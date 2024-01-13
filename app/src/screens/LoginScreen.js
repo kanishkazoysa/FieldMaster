@@ -18,7 +18,7 @@ export default function LoginScreen() {
 
   const handleLogin = () => {
     console.log("Logging in...", { username, password });
-    navigation.navigate("Start");
+    navigation.navigate("Welcome");
   };
 
   return (

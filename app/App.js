@@ -8,6 +8,7 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import { IconButton } from "react-native-paper";
 import SplashScreen from "./src/screens/splashScreen";
+import WelcomeScreen from "./src/screens/WelcomeScreen";
 
 const Stack = createStackNavigator();
 
@@ -20,11 +21,27 @@ const App = () => {
           component={SplashScreen}
         />
         <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
+          name="Welcome"
+          component={WelcomeScreen}
           options={({ navigation }) => ({
             headerShown: false,
             title: "",
+          })}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={({ navigation }) => ({
+            headerShown: true,
+            title: "",
+            headerTransparent: true,
+            headerLeft: () => (
+              <IconButton
+                icon="arrow-left"
+                color="#000"
+                onPress={() => navigation.goBack()}
+              />
+            ),
           })}
         />
         <Stack.Screen

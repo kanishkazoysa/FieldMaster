@@ -12,27 +12,27 @@ import InputField from "../components/InputField";
 import Button from "../components/Button";
 import { textStyles } from "../styles/styles";
 
-export default function RegisterScreen() {
+export default function RegisterScreen({ }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const onBackPress = () => {
-      // Do nothing when the hardware back button is pressed
-      return true;
-    };
+  // useEffect(() => {
+  //   const onBackPress = () => {
+  //     // Do nothing when the hardware back button is pressed
+  //     return true;
+  //   };
 
-    // Disable the hardware back button
-    const backHandler = navigation.addListener("beforeRemove", (e) => {
-      e.preventDefault();
-      onBackPress();
-    });
+  //   // Disable the hardware back button
+  //   const backHandler = navigation.addListener("beforeRemove", (e) => {
+  //     e.preventDefault();
+  //     onBackPress();
+  //   });
 
-    // Clean up the event listener when the component is unmounted
-    return () => backHandler.remove();
-  }, [navigation]);
+  //   // Clean up the event listener when the component is unmounted
+  //   return () => backHandler.remove();
+  // }, [navigation]);
 
   const handleRegister = () => {
     console.log("Registering...", { username, email, password });
