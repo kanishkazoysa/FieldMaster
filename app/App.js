@@ -19,6 +19,10 @@ const App = () => {
           name="splashScreen"
           component={SplashScreen}
         />
+         <Stack.Screen
+          name="Welcome"
+          component={Welcome}
+        />
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
