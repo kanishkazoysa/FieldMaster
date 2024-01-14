@@ -84,13 +84,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     position: "absolute",
     top: 20,
-    left: 20,
+    left: 25,
   },
   text: {
     fontSize: 20,
     position: "absolute",
     top: 70,
-    left: 20,
+    left: 25,
   },
   container: {
     flex: 1,

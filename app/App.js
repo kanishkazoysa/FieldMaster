@@ -44,7 +44,7 @@ const App = () => {
             headerLeft: () => (
               <IconButton
                 icon="arrow-left"
-                color="#000"
+                iconColor="#fff"
                 onPress={() => navigation.goBack()}
               />
             ),
