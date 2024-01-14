@@ -13,8 +13,7 @@ const Button = ({ title, onPress }) => {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#007BFF',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+    justifyContent: 'center',
     borderRadius: 11,
     width: 337,
     height: 40,

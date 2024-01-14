@@ -35,6 +35,7 @@ export default function WelcomeScreen() {
   return (
     <View
       style={{
+        backgroundColor: "white",
         alignItems: "center",
         justifyContent: "center",
         flex: 1,
@@ -59,7 +60,7 @@ export default function WelcomeScreen() {
       <Text style={styles.header}>Hello !</Text>
       <Text style={styles.text}>Your app for accurate and efficient measurements in the real world.</Text>
       <Button title="SIGN UP" onPress={() => navigation.navigate("Register")} />
-      <Button title="LOG IN" onPress={() => navigation.navigate("Login")} />
+      <Button title="LOGIN" onPress={() => navigation.navigate("Login")} />
     </View>
   );
 }

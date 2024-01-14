@@ -18,11 +18,12 @@ const InputField = ({ placeholder, value, onChangeText, keyboardType, secureText
 const styles = StyleSheet.create({
   input: {
     height: 40,
-    width: '100%',
-    borderColor: 'gray',
+    width: 337,
+    backgroundColor: 'white',
+    borderColor: 'white',
     borderWidth: 1,
     borderRadius: 8,
-    marginBottom: 16,
+    marginBottom: 36,
     padding: 8,
   },
 });
