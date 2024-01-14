@@ -25,6 +25,7 @@ export default function LoginScreen() {
   const handleForgotPassword = () => {
     // Handle the logic for forgot password (e.g., navigate to the forgot password screen)
     console.log("Forgot Password");
+    navigation.navigate("Forgot");
   };
 
   const handleSignUp = () => {
@@ -58,14 +59,14 @@ export default function LoginScreen() {
           />
         </View>
 
-        <View style={styles.button}>
-          <Button title="LOGIN" onPress={handleLogin} />
+        <View style={styles.button}  >
+          <Button title="LOGIN"onPress={handleLogin} />
         </View>
 
-        <TouchableOpacity onPress={handleForgotPassword}>
+       <TouchableOpacity onPress={handleForgotPassword}>
           <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
         </TouchableOpacity>
-
+      
         <View style={styles.signupTextContainer}>
           <Text style={styles.signupText}>Don’t have an account? </Text>
           <TouchableOpacity onPress={handleSignUp}>
@@ -117,16 +118,15 @@ const styles = StyleSheet.create({
     top: 400,
   },
   forgotPasswordText: {
-    marginTop: 440,
+   
     color: "#007BFF",
+    top: 440,
     fontSize: 16,
-    textAlign: "center",
     textDecorationLine: "none",
   },
   signupTextContainer: {
     flexDirection: "row",
-
-    marginTop: 200,
+    marginTop: 570,
   },
   signupText: {
     color: "#000",

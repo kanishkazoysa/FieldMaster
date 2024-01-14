@@ -13,24 +13,16 @@ import InputField from "../components/InputField";
 import Button from "../components/Button";
 import { textStyles } from "../styles/styles";
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
   const handleLogin = () => {
     console.log("Logging in...", { username, password });
-    navigation.navigate("Welcome");
+    navigation.navigate("Login");
   };
-  const handleForgotPassword = () => {
-    // Handle the logic for forgot password (e.g., navigate to the forgot password screen)
-    console.log("Forgot Password");
-  };
-
-  const handleSignUp = () => {
-    // Navigate to the register screen when "Sign in" is pressed
-    navigation.navigate("Register");
-  };
+ 
 
   return (
     <View style={styles.container}>
@@ -56,8 +48,8 @@ export default function LoginScreen() {
             onChangeText={(text) => setPassword(text)}
             secureTextEntry
           />
-           <InputField
-            placeholder="Password"
+          <InputField
+            placeholder="Confirm Password"
             value={password}
             onChangeText={(text) => setPassword(text)}
             secureTextEntry
@@ -69,12 +61,26 @@ export default function LoginScreen() {
         </View>
 
         <View style={styles.signupTextContainer}>
-          <Text style={styles.signupText}>Don’t have an account? </Text>
-          <TouchableOpacity onPress={handleSignUp}>
-            <Text style={[styles.signupText, styles.signupLink]}>Sign up</Text>
+          <Text style={styles.signupText}>Have an account? </Text>
+          <TouchableOpacity onPress={handleLogin}>
+            <Text style={[styles.signupText, styles.signupLink]}>Log in</Text>
           </TouchableOpacity>
         </View>
 
+        <View style={styles.privacyTermsContainer}>
+          <Text style={{ fontSize: 12, textAlign: "center" }}>
+            By clicking "Sign up" you agree to our
+          </Text>
+          <View style={styles.linksContainer}>
+            <TouchableOpacity onPress={" "}>
+              <Text style={styles.link}>Terms of Service</Text>
+            </TouchableOpacity>
+            <Text style={{ fontSize: 12 }}> and </Text>
+            <TouchableOpacity onPress={" "}>
+              <Text style={styles.link}>Privacy Policy</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </ScrollView>
     </View>
   );
@@ -86,13 +92,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     position: "absolute",
     top: 20,
-    left: 20,
+    left: 25,
   },
   text: {
     fontSize: 20,
     position: "absolute",
     top: 70,
-    left: 20,
+    left: 25,
   },
   container: {
     flex: 1,
@@ -128,6 +134,7 @@ const styles = StyleSheet.create({
   signupTextContainer: {
     flexDirection: "row",
     marginTop: 550,
+    width: 337,
   },
   signupText: {
     color: "#000",
@@ -137,5 +144,22 @@ const styles = StyleSheet.create({
     color: "#007BFF",
     textDecorationLine: "none",
     fontSize: 16,
+  },
+  privacyTermsContainer: {
+    width: 337,
+    marginTop: 100,
+    marginBottom: 12,
+    alignItems: "center",
+  },
+  linksContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 8,
+  },
+  link: {
+    color: "#007BFF",
+    textDecorationLine: "none",
+    fontSize: 12,
   },
 });
