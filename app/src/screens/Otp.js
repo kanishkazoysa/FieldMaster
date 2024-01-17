@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StatusBar,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
   ScrollView,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import InputField from "../components/InputField";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import Button from "../components/Button";
 
-export default function Otp() {
+const Otp = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
+
+  const inputRefs = Array.from({ length: 6 }, () => React.createRef());
 
   const handleContinue = () => {
     // Implement logic to handle OTP verification
@@ -23,19 +24,39 @@ export default function Otp() {
   };
 
   const handleChangeOtp = (index, value) => {
-    // Update the OTP array when a digit is entered
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
+
+    // Automatically focus on the next input when a digit is entered
+    if (value !== "" && index < 5) {
+      inputRefs[index + 1].current.focus();
+    }
   };
+
+  const handleKeyPress = (index, key) => {
+    // Handle "Backspace" key press to clear the previous input
+    if (key === "Backspace" && index > 0) {
+      const newOtp = [...otp];
+      newOtp[index - 1] = "";
+      setOtp(newOtp);
+      inputRefs[index - 1].current.focus();
+    }
+  };
+
+  useEffect(() => {
+    // Reset OTP when the component is focused (navigated to)
+    if (isFocused) {
+      setOtp(["", "", "", "", "", ""]);
+      inputRefs[0].current.focus();
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
-      {/* Static section at the top */}
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
       <View style={styles.staticSection}></View>
 
-      {/* Scrollable content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.header}>OTP</Text>
         <Text style={styles.text}>
@@ -43,7 +64,6 @@ export default function Otp() {
         </Text>
 
         <View style={styles.field}>
-          {/* Render 6 TextInput components for OTP entry */}
           {otp.map((digit, index) => (
             <TextInput
               key={index}
@@ -52,6 +72,15 @@ export default function Otp() {
               onChangeText={(text) => handleChangeOtp(index, text)}
               maxLength={1}
               keyboardType="numeric"
+              ref={inputRefs[index]}
+              onSubmitEditing={() => {
+                if (index < 5) {
+                  inputRefs[index + 1].current.focus();
+                }
+              }}
+              onKeyPress={({ nativeEvent: { key } }) =>
+                handleKeyPress(index, key)
+              }
             />
           ))}
         </View>
@@ -62,7 +91,7 @@ export default function Otp() {
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   header: {
@@ -75,7 +104,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     position: "absolute",
-    top:55,
+    top: 55,
     width: 337,
   },
   container: {
@@ -84,9 +113,9 @@ const styles = StyleSheet.create({
   staticSection: {
     padding: 16,
     height: 100,
-    backgroundColor: "#007BFF", // Set your desired background color
+    backgroundColor: "#007BFF",
     borderBottomWidth: 1,
-    borderBottomColor: "#007BFF", // Set your desired border color
+    borderBottomColor: "#007BFF",
     color: "#fff",
   },
   scrollContent: {
@@ -100,7 +129,7 @@ const styles = StyleSheet.create({
   },
   otpInput: {
     borderWidth: 1,
-    borderColor: "#000",
+    borderColor: "#C4C4C4",
     borderRadius: 11,
     width: 45,
     height: 45,
@@ -114,3 +143,5 @@ const styles = StyleSheet.create({
     top: 200,
   },
 });
+
+export default Otp;
