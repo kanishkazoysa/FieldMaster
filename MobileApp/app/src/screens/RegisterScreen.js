@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import InputField from "../components/InputField";
@@ -14,15 +15,46 @@ import Button from "../components/Button";
 import { textStyles } from "../styles/styles";
 
 export default function RegisterScreen() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    console.log("Logging in...", { username, password });
-    navigation.navigate("Login");
+  const handleSignUp = async () => {
+    try {
+      if (!email || !password || !confirmPassword) {
+        Alert.alert("Please fill in all fields");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        Alert.alert("Passwords do not match");
+        return;
+      }
+
+      const response = await fetch(
+        "http://192.168.1.109:5000/api/users/register", //  Set your host variable here
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      if (response.ok) {
+        Alert.alert("Success", "User registered successfully");
+        navigation.navigate("Login");
+      } else {
+        const data = await response.json();
+        Alert.alert("Error", data.error || "Something went wrong");
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      Alert.alert("Error", "Something went wrong");
+    }
   };
- 
 
   return (
     <View style={styles.container}>
@@ -38,8 +70,8 @@ export default function RegisterScreen() {
         <View style={styles.feild}>
           <InputField
             placeholder="Email"
-            value={username}
-            onChangeText={(text) => setUsername(text)}
+            value={email}
+            onChangeText={(text) => setEmail(text)}
           />
 
           <InputField
@@ -50,19 +82,19 @@ export default function RegisterScreen() {
           />
           <InputField
             placeholder="Confirm Password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
+            value={confirmPassword}
+            onChangeText={(text) => setConfirmPassword(text)}
             secureTextEntry
           />
         </View>
 
         <View style={styles.button}>
-          <Button title="SIGN UP" onPress={handleLogin} />
+          <Button title="SIGN UP" onPress={handleSignUp} />
         </View>
 
         <View style={styles.signupTextContainer}>
           <Text style={styles.signupText}>Have an account? </Text>
-          <TouchableOpacity onPress={handleLogin}>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Text style={[styles.signupText, styles.signupLink]}>Log in</Text>
           </TouchableOpacity>
         </View>
@@ -106,9 +138,9 @@ const styles = StyleSheet.create({
   staticSection: {
     padding: 16,
     height: 100,
-    backgroundColor: "#007BFF", // Set your desired background color
+    backgroundColor: "#007BFF", // Set background color
     borderBottomWidth: 1,
-    borderBottomColor: "#007BFF", // Set your desired border color
+    borderBottomColor: "#007BFF", // Set border color
     color: "#fff",
   },
   scrollContent: {
