@@ -33,7 +33,7 @@ export default function RegisterScreen() {
       }
 
       const response = await fetch(
-        "http://192.168.1.109:5000/api/users/register", //  Set your host variable here
+        "http://192.168.1.103:5000/api/users/register", //  Set your host variable here
         {
           method: "POST",
           headers: {
