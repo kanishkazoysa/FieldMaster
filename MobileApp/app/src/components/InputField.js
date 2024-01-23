@@ -17,12 +17,14 @@ const InputField = ({ placeholder, value, onChangeText, keyboardType, secureText
 
 const styles = StyleSheet.create({
   input: {
+    
     height: 40,
-    width: '100%',
-    borderColor: 'gray',
+    width: 337,
+    backgroundColor: 'white',
+    borderColor: 'white',
     borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 16,
+    borderRadius: 11,
+    marginBottom: 26,
     padding: 8,
   },
 });
