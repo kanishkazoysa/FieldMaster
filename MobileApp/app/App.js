@@ -2,7 +2,10 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator, CardStyleInterpolators } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+} from "@react-navigation/stack";
 import StartScreen from "./src/screens/StartScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import LoginScreen from "./src/screens/LoginScreen";
@@ -25,10 +28,7 @@ const App = () => {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Slide-in/slide-out animation
         }}
       >
-        <Stack.Screen
-          name="splashScreen"
-          component={SplashScreen}
-        />
+        <Stack.Screen name="splashScreen" component={SplashScreen} />
         <Stack.Screen
           name="Welcome"
           component={WelcomeScreen}
@@ -85,7 +85,7 @@ const App = () => {
             ),
           })}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="Otp"
           component={Otp}
           options={({ navigation }) => ({

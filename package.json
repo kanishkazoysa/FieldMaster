@@ -1,11 +1,9 @@
 {
-  "name": "fieldmaster",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "fieldmaster_routing",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "app": "cd MobileApp && cd app && expo start"
+    "app": "cd MobileApp && cd app && expo start",
+    "web": "cd WebApp &&  npm start"
 
   },
   "author": "",
