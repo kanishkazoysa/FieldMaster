@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
 
 export const textStyles = StyleSheet.create({
+  
   h1: {
-    fontSize: 28,
+    fontSize: 40,
     fontWeight: 'bold',
-    marginBottom: 20,
+    position: 'absolute',
   },
   h2: {
     fontSize: 24,
