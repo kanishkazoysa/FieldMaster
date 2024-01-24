@@ -6,7 +6,6 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
 } from "@react-navigation/stack";
-import StartScreen from "./src/screens/StartScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import { IconButton } from "react-native-paper";

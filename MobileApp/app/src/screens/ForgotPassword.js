@@ -9,8 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import InputField from "../components/InputField";
-import Button from "../components/Button";
+import { Button, InputField } from "../components";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -79,6 +78,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: "center",
     padding: 16,
+    backgroundColor:"#E5E7E9",
   },
   feild: {
     position: "absolute",

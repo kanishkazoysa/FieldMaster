@@ -1,21 +1,18 @@
 import React, { useState } from "react";
-
-
 import {
   View,
   Text,
   StatusBar,
-  TextInput,
+  Image,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import InputField from "../components/InputField";
-import Button from "../components/Button";
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
-import { faLock } from '@fortawesome/free-solid-svg-icons'
+import { Button, InputField } from "../components";
+import { faEnvelope, faLock,  } from "@fortawesome/free-solid-svg-icons";
+
+
 
 
 export default function LoginScreen() {
@@ -48,44 +45,43 @@ export default function LoginScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.header}>Welcome !</Text>
         <Text style={styles.text}>Sign in to continue</Text>
-
-        <View style={styles.feild1}>
         
-       
-        <FontAwesomeIcon icon={faEnvelope} />
-          <InputField
-            placeholder="Email"
-            value={username}
-            onChangeText={(text) => setUsername(text)}
-          />
+      <View style={styles.feild}>
+        <InputField
+          placeholder="Email"
+          value={username}
+          onChangeText={(text) => setUsername(text)}
+          icon={faEnvelope}
+        />
 
-          </View>
-          <View style={styles.feild2}>
-           <FontAwesomeIcon icon={faLock} />
-          <InputField
-            placeholder="Password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry
-          />
+        <InputField
+          placeholder="Password"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry
+          icon={faLock}
+        />
         </View>
 
-        <View style={styles.button}  >
-          <Button title="LOGIN"onPress={handleLogin} />
-         
+        <Image 
+        source={require("../images/login_img.png")}  
+        style={styles.img}
+        />
+
+        <View style={styles.button}>
+          <Button title="LOGIN" onPress={handleLogin} />
         </View>
 
-       <TouchableOpacity onPress={handleForgotPassword}>
+        <TouchableOpacity onPress={handleForgotPassword}>
           <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
         </TouchableOpacity>
-      
+
         <View style={styles.signupTextContainer}>
           <Text style={styles.signupText}>Don’t have an account? </Text>
           <TouchableOpacity onPress={handleSignUp}>
             <Text style={[styles.signupText, styles.signupLink]}>Sign up</Text>
           </TouchableOpacity>
         </View>
-
       </ScrollView>
     </View>
   );
@@ -93,11 +89,13 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   header: {
+  
     fontSize: 40,
     fontWeight: "bold",
     position: "absolute",
     top: 20,
     left: 25,
+  
   },
   text: {
     fontSize: 20,
@@ -109,6 +107,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   staticSection: {
+   
     padding: 16,
     height: 100,
     backgroundColor: "#007BFF", // Set your desired background color
@@ -120,32 +119,28 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: "center",
     padding: 16,
+    backgroundColor:"#f0f2f5",
   },
-  feild1: {
+  feild: {
     position: "absolute",
-    top: 220,
-    flexDirection: "row",
+    top: 320,
+    width: 337,
     
   },
-  feild2: {
-    position: "absolute",
-    top: 280,
-    
-  },
+  
   button: {
     position: "absolute",
-    top: 400,
+    top: 480,
   },
   forgotPasswordText: {
-   
     color: "#007BFF",
-    top: 440,
+    top: 350,
     fontSize: 16,
     textDecorationLine: "none",
   },
   signupTextContainer: {
     flexDirection: "row",
-    marginTop: 570,
+    marginTop: 490,
   },
   signupText: {
     color: "#000",
@@ -155,5 +150,10 @@ const styles = StyleSheet.create({
     color: "#007BFF",
     textDecorationLine: "none",
     fontSize: 16,
+  },
+  img:{
+    top: 100,
+    width:170,
+    height:170,
   },
 });

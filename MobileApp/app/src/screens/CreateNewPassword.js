@@ -9,8 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import InputField from "../components/InputField";
-import Button from "../components/Button";
+import { Button, InputField } from "../components";
 import { Alert } from "react-native";
 
 
@@ -108,6 +107,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: "center",
     padding: 16,
+    backgroundColor:"#f0f2f5",
   },
   feild: {
     position: "absolute",

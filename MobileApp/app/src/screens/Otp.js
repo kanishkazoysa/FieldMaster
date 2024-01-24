@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-import Button from "../components/Button";
+import { Button, InputField } from "../components";
 
 const Otp = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: "center",
     padding: 16,
+    backgroundColor:"#f0f2f5",
   },
   field: {
     flexDirection: "row",

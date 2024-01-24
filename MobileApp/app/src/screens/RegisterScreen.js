@@ -10,11 +10,11 @@ import {
   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import InputField from "../components/InputField";
-import Button from "../components/Button";
-import { textStyles } from "../styles/styles";
+import { Button, InputField } from "../components";
 
-export default function RegisterScreen() {
+
+export default function RegisterScreen() 
+{
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,7 +33,7 @@ export default function RegisterScreen() {
       }
 
       const response = await fetch(
-        "http://192.168.1.103:5000/api/users/register", //  Set your host variable here
+        "http://192.168.1.140:5000/api/users/register", //  Set your host variable here
         {
           method: "POST",
           headers: {
@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: "center",
     padding: 16,
+    backgroundColor:"#f0f2f5",
   },
   feild: {
     position: "absolute",
