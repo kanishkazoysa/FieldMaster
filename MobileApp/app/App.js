@@ -1,6 +1,5 @@
 // App.js
 import React from "react";
-import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createStackNavigator,
@@ -14,6 +13,7 @@ import WelcomeScreen from "./src/screens/WelcomeScreen";
 import ForgotPassword from "./src/screens/ForgotPassword";
 import Otp from "./src/screens/Otp";
 import CreateNewPassword from "./src/screens/CreateNewPassword";
+import BackButton from "./src/components/BackButton";
 
 const Stack = createStackNavigator();
 
@@ -40,32 +40,21 @@ const App = () => {
           name="Register"
           component={RegisterScreen}
           options={({ navigation }) => ({
-            headerShown: true,
+            headerShown: false,
             title: "",
             headerTransparent: true,
-            headerLeft: () => (
-              <IconButton
-                icon="arrow-left"
-                iconColor="#fff"
-                onPress={() => navigation.goBack()}
-              />
-            ),
+            headerLeft: () => <BackButton navigation={navigation} />
           })}
         />
         <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={({ navigation }) => ({
-            headerShown: true,
+            headerShown: false,
             title: "",
             headerTransparent: true,
-            headerLeft: () => (
-              <IconButton
-                icon="arrow-left"
-                iconColor="#fff"
-                onPress={() => navigation.goBack()}
-              />
-            ),
+            headerLeft: () => <BackButton navigation={navigation} />
+          
           })}
         />
         <Stack.Screen
@@ -75,13 +64,7 @@ const App = () => {
             headerShown: true,
             title: "",
             headerTransparent: true,
-            headerLeft: () => (
-              <IconButton
-                icon="arrow-left"
-                iconColor="#fff"
-                onPress={() => navigation.goBack()}
-              />
-            ),
+            headerLeft: () => <BackButton navigation={navigation} />
           })}
         />
         <Stack.Screen
@@ -91,13 +74,7 @@ const App = () => {
             headerShown: true,
             title: "",
             headerTransparent: true,
-            headerLeft: () => (
-              <IconButton
-                icon="arrow-left"
-                iconColor="#fff"
-                onPress={() => navigation.goBack()}
-              />
-            ),
+           headerLeft: () => <BackButton navigation={navigation} />
           })}
         />
         <Stack.Screen

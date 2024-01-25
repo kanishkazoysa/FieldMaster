@@ -10,10 +10,8 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
-import { faEnvelope, faLock,  } from "@fortawesome/free-solid-svg-icons";
-
-
-
+import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
+import BackButton from "../components/BackButton";
 
 export default function LoginScreen() {
   const [username, setUsername] = useState("");
@@ -39,38 +37,34 @@ export default function LoginScreen() {
     <View style={styles.container}>
       {/* Static section at the top */}
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-      <View style={styles.staticSection}></View>
+      <View style={styles.staticSection}>
+        <BackButton navigation={navigation} />
+      </View>
 
       {/* Scrollable content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.header}>Welcome !</Text>
         <Text style={styles.text}>Sign in to continue</Text>
-        
-      <View style={styles.feild}>
-        <InputField
-          placeholder="Email"
-          value={username}
-          onChangeText={(text) => setUsername(text)}
-          icon={faEnvelope}
-        />
 
-        <InputField
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          secureTextEntry
-          icon={faLock}
-        />
-        </View>
+        <View style={styles.feild}>
+          <InputField
+            placeholder="Email"
+            value={username}
+            onChangeText={(text) => setUsername(text)}
+            icon={faEnvelope}
+          />
 
-        <Image 
-        source={require("../images/login_img.png")}  
-        style={styles.img}
-        />
-
-        <View style={styles.button}>
+          <InputField
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry
+            icon={faLock}
+          />
           <Button title="LOGIN" onPress={handleLogin} />
         </View>
+
+        <Image source={require("../images/login_img.png")} style={styles.img} />
 
         <TouchableOpacity onPress={handleForgotPassword}>
           <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
@@ -89,52 +83,43 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   header: {
-  
     fontSize: 40,
     fontWeight: "bold",
     position: "absolute",
-    top: 20,
-    left: 25,
-  
+    top: 1,
+    left: 20,
   },
   text: {
     fontSize: 20,
     position: "absolute",
-    top: 70,
-    left: 25,
+    top: 43,
+    left: 20,
   },
   container: {
     flex: 1,
   },
   staticSection: {
-   
-    padding: 16,
-    height: 100,
+    flex: 0.12,
+    flexDirection: "row",
+    justifyContent:"  center",
+    alignItems: "center",
     backgroundColor: "#007BFF", // Set your desired background color
-    borderBottomWidth: 1,
-    borderBottomColor: "#007BFF", // Set your desired border color
-    color: "#fff",
   },
   scrollContent: {
-    flexGrow: 1,
+    flex: 1,
     alignItems: "center",
-    padding: 16,
-    backgroundColor:"#f0f2f5",
+    backgroundColor: "#f0f2f5",
   },
   feild: {
     position: "absolute",
-    top: 320,
-    width: 337,
-    
-  },
-  
-  button: {
-    position: "absolute",
-    top: 480,
+    alignItems: "center",
+    top: "45%",
   },
   forgotPasswordText: {
+    position: "absolute",
     color: "#007BFF",
-    top: 350,
+    left: 20,
+    top: "70%",
     fontSize: 16,
     textDecorationLine: "none",
   },
@@ -151,9 +136,9 @@ const styles = StyleSheet.create({
     textDecorationLine: "none",
     fontSize: 16,
   },
-  img:{
+  img: {
     top: 100,
-    width:170,
-    height:170,
+    width: 170,
+    height: 170,
   },
 });
