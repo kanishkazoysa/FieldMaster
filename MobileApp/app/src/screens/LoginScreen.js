@@ -62,21 +62,22 @@ export default function LoginScreen() {
             icon={faLock}
           />
           <Button title="LOGIN" onPress={handleLogin} />
+          <TouchableOpacity onPress={handleForgotPassword} >
+        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+      </TouchableOpacity>
         </View>
 
         <Image source={require("../images/login_img.png")} style={styles.img} />
 
-        <View style={styles.forgotContainer}>
-          <TouchableOpacity onPress={handleForgotPassword}>
-            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-          </TouchableOpacity>
-        </View>
-
+        
+       
         <View style={styles.signupTextContainer}>
+        
           <Text style={styles.signupText}>Don’t have an account? </Text>
           <TouchableOpacity onPress={handleSignUp}>
             <Text style={[styles.signupText, styles.signupLink]}>Sign up</Text>
           </TouchableOpacity>
+          
         </View>
       </View>
     </View>
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
   },
   forgotPasswordText: {
     color: "#007BFF",
-    top: 315,
+    top: 2,
     fontSize: 16,
     textDecorationLine: "none",
   },
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
   },
   signupLink: {
     color: "#007BFF",
-    textDecorationLine: "none",
+    textDecorationLine:"none",
     fontSize: 16,
   },
   img: {
