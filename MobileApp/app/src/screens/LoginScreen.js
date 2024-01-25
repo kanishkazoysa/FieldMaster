@@ -42,7 +42,7 @@ export default function LoginScreen() {
       </View>
 
       {/* Scrollable content */}
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <View style={styles.content}>
         <Text style={styles.header}>Welcome !</Text>
         <Text style={styles.text}>Sign in to continue</Text>
 
@@ -66,9 +66,11 @@ export default function LoginScreen() {
 
         <Image source={require("../images/login_img.png")} style={styles.img} />
 
-        <TouchableOpacity onPress={handleForgotPassword}>
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-        </TouchableOpacity>
+        <View style={styles.forgotContainer}>
+          <TouchableOpacity onPress={handleForgotPassword}>
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.signupTextContainer}>
           <Text style={styles.signupText}>Don’t have an account? </Text>
@@ -76,7 +78,7 @@ export default function LoginScreen() {
             <Text style={[styles.signupText, styles.signupLink]}>Sign up</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 }
@@ -101,11 +103,11 @@ const styles = StyleSheet.create({
   staticSection: {
     flex: 0.12,
     flexDirection: "row",
-    justifyContent:"  center",
+    justifyContent: "  center",
     alignItems: "center",
     backgroundColor: "#007BFF", // Set your desired background color
   },
-  scrollContent: {
+  content: {
     flex: 1,
     alignItems: "center",
     backgroundColor: "#f0f2f5",
@@ -113,19 +115,21 @@ const styles = StyleSheet.create({
   feild: {
     position: "absolute",
     alignItems: "center",
-    top: "45%",
+    top: 300,
+  },
+  forgotContainer: {
+    textAlign: "center",
   },
   forgotPasswordText: {
-    position: "absolute",
     color: "#007BFF",
-    left: 20,
-    top: "70%",
+    top: 315,
     fontSize: 16,
     textDecorationLine: "none",
   },
   signupTextContainer: {
+    position: "absolute",
     flexDirection: "row",
-    marginTop: 490,
+    bottom: 30,
   },
   signupText: {
     color: "#000",

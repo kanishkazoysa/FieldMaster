@@ -61,7 +61,7 @@ const App = () => {
           name="Forgot"
           component={ForgotPassword}
           options={({ navigation }) => ({
-            headerShown: true,
+            headerShown: false,
             title: "",
             headerTransparent: true,
             headerLeft: () => <BackButton navigation={navigation} />
