@@ -6,9 +6,11 @@ import {
   TextInput,
   StyleSheet,
   ScrollView,
+  Platform,
 } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Button, InputField } from "../components";
+import BackButton from "../components/BackButton";
 
 const Otp = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -54,14 +56,19 @@ const Otp = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-      <View style={styles.staticSection}></View>
+    <View style={styles.staticSection}>
+    <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+    <BackButton navigation={navigation} />
+  </View>
+
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
+      <View style={styles.headerContainer}>
         <Text style={styles.header}>OTP</Text>
         <Text style={styles.text}>
           Please enter the code that was sent to your email
         </Text>
+        </View>
 
         <View style={styles.field}>
           {otp.map((digit, index) => (
@@ -94,39 +101,35 @@ const Otp = () => {
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    width: "90%",
+    left: 5,
+   },
   header: {
     fontSize: 20,
     fontWeight: "bold",
-    position: "absolute",
-    top: 20,
-    left: 25,
+    top: 10,
   },
   text: {
     fontSize: 16,
-    position: "absolute",
-    top: 55,
-    width: 337,
+    top: 20,
   },
   container: {
     flex: 1,
   },
-  staticSection: {
-    padding: 16,
-    height: 100,
+   staticSection: {
+    height: Platform.OS === "android" ? 65 : 95,
     backgroundColor: "#007BFF",
-    borderBottomWidth: 1,
-    borderBottomColor: "#007BFF",
-    color: "#fff",
+    justifyContent: "center",
   },
   scrollContent: {
     flexGrow: 1,
     alignItems: "center",
-    padding: 16,
-    backgroundColor:"#f0f2f5",
+    backgroundColor: "#f0f2f5",
   },
   field: {
     flexDirection: "row",
-    marginTop: 100,
+    top: 60,
   },
   otpInput: {
     borderWidth: 1,
@@ -134,14 +137,13 @@ const styles = StyleSheet.create({
     borderRadius: 11,
     width: 45,
     height: 45,
-    margin: 7,
+    margin: Platform.OS === "android" ? 5 : 8,
     backgroundColor: "#fff",
     textAlign: "center",
     fontSize: 18,
   },
   button: {
-    position: "absolute",
-    top: 200,
+    top: 100,
   },
 });
 

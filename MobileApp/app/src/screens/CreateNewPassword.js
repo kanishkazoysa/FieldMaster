@@ -11,49 +11,48 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
 import { Alert } from "react-native";
-
+import BackButton from "../components/BackButton";
 
 export default function ForgotPassword() {
   const [NewPassword, setNewPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
   const navigation = useNavigation();
 
-  
-    
+  const handleChangePassword = () => {
+    // Perform your password change logic here
 
-    const handleChangePassword = () => {
-        // Perform your password change logic here
-      
-        // Assuming your password change is successful, show the success message
-        Alert.alert(
-          "Password Changed Successfully",
-          "Your password has been changed successfully.",
-          [
-            {
-              text: "OK",
-              onPress: () => {
-                // Navigate to the desired screen or perform any other action
-                navigation.navigate("Login"); // Change this to the screen you want to navigate to
-              },
-            },
-          ],
-          { cancelable: false }
-        );
-      };
-      
-  
+    // Assuming your password change is successful, show the success message
+    Alert.alert(
+      "Password Changed Successfully",
+      "Your password has been changed successfully.",
+      [
+        {
+          text: "OK",
+          onPress: () => {
+            // Navigate to the desired screen or perform any other action
+            navigation.navigate("Login"); // Change this to the screen you want to navigate to
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <View style={styles.container}>
       {/* Static section at the top */}
-      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-      <View style={styles.staticSection}></View>
+
+      <View style={styles.staticSection}>
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <BackButton navigation={navigation} />
+      </View>
 
       {/* Scrollable content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.header}>Create New Password</Text>
-        <Text style={styles.text}>
-        Password must be at least 8 digits
-        </Text>
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>Create New Password</Text>
+          <Text style={styles.text}>Password must be at least 8 digits</Text>
+        </View>
 
         <View style={styles.feild}>
           <InputField
@@ -68,53 +67,45 @@ export default function ForgotPassword() {
           />
         </View>
 
-        <View style={styles.button}  >
+        <View style={styles.button}>
           <Button title="Change Password" onPress={handleChangePassword} />
         </View>
-
-
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    width: "100%",
+    left: 20,
+  },
   header: {
     fontSize: 20,
     fontWeight: "bold",
-    position: "absolute",
-    top: 20,
-    left: 25,
+    top: 10,
   },
   text: {
     fontSize: 16,
-    position: "absolute",
-    top: 55,
-    left: 25,
+    top: 20,
   },
   container: {
     flex: 1,
   },
   staticSection: {
-    padding: 16,
-    height: 100,
-    backgroundColor: "#007BFF", // Set your desired background color
-    borderBottomWidth: 1,
-    borderBottomColor: "#007BFF", // Set your desired border color
-    color: "#fff",
+    height: Platform.OS === "android" ? 65 : 95,
+    backgroundColor: "#007BFF",
+    justifyContent: "center",
   },
   scrollContent: {
     flexGrow: 1,
     alignItems: "center",
-    padding: 16,
-    backgroundColor:"#f0f2f5",
+    backgroundColor: "#f0f2f5",
   },
   feild: {
-    position: "absolute",
-    top: 120,
+    top: 60,
   },
   button: {
-    position: "absolute",
-    top: 280,
+    top: 80,
   },
 });

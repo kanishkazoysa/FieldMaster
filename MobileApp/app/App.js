@@ -71,7 +71,7 @@ const App = () => {
           name="Otp"
           component={Otp}
           options={({ navigation }) => ({
-            headerShown: true,
+            headerShown: false,
             title: "",
             headerTransparent: true,
            headerLeft: () => <BackButton navigation={navigation} />
@@ -81,7 +81,7 @@ const App = () => {
           name="NewPassword"
           component={CreateNewPassword}
           options={({ navigation }) => ({
-            headerShown: true,
+            headerShown: false,
             title: "",
             headerTransparent: true,
             headerLeft: () => (

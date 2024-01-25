@@ -1,6 +1,8 @@
 // src/components/Button.js
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
 
 const Button = ({ title, onPress }) => {
   return (
@@ -15,7 +17,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#007BFF',
     justifyContent: 'center',
     borderRadius: 11,
-    width: 337,
+    width: windowWidth * 0.9, // Adjusted to 80% of the screen width
     height: 40,
     marginBottom: 15,
   },

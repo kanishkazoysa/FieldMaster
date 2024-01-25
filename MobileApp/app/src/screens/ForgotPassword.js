@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
+import BackButton from "../components/BackButton";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -17,19 +18,24 @@ export default function ForgotPassword() {
 
   const handleForgotPassword = () => {
     navigation.navigate("Otp");
-  }
+  };
   return (
     <View style={styles.container}>
       {/* Static section at the top */}
-      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-      <View style={styles.staticSection}></View>
+
+      <View style={styles.staticSection}>
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <BackButton navigation={navigation} />
+      </View>
 
       {/* Scrollable content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.header}>Forgot Password</Text>
-        <Text style={styles.text}>
-          The verification code will be send to this email address
-        </Text>
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>Forgot Password</Text>
+          <Text style={styles.text}>
+            The verification code will be send to this email address
+          </Text>
+        </View>
 
         <View style={styles.feild}>
           <InputField
@@ -39,53 +45,45 @@ export default function ForgotPassword() {
           />
         </View>
 
-        <View style={styles.button}  >
+        <View style={styles.button}>
           <Button title="Continue" onPress={handleForgotPassword} />
         </View>
-
-
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    width: "100%",
+    left: 20,
+  },
   header: {
     fontSize: 20,
     fontWeight: "bold",
-    position: "absolute",
-    top: 20,
-    left: 25,
+    top: 10,
   },
   text: {
     fontSize: 16,
-    position: "absolute",
-    top: 70,
-    left: 25,
+    top: 20,
   },
   container: {
     flex: 1,
   },
   staticSection: {
-    padding: 16,
-    height: 100,
-    backgroundColor: "#007BFF", // Set your desired background color
-    borderBottomWidth: 1,
-    borderBottomColor: "#007BFF", // Set your desired border color
-    color: "#fff",
+    height: Platform.OS === "android" ? 65 : 95,
+    backgroundColor: "#007BFF",
+    justifyContent: "center",
   },
   scrollContent: {
     flexGrow: 1,
     alignItems: "center",
-    padding: 16,
-    backgroundColor:"#E5E7E9",
+    backgroundColor: "#f0f2f5",
   },
   feild: {
-    position: "absolute",
-    top: 140,
+    top: 60,
   },
   button: {
-    position: "absolute",
-    top: 210,
+    top: 80,
   },
 });

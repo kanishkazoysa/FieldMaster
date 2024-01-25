@@ -3,21 +3,24 @@ import {
   View,
   Text,
   StatusBar,
-  TextInput,
+  Image,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
+import BackButton from "../components/BackButton";
+import { faEnvelope, faLock, faEye } from "@fortawesome/free-solid-svg-icons";
 
-
-export default function RegisterScreen() 
-{
+export default function RegisterScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
 
   const handleSignUp = async () => {
@@ -59,115 +62,125 @@ export default function RegisterScreen()
   return (
     <View style={styles.container}>
       {/* Static section at the top */}
-      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-      <View style={styles.staticSection}></View>
+      <View style={styles.staticSection}>
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <BackButton navigation={navigation} />
+      </View>
 
-      {/* Scrollable content */}
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.header}>Hi !</Text>
-        <Text style={styles.text}>Create a new account</Text>
+      {/* Scrollable section with KeyboardAvoidingView */}
+      <KeyboardAvoidingView
+        style={styles.scrollSection}
+        behavior={Platform.OS === "ios" ? "padding" : "margin"}
+        enabled
+      >
+        {/* Scrollable content */}
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View style={{ marginLeft: 20 }}>
+            <Text style={styles.header}>Hi !</Text>
+            <Text style={styles.text}>Create a new account</Text>
+          </View>
+          <View style={styles.imgContainer}>
+            <Image
+              source={require("../images/register_img.png")}
+              style={styles.img}
+            />
+          </View>
 
-        <View style={styles.feild}>
-          <InputField
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
+          <View style={styles.feild}>
+            <InputField
+              placeholder="Email"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+              icon={faEnvelope}
+            />
+            <InputField
+              placeholder="Password"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry={true}
+              icon={faLock}
+             showEyeIcon={true} 
+              onPressEye={() => setShowPassword(!showPassword)} 
+            />
 
-          <InputField
-            placeholder="Password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry
-          />
-          <InputField
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChangeText={(text) => setConfirmPassword(text)}
-            secureTextEntry
-          />
-        </View>
+            <InputField
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChangeText={(text) => setConfirmPassword(text)}
+              secureTextEntry
+              icon={faLock}
+            />
+            <View style={styles.button}>
+              <Button title="SIGN UP" onPress={handleSignUp} />
+            </View>
+          </View>
 
-        <View style={styles.button}>
-          <Button title="SIGN UP" onPress={handleSignUp} />
-        </View>
-
-        <View style={styles.signupTextContainer}>
-          <Text style={styles.signupText}>Have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={[styles.signupText, styles.signupLink]}>Log in</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.privacyTermsContainer}>
-          <Text style={{ fontSize: 12, textAlign: "center" }}>
-            By clicking "Sign up" you agree to our
-          </Text>
-          <View style={styles.linksContainer}>
-            <TouchableOpacity onPress={" "}>
-              <Text style={styles.link}>Terms of Service</Text>
-            </TouchableOpacity>
-            <Text style={{ fontSize: 12 }}> and </Text>
-            <TouchableOpacity onPress={" "}>
-              <Text style={styles.link}>Privacy Policy</Text>
+          <View style={styles.loginTextContainer}>
+            <Text style={styles.signupText}>Have an account? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={[styles.signupText, styles.signupLink]}>Log in</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </ScrollView>
+
+          <View style={styles.privacyTermsContainer}>
+            <Text style={{ fontSize: 14, textAlign: "center" }}>
+              By clicking "Sign up" you agree to our
+            </Text>
+            <View style={styles.linksContainer}>
+              <TouchableOpacity onPress={" "}>
+                <Text style={styles.link}>Terms of Service</Text>
+              </TouchableOpacity>
+              <Text style={{ fontSize: 14 }}> and </Text>
+              <TouchableOpacity onPress={" "}>
+                <Text style={styles.link}>Privacy Policy</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
-    fontSize: 40,
+    fontSize: 32,
     fontWeight: "bold",
-    position: "absolute",
-    top: 20,
-    left: 25,
+    paddingBottom: 5,
+    top: 5,
   },
   text: {
-    fontSize: 20,
-    position: "absolute",
-    top: 70,
-    left: 25,
+    fontSize: 18,
   },
   container: {
     flex: 1,
   },
   staticSection: {
-    padding: 16,
-    height: 100,
-    backgroundColor: "#007BFF", // Set background color
-    borderBottomWidth: 1,
-    borderBottomColor: "#007BFF", // Set border color
-    color: "#fff",
+    height: Platform.OS === "android" ? 65 : 95,
+    backgroundColor: "#007BFF",
+    justifyContent: "center",
+  },
+  scrollSection: {
+    flex: 1,
+    backgroundColor: "#f0f2f5",
   },
   scrollContent: {
     flexGrow: 1,
-    alignItems: "center",
-    padding: 16,
-    backgroundColor:"#f0f2f5",
+   
   },
   feild: {
-    position: "absolute",
-    top: 220,
+    width: "100%",
+    top: Platform.OS === "ios" ? 15 : 15,
+    alignItems: "center",
   },
   button: {
-    position: "absolute",
-    top: 480,
+    marginTop: 10,
   },
-  forgotPasswordText: {
-    marginTop: 440,
-    color: "#007BFF",
-    fontSize: 16,
-    textAlign: "center",
-    textDecorationLine: "none",
-  },
-  signupTextContainer: {
+
+  loginTextContainer: {
     flexDirection: "row",
-    marginTop: 550,
-    width: 337,
+    top: Platform.OS === "ios" ? 40 : 40,
+    marginLeft: 20,
   },
   signupText: {
     color: "#000",
@@ -175,24 +188,33 @@ const styles = StyleSheet.create({
   },
   signupLink: {
     color: "#007BFF",
+    marginLeft: 5,
     textDecorationLine: "none",
-    fontSize: 16,
   },
   privacyTermsContainer: {
-    width: 337,
-    marginTop: 100,
-    marginBottom: 12,
+    top: Platform.OS === "ios" ? 180 : 110,
     alignItems: "center",
   },
   linksContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 8,
+    marginTop: 5,
   },
   link: {
     color: "#007BFF",
     textDecorationLine: "none",
-    fontSize: 12,
+    fontSize: 14,
+  },
+  imgContainer: {
+    alignItems: "center",
+    
+  },
+  img: {
+    width: 120,
+    borderRadius: 11,
+    height: 120,
+    marginTop: Platform.OS === "ios" ? 30 : 20,
+    marginBottom: Platform.OS === "ios" ? 30 : 20,
   },
 });
