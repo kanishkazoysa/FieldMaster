@@ -10,11 +10,14 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
 import BackButton from "../components/BackButton";
 import { faEnvelope, faLock, faEye } from "@fortawesome/free-solid-svg-icons";
+
+const { width, height } = Dimensions.get("window");
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState("");
@@ -36,7 +39,7 @@ export default function RegisterScreen() {
       }
 
       const response = await fetch(
-        "http://192.168.1.140:5000/api/users/register", //  Set your host variable here
+        "http://192.168.1.140:5000/api/users/register",
         {
           method: "POST",
           headers: {
@@ -61,22 +64,19 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Static section at the top */}
       <View style={styles.staticSection}>
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
         <BackButton navigation={navigation} />
       </View>
 
-      {/* Scrollable section with KeyboardAvoidingView */}
       <KeyboardAvoidingView
         style={styles.scrollSection}
         behavior={Platform.OS === "ios" ? "padding" : "margin"}
         enabled
       >
-        {/* Scrollable content */}
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={{ marginLeft: 20 }}>
-            <Text style={styles.header}>Hi !</Text>
+          <View style={styles.textSection}>
+            <Text style={styles.header}>Hi!</Text>
             <Text style={styles.text}>Create a new account</Text>
           </View>
           <View style={styles.imgContainer}>
@@ -86,7 +86,7 @@ export default function RegisterScreen() {
             />
           </View>
 
-          <View style={styles.feild}>
+          <View style={styles.field}>
             <InputField
               placeholder="Email"
               value={email}
@@ -97,17 +97,17 @@ export default function RegisterScreen() {
               placeholder="Password"
               value={password}
               onChangeText={(text) => setPassword(text)}
-              secureTextEntry={true}
+              secureTextEntry={!showPassword}
               icon={faLock}
-             showEyeIcon={true} 
-              onPressEye={() => setShowPassword(!showPassword)} 
+              showEyeIcon={true}
+              onPressEye={() => setShowPassword(!showPassword)}
             />
 
             <InputField
               placeholder="Confirm Password"
               value={confirmPassword}
               onChangeText={(text) => setConfirmPassword(text)}
-              secureTextEntry
+              secureTextEntry={!showPassword}
               icon={faLock}
             />
             <View style={styles.button}>
@@ -116,22 +116,22 @@ export default function RegisterScreen() {
           </View>
 
           <View style={styles.loginTextContainer}>
-            <Text style={styles.signupText}>Have an account? </Text>
+            <Text style={styles.signupText}>Have an account?</Text>
             <TouchableOpacity onPress={() => navigation.navigate("Login")}>
               <Text style={[styles.signupText, styles.signupLink]}>Log in</Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.privacyTermsContainer}>
-            <Text style={{ fontSize: 14, textAlign: "center" }}>
+            <Text style={styles.privacyText}>
               By clicking "Sign up" you agree to our
             </Text>
             <View style={styles.linksContainer}>
-              <TouchableOpacity onPress={" "}>
+              <TouchableOpacity onPress={() => {}}>
                 <Text style={styles.link}>Terms of Service</Text>
               </TouchableOpacity>
-              <Text style={{ fontSize: 14 }}> and </Text>
-              <TouchableOpacity onPress={" "}>
+              <Text style={styles.andText}> and </Text>
+              <TouchableOpacity onPress={() => {}}>
                 <Text style={styles.link}>Privacy Policy</Text>
               </TouchableOpacity>
             </View>
@@ -144,19 +144,19 @@ export default function RegisterScreen() {
 
 const styles = StyleSheet.create({
   header: {
-    fontSize: 32,
+    fontSize: width * 0.07, // Adjusted font size based on screen width
     fontWeight: "bold",
     paddingBottom: 5,
     top: 5,
   },
   text: {
-    fontSize: 18,
+    fontSize: width * 0.035,
   },
   container: {
     flex: 1,
   },
   staticSection: {
-    height: Platform.OS === "android" ? 65 : 95,
+    height: Platform.OS === "android" ? height * 0.07 : height * 0.1,
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
@@ -166,55 +166,70 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-   
   },
-  feild: {
+  textSection: {
+    marginLeft: width * 0.05,
+  },
+  imgContainer: {
+    alignItems: "center",
+  },
+  img: {
+    
+    borderRadius: 11,
+    aspectRatio: 0.99,
+    height: height * 0.2,
+    marginTop: Platform.OS === "ios" ? height * 0.04 : height * 0.02,
+    marginBottom: Platform.OS === "ios" ? height * 0.04 : height * 0.02,
+  },
+  field: {
     width: "100%",
-    top: Platform.OS === "ios" ? 15 : 15,
+    top: height * 0.015,
     alignItems: "center",
   },
   button: {
-    marginTop: 10,
+    marginTop: height * 0.02,
   },
-
   loginTextContainer: {
     flexDirection: "row",
-    top: Platform.OS === "ios" ? 40 : 40,
-    marginLeft: 20,
+    marginLeft: width * 0.05,
+    // Center the text horizontally
+    marginTop: height * 0.04, // Adjusted margin for better positioning
+    marginBottom: height * 0.02, // Added margin at the bottom
   },
+  
   signupText: {
     color: "#000",
-    fontSize: 16,
+    fontSize: width * 0.035,
   },
+  
   signupLink: {
     color: "#007BFF",
-    marginLeft: 5,
+    marginLeft: width * 0.02,
     textDecorationLine: "none",
   },
   privacyTermsContainer: {
-    top: Platform.OS === "ios" ? 180 : 110,
+    flex: 1,
+    justifyContent: "flex-end",
     alignItems: "center",
+    marginBottom:Platform.OS === "ios" ? height * 0.02 : height * 0.02,
+  },
+  
+  privacyText: {
+    fontSize: width * 0.035,
+    textAlign: "center",
   },
   linksContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 5,
+    marginTop: height * 0.005,
   },
   link: {
     color: "#007BFF",
     textDecorationLine: "none",
-    fontSize: 14,
+    fontSize: width * 0.035,
   },
-  imgContainer: {
-    alignItems: "center",
-    
-  },
-  img: {
-    width: 120,
-    borderRadius: 11,
-    height: 120,
-    marginTop: Platform.OS === "ios" ? 30 : 20,
-    marginBottom: Platform.OS === "ios" ? 30 : 20,
+  andText: {
+    fontSize: width * 0.035,
   },
 });

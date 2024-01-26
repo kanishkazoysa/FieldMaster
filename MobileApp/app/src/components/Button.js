@@ -18,12 +18,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 11,
     width: windowWidth * 0.9, // Adjusted to 80% of the screen width
-    height: 40,
-    marginBottom: 15,
+    height: Dimensions.get('window').height * 0.05, // Adjusted to 5% of the screen height
+    marginBottom: Dimensions.get('window').height * 0.015, // Adjusted to 1.5% of the screen height
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: windowWidth * 0.04, // Adjusted font size based on screen width
     fontWeight: 'bold',
     textAlign: 'center',
   },

@@ -1,4 +1,3 @@
-// Import necessary modules and components
 import React, { useState } from "react";
 import {
   View,
@@ -10,61 +9,52 @@ import {
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
+  Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import BackButton from "../components/BackButton";
 
-// Define the LoginScreen component
+const { width, height } = Dimensions.get("window");
+
 export default function LoginScreen() {
-  // State variables for username and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // Navigation hook
   const navigation = useNavigation();
 
-  // Function to handle login
   const handleLogin = () => {
-    console.log("Logging in...", { username, password });
+    console.log("Logging in...", { email, password });
     navigation.navigate("Welcome");
   };
 
-  // Function to handle forgot password
   const handleForgotPassword = () => {
     console.log("Forgot Password");
     navigation.navigate("Forgot");
   };
 
-  // Function to handle sign up
   const handleSignUp = () => {
     navigation.navigate("Register");
   };
 
   return (
-    // Main container
     <View style={styles.container}>
-      {/* Static section */}
       <View style={styles.staticSection}>
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
         <BackButton navigation={navigation} />
       </View>
 
-      {/* Scrollable section with KeyboardAvoidingView */}
       <KeyboardAvoidingView
         style={styles.scrollSection}
-        behavior={Platform.OS === "ios" ? "padding" : "margin"}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         enabled
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          {/* Welcome text */}
-          <View style={{ marginLeft: 20 }}>
+          <View style={styles.textSection}>
             <Text style={styles.welcomeText}>Welcome </Text>
             <Text style={styles.signInText}>Sign in to continue</Text>
           </View>
 
-          {/* Image */}
           <View style={styles.imgContainer}>
             <Image
               source={require("../images/login_img.png")}
@@ -72,7 +62,6 @@ export default function LoginScreen() {
             />
           </View>
 
-          {/* Input fields, button, and other components */}
           <View style={styles.field}>
             <InputField
               placeholder="Email"
@@ -96,7 +85,6 @@ export default function LoginScreen() {
             </TouchableOpacity>
           </View>
 
-          {/* Sign up text */}
           <View style={styles.signupTextContainer}>
             <Text style={styles.signupText}>Don’t have an account? </Text>
             <TouchableOpacity onPress={handleSignUp}>
@@ -111,23 +99,21 @@ export default function LoginScreen() {
   );
 }
 
-// Stylesheet
 const styles = StyleSheet.create({
-  // Define styles for various components
   welcomeText: {
-    fontSize: 32,
+    fontSize: width * 0.07, // Adjusted font size based on screen width
     fontWeight: "bold",
     paddingBottom: 5,
     top: 5,
   },
   signInText: {
-    fontSize: 16,
+    fontSize: width * 0.035, // Adjusted font size based on screen width
   },
   container: {
     flex: 1,
   },
   staticSection: {
-    height: Platform.OS === "android" ? 65 : 95,
+    height: Platform.OS === "android" ? height * 0.07 : height * 0.1, // Adjusted height based on screen height
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
@@ -138,41 +124,43 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
+  textSection: {
+    marginLeft: width * 0.05, // Adjusted margin based on screen width
+  },
+  imgContainer: {
+    alignItems: "center",
+  },
+  img: {
+    width: width * 0.9,
+    borderRadius: 11,
+    height: height * 0.33,
+    marginTop: Platform.OS === "ios" ? height * 0.03 : height * 0.02,
+    marginBottom: Platform.OS === "ios" ? height * 0.02 : height * 0.02,
+  },
   field: {
     width: "100%",
-    marginBottom: 20,
-    top: 20,
+    marginBottom: height * 0.03, // Adjusted margin based on screen height
+    top: height * 0.03, // Adjusted top based on screen height
     alignItems: "center",
   },
   forgotPasswordText: {
     color: "#007BFF",
-    fontSize: 16,
+    fontSize: width * 0.035, // Adjusted font size based on screen width
     textDecorationLine: "none",
     textAlign: "right",
   },
   signupTextContainer: {
     flexDirection: "row",
-    top: Platform.OS === "ios" ? 110 : 50,
-    marginLeft: 20,
+    top: Platform.OS === "ios" ? height * 0.11 : height * 0.09, // Adjusted top based on screen height
+    marginLeft: width * 0.05, // Adjusted margin based on screen width
   },
   signupText: {
     color: "#000",
-    fontSize: 16,
+    fontSize: width * 0.035, // Adjusted font size based on screen width
   },
   signupLink: {
     color: "#007BFF",
-    marginLeft: 5,
+    marginLeft: width * 0.02, // Adjusted margin based on screen width
     textDecorationLine: "none",
-  },
-  imgContainer: {
-    alignItems: "center",
-    
-  },
-  img: {
-    width: "90%",
-    borderRadius: 11,
-    height: 240,
-    marginTop: Platform.OS === "ios" ? 30 : 20,
-    marginBottom: Platform.OS === "ios" ? 30 : 20,
   },
 });

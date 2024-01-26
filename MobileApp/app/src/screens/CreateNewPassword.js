@@ -3,19 +3,22 @@ import {
   View,
   Text,
   StatusBar,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Platform,
+  Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
 import { Alert } from "react-native";
 import BackButton from "../components/BackButton";
 
+const { width, height } = Dimensions.get("window");
+
 export default function ForgotPassword() {
-  const [NewPassword, setNewPassword] = useState("");
-  const [ConfirmPassword, setConfirmPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const navigation = useNavigation();
 
   const handleChangePassword = () => {
@@ -41,7 +44,6 @@ export default function ForgotPassword() {
   return (
     <View style={styles.container}>
       {/* Static section at the top */}
-
       <View style={styles.staticSection}>
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
         <BackButton navigation={navigation} />
@@ -54,15 +56,15 @@ export default function ForgotPassword() {
           <Text style={styles.text}>Password must be at least 8 digits</Text>
         </View>
 
-        <View style={styles.feild}>
+        <View style={styles.field}>
           <InputField
             placeholder="New Password"
-            value={NewPassword}
+            value={newPassword}
             onChangeText={(text) => setNewPassword(text)}
           />
           <InputField
             placeholder="Confirm Password"
-            value={ConfirmPassword}
+            value={confirmPassword}
             onChangeText={(text) => setConfirmPassword(text)}
           />
         </View>
@@ -77,23 +79,24 @@ export default function ForgotPassword() {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    width: "100%",
-    left: 20,
+    width: "90%",
+    marginLeft: 5,
+    marginTop: 1,
   },
   header: {
-    fontSize: 20,
+    fontSize: width * 0.06,
     fontWeight: "bold",
-    top: 10,
+    marginTop: height * 0.01,
   },
   text: {
-    fontSize: 16,
-    top: 20,
+    fontSize: width * 0.04,
+    marginTop: height * 0.01,
   },
   container: {
     flex: 1,
   },
   staticSection: {
-    height: Platform.OS === "android" ? 65 : 95,
+    height: Platform.OS === "android" ? height * 0.07 : height * 0.1,
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
@@ -102,10 +105,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#f0f2f5",
   },
-  feild: {
-    top: 60,
+  field: {
+    marginTop: height * 0.02,
   },
   button: {
-    top: 80,
+    marginTop: height * 0.02,
   },
 });

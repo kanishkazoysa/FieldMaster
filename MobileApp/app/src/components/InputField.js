@@ -1,8 +1,10 @@
 // InputField.js
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TextInput, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+
+const { width } = Dimensions.get("window");
 
 const InputField = ({ placeholder, value, onChangeText, secureTextEntry, icon, showEyeIcon, onPressEye }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -36,20 +38,20 @@ const InputField = ({ placeholder, value, onChangeText, secureTextEntry, icon, s
 
 const styles = StyleSheet.create({
   inputContainer: {
-    height: 40,
+    height: width * 0.1, // Adjusted to 10% of the screen width
     width: "90%",
     backgroundColor: "#fff",
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: width * 0.05, // Adjusted to 3% of the screen width
     borderRadius: 11,
     position: "relative",
   },
   input: {
-    height: 40,
+    height: width * 0.1, // Adjusted to 10% of the screen width
     flex: 1,
     paddingLeft: 10,
-    fontSize: 16,
+    fontSize: width * 0.04, // Adjusted font size based on screen width
   },
   icon: {
     marginLeft: 10,
@@ -59,12 +61,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     bottom: 0,
-    right: 5,
+    right: width * 0.01, // Adjusted to 1% of the screen width
     justifyContent: "center",
     alignItems: "center",
   },
   touchableArea: {
-    padding: 10, // Increase padding here
+    padding: width * 0.02, // Adjusted to 2% of the screen width
   },
   eyeIcon: {
     color: "#65676b",

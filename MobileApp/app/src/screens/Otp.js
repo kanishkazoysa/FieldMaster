@@ -7,10 +7,13 @@ import {
   StyleSheet,
   ScrollView,
   Platform,
+  Dimensions,
 } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Button, InputField } from "../components";
 import BackButton from "../components/BackButton";
+
+const { width, height } = Dimensions.get("window");
 
 const Otp = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -56,18 +59,17 @@ const Otp = () => {
 
   return (
     <View style={styles.container}>
-    <View style={styles.staticSection}>
-    <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-    <BackButton navigation={navigation} />
-  </View>
-
+      <View style={styles.staticSection}>
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <BackButton navigation={navigation} />
+      </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>OTP</Text>
-        <Text style={styles.text}>
-          Please enter the code that was sent to your email
-        </Text>
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>OTP</Text>
+          <Text style={styles.text}>
+            Please enter the code that was sent to your email
+          </Text>
         </View>
 
         <View style={styles.field}>
@@ -103,22 +105,23 @@ const Otp = () => {
 const styles = StyleSheet.create({
   headerContainer: {
     width: "90%",
-    left: 5,
-   },
+    marginLeft: 5,
+    marginTop: 1,
+  },
   header: {
-    fontSize: 20,
+    fontSize: width * 0.06,
     fontWeight: "bold",
-    top: 10,
+    marginTop: height * 0.01,
   },
   text: {
-    fontSize: 16,
-    top: 20,
+    fontSize: width * 0.04,
+    marginTop: height * 0.01,
   },
   container: {
     flex: 1,
   },
-   staticSection: {
-    height: Platform.OS === "android" ? 65 : 95,
+  staticSection: {
+    height: Platform.OS === "android" ? height * 0.07 : height * 0.1,
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
@@ -129,21 +132,21 @@ const styles = StyleSheet.create({
   },
   field: {
     flexDirection: "row",
-    top: 60,
+    marginTop: height * 0.02,
   },
   otpInput: {
     borderWidth: 1,
     borderColor: "#C4C4C4",
     borderRadius: 11,
-    width: 45,
-    height: 45,
-    margin: Platform.OS === "android" ? 5 : 8,
+    width: width * 0.1,
+    height: width * 0.1,
+    margin: Platform.OS === "android" ? width * 0.02 : width * 0.02,
     backgroundColor: "#fff",
     textAlign: "center",
-    fontSize: 18,
+    fontSize: width * 0.06,
   },
   button: {
-    top: 100,
+    marginTop: height * 0.03,
   },
 });
 
