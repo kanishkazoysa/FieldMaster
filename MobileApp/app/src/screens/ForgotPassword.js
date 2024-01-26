@@ -11,8 +11,12 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
 import BackButton from "../components/BackButton";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from "react-native-responsive-dimensions";
 
-const { width, height } = Dimensions.get("window");
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -58,23 +62,21 @@ export default function ForgotPassword() {
 const styles = StyleSheet.create({
   headerContainer: {
     width: "90%",
-    marginLeft: 5,
-    marginTop: 1,
   },
   header: {
-    fontSize: width * 0.06,
+    fontSize: responsiveFontSize(3),
     fontWeight: "bold",
-    marginTop: height * 0.01,
+    marginTop: "3%",
   },
   text: {
-    fontSize: width * 0.04,
-    marginTop: height * 0.01,
+    fontSize: responsiveFontSize(2),
+    marginTop: "1%",
   },
   container: {
     flex: 1,
   },
   staticSection: {
-    height: Platform.OS === "android" ? height * 0.07 : height * 0.1,
+    height: Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
@@ -84,9 +86,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f2f5",
   },
   field: {
-    marginTop: height * 0.02,
+    marginTop: responsiveHeight(3),
   },
   button: {
-    marginTop: height * 0.02,
+    marginTop: responsiveHeight(1),
   },
 });

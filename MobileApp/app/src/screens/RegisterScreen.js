@@ -15,7 +15,12 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
 import BackButton from "../components/BackButton";
-import { faEnvelope, faLock, faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
 
 const { width, height } = Dimensions.get("window");
 
@@ -71,69 +76,73 @@ export default function RegisterScreen() {
 
       <KeyboardAvoidingView
         style={styles.scrollSection}
-        behavior={Platform.OS === "ios" ? "padding" : "margin"}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         enabled
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.textSection}>
-            <Text style={styles.header}>Hi!</Text>
-            <Text style={styles.text}>Create a new account</Text>
-          </View>
-          <View style={styles.imgContainer}>
-            <Image
-              source={require("../images/register_img.png")}
-              style={styles.img}
-            />
-          </View>
-
-          <View style={styles.field}>
-            <InputField
-              placeholder="Email"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              icon={faEnvelope}
-            />
-            <InputField
-              placeholder="Password"
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              secureTextEntry={!showPassword}
-              icon={faLock}
-              showEyeIcon={true}
-              onPressEye={() => setShowPassword(!showPassword)}
-            />
-
-            <InputField
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChangeText={(text) => setConfirmPassword(text)}
-              secureTextEntry={!showPassword}
-              icon={faLock}
-            />
-            <View style={styles.button}>
-              <Button title="SIGN UP" onPress={handleSignUp} />
+          <View style={styles.scrollContent}>
+            <View style={styles.textSection}>
+              <Text style={styles.header}>Hi!</Text>
+              <Text style={styles.text}>Create a new account</Text>
             </View>
-          </View>
+            <View style={styles.imgContainer}>
+              <Image
+                source={require("../images/register_img.png")}
+                style={styles.img}
+              />
+            </View>
 
-          <View style={styles.loginTextContainer}>
-            <Text style={styles.signupText}>Have an account?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={[styles.signupText, styles.signupLink]}>Log in</Text>
-            </TouchableOpacity>
-          </View>
+            <View style={styles.field}>
+              <InputField
+                placeholder="Email"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                icon={faEnvelope}
+              />
+              <InputField
+                placeholder="Password"
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                secureTextEntry={!showPassword}
+                icon={faLock}
+                showEyeIcon={true}
+                onPressEye={() => setShowPassword(!showPassword)}
+              />
 
-          <View style={styles.privacyTermsContainer}>
-            <Text style={styles.privacyText}>
-              By clicking "Sign up" you agree to our
-            </Text>
-            <View style={styles.linksContainer}>
-              <TouchableOpacity onPress={() => {}}>
-                <Text style={styles.link}>Terms of Service</Text>
+              <InputField
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChangeText={(text) => setConfirmPassword(text)}
+                secureTextEntry={!showPassword}
+                icon={faLock}
+              />
+              <View style={styles.button}>
+                <Button title="SIGN UP" onPress={handleSignUp} />
+              </View>
+            </View>
+
+            <View style={styles.loginTextContainer}>
+              <Text style={styles.signupText}>Have an account?</Text>
+              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                <Text style={[styles.signupText, styles.signupLink]}>
+                  Log in
+                </Text>
               </TouchableOpacity>
-              <Text style={styles.andText}> and </Text>
-              <TouchableOpacity onPress={() => {}}>
-                <Text style={styles.link}>Privacy Policy</Text>
-              </TouchableOpacity>
+            </View>
+
+            <View style={styles.privacyTermsContainer}>
+              <Text style={styles.privacyText}>
+                By clicking "Sign up" you agree to our
+              </Text>
+              <View style={styles.linksContainer}>
+                <TouchableOpacity onPress={() => {}}>
+                  <Text style={styles.link}>Terms of Service</Text>
+                </TouchableOpacity>
+                <Text style={styles.andText}> and </Text>
+                <TouchableOpacity onPress={() => {}}>
+                  <Text style={styles.link}>Privacy Policy</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -144,19 +153,20 @@ export default function RegisterScreen() {
 
 const styles = StyleSheet.create({
   header: {
-    fontSize: width * 0.07, // Adjusted font size based on screen width
+    fontSize: responsiveFontSize(5),
     fontWeight: "bold",
-    paddingBottom: 5,
-    top: 5,
+    top: responsiveHeight(0.1),
   },
   text: {
-    fontSize: width * 0.035,
+    fontSize: responsiveFontSize(2.5),
+    marginTop: responsiveHeight(-1),
   },
   container: {
     flex: 1,
   },
   staticSection: {
-    height: Platform.OS === "android" ? height * 0.07 : height * 0.1,
+    height:
+      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
@@ -168,52 +178,51 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   textSection: {
-    marginLeft: width * 0.05,
+    marginLeft: responsiveWidth(5),
   },
   imgContainer: {
     alignItems: "center",
   },
   img: {
-    
+    resizeMode: "contain",
     borderRadius: 11,
-    aspectRatio: 0.99,
-    height: height * 0.2,
-    marginTop: Platform.OS === "ios" ? height * 0.04 : height * 0.02,
-    marginBottom: Platform.OS === "ios" ? height * 0.04 : height * 0.02,
+    width: responsiveWidth(30),
+    height: responsiveHeight(20),
+    marginTop: responsiveHeight(1),
   },
   field: {
-    width: "100%",
-    top: height * 0.015,
+    width: responsiveWidth(100),
+    top: responsiveHeight(1.2),
     alignItems: "center",
   },
   button: {
-    marginTop: height * 0.02,
+    marginTop: responsiveHeight(2),
   },
   loginTextContainer: {
+    flex: 1,
     flexDirection: "row",
-    marginLeft: width * 0.05,
-    // Center the text horizontally
-    marginTop: height * 0.04, // Adjusted margin for better positioning
-    marginBottom: height * 0.02, // Added margin at the bottom
+    marginLeft: responsiveWidth(6),
+    top: responsiveHeight(10),
   },
-  
+
   signupText: {
     color: "#000",
-    fontSize: width * 0.035,
+    fontSize: responsiveFontSize(2),
   },
-  
+
   signupLink: {
     color: "#007BFF",
-    marginLeft: width * 0.02,
+    marginLeft: 7,
     textDecorationLine: "none",
   },
   privacyTermsContainer: {
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
-    marginBottom:Platform.OS === "ios" ? height * 0.02 : height * 0.02,
+    marginBottom:
+      Platform.OS === "android" ? responsiveHeight(1) : responsiveHeight(2.5),
   },
-  
+
   privacyText: {
     fontSize: width * 0.035,
     textAlign: "center",

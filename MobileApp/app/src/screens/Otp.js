@@ -7,13 +7,17 @@ import {
   StyleSheet,
   ScrollView,
   Platform,
-  Dimensions,
 } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-import { Button, InputField } from "../components";
+import { Button } from "../components";
 import BackButton from "../components/BackButton";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from "react-native-responsive-dimensions";
 
-const { width, height } = Dimensions.get("window");
+
 
 const Otp = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -105,23 +109,21 @@ const Otp = () => {
 const styles = StyleSheet.create({
   headerContainer: {
     width: "90%",
-    marginLeft: 5,
-    marginTop: 1,
   },
   header: {
-    fontSize: width * 0.06,
+    fontSize: responsiveFontSize(3),
     fontWeight: "bold",
-    marginTop: height * 0.01,
+    marginTop: "3%",
   },
   text: {
-    fontSize: width * 0.04,
-    marginTop: height * 0.01,
+    fontSize: responsiveFontSize(2),
+    marginTop: "1%",
   },
   container: {
     flex: 1,
   },
   staticSection: {
-    height: Platform.OS === "android" ? height * 0.07 : height * 0.1,
+    height: Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10),
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
@@ -132,21 +134,21 @@ const styles = StyleSheet.create({
   },
   field: {
     flexDirection: "row",
-    marginTop: height * 0.02,
+    marginTop: responsiveHeight(3),
   },
   otpInput: {
     borderWidth: 1,
     borderColor: "#C4C4C4",
     borderRadius: 11,
-    width: width * 0.1,
-    height: width * 0.1,
-    margin: Platform.OS === "android" ? width * 0.02 : width * 0.02,
+    width: responsiveWidth(13),
+    height: responsiveHeight(7),
+    margin: Platform.OS === "android" ? responsiveHeight(0.5) :responsiveHeight(0.5),
     backgroundColor: "#fff",
     textAlign: "center",
-    fontSize: width * 0.06,
+    fontSize: responsiveFontSize(2.5),
   },
   button: {
-    marginTop: height * 0.03,
+    marginTop: responsiveHeight(4),
   },
 });
 

@@ -84,12 +84,14 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   img1: {
+    resizeMode: "contain",
     position: "absolute",
     top: "49%",
     left: "50%",
   },
 
   img2: {
+    resizeMode: "contain",
     position: "absolute",
     top: "40%",
     width: "100%",

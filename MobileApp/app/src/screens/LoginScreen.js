@@ -15,8 +15,11 @@ import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import BackButton from "../components/BackButton";
-
-const { width, height } = Dimensions.get("window");
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -101,19 +104,20 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   welcomeText: {
-    fontSize: width * 0.07, // Adjusted font size based on screen width
+    fontSize: responsiveFontSize(5),
     fontWeight: "bold",
-    paddingBottom: 5,
-    top: 5,
+    top: responsiveHeight(0.1),
   },
   signInText: {
-    fontSize: width * 0.035, // Adjusted font size based on screen width
+    fontSize: responsiveFontSize(2.5),
+    marginTop: responsiveHeight(-1),
   },
   container: {
     flex: 1,
   },
   staticSection: {
-    height: Platform.OS === "android" ? height * 0.07 : height * 0.1, // Adjusted height based on screen height
+    height:
+      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
@@ -125,42 +129,40 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   textSection: {
-    marginLeft: width * 0.05, // Adjusted margin based on screen width
+    marginLeft: responsiveWidth(5),
   },
   imgContainer: {
     alignItems: "center",
   },
   img: {
-    width: width * 0.9,
+    width: responsiveWidth(90),
     borderRadius: 11,
-    height: height * 0.33,
-    marginTop: Platform.OS === "ios" ? height * 0.03 : height * 0.02,
-    marginBottom: Platform.OS === "ios" ? height * 0.02 : height * 0.02,
+    height: responsiveHeight(35),
+    marginTop: responsiveHeight(2),
   },
   field: {
     width: "100%",
-    marginBottom: height * 0.03, // Adjusted margin based on screen height
-    top: height * 0.03, // Adjusted top based on screen height
+    top: responsiveHeight(3),
     alignItems: "center",
   },
   forgotPasswordText: {
     color: "#007BFF",
-    fontSize: width * 0.035, // Adjusted font size based on screen width
+    fontSize: responsiveFontSize(2),
     textDecorationLine: "none",
     textAlign: "right",
   },
   signupTextContainer: {
     flexDirection: "row",
-    top: Platform.OS === "ios" ? height * 0.11 : height * 0.09, // Adjusted top based on screen height
-    marginLeft: width * 0.05, // Adjusted margin based on screen width
+    marginLeft: responsiveWidth(6),
+    top: responsiveHeight(10),
   },
   signupText: {
     color: "#000",
-    fontSize: width * 0.035, // Adjusted font size based on screen width
+    fontSize: responsiveFontSize(2),
   },
   signupLink: {
     color: "#007BFF",
-    marginLeft: width * 0.02, // Adjusted margin based on screen width
+    marginLeft: responsiveFontSize(0.5),
     textDecorationLine: "none",
   },
 });
