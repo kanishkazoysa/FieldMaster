@@ -29,6 +29,7 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigation = useNavigation();
 
   const handleSignUp = async () => {
@@ -55,7 +56,14 @@ export default function RegisterScreen() {
       );
 
       if (response.ok) {
-        Alert.alert("Success", "User registered successfully");
+        Alert.alert("Success", "User registered successfully",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.navigate("Welcome"),
+          },
+        ],
+        { cancelable: false });
         navigation.navigate("Login");
       } else {
         const data = await response.json();
@@ -110,11 +118,13 @@ export default function RegisterScreen() {
               />
 
               <InputField
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChangeText={(text) => setConfirmPassword(text)}
-                secureTextEntry={!showPassword}
-                icon={faLock}
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChangeText={(text) => setConfirmPassword(text)}
+              secureTextEntry={!showConfirmPassword}
+              icon={faLock}
+              showEyeIcon={true}
+              onPressEye={() => setShowConfirmPassword(!showConfirmPassword)}
               />
               <View style={styles.button}>
                 <Button title="SIGN UP" onPress={handleSignUp} />
