@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useState ,useCallback } from "react";
 import {
   View,
   Text,
   Platform,
   StatusBar,
   Image,
+  Alert,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
   Dimensions,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation ,useFocusEffect } from "@react-navigation/native";
 import { Button, InputField } from "../components";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import BackButton from "../components/BackButton";
@@ -26,9 +27,41 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    console.log("Logging in...", { email, password });
-    navigation.navigate("Welcome");
+  const handleLogin = async () => {
+    try {
+      if (!email || !password) {
+        Alert.alert("Please fill in all fields");
+        return;
+      }
+  
+      const response = await fetch("http://192.168.1.140:5000/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      if (response.ok) {
+        Alert.alert(
+          "Success",
+          "Login successfully",
+          [
+            {
+              text: "OK",
+              onPress: () => navigation.navigate("Welcome"),
+            },
+          ],
+          { cancelable: false }
+        );
+      } else {
+        const data = await response.json();
+        Alert.alert("Error", data.error || "Something went wrong");
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      Alert.alert("Error", "Something went wrong");
+    }
   };
 
   const handleForgotPassword = () => {
@@ -39,6 +72,12 @@ export default function LoginScreen() {
   const handleSignUp = () => {
     navigation.navigate("Register");
   };
+  useFocusEffect(
+    useCallback(() => {
+      setEmail("");
+      setPassword("");
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -49,7 +88,7 @@ export default function LoginScreen() {
 
       <KeyboardAvoidingView
         style={styles.scrollSection}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "ios" ? "padding" : "margin"}
         enabled
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
