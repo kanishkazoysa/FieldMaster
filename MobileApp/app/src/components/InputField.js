@@ -38,13 +38,12 @@ const InputField = ({ placeholder, value, onChangeText, secureTextEntry, icon, s
 
 const styles = StyleSheet.create({
   inputContainer: {
-    height: width * 0.1, // Adjusted to 10% of the screen width
+    height: width * 0.09, // Adjusted to 10% of the screen width
     width: "90%",
-    backgroundColor: "#fff",
+   borderBottomWidth: 1,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: width * 0.05, // Adjusted to 3% of the screen width
-    borderRadius: 11,
+    marginBottom: width * 0.05, // Adjusted to 3% of the screen widt
     position: "relative",
   },
   input: {

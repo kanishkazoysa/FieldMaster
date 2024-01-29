@@ -21,10 +21,12 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
+import { Icon } from "react-native-paper";
 
 const { width, height } = Dimensions.get("window");
 
 export default function RegisterScreen() {
+  const [userName, setUserName] = useState(""); // [variable, function
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -56,14 +58,17 @@ export default function RegisterScreen() {
       );
 
       if (response.ok) {
-        Alert.alert("Success", "User registered successfully",
-        [
-          {
-            text: "OK",
-            onPress: () => navigation.navigate("Welcome"),
-          },
-        ],
-        { cancelable: false });
+        Alert.alert(
+          "Success",
+          "User registered successfully",
+          [
+            {
+              text: "OK",
+              onPress: () => navigation.navigate("Welcome"),
+            },
+          ],
+          { cancelable: false }
+        );
         navigation.navigate("Login");
       } else {
         const data = await response.json();
@@ -84,7 +89,7 @@ export default function RegisterScreen() {
 
       <KeyboardAvoidingView
         style={styles.scrollSection}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "ios" ? "padding" : "margin"}
         enabled
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -93,39 +98,48 @@ export default function RegisterScreen() {
               <Text style={styles.header}>Hi!</Text>
               <Text style={styles.text}>Create a new account</Text>
             </View>
-            <View style={styles.imgContainer}>
-              <Image
-                source={require("../images/register_img.png")}
-                style={styles.img}
-              />
-            </View>
 
             <View style={styles.field}>
-              <InputField
-                placeholder="Email"
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                icon={faEnvelope}
-              />
-              <InputField
-                placeholder="Password"
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                secureTextEntry={!showPassword}
-                icon={faLock}
-                showEyeIcon={true}
-                onPressEye={() => setShowPassword(!showPassword)}
-              />
+              <View>
+                <Text style={styles.feildText}>User Name</Text>
+                <InputField
+                  value={userName}
+                  onChangeText={(text) => setUserName(text)}
+                />
+              </View>
 
-              <InputField
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChangeText={(text) => setConfirmPassword(text)}
-              secureTextEntry={!showConfirmPassword}
-              icon={faLock}
-              showEyeIcon={true}
-              onPressEye={() => setShowConfirmPassword(!showConfirmPassword)}
-              />
+              <View>
+                <Text style={styles.feildText}>Email</Text>
+                <InputField
+                  value={email}
+                  onChangeText={(text) => setEmail(text)}
+                />
+              </View>
+
+              <View>
+                <Text style={styles.feildText}>Password</Text>
+                <InputField
+                  value={password}
+                  onChangeText={(text) => setPassword(text)}
+                  secureTextEntry={!showPassword}
+                  showEyeIcon={true}
+                  onPressEye={() => setShowPassword(!showPassword)}
+                />
+              </View>
+
+              <View>
+                <Text style={styles.feildText}>Confirm Password</Text>
+                <InputField
+                  value={confirmPassword}
+                  onChangeText={(text) => setConfirmPassword(text)}
+                  secureTextEntry={!showConfirmPassword}
+                  showEyeIcon={true}
+                  onPressEye={() =>
+                    setShowConfirmPassword(!showConfirmPassword)
+                  }
+                />
+              </View>
+
               <View style={styles.button}>
                 <Button title="SIGN UP" onPress={handleSignUp} />
               </View>
@@ -139,7 +153,7 @@ export default function RegisterScreen() {
                 </Text>
               </TouchableOpacity>
             </View>
-
+            
             <View style={styles.privacyTermsContainer}>
               <Text style={styles.privacyText}>
                 By clicking "Sign up" you agree to our
@@ -168,8 +182,14 @@ const styles = StyleSheet.create({
     top: responsiveHeight(0.1),
   },
   text: {
-    fontSize: responsiveFontSize(2.5),
+    fontSize: responsiveFontSize(2),
     marginTop: responsiveHeight(-1),
+  },
+  feildText: {
+    fontSize: responsiveFontSize(2),
+    marginTop: responsiveHeight(1),
+    paddingBottom: responsiveHeight(0.1),
+    
   },
   container: {
     flex: 1,
@@ -190,19 +210,9 @@ const styles = StyleSheet.create({
   textSection: {
     marginLeft: responsiveWidth(5),
   },
-  imgContainer: {
-    alignItems: "center",
-  },
-  img: {
-    resizeMode: "contain",
-    borderRadius: 11,
-    width: responsiveWidth(30),
-    height: responsiveHeight(20),
-    marginTop: responsiveHeight(1),
-  },
   field: {
     width: responsiveWidth(100),
-    top: responsiveHeight(1.2),
+    top: responsiveHeight(5),
     alignItems: "center",
   },
   button: {
