@@ -196,13 +196,13 @@ const styles = StyleSheet.create({
   },
   staticSection: {
     height:
-      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
+    Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
   scrollSection: {
     flex: 1,
-    backgroundColor: "#f0f2f5",
+    backgroundColor: "#fff",
   },
   scrollContent: {
     flexGrow: 1,
@@ -214,10 +214,12 @@ const styles = StyleSheet.create({
     width: responsiveWidth(100),
     top: responsiveHeight(5),
     alignItems: "center",
-  },
+  }, 
+  
   button: {
     marginTop: responsiveHeight(2),
   },
+
   loginTextContainer: {
     flex: 1,
     flexDirection: "row",
@@ -235,6 +237,7 @@ const styles = StyleSheet.create({
     marginLeft: 7,
     textDecorationLine: "none",
   },
+
   privacyTermsContainer: {
     flex: 1,
     justifyContent: "flex-end",
