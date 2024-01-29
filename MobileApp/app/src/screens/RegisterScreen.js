@@ -15,7 +15,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
 import BackButton from "../components/BackButton";
-import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faLock ,faUser } from "@fortawesome/free-solid-svg-icons";
 import {
   responsiveHeight,
   responsiveWidth,
@@ -103,6 +103,7 @@ export default function RegisterScreen() {
               <View>
                 <Text style={styles.feildText}>User Name</Text>
                 <InputField
+               
                   value={userName}
                   onChangeText={(text) => setUserName(text)}
                 />
@@ -111,6 +112,7 @@ export default function RegisterScreen() {
               <View>
                 <Text style={styles.feildText}>Email</Text>
                 <InputField
+               
                   value={email}
                   onChangeText={(text) => setEmail(text)}
                 />
@@ -119,6 +121,7 @@ export default function RegisterScreen() {
               <View>
                 <Text style={styles.feildText}>Password</Text>
                 <InputField
+                  
                   value={password}
                   onChangeText={(text) => setPassword(text)}
                   secureTextEntry={!showPassword}
@@ -130,6 +133,7 @@ export default function RegisterScreen() {
               <View>
                 <Text style={styles.feildText}>Confirm Password</Text>
                 <InputField
+                 
                   value={confirmPassword}
                   onChangeText={(text) => setConfirmPassword(text)}
                   secureTextEntry={!showConfirmPassword}
@@ -190,6 +194,7 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(1),
     paddingBottom: responsiveHeight(0.1),
     
+    
   },
   container: {
     flex: 1,
@@ -212,19 +217,19 @@ const styles = StyleSheet.create({
   },
   field: {
     width: responsiveWidth(100),
-    top: responsiveHeight(5),
+    top: responsiveHeight(3),
     alignItems: "center",
   }, 
   
   button: {
-    marginTop: responsiveHeight(2),
+    marginTop: responsiveHeight(3),
   },
 
   loginTextContainer: {
-    flex: 1,
-    flexDirection: "row",
-    marginLeft: responsiveWidth(6),
-    top: responsiveHeight(10),
+    flex: 1,  
+    flexDirection: "row", 
+    marginLeft: responsiveWidth(8),
+    top: responsiveHeight(5),
   },
 
   signupText: {

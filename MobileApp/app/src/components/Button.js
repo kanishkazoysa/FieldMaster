@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#007BFF',
     justifyContent: 'center',
     borderRadius: 11,
-    width: windowWidth * 0.9, // Adjusted to 80% of the screen width
+    width: windowWidth * 0.85, // Adjusted to 80% of the screen width
     height: Dimensions.get('window').height * 0.05, // Adjusted to 5% of the screen height
     marginBottom: Dimensions.get('window').height * 0.02, // Adjusted to 1.5% of the screen height
   },

@@ -38,9 +38,11 @@ const InputField = ({ placeholder, value, onChangeText, secureTextEntry, icon, s
 
 const styles = StyleSheet.create({
   inputContainer: {
-    height: width * 0.09, // Adjusted to 10% of the screen width
-    width: width * 0.85, // Adjusted to 90% of the screen width
-   borderBottomWidth: 1,
+    height: width * 0.1, // Adjusted to 10% of the screen width
+   width: width * 0.85, // Adjusted to 80% of the screen width
+   borderWidth: 1,
+   borderColor: "#CED0D4",
+   borderRadius: 9,
     flexDirection: "row",
     alignItems: "center",
     marginBottom: width * 0.02, // Adjusted to 3% of the screen widt
@@ -53,8 +55,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.04, // Adjusted font size based on screen width
   },
   icon: {
-    marginLeft: 10,
-    color: "#65676b",
+color: "#65676b",
   },
   iconContainer: {
     position: "absolute",
