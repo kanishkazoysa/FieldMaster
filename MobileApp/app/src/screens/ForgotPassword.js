@@ -5,8 +5,8 @@ import {
   StatusBar,
   Platform,
   StyleSheet,
-  ScrollView,
-  Dimensions,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
@@ -14,9 +14,8 @@ import BackButton from "../components/BackButton";
 import {
   responsiveHeight,
   responsiveWidth,
-  responsiveFontSize
+  responsiveFontSize,
 } from "react-native-responsive-dimensions";
-
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -26,16 +25,20 @@ export default function ForgotPassword() {
     navigation.navigate("Otp");
   };
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
+
   return (
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
     <View style={styles.container}>
-      {/* Static section at the top */}
       <View style={styles.staticSection}>
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
         <BackButton navigation={navigation} />
       </View>
 
-      {/* Scrollable content */}
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <View style={styles.Content}>
         <View style={styles.headerContainer}>
           <Text style={styles.header}>Forgot Password</Text>
           <Text style={styles.text}>
@@ -54,8 +57,9 @@ export default function ForgotPassword() {
         <View style={styles.button}>
           <Button title="Continue" onPress={handleForgotPassword} />
         </View>
-      </ScrollView>
+      </View>
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -76,14 +80,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   staticSection: {
-    height: Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
+    height:
+      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
-  scrollContent: {
-    flexGrow: 1,
+  Content: {
+    flex: 1,
     alignItems: "center",
-    backgroundColor: "#f0f2f5",
+    backgroundColor: "white",
   },
   field: {
     marginTop: responsiveHeight(3),

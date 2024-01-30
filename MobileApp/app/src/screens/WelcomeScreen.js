@@ -6,18 +6,12 @@ import * as Animatable from "react-native-animatable";
 
 export default function WelcomeScreen() {
   const navigation = useNavigation();
-
-  // code for when back button is pressed on the device see the animation again
-
-  //start
   const isFocused = useIsFocused();
-  // Declare refs for Animatable.Image components
   const img1Ref = useRef(null);
   const img2Ref = useRef(null);
 
   useEffect(() => {
     if (isFocused) {
-      // Reset animations when the component is focused
       if (img1Ref.current) {
         img1Ref.current.bounceInDown(3500);
       }
@@ -26,8 +20,6 @@ export default function WelcomeScreen() {
       }
     }
   }, [isFocused]);
-
-  //end
 
   return (
     <View
@@ -38,7 +30,6 @@ export default function WelcomeScreen() {
       }}
     >
       <View style={styles.imgSection}>
-        {/* <Image source={require("../images/logo.png")} style={styles.logo} /> */}
         <Animatable.Image
           ref={img2Ref}
           source={require("../images/new.png")}

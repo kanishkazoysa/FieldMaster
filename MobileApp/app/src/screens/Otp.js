@@ -5,7 +5,8 @@ import {
   StatusBar,
   TextInput,
   StyleSheet,
-  ScrollView,
+Keyboard,
+TouchableWithoutFeedback,
   Platform,
 } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
@@ -61,14 +62,20 @@ const Otp = () => {
     }
   }, [isFocused]);
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
+
   return (
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>  
     <View style={styles.container}>
       <View style={styles.staticSection}>
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
         <BackButton navigation={navigation} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <View style={styles.Content}>
         <View style={styles.headerContainer}>
           <Text style={styles.header}>OTP</Text>
           <Text style={styles.text}>
@@ -101,8 +108,9 @@ const Otp = () => {
         <View style={styles.button}>
           <Button title="Continue" onPress={handleContinue} />
         </View>
-      </ScrollView>
+      </View>
     </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -127,10 +135,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
-  scrollContent: {
-    flexGrow: 1,
+ Content: {
+  flex: 1,
+  backgroundColor: "#fff",
     alignItems: "center",
-    backgroundColor: "#f0f2f5",
   },
   field: {
     flexDirection: "row",

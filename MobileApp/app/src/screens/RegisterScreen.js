@@ -3,17 +3,15 @@ import {
   View,
   Text,
   StatusBar,
-  Image,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
   Alert,
-  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
   Platform,
-  Dimensions,
+  Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Button, InputField,   } from "../components";
+import { Button, InputField } from "../components";
 import BackButton from "../components/BackButton";
 import {
   responsiveHeight,
@@ -21,10 +19,8 @@ import {
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 
-const { width, height } = Dimensions.get("window");
-
 export default function RegisterScreen() {
-  const [userName, setUserName] = useState(""); // [variable, function
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -43,9 +39,9 @@ export default function RegisterScreen() {
         Alert.alert("Passwords do not match");
         return;
       }
-    
+
       const response = await fetch(
-        "http://192.168.1.140:5000/api/users/register",
+        "http://192.168.1.100:5000/api/users/register",
         {
           method: "POST",
           headers: {
@@ -60,7 +56,7 @@ export default function RegisterScreen() {
           "Success",
           "User registered successfully",
           [
-            { 
+            {
               text: "OK",
               onPress: () => navigation.navigate("Welcome"),
             },
@@ -78,103 +74,86 @@ export default function RegisterScreen() {
     }
   };
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
     <View style={styles.container}>
       <View style={styles.staticSection}>
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
         <BackButton navigation={navigation} />
       </View>
 
-      <KeyboardAvoidingView
-        style={styles.scrollSection}
-        behavior={Platform.OS === "ios" ? "margin" : "margin"}
-        enabled
-      >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.scrollContent}>
-            <View style={styles.textSection}>
-              <Text style={styles.header}>Hi!</Text>
-              <Text style={styles.text}>Create a new account</Text>
-            </View>
+      <View style={styles.textSection}>
+        <Text style={styles.header}>Hi!</Text>
+        <Text style={styles.text}>Create a new account</Text>
+      </View>
 
-            <View style={styles.field}>
-             
+      <View style={styles.field}>
+        <View>
+          <Text style={styles.feildText}>Email</Text>
+          <InputField value={email} onChangeText={(text) => setEmail(text)} />
+        </View>
 
-              <View>
-                <Text style={styles.feildText}>Email</Text>
-                <InputField
-                  value={email}
-                  onChangeText={(text) => setEmail(text)}
-                />
-              </View>
+        <View>
+          <Text style={styles.feildText}>Password</Text>
+          <InputField
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry={!showPassword}
+            showEyeIcon={true}
+            onPressEye={() => setShowPassword(!showPassword)}
+          />
+        </View>
 
-              <View>
-                <Text style={styles.feildText}>Password</Text>
-                <InputField
-                  value={password}
-                  onChangeText={(text) => setPassword(text)}
-                  secureTextEntry={!showPassword}
-                  showEyeIcon={true}
-                  onPressEye={() => setShowPassword(!showPassword)}
-                />
-              </View>
+        <View>
+          <Text style={styles.feildText}>Confirm Password</Text>
+          <InputField
+            value={confirmPassword}
+            onChangeText={(text) => setConfirmPassword(text)}
+            secureTextEntry={!showConfirmPassword}
+            showEyeIcon={true}
+            onPressEye={() => setShowConfirmPassword(!showConfirmPassword)}
+          />
+        </View>
 
-              <View>
-                <Text style={styles.feildText}>Confirm Password</Text>
-                <InputField
-                  value={confirmPassword}
-                  onChangeText={(text) => setConfirmPassword(text)}
-                  secureTextEntry={!showConfirmPassword}
-                  showEyeIcon={true}
-                  onPressEye={() =>
-                    setShowConfirmPassword(!showConfirmPassword)
-                  }
-                />
-              </View>
+        <View style={styles.button}>
+          <Button title="SIGN UP" onPress={handleSignUp} />
+        </View>
+      </View>
 
-              <View style={styles.button}>
-                <Button title="SIGN UP" onPress={handleSignUp} />
-              </View>
-            </View>
+      <View style={styles.loginTextContainer}>
+        <Text style={styles.signupText}>Have an account?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <Text style={[styles.signupText, styles.signupLink]}>Log in</Text>
+        </TouchableOpacity>
+      </View>
 
-            <View style={styles.loginTextContainer}>
-              <Text style={styles.signupText}>Have an account?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                <Text style={[styles.signupText, styles.signupLink]}>
-                  Log in
-                </Text>
-              </TouchableOpacity>
-            </View>
+      <View style={styles.lineContainer}>
+        <View style={styles.line}></View>
+        <Text style={styles.orText}> or</Text>
+        <View style={styles.line}></View>
+      </View>
 
-            <View style={styles.lineContainer}>
-              <View style={styles.line}></View>
-              <Text style={styles.orText}> or</Text>
-              <View style={styles.line}></View>
-            </View>
+      <View style={styles.privacyTermsContainer}>
+        <Text style={styles.privacyText}>
+          By clicking "Sign up" you agree to our
+        </Text>
+        <View style={styles.linksContainer}>
+          <TouchableOpacity onPress={() => {}}>
+            <Text style={styles.link}>Terms of Service</Text>
+          </TouchableOpacity>
+          <Text style={styles.andText}> and </Text>
+          <TouchableOpacity onPress={() => {}}>
+            <Text style={styles.link}>Privacy Policy</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
 
-            <View style={styles.privacyTermsContainer}>
-              <Text style={styles.privacyText}>
-                By clicking "Sign up" you agree to our
-              </Text>
-              <View style={styles.linksContainer}>
-                <TouchableOpacity onPress={() => {}}>
-                  <Text style={styles.link}>Terms of Service</Text>
-                </TouchableOpacity>
-                <Text style={styles.andText}> and </Text>
-                <TouchableOpacity onPress={() => {}}>
-                  <Text style={styles.link}>Privacy Policy</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-     
-
-
-
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -202,19 +181,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
-  scrollSection: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  scrollContent: {
-    flexGrow: 1,
-  },
   textSection: {
     marginLeft: responsiveWidth(5),
   },
   field: {
-    width: responsiveWidth(100),
-    top: responsiveHeight(3),
+    width: "100%",
+    top: responsiveHeight(5),
     alignItems: "center",
   },
 
@@ -226,7 +198,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: responsiveHeight(-10),
+    marginTop: responsiveHeight(13),
   },
 
   line: {
@@ -241,10 +213,10 @@ const styles = StyleSheet.create({
   },
 
   loginTextContainer: {
-    flex: 1,
+    
     flexDirection: "row",
     marginLeft: responsiveWidth(8),
-    top: responsiveHeight(3),
+    top: responsiveHeight(8),
   },
 
   signupText: {

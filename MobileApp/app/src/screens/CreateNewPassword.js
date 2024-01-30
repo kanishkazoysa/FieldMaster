@@ -3,11 +3,10 @@ import {
   View,
   Text,
   StatusBar,
-  TouchableOpacity,
   StyleSheet,
-  ScrollView,
   Platform,
-  Dimensions,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
@@ -43,17 +42,21 @@ export default function ForgotPassword() {
       { cancelable: false }
     );
   };
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
 
   return (
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
     <View style={styles.container}>
-      {/* Static section at the top */}
+      
       <View style={styles.staticSection}>
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
         <BackButton navigation={navigation} />
       </View>
-
-      {/* Scrollable content */}
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      
+      <View style={styles.Content}>
         <View style={styles.headerContainer}>
           <Text style={styles.header}>Create New Password</Text>
           <Text style={styles.text}>Password must be at least 8 digits</Text>
@@ -75,8 +78,9 @@ export default function ForgotPassword() {
         <View style={styles.button}>
           <Button title="Change Password" onPress={handleChangePassword} />
         </View>
-      </ScrollView>
+      </View>
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -101,15 +105,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
-  scrollContent: {
-    flexGrow: 1,
+  Content: {
+    flex: 1,
     alignItems: "center",
-    backgroundColor: "#f0f2f5",
+    backgroundColor: "#fff",
   },
   field: {
     marginTop: responsiveHeight(3),
   },
   button: {
-    marginTop: responsiveHeight(1),
+    marginTop: responsiveHeight(3),
   },
 });
