@@ -34,7 +34,7 @@ export default function LoginScreen() {
         return;
       }
   
-      const response = await fetch("http://192.168.1.140:5000/api/users/login", {
+      const response = await fetch("http://192.168.1.100:5000/api/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

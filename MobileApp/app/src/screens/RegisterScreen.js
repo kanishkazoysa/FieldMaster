@@ -87,7 +87,7 @@ export default function RegisterScreen() {
 
       <KeyboardAvoidingView
         style={styles.scrollSection}
-        behavior={Platform.OS === "ios" ? "padding" : "margin"}
+        behavior={Platform.OS === "ios" ? "margin" : "margin"}
         enabled
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
