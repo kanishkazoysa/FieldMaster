@@ -13,15 +13,13 @@ import {
   Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Button, InputField } from "../components";
+import { Button, InputField,   } from "../components";
 import BackButton from "../components/BackButton";
-import { faEnvelope, faLock ,faUser } from "@fortawesome/free-solid-svg-icons";
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
-import { Icon } from "react-native-paper";
 
 const { width, height } = Dimensions.get("window");
 
@@ -45,7 +43,7 @@ export default function RegisterScreen() {
         Alert.alert("Passwords do not match");
         return;
       }
-
+    
       const response = await fetch(
         "http://192.168.1.140:5000/api/users/register",
         {
@@ -62,7 +60,7 @@ export default function RegisterScreen() {
           "Success",
           "User registered successfully",
           [
-            {
+            { 
               text: "OK",
               onPress: () => navigation.navigate("Welcome"),
             },
@@ -100,19 +98,11 @@ export default function RegisterScreen() {
             </View>
 
             <View style={styles.field}>
-              <View>
-                <Text style={styles.feildText}>User Name</Text>
-                <InputField
-               
-                  value={userName}
-                  onChangeText={(text) => setUserName(text)}
-                />
-              </View>
+             
 
               <View>
                 <Text style={styles.feildText}>Email</Text>
                 <InputField
-               
                   value={email}
                   onChangeText={(text) => setEmail(text)}
                 />
@@ -121,7 +111,6 @@ export default function RegisterScreen() {
               <View>
                 <Text style={styles.feildText}>Password</Text>
                 <InputField
-                  
                   value={password}
                   onChangeText={(text) => setPassword(text)}
                   secureTextEntry={!showPassword}
@@ -133,7 +122,6 @@ export default function RegisterScreen() {
               <View>
                 <Text style={styles.feildText}>Confirm Password</Text>
                 <InputField
-                 
                   value={confirmPassword}
                   onChangeText={(text) => setConfirmPassword(text)}
                   secureTextEntry={!showConfirmPassword}
@@ -157,7 +145,13 @@ export default function RegisterScreen() {
                 </Text>
               </TouchableOpacity>
             </View>
-            
+
+            <View style={styles.lineContainer}>
+              <View style={styles.line}></View>
+              <Text style={styles.orText}> or</Text>
+              <View style={styles.line}></View>
+            </View>
+
             <View style={styles.privacyTermsContainer}>
               <Text style={styles.privacyText}>
                 By clicking "Sign up" you agree to our
@@ -172,6 +166,11 @@ export default function RegisterScreen() {
                 </TouchableOpacity>
               </View>
             </View>
+
+     
+
+
+
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -193,15 +192,13 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(2),
     marginTop: responsiveHeight(1),
     paddingBottom: responsiveHeight(0.1),
-    
-    
   },
   container: {
     flex: 1,
   },
   staticSection: {
     height:
-    Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
+      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
@@ -219,17 +216,35 @@ const styles = StyleSheet.create({
     width: responsiveWidth(100),
     top: responsiveHeight(3),
     alignItems: "center",
-  }, 
-  
+  },
+
   button: {
     marginTop: responsiveHeight(3),
   },
 
+  lineContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: responsiveHeight(-10),
+  },
+
+  line: {
+    width: responsiveWidth(35),
+    height: 1,
+    backgroundColor: "#CED0D4",
+  },
+  orText: {
+    fontSize: responsiveFontSize(2),
+    marginHorizontal: responsiveWidth(2),
+    color: "#000",
+  },
+
   loginTextContainer: {
-    flex: 1,  
-    flexDirection: "row", 
+    flex: 1,
+    flexDirection: "row",
     marginLeft: responsiveWidth(8),
-    top: responsiveHeight(5),
+    top: responsiveHeight(3),
   },
 
   signupText: {
@@ -252,21 +267,21 @@ const styles = StyleSheet.create({
   },
 
   privacyText: {
-    fontSize: width * 0.035,
+    fontSize: responsiveFontSize(1.5),
     textAlign: "center",
   },
   linksContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: height * 0.005,
+    marginTop: responsiveHeight(0.5),
   },
   link: {
     color: "#007BFF",
     textDecorationLine: "none",
-    fontSize: width * 0.035,
+    fontSize: responsiveFontSize(1.5),
   },
   andText: {
-    fontSize: width * 0.035,
+    fontSize: responsiveFontSize(1.5),
   },
 });
