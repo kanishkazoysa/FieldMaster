@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "aws",
-    "slug": "aws",
+    "name": "fieldmaster",
+    "slug": "fieldmaster",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,19 +16,22 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.FieldMaster.aws",
-
+      "bundleIdentifier": "com.kanishkazoysa.fieldmaster"
     },
     "android": {
-
-    "package": "com.FieldMaster.aws",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.kanishkazoysa.fieldmaster"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "config": {
+        "oauth": {
+          "redirectUri": "http://localhost:19006/oauth"
+        }
+      }
+    },
+    "scheme": "fieldmaster"
   }
 }
