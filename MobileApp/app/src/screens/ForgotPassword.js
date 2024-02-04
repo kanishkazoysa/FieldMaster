@@ -16,13 +16,26 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
+import auth from '@react-native-firebase/auth';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
 
-  const handleForgotPassword = () => {
-    navigation.navigate("Otp");
+  const handleSendMail = async () => {
+    try {
+      if (email) {
+        // Send password reset email using Firebase
+        await auth().sendPasswordResetEmail(email);
+        Alert.alert('Success', 'Check your email for the password reset link.');
+        navigation.navigate('Login');
+      } else {
+        Alert.alert('Error', 'Please enter a valid email address.');
+      }
+    } catch (error) {
+      console.error('Error sending password reset email:', error);
+      Alert.alert('Error', 'Failed to send password reset email. Please try again.');
+    }
   };
 
   const dismissKeyboard = () => {
@@ -55,7 +68,7 @@ export default function ForgotPassword() {
         </View>
 
         <View style={styles.button}>
-          <Button title="Continue" onPress={handleForgotPassword} />
+          <Button title="Continue" onPress={handleSendMail} />
         </View>
       </View>
     </View>
