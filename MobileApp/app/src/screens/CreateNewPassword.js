@@ -18,30 +18,62 @@ import {
   responsiveFontSize
 } from "react-native-responsive-dimensions";
 
-export default function ForgotPassword() {
+export default function ForgotPassword({ route}) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigation = useNavigation();
+  const { email } = route.params;
 
-  const handleChangePassword = () => {
-    // Perform your password change logic here
+  const handleChangePassword =async () => {
+    try{
 
-    // Assuming your password change is successful, show the success message
-    Alert.alert(
-      "Password Changed Successfully",
-      "Your password has been changed successfully.",
-      [
-        {
-          text: "OK",
-          onPress: () => {
-            // Navigate to the desired screen or perform any other action
-            navigation.navigate("Login"); // Change this to the screen you want to navigate to
-          },
+      if (!newPassword || !confirmPassword) {
+        Alert.alert("Error", "Please fill in all fields");
+        return;
+      }
+      if (!(newPassword===confirmPassword)){
+        Alert.alert("Error", "Passwords do not match");
+        return;
+      }
+      const response = await fetch('http://192.168.1.100:5000/api/users/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      ],
-      { cancelable: false }
-    );
+        body: JSON.stringify({
+          email: email, // Pass the relevant email here
+          newPassword: newPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert(
+          "Password Changed Successfully",
+          "Your password has been changed successfully.",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                navigation.navigate("Login");
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+      } else {
+        Alert.alert("Error", data.error || "Password change failed.");
+      }
+
+    }
+    catch{
+      Alert.alert("Error", "An error occurred while changing password");
+    }
   };
+
+
+
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };

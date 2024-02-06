@@ -5,45 +5,45 @@ import {
   StatusBar,
   TextInput,
   StyleSheet,
-Keyboard,
-TouchableWithoutFeedback,
+  Keyboard,
+  TouchableWithoutFeedback,
   Platform,
 } from "react-native";
-import { useNavigation, useIsFocused ,  useRoute } from "@react-navigation/native";
+import {
+  useNavigation,
+  useIsFocused,
+  useRoute,
+} from "@react-navigation/native";
 import { Button } from "../components";
 import BackButton from "../components/BackButton";
 import {
   responsiveHeight,
   responsiveWidth,
-  responsiveFontSize
+  responsiveFontSize,
 } from "react-native-responsive-dimensions";
 
-
-
-const Otp = ({route}) => {
-  const [ otp, setOtp] = useState(["", "", "", "", "", ""]);
+const Otp = ({ route }) => {
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const inputRefs = Array.from({ length: 6 }, () => React.createRef());
   const { Otp, email } = route.params;
- 
-    // Implement logic to handle OTP verification
-    const handleContinue = () => {
-      const enteredOTP = otp.join("");
-      console.log("Entered OTP:", enteredOTP);
-      console.log("OTP passed from navigation:", otp);
 
+  // Implement logic to handle OTP verification
+  const handleContinue = () => {
+    const enteredOTP = otp.join("");
+    try {
       if (enteredOTP == Otp) {
         console.log("OTP is correct, navigating to NewPassword screen.");
-        navigation.navigate("NewPassword");
+        navigation.navigate("NewPassword", { email });
       } else {
-        console.log("Invalid OTP.");
         alert("Invalid OTP");
       }
-    };
-    
-    
-  
+    } catch {
+      alert("Invalid OTP");
+    }
+  };
+
   const handleChangeOtp = (index, value) => {
     const newOtp = [...otp];
     newOtp[index] = value;
@@ -77,50 +77,49 @@ const Otp = ({route}) => {
     Keyboard.dismiss();
   };
 
-
   return (
-    <TouchableWithoutFeedback onPress={dismissKeyboard}>  
-    <View style={styles.container}>
-      <View style={styles.staticSection}>
-        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-        <BackButton navigation={navigation} />
-      </View>
-
-      <View style={styles.Content}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.header}>OTP</Text>
-          <Text style={styles.text}>
-            Please enter the code that was sent to your email
-          </Text>
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        <View style={styles.staticSection}>
+          <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+          <BackButton navigation={navigation} />
         </View>
 
-        <View style={styles.field}>
-          { otp.map((digit, index) => (
-            <TextInput
-              key={index}
-              style={styles.otpInput}
-              value={digit}
-              onChangeText={(text) => handleChangeOtp(index, text)}
-              maxLength={1}
-              keyboardType="numeric"
-              ref={inputRefs[index]}
-              onSubmitEditing={() => {
-                if (index < 5) {
-                  inputRefs[index + 1].current.focus();
+        <View style={styles.Content}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.header}>OTP</Text>
+            <Text style={styles.text}>
+              Please enter the code that was sent to your email
+            </Text>
+          </View>
+
+          <View style={styles.field}>
+            {otp.map((digit, index) => (
+              <TextInput
+                key={index}
+                style={styles.otpInput}
+                value={digit}
+                onChangeText={(text) => handleChangeOtp(index, text)}
+                maxLength={1}
+                keyboardType="numeric"
+                ref={inputRefs[index]}
+                onSubmitEditing={() => {
+                  if (index < 5) {
+                    inputRefs[index + 1].current.focus();
+                  }
+                }}
+                onKeyPress={({ nativeEvent: { key } }) =>
+                  handleKeyPress(index, key)
                 }
-              }}
-              onKeyPress={({ nativeEvent: { key } }) =>
-                handleKeyPress(index, key)
-              }
-            />
-          ))}
-        </View>
+              />
+            ))}
+          </View>
 
-        <View style={styles.button}>
-          <Button title="Continue" onPress={handleContinue} />
+          <View style={styles.button}>
+            <Button title="Continue" onPress={handleContinue} />
+          </View>
         </View>
       </View>
-    </View>
     </TouchableWithoutFeedback>
   );
 };
@@ -142,13 +141,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   staticSection: {
-    height: Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10),
+    height:
+      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10),
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
- Content: {
-  flex: 1,
-  backgroundColor: "#fff",
+  Content: {
+    flex: 1,
+    backgroundColor: "#fff",
     alignItems: "center",
   },
   field: {
@@ -161,7 +161,8 @@ const styles = StyleSheet.create({
     borderRadius: 11,
     width: responsiveWidth(13),
     height: responsiveHeight(7),
-    margin: Platform.OS === "android" ? responsiveHeight(0.5) :responsiveHeight(0.5),
+    margin:
+      Platform.OS === "android" ? responsiveHeight(0.5) : responsiveHeight(0.5),
     backgroundColor: "#fff",
     textAlign: "center",
     fontSize: responsiveFontSize(2.5),
