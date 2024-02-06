@@ -73,13 +73,6 @@ export default function RegisterScreen() {
     }
   };
 
-
-
-
-
-
-
-
   const handleSignUp = async () => {
     try {
       if (!email || !password || !confirmPassword) {

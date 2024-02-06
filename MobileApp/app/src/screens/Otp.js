@@ -9,7 +9,7 @@ Keyboard,
 TouchableWithoutFeedback,
   Platform,
 } from "react-native";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
+import { useNavigation, useIsFocused ,  useRoute } from "@react-navigation/native";
 import { Button } from "../components";
 import BackButton from "../components/BackButton";
 import {
@@ -20,19 +20,30 @@ import {
 
 
 
-const Otp = () => {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+const Otp = ({route}) => {
+  const [ otp, setOtp] = useState(["", "", "", "", "", ""]);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-
   const inputRefs = Array.from({ length: 6 }, () => React.createRef());
-
-  const handleContinue = () => {
+  const { Otp, email } = route.params;
+ 
     // Implement logic to handle OTP verification
-    console.log("Entered OTP:", otp.join(""));
-    navigation.navigate("NewPassword");
-  };
+    const handleContinue = () => {
+      const enteredOTP = otp.join("");
+      console.log("Entered OTP:", enteredOTP);
+      console.log("OTP passed from navigation:", otp);
 
+      if (enteredOTP == Otp) {
+        console.log("OTP is correct, navigating to NewPassword screen.");
+        navigation.navigate("NewPassword");
+      } else {
+        console.log("Invalid OTP.");
+        alert("Invalid OTP");
+      }
+    };
+    
+    
+  
   const handleChangeOtp = (index, value) => {
     const newOtp = [...otp];
     newOtp[index] = value;
@@ -84,7 +95,7 @@ const Otp = () => {
         </View>
 
         <View style={styles.field}>
-          {otp.map((digit, index) => (
+          { otp.map((digit, index) => (
             <TextInput
               key={index}
               style={styles.otpInput}

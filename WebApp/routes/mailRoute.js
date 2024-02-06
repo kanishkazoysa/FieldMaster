@@ -1,17 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const formData = require('form-data');
-const Mailgun = require('mailgun.js');
-
-const API_KEY = '730e60442716fcae468c296398272c4f-8c90f339-d99a8e17';
-const DOMAIN = 'sandbox1a76532aacd4416188f2f79fde12a6bc.mailgun.org';
+const formData = require("form-data");
+const Mailgun = require("mailgun.js");
+const User = require("../models/user");
+const API_KEY = "730e60442716fcae468c296398272c4f-8c90f339-d99a8e17";
+const DOMAIN = "sandbox1a76532aacd4416188f2f79fde12a6bc.mailgun.org";
 
 const mailgun = new Mailgun(formData);
-const client = mailgun.client({ username: 'api', key: API_KEY });
+const client = mailgun.client({ username: "api", key: API_KEY });
 
 router.post("/otp", async (req, res) => {
   try {
     const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: "User does not exist" });
+    }
 
     const otp = generateOTP();
 
@@ -30,10 +34,10 @@ function generateOTP() {
 
 async function sendOtpEmail(email, otp) {
   const messageData = {
-    from: 'kanishkazoysa1234@gmail.com',
+    from: "<kanishkazoysa1234@gmail.com>",
     to: email,
-    subject: 'Your OTP Code',
-    text: `Your OTP code is: ${otp}`,
+    subject: "Your OTP Code",
+    html: `Your OTP code is: ${otp}`,
   };
 
   await client.messages.create(DOMAIN, messageData);
