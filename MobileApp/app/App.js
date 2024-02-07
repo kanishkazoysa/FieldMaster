@@ -13,6 +13,7 @@ import WelcomeScreen from "./src/screens/WelcomeScreen";
 import ForgotPassword from "./src/screens/ForgotPassword";
 import Otp from "./src/screens/Otp";
 import CreateNewPassword from "./src/screens/CreateNewPassword";
+import Home from "./src/screens/Home";
 import BackButton from "./src/components/BackButton";
 
 const Stack = createStackNavigator();
@@ -93,6 +94,14 @@ const App = () => {
             ),
           })}
         />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={({ navigation }) => ({
+            headerShown: false,
+            title: "",
+          })}
+       />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -55,7 +55,12 @@ export default function WelcomeScreen() {
           title="SIGN UP"
           onPress={() => navigation.navigate("Register")}
         />
-        <Button title="LOGIN" onPress={() => navigation.navigate("Login")} />
+        <Button 
+        title="LOGIN" onPress={() => navigation.navigate("Login")} 
+        />
+        <Button 
+        title="SWITCH PAGE" onPress={() => navigation.navigate("Home")} 
+        />
       </View>
     </View>
   );
