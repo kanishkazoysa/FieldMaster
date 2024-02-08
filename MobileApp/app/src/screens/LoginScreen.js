@@ -12,12 +12,12 @@ import {
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Button, InputField } from "../components";
-import BackButton from "../components/BackButton";
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
+import { Appbar  } from "react-native-paper";
 
   export default function LoginScreen() {
     const [email, setEmail] = useState("");
@@ -87,10 +87,13 @@ import {
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
-        <View style={styles.staticSection}>
-          <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-          <BackButton navigation={navigation} />
-        </View>
+      <StatusBar barStyle="light-content" />
+      <Appbar.Header style={styles.header} >
+        <Appbar.BackAction
+          onPress={() => navigation.goBack()}
+          color="white"
+        />
+      </Appbar.Header>
 
         <View style={styles.textSection}>
           <Text style={styles.welcomeText}>Welcome </Text>
@@ -133,6 +136,16 @@ import {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    height: 50,
+    backgroundColor: "#007BFF",
+    
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
+  },
   welcomeText: {
     fontSize: responsiveFontSize(5),
     fontWeight: "bold",

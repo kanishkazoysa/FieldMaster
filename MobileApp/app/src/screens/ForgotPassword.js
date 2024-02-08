@@ -56,14 +56,17 @@ export default function ForgotPassword() {
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
-        <View style={styles.staticSection}>
-          <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-          <BackButton navigation={navigation} />
-        </View>
+      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+      <Appbar.Header style={styles.header} >
+        <Appbar.BackAction
+          onPress={() => navigation.goBack()}
+          color="white"
+        />
+      </Appbar.Header>
 
         <View style={styles.Content}>
           <View style={styles.headerContainer}>
-            <Text style={styles.header}>Forgot Password</Text>
+            <Text style={styles.head}>Forgot Password</Text>
             <Text style={styles.text}>
               The verification code will be sent to this email address
             </Text>
@@ -87,10 +90,12 @@ export default function ForgotPassword() {
 }
 
 const styles = StyleSheet.create({
+
+  
   headerContainer: {
     width: "90%",
   },
-  header: {
+  head: {
     fontSize: responsiveFontSize(3),
     fontWeight: "bold",
     marginTop: "3%",

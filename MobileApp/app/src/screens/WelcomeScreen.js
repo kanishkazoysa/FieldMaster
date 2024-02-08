@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef } from "react";
-import Button from "../components/Button";
+
+import { Button } from "react-native-paper";
 import * as Animatable from "react-native-animatable";
+
 
 export default function WelcomeScreen() {
   const navigation = useNavigation();
@@ -51,21 +53,32 @@ export default function WelcomeScreen() {
         <Text style={styles.text}>
           Your app for accurate and efficient measurements in the real world.
         </Text>
-        <Button
-          title="SIGN UP"
-          onPress={() => navigation.navigate("Register")}
-        />
-        <Button 
-        title="LOGIN" onPress={() => navigation.navigate("Login")} 
-        />
-        <Button 
-        title="SWITCH PAGE" onPress={() => navigation.navigate("Home")} 
-        />
+
+        <Button mode="contained" onPress={() => navigation.navigate("Register")} style={styles.button}  >
+          SIGN UP
+        </Button>
+
+        <Button mode="contained" onPress={() => navigation.navigate("Login")} style={styles.button}>
+          LOGIN
+        </Button>
+
+        <Button mode="contained" onPress={() => navigation.navigate("Home")} style={styles.button}>
+          SWITCH PAGE
+        </Button>
+        
       </View>
     </View>
   );
 }
 const styles = StyleSheet.create({
+  button: {
+    margin: 10,
+    backgroundColor: "#007BFF",
+    width: 337,
+    padding: 2,
+
+  },
+
   imgSection: {
     flex: 1.1,
     backgroundColor: "white",

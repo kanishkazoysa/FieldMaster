@@ -16,7 +16,7 @@ import {
 return (
     <View style={styles.container}>
       <Appbar.Header style={styles.header}>
-        <Appbar.BackAction onPress={() => navigation.goBack()} style={styles.backbutton} />
+        <Appbar.BackAction onPress={() => navigation.goBack()} color="white" />
       </Appbar.Header>
       <View style={styles.content}>
         <Text style={styles.text}>Welcome to the Home Screen</Text>
@@ -30,9 +30,7 @@ return (
         flex: 1,
         backgroundColor: "#fff",
         },
-        backbutton: {
-        color: "#fff",
-        },
+       
         header: {
             color: "#fff",
         backgroundColor: "#007BFF",

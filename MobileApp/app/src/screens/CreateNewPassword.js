@@ -11,12 +11,12 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Button, InputField } from "../components";
 import { Alert } from "react-native";
-import BackButton from "../components/BackButton";
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize
 } from "react-native-responsive-dimensions";
+import { Appbar } from "react-native-paper";
 
 export default function ForgotPassword({ route}) {
   const [newPassword, setNewPassword] = useState("");
@@ -82,15 +82,17 @@ export default function ForgotPassword({ route}) {
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
     <View style={styles.container}>
-      
-      <View style={styles.staticSection}>
-        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-        <BackButton navigation={navigation} />
-      </View>
+    <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+    <Appbar.Header style={styles.header} >
+      <Appbar.BackAction
+        onPress={() => navigation.goBack()}
+        color="white"
+      />
+    </Appbar.Header>
       
       <View style={styles.Content}>
         <View style={styles.headerContainer}>
-          <Text style={styles.header}>Create New Password</Text>
+          <Text style={styles.head}>Create New Password</Text>
           <Text style={styles.text}>Password must be at least 8 digits</Text>
         </View>
 
@@ -117,10 +119,20 @@ export default function ForgotPassword({ route}) {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    height: 50,
+    backgroundColor: "#007BFF",
+    
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
+  },
   headerContainer: {
     width: "90%",
   },
-  header: {
+  head: {
     fontSize: responsiveFontSize(3),
     fontWeight: "bold",
     marginTop: "3%",
