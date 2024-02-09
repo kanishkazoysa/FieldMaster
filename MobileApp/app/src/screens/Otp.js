@@ -12,10 +12,9 @@ import {
 import {
   useNavigation,
   useIsFocused,
-  useRoute,
 } from "@react-navigation/native";
-import { Button } from "../components";
-import BackButton from "../components/BackButton";
+import { Appbar , Button } from "react-native-paper";
+
 import {
   responsiveHeight,
   responsiveWidth,
@@ -80,14 +79,17 @@ const Otp = ({ route }) => {
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
-        <View style={styles.staticSection}>
-          <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-          <BackButton navigation={navigation} />
-        </View>
+      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+      <Appbar.Header style={styles.header} >
+        <Appbar.BackAction
+          onPress={() => navigation.goBack()}
+          color="white"
+        />
+      </Appbar.Header>
 
         <View style={styles.Content}>
           <View style={styles.headerContainer}>
-            <Text style={styles.header}>OTP</Text>
+            <Text style={styles.head}>OTP</Text>
             <Text style={styles.text}>
               Please enter the code that was sent to your email
             </Text>
@@ -115,9 +117,9 @@ const Otp = ({ route }) => {
             ))}
           </View>
 
-          <View style={styles.button}>
-            <Button title="Continue" onPress={handleContinue} />
-          </View>
+          <Button mode="contained" onPress={handleContinue} style={styles.button}>
+          Continue
+          </Button>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -125,10 +127,22 @@ const Otp = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+
+  header: {
+    height: 50,
+    backgroundColor: "#007BFF",
+    
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
+  },
+
   headerContainer: {
     width: "90%",
   },
-  header: {
+  head: {
     fontSize: responsiveFontSize(3),
     fontWeight: "bold",
     marginTop: "3%",
@@ -168,7 +182,10 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(2.5),
   },
   button: {
-    marginTop: responsiveHeight(4),
+    marginTop: responsiveHeight(5),
+       backgroundColor: "#007BFF",
+       width: 337,
+       padding: 2,
   },
 });
 

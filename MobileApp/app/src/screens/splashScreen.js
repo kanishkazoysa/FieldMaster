@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, View, StatusBar} from "react-native";
 import React, { useEffect } from "react";
 import * as Animatable from 'react-native-animatable';
 import { CommonActions } from "@react-navigation/native";
@@ -20,6 +20,7 @@ const SplashScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+    <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <Animatable.Image 
         source={require("../images/logo.png")} 
         style={styles.image} 

@@ -11,58 +11,57 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { Button, InputField } from "../components";
-import BackButton from "../components/BackButton";
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
+import { Appbar, TextInput,Button } from "react-native-paper";
 
-  export default function LoginScreen() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const navigation = useNavigation();
-  
-    const handleLogin = async () => {
-      try {
-        if (!email || !password) {
-          Alert.alert("Please fill in all fields");
-          return;
-        }
-  
-        const response = await fetch(
-          "http://192.168.1.100:5000/api/users/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-          }
-        );
-  
-        if (response.ok) {
-          Alert.alert(
-            "Success",
-            "Login successfully",
-            [
-              {
-                text: "OK",
-                onPress: () => navigation.navigate("Welcome"),
-              },
-            ],
-            { cancelable: false }
-          );
-        } else {
-          const data = await response.json();
-          Alert.alert("Error", data.error || "Something went wrong");
-        }
-      } catch (error) {
-        console.error("Error during registration:", error);
-        Alert.alert("Error", "Something went wrong");
+export default function LoginScreen() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigation = useNavigation();
+
+  const handleLogin = async () => {
+    try {
+      if (!email || !password) {
+        Alert.alert("Please fill in all fields");
+        return;
       }
-    };
+
+      const response = await fetch(
+        "http://192.168.8.104:5000/api/users/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      if (response.ok) {
+        Alert.alert(
+          "Success",
+          "Login successfully",
+          [
+            {
+              text: "OK",
+              onPress: () => navigation.navigate("Welcome"),
+            },
+          ],
+          { cancelable: false }
+        );
+      } else {
+        const data = await response.json();
+        Alert.alert("Error", data.error || "Something went wrong");
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      Alert.alert("Error", "Something went wrong");
+    }
+  };
 
   const handleForgotPassword = () => {
     console.log("Forgot Password");
@@ -87,10 +86,13 @@ import {
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
-        <View style={styles.staticSection}>
-          <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-          <BackButton navigation={navigation} />
-        </View>
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <Appbar.Header style={styles.header}>
+          <Appbar.BackAction
+            onPress={() => navigation.goBack()}
+            color="white"
+          />
+        </Appbar.Header>
 
         <View style={styles.textSection}>
           <Text style={styles.welcomeText}>Welcome </Text>
@@ -98,21 +100,34 @@ import {
         </View>
 
         <View style={styles.field}>
+          <View style={{marginBottom:responsiveHeight(2) }}>
+          <TextInput
+            label="email"
+            mode="outlined"
+            outlineColor="#d9d7d2"
+            activeOutlineColor="#007BFF"
+            width={responsiveWidth(85)}
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          />
+          </View>
+          
           <View>
-            <Text style={styles.feildText}>Email</Text>
-            <InputField value={email} onChangeText={(text) => setEmail(text)} />
+          <TextInput
+            label="password"
+            mode="outlined"
+            outlineColor="#d9d7d2"
+            activeOutlineColor="#007BFF"
+            width={responsiveWidth(85)}
+            secureTextEntry         
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+          />
           </View>
-          <View>
-            <Text style={styles.feildText}>Password</Text>
-            <InputField
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              secureTextEntry
-            />
-          </View>
-          <View style={styles.button}>
-            <Button title="LOGIN" onPress={handleLogin} />
-          </View>
+          
+          <Button mode="contained" onPress={handleLogin} style={styles.button}>
+          LOGIN
+          </Button>
 
           <View>
             <TouchableOpacity onPress={handleForgotPassword}>
@@ -133,6 +148,23 @@ import {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    height: 50,
+    backgroundColor: "#007BFF",
+
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
+  },
+  button: {
+ marginTop: responsiveHeight(5),
+    backgroundColor: "#007BFF",
+    width: 337,
+    padding: 2,
+
+  },
   welcomeText: {
     fontSize: responsiveFontSize(5),
     fontWeight: "bold",
@@ -144,29 +176,18 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-  },
-  feildText: {
-    fontSize: responsiveFontSize(2),
-    marginTop: responsiveHeight(1),
-    paddingBottom: responsiveHeight(0.1),
-  },
-  staticSection: {
-    height:
-      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10),
-    backgroundColor: "#007BFF",
-    justifyContent: "center",
+    backgroundColor: "white",
   },
   textSection: {
     marginLeft: responsiveWidth(5),
   },
-  button: {
-    top: responsiveHeight(4),
-  },
+ 
 
   field: {
-    width: "100%",
+    width: responsiveWidth(100),
     top: responsiveHeight(5),
-    alignItems: "center",
+  alignItems: "center",
+   
   },
   forgotPasswordText: {
     color: "#007BFF",
