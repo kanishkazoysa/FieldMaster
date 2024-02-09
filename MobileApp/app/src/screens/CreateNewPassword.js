@@ -9,14 +9,13 @@ import {
   Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Button, InputField } from "../components";
 import { Alert } from "react-native";
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize
 } from "react-native-responsive-dimensions";
-import { Appbar } from "react-native-paper";
+import { Appbar , Button ,TextInput } from "react-native-paper";
 
 export default function ForgotPassword({ route}) {
   const [newPassword, setNewPassword] = useState("");
@@ -35,7 +34,7 @@ export default function ForgotPassword({ route}) {
         Alert.alert("Error", "Passwords do not match");
         return;
       }
-      const response = await fetch('http://192.168.1.100:5000/api/users/change-password', {
+      const response = await fetch('http://192.168.8.104:5000/api/users/change-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,21 +96,32 @@ export default function ForgotPassword({ route}) {
         </View>
 
         <View style={styles.field}>
-          <InputField
-            placeholder="New Password"
-            value={newPassword}
-            onChangeText={(text) => setNewPassword(text)}
-          />
-          <InputField
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChangeText={(text) => setConfirmPassword(text)}
-          />
+        <View style={{marginBottom:10}}>
+        <TextInput
+        label="New Password"
+        mode="outlined"
+        outlineColor="#d9d7d2"
+        activeOutlineColor="#007BFF"
+        width={responsiveWidth(85)}
+        value={newPassword}
+        onChangeText={(text) => setNewPassword(text)}
+      />
+        </View>
+      
+      <TextInput
+      label="confirm Password"
+      mode="outlined"
+      outlineColor="#d9d7d2"
+      activeOutlineColor="#007BFF"
+      width={responsiveWidth(85)}
+      value={confirmPassword}
+      onChangeText={(text) => setConfirmPassword(text)}
+    />
         </View>
 
-        <View style={styles.button}>
-          <Button title="Change Password" onPress={handleChangePassword} />
-        </View>
+        <Button mode="contained" onPress={handleChangePassword} style={styles.button}>
+        Change Password
+        </Button>
       </View>
     </View>
     </TouchableWithoutFeedback>
@@ -158,6 +168,9 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(3),
   },
   button: {
-    marginTop: responsiveHeight(3),
+    marginTop: responsiveHeight(5),
+       backgroundColor: "#007BFF",
+       width: 337,
+       padding: 2,
   },
 });

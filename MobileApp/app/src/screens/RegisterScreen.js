@@ -6,6 +6,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   View,
   Text,
+ 
+  Image,
   StatusBar,
   TouchableOpacity,
   StyleSheet,
@@ -15,13 +17,13 @@ import {
   Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Button, InputField } from "../components";
-import { Appbar } from "react-native-paper";
+import { Appbar, TextInput, Button } from "react-native-paper";
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
+
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -86,7 +88,7 @@ export default function RegisterScreen() {
       }
 
       const response = await fetch(
-        "http://192.168.1.100:5000/api/users/register",
+        "http://192.168.8.104:5000/api/users/register",
         {
           method: "POST",
           headers: {
@@ -126,8 +128,8 @@ export default function RegisterScreen() {
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-        <Appbar.Header style={styles.header} >
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <Appbar.Header style={styles.header}>
           <Appbar.BackAction
             onPress={() => navigation.goBack()}
             color="white"
@@ -140,36 +142,51 @@ export default function RegisterScreen() {
         </View>
 
         <View style={styles.field}>
-          <View>
-            <Text style={styles.feildText}>Email</Text>
-            <InputField value={email} onChangeText={(text) => setEmail(text)} />
-          </View>
-
-          <View>
-            <Text style={styles.feildText}>Password</Text>
-            <InputField
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              secureTextEntry={!showPassword}
-              showEyeIcon={true}
-              onPressEye={() => setShowPassword(!showPassword)}
+          <View style={{ marginBottom: 10 }}>
+            <TextInput
+              label="email"
+              mode="outlined"
+              outlineColor="#d9d7d2"
+              activeOutlineColor="#007BFF"
+              width={responsiveWidth(89)}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
             />
           </View>
 
-          <View>
-            <Text style={styles.feildText}>Confirm Password</Text>
-            <InputField
+          <View style={{ marginBottom: 10 }}>
+          <TextInput
+          label="Password"
+          mode="outlined"
+          outlineColor="#d9d7d2"
+          activeOutlineColor="#007BFF"
+          width={responsiveWidth(75)}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry={!showPassword}
+          right={<TextInput.Icon icon={showPassword ? "eye" : "eye-off"} onPress={() => setShowPassword(!showPassword)} />}
+          
+        />
+             
+          </View>
+
+          <View style={{ marginBottom: 10 }}>
+            <TextInput
+              label="Confirm Password"
+              mode="outlined"
+              outlineColor="#d9d7d2"
+              activeOutlineColor="#007BFF"
+              width={responsiveWidth(75)}
               value={confirmPassword}
               onChangeText={(text) => setConfirmPassword(text)}
-              secureTextEntry={!showConfirmPassword}
-              showEyeIcon={true}
-              onPressEye={() => setShowConfirmPassword(!showConfirmPassword)}
+              secureTextEntry={!showConfirmPassword}  
+              right={<TextInput.Icon icon={showConfirmPassword ? "eye" : "eye-off"} onPress={() => setShowConfirmPassword(!showConfirmPassword)} />}
             />
           </View>
 
-          <View style={styles.button}>
-            <Button title="SIGN UP" onPress={handleSignUp} />
-          </View>
+          <Button mode="contained" onPress={handleSignUp} style={styles.button}>
+            SIGN UP
+          </Button>
         </View>
 
         <View style={styles.loginTextContainer}>
@@ -191,8 +208,19 @@ export default function RegisterScreen() {
           </Text>
         </View>
 
-        <View style={styles.Googlebutton}>
-          <Button title="GOOGLE SIGN IN" onPress={() => promptAsync()} />
+        <View style={styles.GooglebuttonContainer}>
+          <TouchableOpacity
+            style={styles.Googlebutton}
+            onPress={() => promptAsync()}
+          >
+            <View style={{ left: -20,  }}>
+              <Image
+              source={require("../images/google.png")} />
+            </View>
+            <View>
+              <Text style={{ marginTop: 8, left:-3 }}>SIGN WITH GOOGLE</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.privacyTermsContainer}>
@@ -218,12 +246,18 @@ const styles = StyleSheet.create({
   header: {
     height: 50,
     backgroundColor: "#007BFF",
-    
+
     ...Platform.select({
       android: {
         marginTop: StatusBar.currentHeight,
       },
     }),
+  },
+  button: {
+    marginTop: responsiveHeight(3),
+    backgroundColor: "#007BFF",
+    width: 337,
+    padding: 2,
   },
 
   userInfo: {
@@ -231,9 +265,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: responsiveHeight(5),
   },
-  Googlebutton: {
-    top: responsiveHeight(5),
+  GooglebuttonContainer: {
+    flex: 1,
+    top: responsiveHeight(3),
     alignItems: "center",
+  },
+  Googlebutton: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    borderColor: "#007BFF",
+    borderWidth: 1,
+    borderRadius: 24,
+    color: "#007BFF",
+    width: 330,
+    padding: 5.9,
   },
   head: {
     fontSize: responsiveFontSize(5),
@@ -251,24 +297,16 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    backgroundColor: "white",
   },
-  staticSection: {
-    height:
-      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
-    backgroundColor: "#007BFF",
-    justifyContent: "center",
-  },
+
   textSection: {
     marginLeft: responsiveWidth(5),
   },
   field: {
     width: "100%",
-    top: responsiveHeight(5),
+    top: responsiveHeight(3),
     alignItems: "center",
-  },
-
-  button: {
-    marginTop: responsiveHeight(3),
   },
 
   lineContainer: {
@@ -307,6 +345,7 @@ const styles = StyleSheet.create({
   },
 
   privacyTermsContainer: {
+    
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",

@@ -10,12 +10,12 @@ import {
   Alert, // Import Alert
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Button, InputField } from "../components";
-import BackButton from "../components/BackButton";
 import {
   responsiveHeight,
   responsiveFontSize,
+  responsiveWidth,
 } from "react-native-responsive-dimensions";
+import { Appbar, TextInput,Button } from "react-native-paper";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -28,7 +28,7 @@ export default function ForgotPassword() {
         return;
       }
 
-      const response = await fetch("http://192.168.1.100:5000/api/mail/otp", {
+      const response = await fetch("http://192.168.8.104:5000/api/mail/otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -73,16 +73,20 @@ export default function ForgotPassword() {
           </View>
 
           <View style={styles.field}>
-            <InputField
-              placeholder="Email"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-            />
+          <TextInput
+          label="email"
+          mode="outlined"
+          outlineColor="#d9d7d2"
+          activeOutlineColor="#007BFF"
+          width={responsiveWidth(85)}
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        />
           </View>
 
-          <View style={styles.button}>
-            <Button title="Continue" onPress={handleForgotPassword} />
-          </View>
+          <Button mode="contained" onPress={handleForgotPassword} style={styles.button}>
+          Continue
+          </Button>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -91,6 +95,16 @@ export default function ForgotPassword() {
 
 const styles = StyleSheet.create({
 
+  header: {
+    height: 50,
+    backgroundColor: "#007BFF",
+    
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
+  },
   
   headerContainer: {
     width: "90%",
@@ -122,6 +136,9 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(3),
   },
   button: {
-    marginTop: responsiveHeight(1),
+    marginTop: responsiveHeight(5),
+       backgroundColor: "#007BFF",
+       width: 337,
+       padding: 2,
   },
 });

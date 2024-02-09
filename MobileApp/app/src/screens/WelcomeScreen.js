@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, StatusBar } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef } from "react";
 
@@ -31,6 +31,7 @@ export default function WelcomeScreen() {
         backgroundColor: "white",
       }}
     >
+    <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <View style={styles.imgSection}>
         <Animatable.Image
           ref={img2Ref}
