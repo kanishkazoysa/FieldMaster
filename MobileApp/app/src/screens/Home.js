@@ -1,20 +1,47 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { Searchbar, Button } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
-
+import * as Location from "expo-location";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faLocationCrosshairs } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const navigation = useNavigation();
   const [isFocused, setIsFocused] = useState(false);
-  const [mapType, setMapType] = useState("standard");
- 
+  const [mapTypeIndex, setMapTypeIndex] = useState(0);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [showCurrentLocation, setShowCurrentLocation] = useState(false);
+  const [searchedLocation, setSearchedLocation] = useState(null);
+  const mapRef = React.useRef(null);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation(location);
+    })();
+  }, []);
+
+  const mapTypes = [
+    "standard",
+    "satellite",
+    "hybrid",
+    "terrain",
+    "none" // Add more map types as needed
+  ];
 
   const toggleMapType = () => {
-    setMapType(mapType === "standard" ? "satellite" : "standard");
+    const nextIndex = (mapTypeIndex + 1) % mapTypes.length;
+    setMapTypeIndex(nextIndex);
   };
 
   const onFocus = () => {
@@ -24,15 +51,76 @@ export default function Home() {
   const onBlur = () => {
     setIsFocused(false);
   };
+
+  const focusOnCurrentLocation = () => {
+    setShowCurrentLocation(!showCurrentLocation);
+    setSearchedLocation(null); // Clear searched location
+    if (!showCurrentLocation && currentLocation && mapRef.current) {
+      mapRef.current.animateToRegion({
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      });
+    }
+  };
+
+  const searchLocation = async () => {
+    if (searchQuery) {
+      try {
+        const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(searchQuery)}&key=AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U`);
+        const data = await response.json();
+        if (data.results && data.results.length > 0) {
+          const { lat, lng } = data.results[0].geometry.location;
+          setShowCurrentLocation(false); // Hide current location
+          setSearchedLocation({ latitude: lat, longitude: lng });
+          if (mapRef.current) {
+            mapRef.current.animateToRegion({
+              latitude: lat,
+              longitude: lng,
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05,
+            });
+          }
+        } else {
+          console.error("Location not found");
+        }
+      } catch (error) {
+        console.error("Error searching for location:", error);
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
-
-      <MapView 
-      style={styles.map}
-      provider={PROVIDER_GOOGLE} // Needed for Google Maps
-      mapType={mapType} 
-      /> 
-
+      <MapView
+        ref={mapRef}
+        style={styles.map}
+        provider={PROVIDER_GOOGLE}
+        mapType={mapTypes[mapTypeIndex]}
+        initialRegion={{
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+        {showCurrentLocation && currentLocation && (
+          <Marker
+            coordinate={{
+              latitude: currentLocation.coords.latitude,
+              longitude: currentLocation.coords.longitude,
+            }}
+            title="Current Location"
+          />
+        )}
+        {searchedLocation && (
+          <Marker
+            coordinate={searchedLocation}
+            title="Searched Location"
+          />
+        )}
+      </MapView>
 
       <View style={styles.searchbar}>
         <Searchbar
@@ -49,19 +137,26 @@ export default function Home() {
           placeholder="Search Location"
           onChangeText={setSearchQuery}
           value={searchQuery}
+          onSubmitEditing={searchLocation} // Call searchLocation on submit
         />
         <View style={styles.profileIconContainer}>
-          <MaterialIcons name="account-circle" size={45} color="#007BFF" />
+          <MaterialIcons name="account-circle" size={45} color="#000" />
         </View>
       </View>
 
-
       <TouchableOpacity style={styles.button1} onPress={toggleMapType}>
         <Text style={styles.buttonText}>
-          {mapType === "standard" ? "Satellite" : "Standard"}
+          {mapTypes[mapTypeIndex].charAt(0).toUpperCase() +
+            mapTypes[mapTypeIndex].slice(1)}
         </Text>
       </TouchableOpacity>
 
+      <TouchableOpacity
+        style={styles.button2}
+        onPress={focusOnCurrentLocation}
+      >
+        <FontAwesomeIcon icon={faLocationCrosshairs} size={25} color="#fff" />
+      </TouchableOpacity>
 
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
@@ -90,17 +185,23 @@ export default function Home() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   button1: {
     position: "absolute",
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    backgroundColor: "rgba(0,0,0, 0.7)",
     padding: 10,
     borderRadius: 5,
     bottom: 100,
     left: 20,
   },
-  buttonText: {
-    fontSize: 16,
+  button2: {
+    position: "absolute",
+    backgroundColor: "rgba(0,0,0, 0.7)",
+    padding: 10,
+    borderRadius: 5,
+    top: 150,
+    right: 10,
   },
   buttonContainer: {
     position: "absolute",
@@ -117,10 +218,12 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
   },
+  buttonText: {
+    fontSize: 16,
+    color: "#fff",
+  },
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
   searchbar: {
     left: 10,
