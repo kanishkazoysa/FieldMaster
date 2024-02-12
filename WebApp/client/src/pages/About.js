@@ -1,10 +1,10 @@
 import React from 'react';
-import Header from "../componenets/Header";
+import Navbar from '../components/Navbar';
 
 export default function About() {
     return (
       <div>
-        <Header />
+        <Navbar />
         <h1>About Page</h1>
       </div>
     );
