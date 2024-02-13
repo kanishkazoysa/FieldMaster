@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { Searchbar, Button } from "react-native-paper";
+import { Searchbar, Button, Avatar } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -36,7 +36,7 @@ export default function Home() {
     "satellite",
     "hybrid",
     "terrain",
-    "none" // Add more map types as needed
+    "none", // Add more map types as needed
   ];
 
   const toggleMapType = () => {
@@ -68,7 +68,11 @@ export default function Home() {
   const searchLocation = async () => {
     if (searchQuery) {
       try {
-        const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(searchQuery)}&key=AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U`);
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+            searchQuery
+          )}&key=AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U`
+        );
         const data = await response.json();
         if (data.results && data.results.length > 0) {
           const { lat, lng } = data.results[0].geometry.location;
@@ -99,8 +103,8 @@ export default function Home() {
         provider={PROVIDER_GOOGLE}
         mapType={mapTypes[mapTypeIndex]}
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude: 6.2427,
+          longitude: 80.0607,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
@@ -115,10 +119,7 @@ export default function Home() {
           />
         )}
         {searchedLocation && (
-          <Marker
-            coordinate={searchedLocation}
-            title="Searched Location"
-          />
+          <Marker coordinate={searchedLocation} title="Searched Location" />
         )}
       </MapView>
 
@@ -140,21 +141,19 @@ export default function Home() {
           onSubmitEditing={searchLocation} // Call searchLocation on submit
         />
         <View style={styles.profileIconContainer}>
-          <MaterialIcons name="account-circle" size={45} color="#000" />
+          <Avatar.Image size={44} source={require("../images/zoysa.png")} />
         </View>
       </View>
-
+      
       <TouchableOpacity style={styles.button1} onPress={toggleMapType}>
         <Text style={styles.buttonText}>
+       
           {mapTypes[mapTypeIndex].charAt(0).toUpperCase() +
             mapTypes[mapTypeIndex].slice(1)}
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button2}
-        onPress={focusOnCurrentLocation}
-      >
+      <TouchableOpacity style={styles.button2} onPress={focusOnCurrentLocation}>
         <FontAwesomeIcon icon={faLocationCrosshairs} size={25} color="#fff" />
       </TouchableOpacity>
 

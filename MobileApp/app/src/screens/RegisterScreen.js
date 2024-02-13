@@ -6,7 +6,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   View,
   Text,
- 
   Image,
   StatusBar,
   TouchableOpacity,
@@ -88,7 +87,7 @@ export default function RegisterScreen() {
       }
 
       const response = await fetch(
-        "http://192.168.8.104:5000/api/users/register",
+        "http://10.10.5.238:5000/api/users/register",
         {
           method: "POST",
           headers: {
