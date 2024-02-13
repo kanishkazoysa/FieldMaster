@@ -87,7 +87,7 @@ export default function RegisterScreen() {
       }
 
       const response = await fetch(
-        "http://10.10.5.238:5000/api/users/register",
+        "http://192.168.1.101:5000/api/users/register",
         {
           method: "POST",
           headers: {
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: responsiveFontSize(2),
-    marginTop: responsiveHeight(-1),
+    
   },
   feildText: {
     fontSize: responsiveFontSize(2),
