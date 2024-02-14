@@ -31,7 +31,7 @@ export default function LoginScreen() {
       }
 
       const response = await fetch(
-        "http://192.168.8.104:5000/api/users/login",
+        "http://192.168.1.101:5000/api/users/login",
         {
           method: "POST",
           headers: {
@@ -48,7 +48,7 @@ export default function LoginScreen() {
           [
             {
               text: "OK",
-              onPress: () => navigation.navigate("Welcome"),
+              onPress: () => navigation.navigate("Home"),
             },
           ],
           { cancelable: false }
@@ -171,8 +171,7 @@ const styles = StyleSheet.create({
     top: responsiveHeight(0.1),
   },
   signInText: {
-    fontSize: responsiveFontSize(2.5),
-    marginTop: responsiveHeight(-1),
+    fontSize: responsiveFontSize(2),
   },
   container: {
     flex: 1,

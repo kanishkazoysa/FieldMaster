@@ -1,10 +1,10 @@
 import React from 'react';
-import Header from "../componenets/Header";
+import Navbar from '../components/Navbar';
 
 export default function Contact() {
     return (
       <div>
-        <Header />
+        <Navbar />
         <h1>Contact Page</h1>
       </div>
     );

@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+  TextInput,
+  FlatList,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { Searchbar, Button } from "react-native-paper";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Button, Avatar } from "react-native-paper";
 import * as Location from "expo-location";
+import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faLocationCrosshairs } from "@fortawesome/free-solid-svg-icons";
+import { faLocationCrosshairs,faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,6 +24,7 @@ export default function Home() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [showCurrentLocation, setShowCurrentLocation] = useState(false);
   const [searchedLocation, setSearchedLocation] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
   const mapRef = React.useRef(null);
 
   useEffect(() => {
@@ -32,16 +41,20 @@ export default function Home() {
   }, []);
 
   const mapTypes = [
-    "standard",
-    "satellite",
-    "hybrid",
-    "terrain",
-    "none" // Add more map types as needed
+    { name: "Standard", value: "standard" },
+    { name: "Satellite", value: "satellite" },
+    { name: "Hybrid", value: "hybrid" },
+    { name: "Terrain", value: "terrain" },
+   
   ];
 
   const toggleMapType = () => {
-    const nextIndex = (mapTypeIndex + 1) % mapTypes.length;
-    setMapTypeIndex(nextIndex);
+    setShowDropdown(!showDropdown);
+  };
+
+  const selectMapType = (index) => {
+    setMapTypeIndex(index);
+    setShowDropdown(false);
   };
 
   const onFocus = () => {
@@ -68,7 +81,11 @@ export default function Home() {
   const searchLocation = async () => {
     if (searchQuery) {
       try {
-        const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(searchQuery)}&key=AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U`);
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+            searchQuery
+          )}&key=AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U`
+        );
         const data = await response.json();
         if (data.results && data.results.length > 0) {
           const { lat, lng } = data.results[0].geometry.location;
@@ -91,16 +108,24 @@ export default function Home() {
     }
   };
 
+  const clearSearchQuery = () => {
+    setSearchQuery("");
+  };
+
+
+  
+
   return (
+   
     <View style={styles.container}>
       <MapView
         ref={mapRef}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
-        mapType={mapTypes[mapTypeIndex]}
+        mapType={mapTypes[mapTypeIndex].value}
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude: 6.2427,
+          longitude: 80.0607,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
@@ -115,46 +140,58 @@ export default function Home() {
           />
         )}
         {searchedLocation && (
-          <Marker
-            coordinate={searchedLocation}
-            title="Searched Location"
-          />
+          <Marker coordinate={searchedLocation} title="Searched Location" />
         )}
       </MapView>
 
       <View style={styles.searchbar}>
-        <Searchbar
-          icon={() => (
-            <MaterialIcons name="location-on" size={25} color="#007BFF" />
-          )}
-          theme={{ colors: { primary: "white" } }}
+        <View style={styles.locationIconContainer}>
+          <MaterialIcons name="location-on" size={24} color="#007BFF" />
+        </View>
+        <TextInput
+          placeholder="Search Location"
+          placeholderTextColor="rgba(0, 0, 0, 0.5)"
           onFocus={onFocus}
           onBlur={onBlur}
           style={[
             styles.searchbarInput,
             isFocused ? styles.searchbarInputFocused : null,
           ]}
-          placeholder="Search Location"
           onChangeText={setSearchQuery}
           value={searchQuery}
-          onSubmitEditing={searchLocation} // Call searchLocation on submit
+          onSubmitEditing={searchLocation}
         />
-        <View style={styles.profileIconContainer}>
-          <MaterialIcons name="account-circle" size={45} color="#000" />
+        {searchQuery !== "" && (
+          <TouchableOpacity onPress={clearSearchQuery} style={styles.clearIconContainer}>
+            <MaterialIcons name="cancel" size={24} color="#707070" />
+          </TouchableOpacity>
+        )}
+        <View style={{ marginLeft: 10 }}>
+          <Avatar.Image size={44} source={require("../images/zoysa.png")} />
         </View>
       </View>
 
-      <TouchableOpacity style={styles.button1} onPress={toggleMapType}>
-        <Text style={styles.buttonText}>
-          {mapTypes[mapTypeIndex].charAt(0).toUpperCase() +
-            mapTypes[mapTypeIndex].slice(1)}
-        </Text>
+      <TouchableOpacity style={styles.layerIconContainer} onPress={toggleMapType}>
+      <FontAwesomeIcon icon={faLayerGroup} size={25} color="#fff"/>
+        {showDropdown && (
+          <View style={styles.dropdownContainer}>
+            <FlatList
+              data={mapTypes}
+              renderItem={({ item, index }) => (
+                <TouchableOpacity
+                  style={styles.dropdownItem}
+                  onPress={() => selectMapType(index)}
+                >
+                  <Text  style={{ color: '#fff' }}>{item.name}</Text>
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item) => item.value}
+            />
+          </View>
+        )}
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button2}
-        onPress={focusOnCurrentLocation}
-      >
+      <TouchableOpacity style={styles.button2} onPress={focusOnCurrentLocation}>
         <FontAwesomeIcon icon={faLocationCrosshairs} size={25} color="#fff" />
       </TouchableOpacity>
 
@@ -183,24 +220,55 @@ export default function Home() {
         </View>
       </View>
     </View>
+  
   );
 }
 
 const styles = StyleSheet.create({
-  button1: {
+  locationIconContainer: {
+    position: "absolute",
+    left: 20,
+    top: "50%",
+    transform: [{ translateY: -12 }], // Adjust translateY to vertically center the icon
+    zIndex: 1,
+  },
+  layerIconContainer: {
     position: "absolute",
     backgroundColor: "rgba(0,0,0, 0.7)",
     padding: 10,
     borderRadius: 5,
-    bottom: 100,
-    left: 20,
+    right: 10,
+    top: Platform.OS === "android" ? "15%" : "27%",
+    transform: [{ translateY: -12 }], // Adjust translateY to vertically center the icon
+    zIndex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  dropdownContainer: {
+    position: "absolute",
+    top:0,
+    right: 50,
+    backgroundColor: "rgba(0,0,0, 0.7)",
+    borderRadius: 5,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  dropdownItem: {
+    padding: 10,
+    color: '#fff',
   },
   button2: {
     position: "absolute",
     backgroundColor: "rgba(0,0,0, 0.7)",
     padding: 10,
     borderRadius: 5,
-    top: 150,
+    top: Platform.OS === "android" ? "15%" : "18%",
     right: 10,
   },
   buttonContainer: {
@@ -226,32 +294,38 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   searchbar: {
-    left: 10,
+    width: "100%",
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     position: "absolute",
-    top: "8%",
-    width: "83%",
+    top: Platform.OS === "android" ? "4%" : "8%",
     zIndex: 1,
   },
   searchbarInput: {
+    borderRadius: 30,
+    paddingLeft: 40,
     height: 50,
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
+    width: "80%",
+    backgroundColor: "rgba(255, 255, 255, 0.6)",
+    color:"#000",
     borderWidth: 1,
     borderColor: "#CED0D4",
   },
   searchbarInputFocused: {
     backgroundColor: "#fff",
+    borderColor: "#007BFF", // Change border color when focused
   },
   map: {
     width: "100%",
     height: "100%",
   },
-  profileIconContainer: {
+  clearIconContainer: {
     position: "absolute",
-    top: 1,
-    right: -50,
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-    paddingHorizontal: 1,
+    left:"75%",
+    top: "50%",
+    transform: [{ translateY: -12 }],
+    zIndex: 1,
   },
 });
