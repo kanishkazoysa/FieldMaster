@@ -29,9 +29,10 @@ export default function LoginScreen() {
         Alert.alert("Please fill in all fields");
         return;
       }
-
+      
       const response = await fetch(
-        "http://192.168.1.101:5000/api/users/login",
+        
+        `http://10.10.5.238:5000/api/users/login`,
         {
           method: "POST",
           headers: {

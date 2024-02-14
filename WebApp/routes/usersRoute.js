@@ -1,11 +1,52 @@
 const express = require("express");
 const router = express.Router();
+const userEmailVerificationModel = require("../models/userEmailVerification");
+const nodemailer = require("nodemailer");
+const { v4: uuidv4 } = require("uuid");
+
 // const bcrypt = require('bcrypt');
 const User = require("../models/user");
 
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "kanishkazoysa1234@gmail.com",
+    pass: "babx gpyj vvyx kpkp",
+  },
+});
+
+transporter.verify((error, success) => {
+  if (error) {
+    console.log(error);
+  } else console.log("Server is ready to take messages");
+});
+
 router.post("/register", async (req, res) => {
   const { email, password } = req.body;
+  const VerifyId = uuidv4();
 
+  const mailOptions = {
+    from: "kanishkazoysa1234@gmail.com",
+    to: email,
+    subject: "Your OTP Code",
+    html: `Your OTP code is:<a href= "http://localhost:5000/api/users/emailVerification/${email}/${VerifyId}">Verify</a>`,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
+  const createdAt = new Date();
+  const expiredAt = new Date(createdAt.getTime() + 1 * 60000);
+  const newUser = new userEmailVerificationModel({
+    email,
+    VerifyId,
+    createdAt,
+    expiredAt,
+  });
+  await newUser.save();
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -15,36 +56,69 @@ router.post("/register", async (req, res) => {
     }
 
     const newUser = new User({ email, password });
-    const user = await newUser.save();
+    await newUser.save();
     res.send("User Registered Successfully");
   } catch (error) {
     return res.status(400).json({ error });
   }
 });
 
+router.get("/emailVerification/:email/:VerifyId", async (req, res) => {
+  const { email, VerifyId } = req.params;
+  try {
+    const user = await userEmailVerificationModel.findOne({ email, VerifyId });
+    if (!user) {
+      // return res.status(400).json({ error: "User does not exist" });
+      return res.redirect(
+        `http://localhost:3000/emailVerification?message={"User does not exist"}&verified=false`
+      );
+    }
+    if (VerifyId != user.VerifyId) {
+      console.log("Invalid Email");
+      return res.status(400).json({ error: "Invalid Email" });
+    }
+    const currentTime = new Date();
+    if (currentTime > user.expiredAt) {
+      console.log("Email has expired");
+      // delte the user from the database
+      await userEmailVerificationModel.findOneAndDelete({ email });
+      return res.status(400).json({ error: "Email has expired" });
+    }
+    console.log("Email is valid");
+    //update the user as verified
+    await User.findOneAndUpdate({ email }, { isVerified: true });
+    // delte the user from the database
+    await userEmailVerificationModel.findOneAndDelete({ email });
+
+    // res.status(200).json({ message: "OTP is valid" });
+    res.redirect(
+      `http://localhost:3000/emailVerification?message={"email verified"}&verified=true`
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-try{
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(400).json({ error: "User does not exist"});
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: "User does not exist" });
+    }
+
+    if (password !== user.password) {
+      return res.status(400).json({ error: "Invalid credentials." });
+    }
+
+    res.send("User Logged In Successfully");
+  } catch (error) {
+    return res.status(400).json({ error });
   }
+});
 
-  if (password !== user.password) {
-    return res.status(400).json({ error: "Invalid credentials." });
-  }
-
-  res.send("User Logged In Successfully");
-}
-
-catch (error) {
-  return res.status(400).json({ error });
-}
-
-} );
-
-router.post('/change-password', async (req, res) => {
+router.post("/change-password", async (req, res) => {
   const { email, newPassword } = req.body;
 
   try {
@@ -53,7 +127,7 @@ router.post('/change-password', async (req, res) => {
 
     // If user not found
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
     // Update user's password in the database
@@ -61,12 +135,11 @@ router.post('/change-password', async (req, res) => {
     await user.save();
 
     // Password changed successfully
-    res.status(200).json({ message: 'Password changed successfully' });
+    res.status(200).json({ message: "Password changed successfully" });
   } catch (error) {
-    console.error('Error changing password:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error changing password:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 module.exports = router;

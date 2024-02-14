@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
+  Alert,
   StatusBar,
   TextInput,
   StyleSheet,
@@ -9,11 +10,8 @@ import {
   TouchableWithoutFeedback,
   Platform,
 } from "react-native";
-import {
-  useNavigation,
-  useIsFocused,
-} from "@react-navigation/native";
-import { Appbar , Button } from "react-native-paper";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
+import { Appbar, Button } from "react-native-paper";
 
 import {
   responsiveHeight,
@@ -29,18 +27,42 @@ const Otp = ({ route }) => {
   const { Otp, email } = route.params;
 
   // Implement logic to handle OTP verification
-  const handleContinue = () => {
+  const handleContinue = async () => {
+    console.log("gfdgh");
     const enteredOTP = otp.join("");
     try {
-      if (enteredOTP == Otp) {
+      const response = await fetch(`http://10.10.5.238:5000/api/mail/verify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, enteredOTP }),
+      });
+      if (response.ok) {
         console.log("OTP is correct, navigating to NewPassword screen.");
         navigation.navigate("NewPassword", { email });
       } else {
-        alert("Invalid OTP");
+        const data = await response.json();
+        Alert.alert("Error", data.error);
       }
+      //   if (enteredOTP == Otp) {
+      //     console.log("OTP is correct, navigating to NewPassword screen.");
+      //     navigation.navigate("NewPassword", { email });
+      //   } else {
+      //     alert("Invalid OTP");
+      //   }
     } catch {
-      alert("Invalid OTP");
+      Alert.alert("Error", "Something went wrong");
     }
+  };
+  const handleTryAgain = async () => {
+    const response = await fetch("http://10.10.5.238:5000/api/mail/otp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
   };
 
   const handleChangeOtp = (index, value) => {
@@ -79,13 +101,13 @@ const Otp = ({ route }) => {
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-      <Appbar.Header style={styles.header} >
-        <Appbar.BackAction
-          onPress={() => navigation.goBack()}
-          color="white"
-        />
-      </Appbar.Header>
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <Appbar.Header style={styles.header}>
+          <Appbar.BackAction
+            onPress={() => navigation.goBack()}
+            color="white"
+          />
+        </Appbar.Header>
 
         <View style={styles.Content}>
           <View style={styles.headerContainer}>
@@ -117,8 +139,19 @@ const Otp = ({ route }) => {
             ))}
           </View>
 
-          <Button mode="contained" onPress={handleContinue} style={styles.button}>
-          Continue
+          <Button
+            mode="contained"
+            onPress={handleContinue}
+            style={styles.button}
+          >
+            Continue
+          </Button>
+          <Button
+            mode="contained"
+            onPress={handleTryAgain}
+            style={styles.button}
+          >
+            Try Again
           </Button>
         </View>
       </View>
@@ -127,11 +160,10 @@ const Otp = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-
   header: {
     height: 50,
     backgroundColor: "#007BFF",
-    
+
     ...Platform.select({
       android: {
         marginTop: StatusBar.currentHeight,
@@ -183,9 +215,9 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: responsiveHeight(5),
-       backgroundColor: "#007BFF",
-       width: 337,
-       padding: 2,
+    backgroundColor: "#007BFF",
+    width: 337,
+    padding: 2,
   },
 });
 
