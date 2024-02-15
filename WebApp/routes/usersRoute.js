@@ -64,16 +64,16 @@ router.post("/register", async (req, res) => {
         })
       }
       
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("Email sent: " + info.response);
-        }
-      });
     }
-
-
+    
+    
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
     const newUser = new User({ email, password });
     await newUser.save();
     res.send("User Registered Successfully");
@@ -101,7 +101,9 @@ router.get("/emailVerification/:email/:VerifyId", async (req, res) => {
       console.log("Email has expired");
       // delte the user from the database
       await userEmailVerificationModel.findOneAndDelete({ email });
-      return res.status(400).json({ error: "Email has expired" });
+      return res.redirect(
+        `http://localhost:3000/emailVerification?message="Email verification failed!"&verified=false`
+      );
     }
     console.log("Email is valid");
     //update the user as verified
