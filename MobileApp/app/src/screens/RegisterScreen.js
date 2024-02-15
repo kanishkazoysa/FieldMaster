@@ -87,7 +87,7 @@ export default function RegisterScreen() {
       }
 
       const response = await fetch(
-        "http://192.168.1.101:5000/api/users/register",
+        "http://10.10.5.238:5000/api/users/register",
         {
           method: "POST",
           headers: {
@@ -100,11 +100,11 @@ export default function RegisterScreen() {
       if (response.ok) {
         Alert.alert(
           "Success",
-          "User registered successfully",
+          "Please verify your email",
           [
             {
               text: "OK",
-              onPress: () => navigation.navigate("Welcome"),
+              onPress: () => navigation.navigate("Login"),
             },
           ],
           { cancelable: false }
