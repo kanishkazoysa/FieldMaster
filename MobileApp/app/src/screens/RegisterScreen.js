@@ -100,11 +100,11 @@ export default function RegisterScreen() {
       if (response.ok) {
         Alert.alert(
           "Success",
-          "User registered successfully",
+          "Please verify your email",
           [
             {
               text: "OK",
-              onPress: () => navigation.navigate("Welcome"),
+              onPress: () => navigation.navigate("Login"),
             },
           ],
           { cancelable: false }

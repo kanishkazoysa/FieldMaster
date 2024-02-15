@@ -28,16 +28,16 @@ router.post("/register", async (req, res) => {
   const mailOptions = {
     from: "kanishkazoysa1234@gmail.com",
     to: email,
-    subject: "Your OTP Code",
-    html: `Your OTP code is:<a href= "http://localhost:5000/api/users/emailVerification/${email}/${VerifyId}">Verify</a>`,
+    subject: "FieldMaster Email Verification",
+    html: `
+      <div style="text-align: center;">
+        <img src="https://drive.google.com/uc?export=view&id=180piTLBcaAil8Nfn7hcmADai01Wej4XJ" alt="FieldMaster Logo" style="width: 200px;"/>
+        <h1>Welcome to FieldMaster</h1>
+        <p>Click the link below to verify your FieldMaster account:</p>
+        <a href="http://localhost:5000/api/users/emailVerification/${email}/${VerifyId}" style="background-color: #4CAF50; color: white; padding: 14px 20px; text-align: center; text-decoration: none; display: inline-block;">Verify</a>
+      </div>
+    `,
   };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Email sent: " + info.response);
-    }
-  });
   const createdAt = new Date();
   const expiredAt = new Date(createdAt.getTime() + 1 * 60000);
   const newUser = new userEmailVerificationModel({
@@ -50,10 +50,29 @@ router.post("/register", async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res
+      if(existingUser.isVerified)
+      {
+        return res
         .status(400)
         .json({ error: "User with this email already exists." });
+        
+      }
+      else{
+        //delete the user
+        await User.findOneAndDelete({
+          email:existingUser.email
+        })
+      }
+      
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Email sent: " + info.response);
+        }
+      });
     }
+
 
     const newUser = new User({ email, password });
     await newUser.save();
@@ -104,12 +123,16 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
+    const isVerified = user.isVerified;
     if (!user) {
       return res.status(400).json({ error: "User does not exist" });
     }
 
     if (password !== user.password) {
       return res.status(400).json({ error: "Invalid credentials." });
+    }
+    if (!isVerified) {
+      return res.status(400).json({ error: "User is not verified." });
     }
 
     res.send("User Logged In Successfully");
