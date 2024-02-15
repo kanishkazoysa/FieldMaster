@@ -2,25 +2,67 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
+  Alert,
   StatusBar,
   TextInput,
   StyleSheet,
-  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Platform,
 } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-import Button from "../components/Button";
+import { Appbar, Button } from "react-native-paper";
 
-const Otp = () => {
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
+
+const Otp = ({ route }) => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-
   const inputRefs = Array.from({ length: 6 }, () => React.createRef());
+  const { Otp, email } = route.params;
 
-  const handleContinue = () => {
-    // Implement logic to handle OTP verification
-    console.log("Entered OTP:", otp.join(""));
-    navigation.navigate("NewPassword");
+  // Implement logic to handle OTP verification
+  const handleContinue = async () => {
+    console.log("gfdgh");
+    const enteredOTP = otp.join("");
+    try {
+      const response = await fetch(`http://10.10.5.238:5000/api/mail/verify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, enteredOTP }),
+      });
+      if (response.ok) {
+        console.log("OTP is correct, navigating to NewPassword screen.");
+        navigation.navigate("NewPassword", { email });
+      } else {
+        const data = await response.json();
+        Alert.alert("Error", data.error);
+      }
+      //   if (enteredOTP == Otp) {
+      //     console.log("OTP is correct, navigating to NewPassword screen.");
+      //     navigation.navigate("NewPassword", { email });
+      //   } else {
+      //     alert("Invalid OTP");
+      //   }
+    } catch {
+      Alert.alert("Error", "Something went wrong");
+    }
+  };
+  const handleTryAgain = async () => {
+    const response = await fetch("http://10.10.5.238:5000/api/mail/otp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
   };
 
   const handleChangeOtp = (index, value) => {
@@ -52,95 +94,130 @@ const Otp = () => {
     }
   }, [isFocused]);
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-      <View style={styles.staticSection}></View>
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <Appbar.Header style={styles.header}>
+          <Appbar.BackAction
+            onPress={() => navigation.goBack()}
+            color="white"
+          />
+        </Appbar.Header>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.header}>OTP</Text>
-        <Text style={styles.text}>
-          Please enter the code that was sent to your email
-        </Text>
+        <View style={styles.Content}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.head}>OTP</Text>
+            <Text style={styles.text}>
+              Please enter the code that was sent to your email
+            </Text>
+          </View>
 
-        <View style={styles.field}>
-          {otp.map((digit, index) => (
-            <TextInput
-              key={index}
-              style={styles.otpInput}
-              value={digit}
-              onChangeText={(text) => handleChangeOtp(index, text)}
-              maxLength={1}
-              keyboardType="numeric"
-              ref={inputRefs[index]}
-              onSubmitEditing={() => {
-                if (index < 5) {
-                  inputRefs[index + 1].current.focus();
+          <View style={styles.field}>
+            {otp.map((digit, index) => (
+              <TextInput
+                key={index}
+                style={styles.otpInput}
+                value={digit}
+                onChangeText={(text) => handleChangeOtp(index, text)}
+                maxLength={1}
+                keyboardType="numeric"
+                ref={inputRefs[index]}
+                onSubmitEditing={() => {
+                  if (index < 5) {
+                    inputRefs[index + 1].current.focus();
+                  }
+                }}
+                onKeyPress={({ nativeEvent: { key } }) =>
+                  handleKeyPress(index, key)
                 }
-              }}
-              onKeyPress={({ nativeEvent: { key } }) =>
-                handleKeyPress(index, key)
-              }
-            />
-          ))}
-        </View>
+              />
+            ))}
+          </View>
 
-        <View style={styles.button}>
-          <Button title="Continue" onPress={handleContinue} />
+          <Button
+            mode="contained"
+            onPress={handleContinue}
+            style={styles.button}
+          >
+            Continue
+          </Button>
+          <Button
+            mode="contained"
+            onPress={handleTryAgain}
+            style={styles.button}
+          >
+            Try Again
+          </Button>
         </View>
-      </ScrollView>
-    </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
-    fontSize: 20,
+    height: 50,
+    backgroundColor: "#007BFF",
+
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
+  },
+
+  headerContainer: {
+    width: "90%",
+  },
+  head: {
+    fontSize: responsiveFontSize(3),
     fontWeight: "bold",
-    position: "absolute",
-    top: 20,
-    left: 25,
+    marginTop: "3%",
   },
   text: {
-    fontSize: 16,
-    position: "absolute",
-    top: 55,
-    width: 337,
+    fontSize: responsiveFontSize(2),
+    marginTop: "1%",
   },
   container: {
     flex: 1,
   },
   staticSection: {
-    padding: 16,
-    height: 100,
+    height:
+      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10),
     backgroundColor: "#007BFF",
-    borderBottomWidth: 1,
-    borderBottomColor: "#007BFF",
-    color: "#fff",
+    justifyContent: "center",
   },
-  scrollContent: {
-    flexGrow: 1,
+  Content: {
+    flex: 1,
+    backgroundColor: "#fff",
     alignItems: "center",
-    padding: 16,
   },
   field: {
     flexDirection: "row",
-    marginTop: 100,
+    marginTop: responsiveHeight(3),
   },
   otpInput: {
     borderWidth: 1,
     borderColor: "#C4C4C4",
     borderRadius: 11,
-    width: 45,
-    height: 45,
-    margin: 7,
+    width: responsiveWidth(13),
+    height: responsiveHeight(7),
+    margin:
+      Platform.OS === "android" ? responsiveHeight(0.5) : responsiveHeight(0.5),
     backgroundColor: "#fff",
     textAlign: "center",
-    fontSize: 18,
+    fontSize: responsiveFontSize(2.5),
   },
   button: {
-    position: "absolute",
-    top: 200,
+    marginTop: responsiveHeight(5),
+    backgroundColor: "#007BFF",
+    width: 337,
+    padding: 2,
   },
 });
 
