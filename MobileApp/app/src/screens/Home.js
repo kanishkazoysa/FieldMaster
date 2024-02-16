@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
+  SafeAreaView,
   TextInput,
   FlatList,
 } from "react-native";
@@ -116,7 +117,7 @@ export default function Home() {
   
 
   return (
-   
+    
     <View style={styles.container}>
       <MapView
         ref={mapRef}
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     right: 10,
-    top: Platform.OS === "android" ? "15%" : "27%",
+    top: Platform.OS === "android" ? "25%" : "27%",
     transform: [{ translateY: -12 }], // Adjust translateY to vertically center the icon
     zIndex: 1,
     flexDirection: "row",

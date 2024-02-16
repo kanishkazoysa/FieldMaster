@@ -89,7 +89,7 @@ router.get("/emailVerification/:email/:VerifyId", async (req, res) => {
     if (!user) {
       // return res.status(400).json({ error: "User does not exist" });
       return res.redirect(
-        `http://localhost:3000/emailVerification?message={"User does not exist"}&verified=false`
+        `http://localhost:3000/emailVerification?message=User does not exist&verified=false`
       );
     }
     if (VerifyId != user.VerifyId) {
@@ -102,7 +102,7 @@ router.get("/emailVerification/:email/:VerifyId", async (req, res) => {
       // delte the user from the database
       await userEmailVerificationModel.findOneAndDelete({ email });
       return res.redirect(
-        `http://localhost:3000/emailVerification?message="Email verification failed!"&verified=false`
+        `http://localhost:3000/emailVerification?message=Email verification failed!&verified=false`
       );
     }
     console.log("Email is valid");
@@ -113,7 +113,7 @@ router.get("/emailVerification/:email/:VerifyId", async (req, res) => {
 
     // res.status(200).json({ message: "OTP is valid" });
     res.redirect(
-      `http://localhost:3000/emailVerification?message={"email verified"}&verified=true`
+      `http://localhost:3000/emailVerification?message=Email verified&verified=true`
     );
   } catch (error) {
     console.error(error);

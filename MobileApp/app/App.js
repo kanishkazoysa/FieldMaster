@@ -42,67 +42,29 @@ const App = () => {
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => <BackButton navigation={navigation} />
-          })}
         />
         <Stack.Screen
           name="Login"
           component={LoginScreen}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => <BackButton navigation={navigation} />
-          
-          })}
         />
         <Stack.Screen
           name="Forgot"
           component={ForgotPassword}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => <BackButton navigation={navigation} />
-          })}
+          
         />
         <Stack.Screen
           name="Otp"
           component={Otp}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-           headerLeft: () => <BackButton navigation={navigation} />
-          })}
+       
         />
         <Stack.Screen
           name="NewPassword"
           component={CreateNewPassword}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => (
-              <IconButton
-                icon="arrow-left"
-                iconColor="#fff"
-                onPress={() => navigation.goBack()}
-              />
-            ),
-          })}
+          
         />
         <Stack.Screen
           name="Home"
           component={Home}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-          })}
        />
       </Stack.Navigator>
     </NavigationContainer>
