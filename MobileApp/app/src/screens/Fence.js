@@ -15,8 +15,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 
-import Headersection from "../component/Headersection";
-import CustomButton from "../component/CustomButton";
+import Headersection from "../components/Headersection";
+import CustomButton from "../components/CustomButton";
 
 export default function Fence() {
   const [FenceTypeselectedValue, setFenceTypeSelectedValue] = useState(null);

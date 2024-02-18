@@ -15,6 +15,7 @@ import Otp from "./src/screens/Otp";
 import CreateNewPassword from "./src/screens/CreateNewPassword";
 import Home from "./src/screens/Home";
 import BackButton from "./src/components/BackButton";
+import Fence from "./src/screens/Fence";
 
 
 
@@ -99,6 +100,15 @@ const App = () => {
         <Stack.Screen
           name="Home"
           component={Home}
+          options={({ navigation }) => ({
+            headerShown: false,
+            title: "",
+          })}
+       />
+
+<Stack.Screen
+          name="Fence"
+          component={Fence}
           options={({ navigation }) => ({
             headerShown: false,
             title: "",
