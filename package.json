@@ -8,6 +8,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nodemailer": "^6.9.9"
+    "expo": "^50.0.7",
+    "expo-print": "^12.8.1",
+    "expo-sharing": "^11.10.0",
+    "nodemailer": "^6.9.9",
+    "react-native-picker-select": "^9.0.1"
   }
 }

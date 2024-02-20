@@ -15,6 +15,10 @@ import Otp from "./src/screens/Otp";
 import CreateNewPassword from "./src/screens/CreateNewPassword";
 import Home from "./src/screens/Home";
 import BackButton from "./src/components/BackButton";
+import Fertilization from "./src/screens/Fertilization";
+import PlantationDetails from "./src/screens/PlantationDetails";
+import FertilizationDetails from "./src/screens/FertilizationDetails";
+import Plantation from "./src/screens/Plantation";
 
 
 
@@ -96,6 +100,7 @@ const App = () => {
             ),
           })}
         />
+
         <Stack.Screen
           name="Home"
           component={Home}
@@ -104,6 +109,71 @@ const App = () => {
             title: "",
           })}
        />
+        <Stack.Screen
+          name="Plantation"
+          component={Plantation}
+          options={({ navigation }) => ({
+            headerShown: false,
+            title: "",
+            headerTransparent: true,
+            headerLeft: () => (
+              <IconButton
+                icon="arrow-left"
+                iconColor="#fff"
+                onPress={() => navigation.goBack()}
+              />
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="PlantationDetails"
+          component={PlantationDetails}
+          options={({ navigation }) => ({
+            headerShown: false,
+            title: "",
+            headerTransparent: true,
+            headerLeft: () => (
+              <IconButton
+                icon="arrow-left"
+                iconColor="#fff"
+                onPress={() => navigation.goBack()}
+              />
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="Fertilization"
+          component={Fertilization}
+          options={({ navigation }) => ({
+            headerShown: false,
+            title: "",
+            headerTransparent: true,
+            headerLeft: () => (
+              <IconButton
+                icon="arrow-left"
+                iconColor="#fff"
+                onPress={() => navigation.goBack()}
+              />
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="FertilizationDetails"
+          component={FertilizationDetails}
+          options={({ navigation }) => ({
+            headerShown: false,
+            title: "",
+            headerTransparent: true,
+            headerLeft: () => (
+              <IconButton
+                icon="arrow-left"
+                iconColor="#fff"
+                onPress={() => navigation.goBack()}
+              />
+            ),
+          })}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
