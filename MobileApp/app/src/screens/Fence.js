@@ -68,6 +68,7 @@ export default function Fence() {
     label: "Select Type",
     value: null,
     color: "blue",
+   
   };
 
   const fenceTypeOptions = [

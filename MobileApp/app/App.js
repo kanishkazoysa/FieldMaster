@@ -16,8 +16,12 @@ import CreateNewPassword from "./src/screens/CreateNewPassword";
 import Home from "./src/screens/Home";
 import BackButton from "./src/components/BackButton";
 import Fence from "./src/screens/Fence";
-
-
+import FenceDetails from "./src/screens/FenceDetails";
+import Plantation from "./src/screens/Plantation";
+import TemplateView from "./src/screens/TemplateView";
+import PlantationDetails from "./src/screens/PlantationDetails";
+import Fertilization from "./src/screens/Fertilization";
+import FertilizationDetails from "./src/screens/FertilizationDetails";
 
 const Stack = createStackNavigator();
 
@@ -47,7 +51,7 @@ const App = () => {
             headerShown: false,
             title: "",
             headerTransparent: true,
-            headerLeft: () => <BackButton navigation={navigation} />
+            headerLeft: () => <BackButton navigation={navigation} />,
           })}
         />
         <Stack.Screen
@@ -57,8 +61,7 @@ const App = () => {
             headerShown: false,
             title: "",
             headerTransparent: true,
-            headerLeft: () => <BackButton navigation={navigation} />
-          
+            headerLeft: () => <BackButton navigation={navigation} />,
           })}
         />
         <Stack.Screen
@@ -68,7 +71,7 @@ const App = () => {
             headerShown: false,
             title: "",
             headerTransparent: true,
-            headerLeft: () => <BackButton navigation={navigation} />
+            headerLeft: () => <BackButton navigation={navigation} />,
           })}
         />
         <Stack.Screen
@@ -78,7 +81,7 @@ const App = () => {
             headerShown: false,
             title: "",
             headerTransparent: true,
-           headerLeft: () => <BackButton navigation={navigation} />
+            headerLeft: () => <BackButton navigation={navigation} />,
           })}
         />
         <Stack.Screen
@@ -104,16 +107,17 @@ const App = () => {
             headerShown: false,
             title: "",
           })}
-       />
+        />
+        <Stack.Screen name="TemplateView" component={TemplateView} />
 
-<Stack.Screen
-          name="Fence"
-          component={Fence}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-          })}
-       />
+        <Stack.Screen name="Fence" component={Fence} />
+        <Stack.Screen name="FenceDetails" component={FenceDetails} />
+        <Stack.Screen name="Plantation" component={Plantation} />
+        <Stack.Screen name="PlantationDetails" component={PlantationDetails} />
+        <Stack.Screen name="Fertilization" component={Fertilization} />
+        <Stack.Screen name="FertilizationDetails" component={FertilizationDetails} />
+
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
