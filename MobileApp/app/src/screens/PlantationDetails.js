@@ -259,7 +259,7 @@ import {
                         size={30}
                         color="#65676B"
                       />
-                      <Text style={styles.LeftText}>Plant                :</Text>
+                      <Text style={styles.LeftText}>Plant               :</Text>
                     </View>
                     <View style={styles.innersquareright}>
                       <Text style={styles.RightText}>{textPlant}</Text>
@@ -273,7 +273,7 @@ import {
                         size={30}
                         color="#65676B"
                       />
-                      <Text style={styles.LeftText}>Plant Spaing   :</Text>
+                      <Text style={styles.LeftText}>Plant Spaing  :</Text>
                     </View>
                     <View style={styles.innersquareright}>
                       <Text style={styles.RightText}>{textplantspace} {selectedValue}</Text>
@@ -287,7 +287,7 @@ import {
                         size={30}
                         color="#65676B"
                       />
-                      <Text style={styles.LeftText}>Row Spaing     :</Text>
+                      <Text style={styles.LeftText}>Row Spaing    :</Text>
                     </View>
                     <View style={styles.innersquareright}>
                       <Text style={styles.RightText}>{textRowspace} {selectedValue1}</Text>

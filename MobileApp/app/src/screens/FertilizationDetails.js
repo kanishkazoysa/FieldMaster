@@ -235,7 +235,7 @@ export default function FertilizationDetails({route}) {
                       size={30}
                       color="#65676B"
                     />
-                    <Text style={styles.LeftText}>Fertilizer Type :</Text>
+                    <Text style={styles.LeftText}>Fertilizer Type:</Text>
                   </View>
                   <View style={styles.innersquareright}>
                     <Text style={styles.RightText}>{FertilizerType}</Text>
