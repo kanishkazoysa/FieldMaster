@@ -10,7 +10,9 @@ const Headersection = ({ navigation, title }) => {
           onPress={() => navigation.goBack()}
           color="white"
         />
+        <View style={{marginTop:40,left:10,width:"67%"}}>
         <Text style={styles.headerText}>{title}</Text>
+        </View>
       </Appbar.Header>
     </View>
   );
@@ -28,6 +30,7 @@ const styles = {
     }),
   },
   headerText: {
+   
     fontSize: 18,
     textAlign: "center",
     color: "white",

@@ -25,7 +25,7 @@ const styles = {
   buttonText: {
     color: "white",
     fontSize: 16,
-    fontFamily: "Roboto", // Change the font family as needed
+ 
   },
 };
 
