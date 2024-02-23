@@ -8,6 +8,7 @@ import Hero from './components/Hero/Hero';
 import About from './components/About';
 import Footer from './components/Footer';
 import Pricing from './components/Pricing';
+import Setup from './components/SetupCard';
 
 export default function App() {
   return (
@@ -16,7 +17,7 @@ export default function App() {
     <div className='container'>
       <Hero />
       <About />
-      
+      <Setup />
       <Pricing />
       <Footer />
     </div>
