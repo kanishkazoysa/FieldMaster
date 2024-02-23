@@ -24,7 +24,7 @@ export default function Fertilization() {
   const navigation = useNavigation();
   const handleFertilizationDetails = () => {
 
-  if (!textFertilizationType || !textFertilizationNUmberoftime || !textFertilizationAmount || !FertilizerAmountUnitselectedValue || !selectedButton) {
+  if (!textFertilizationType || !textFertilizationNUmberoftime || !textFertilizationAmount || !FertilizerAmountUnitselectedValue || selectedButton === null) {
       // Display error message
       Alert.alert('Error', 'Please fill in all fields');
       return;
