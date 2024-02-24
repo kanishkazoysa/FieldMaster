@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { TouchableOpacity, View, Text, Image, Button } from 'react-native';
 import { Appbar } from 'react-native-paper';
@@ -6,7 +6,6 @@ import { styles } from './SavedTemplatesScreenStyles';
 /* import AppLoading from 'expo-app-loading'; */
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 /* icons from materialcommunity icons */
 const CustomEditIcon = (props) => {
@@ -138,16 +137,24 @@ const SavedTemplatesScreen = ({ navigation }) => {
                       />
                     </TouchableOpacity>
                   </View>
-                  <View style={styles.col_02}>
-                    <Text style={styles.bold_text}>{item.name}</Text>
-                    <Text style={styles.sub_text_style}>
-                      Location: {item.location}
-                    </Text>
-                    <Text style={styles.sub_text_style}>
-                      Date: {item.date}{' '}
-                    </Text>
-                    <Text style={styles.sub_text_style}>Time: {item.time}</Text>
-                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('TemplateView');
+                    }}
+                  >
+                    <View style={styles.col_02}>
+                      <Text style={styles.bold_text}>{item.name}</Text>
+                      <Text style={styles.sub_text_style}>
+                        Location: {item.location}
+                      </Text>
+                      <Text style={styles.sub_text_style}>
+                        Date: {item.date}{' '}
+                      </Text>
+                      <Text style={styles.sub_text_style}>
+                        Time: {item.time}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
                   <View style={styles.col_03}>
                     <MaterialCommunityIcons
                       name='square-edit-outline'

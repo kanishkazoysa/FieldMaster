@@ -3,14 +3,13 @@ import { View, Image, Text, StyleSheet } from 'react-native';
 import { Appbar, ThemeProvider } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './TemplateViewStyles';
-/* import { Icon } from '@uiw/react-native'; */
 
 const ClearLandIcon = (props) => (
-  <MaterialCommunityIcons {...props} name='palm-tree' size={25} color='white' />
+  <MaterialCommunityIcons {...props} name='island' size={25} color='white' />
 );
 
 const PlantationIcon = (props) => (
-  <MaterialCommunityIcons {...props} name='leaf' size={25} color='white' />
+  <MaterialCommunityIcons {...props} name='sprout' size={25} color='white' />
 );
 
 const FenceSetupIcon = (props) => (
@@ -20,34 +19,64 @@ const FenceSetupIcon = (props) => (
 const TypeIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='power-socket-eu'
+    name='format-list-bulleted-type'
     size={25}
     color='grey'
   />
 );
 const PerimeterIcon = (props) => (
-  <MaterialCommunityIcons {...props} name='crop' size={25} color='grey' />
-);
-
-const AreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='dice-4-outline'
+    name='vector-square'
     size={25}
     color='grey'
   />
 );
 
-const TemplateView = () => {
+const AreaIcon = (props) => (
+  <MaterialCommunityIcons
+    {...props}
+    name='texture-box'
+    size={25}
+    color='grey'
+  />
+);
+
+const CustomMapIcon = (props) => (
+  <MaterialCommunityIcons
+    {...props}
+    name='map-marker-radius'
+    size={25}
+    color='grey'
+  />
+);
+
+const CustomEditIcon = ({ navigation }) => (
+  <MaterialCommunityIcons
+    name='square-edit-outline'
+    size={25}
+    color={'white'}
+    style={{ marginRight: 10 }}
+    onPress={() => {
+      navigation.navigate('EditTemplate');
+    }}
+  />
+);
+
+const TemplateView = ({ navigation }) => {
   return (
     <>
       <View>
         {/* Appbar */}
         <Appbar.Header style={styles.top_Bar} dark={true} mode='center-aligned'>
-          <Appbar.BackAction onPress={() => {}} />
+          <Appbar.BackAction
+            onPress={() => {
+              navigation.navigate('SavedTemplatesScreen');
+            }}
+          />
           <Appbar.Content title='Template Name' />
           {/* pencil/ pen icon  */}
-          <Appbar.Action icon='pencil' onPress={() => {}} />
+          <CustomEditIcon navigation={navigation} />
         </Appbar.Header>
       </View>
       <View style={styles.low_outer}>
@@ -109,7 +138,7 @@ const TemplateView = () => {
                 </View>
               </View>
               <View style={styles.blockView}>
-                <Icon name='map' size={25} color='grey' />
+                <CustomMapIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Location</Text>
                   <Text style={styles.text02Styling}>Balapitiya</Text>
