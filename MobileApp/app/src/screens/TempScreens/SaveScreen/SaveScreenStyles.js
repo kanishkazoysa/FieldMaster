@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   top_Bar_Whole: {
     backgroundColor: '#0866FF',
-    marginTop: 30,
+    marginTop: 0,
   },
   inner_View: {
     backgroundColor: 'lightgrey',

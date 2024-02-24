@@ -72,7 +72,7 @@ export default function WelcomeScreen() {
 
         <Button
           mode='contained'
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigation.navigate('SaveScreen')}
           style={styles.button}
         >
           SWITCH PAGE

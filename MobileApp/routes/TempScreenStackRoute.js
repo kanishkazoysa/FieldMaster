@@ -3,10 +3,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 /* importing screens */
 import SavedTemplatesScreen from '../app/src/screens/TempScreens/SavedTemplatesScreen/SavedTemplatesScreen';
-import SaveScreen from '../Components/SaveScreen/SaveScreen';
-import ResizeMap from '../Components/ResizeMap/ResizeMap';
-import TemplateView from '../Components/TemplateView/TemplateView';
-import EditTemplate from '../Components/EditTemplate/EditTemplate';
+import SaveScreen from '../app/src/screens/TempScreens/SaveScreen/SaveScreen';
+import ResizeMap from '../app/src/screens/TempScreens/ResizeMap/ResizeMap';
+import TemplateView from '../app/src/screens/TempScreens/TemplateView/TemplateView';
+import EditTemplate from '../app/src/screens/TempScreens/EditTemplate/EditTemplate';
 
 const Stack = createNativeStackNavigator();
 

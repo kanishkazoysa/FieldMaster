@@ -3,19 +3,22 @@ import { Text, View } from 'react-native';
 import { Appbar, TextInput } from 'react-native-paper';
 import { styles } from './SaveScreenStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ScrollView } from 'react-native';
 
-import Icon from '@mdi/react';
-import { mdiHome, mdiMapMarkerRadius } from '@mdi/js';
-
-const CustomHomeIcon = (props) => (
-  <MaterialCommunityIcons {...props} name='home' size={30} color='black' />
+const CustomPerimeterIcon = (props) => (
+  <MaterialCommunityIcons
+    {...props}
+    name='vector-square'
+    size={30}
+    color='grey'
+  />
 );
 const CustomAreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='map-marker-radius'
+    name='texture-box'
     size={30}
-    color='black'
+    color='grey'
   />
 );
 
@@ -40,70 +43,72 @@ export function SaveScreen({ navigation }) {
         </View>
       </Appbar.Header>
       {/* three inner views */}
-      <View style={styles.low_outer}>
-        <View style={[styles.inner_View, styles.inner_View_01]}>
-          <View style={styles.inner_View_01_inner}>
-            <View style={styles.row_01}>
-              <Text style={styles.bold_text}>Land Info</Text>
-            </View>
-            <View style={styles.row_02}>
-              <View style={styles.row_02_col_02}>
-                <View style={styles.col_02_col_01}>
-                  <CustomHomeIcon />
+      <ScrollView>
+        <View style={styles.low_outer}>
+          <View style={[styles.inner_View, styles.inner_View_01]}>
+            <View style={styles.inner_View_01_inner}>
+              <View style={styles.row_01}>
+                <Text style={styles.bold_text}>Land Info</Text>
+              </View>
+              <View style={styles.row_02}>
+                <View style={styles.row_02_col_02}>
+                  <View style={styles.col_02_col_01}>
+                    <CustomPerimeterIcon />
+                  </View>
+                  <View style={styles.area_col_styling}>
+                    <Text style={styles.area_text_styling}>Perimeter</Text>
+                    <Text style={styles.bold_text}> 1.5km</Text>
+                  </View>
                 </View>
-                <View style={styles.area_col_styling}>
-                  <Text style={styles.area_text_styling}>Perimeter</Text>
-                  <Text style={styles.bold_text}> 1.5km</Text>
+                <View style={styles.row_02_col_02}>
+                  <View style={styles.col_02_col_01}>
+                    <CustomAreaIcon />
+                  </View>
+                  <View style={styles.area_col_styling}>
+                    <Text style={styles.area_text_styling}>Area</Text>
+                    <Text style={styles.bold_text}> 100 acres</Text>
+                  </View>
                 </View>
               </View>
-              <View style={styles.row_02_col_02}>
-                <View style={styles.col_02_col_01}>
-                  <CustomAreaIcon />
-                </View>
-                <View style={styles.area_col_styling}>
-                  <Text style={styles.area_text_styling}>Area</Text>
-                  <Text style={styles.bold_text}> 100 acres</Text>
-                </View>
+            </View>
+          </View>
+          <View style={[styles.inner_View, styles.inner_view_02]}>
+            <View style={styles.inner_view_02_inner}>
+              <View style={styles.input_view}>
+                <Text style={styles.bold_text}>Measure Name :</Text>
+                <TextInput
+                  style={styles.input_text}
+                  value={measureNameText}
+                  placeholder='Measures Name'
+                  onChangeText={(text) => setMeasureNameText(text)}
+                />
+              </View>
+              <View style={styles.input_view}>
+                <Text style={styles.bold_text}>Land Type :</Text>
+                <TextInput
+                  style={styles.input_text}
+                  value={landTypeText}
+                  placeholder='Land Type'
+                  onChangeText={(text) => setLandTypeText(text)}
+                  outlineColor='black'
+                  underlineColor='black'
+                />
               </View>
             </View>
           </View>
-        </View>
-        <View style={[styles.inner_View, styles.inner_view_02]}>
-          <View style={styles.inner_view_02_inner}>
-            <View style={styles.input_view}>
-              <Text style={styles.bold_text}>Measure Name :</Text>
+          <View style={styles.inner_View}>
+            <View style={styles.inner_view_03}>
+              <Text style={styles.bold_text}>Description:</Text>
               <TextInput
-                style={styles.input_text}
-                value={measureNameText}
-                placeholder='Measures Name'
-                onChangeText={(text) => setMeasureNameText(text)}
-              />
-            </View>
-            <View style={styles.input_view}>
-              <Text style={styles.bold_text}>Land Type :</Text>
-              <TextInput
-                style={styles.input_text}
-                value={landTypeText}
-                placeholder='Land Type'
-                onChangeText={(text) => setLandTypeText(text)}
-                outlineColor='black'
-                underlineColor='black'
+                style={styles.description_input}
+                value={descriptionText}
+                placeholder='Description'
+                onChangeText={(text) => setDescriptionText(text)}
               />
             </View>
           </View>
         </View>
-        <View style={styles.inner_View}>
-          <View style={styles.inner_view_03}>
-            <Text style={styles.bold_text}>Description:</Text>
-            <TextInput
-              style={styles.description_input}
-              value={descriptionText}
-              placeholder='Description'
-              onChangeText={(text) => setDescriptionText(text)}
-            />
-          </View>
-        </View>
-      </View>
+      </ScrollView>
     </>
   );
 }

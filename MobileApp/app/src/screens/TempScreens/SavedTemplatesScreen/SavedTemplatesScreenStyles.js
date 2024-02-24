@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
-import AppLoading from 'expo-app-loading';
-import { useFonts } from 'expo-font';
+/* import AppLoading from 'expo-app-loading'; */
+/* import { useFonts } from 'expo-font'; */
 
 export const styles = StyleSheet.create({
   top_Bar: {

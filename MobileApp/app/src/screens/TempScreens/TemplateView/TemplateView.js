@@ -3,7 +3,7 @@ import { View, Image, Text, StyleSheet } from 'react-native';
 import { Appbar, ThemeProvider } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './TemplateViewStyles';
-import { Icon } from '@uiw/react-native';
+/* import { Icon } from '@uiw/react-native'; */
 
 const ClearLandIcon = (props) => (
   <MaterialCommunityIcons {...props} name='palm-tree' size={25} color='white' />

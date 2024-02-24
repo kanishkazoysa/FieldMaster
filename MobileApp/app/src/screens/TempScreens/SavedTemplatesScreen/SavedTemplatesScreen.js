@@ -3,33 +3,20 @@ import React, { useState } from 'react';
 import { TouchableOpacity, View, Text, Image, Button } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { styles } from './SavedTemplatesScreenStyles';
-import AppLoading from 'expo-app-loading';
+/* import AppLoading from 'expo-app-loading'; */
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import { Icon } from '@uiw/react-native';
-
-import {
-  useFonts,
-  PTSans_400Regular,
-  PTSans_400Regular_Italic,
-  PTSans_700Bold,
-  PTSans_700Bold_Italic,
-} from '@expo-google-fonts/pt-sans';
-
-/* icons */
-const CustomEditIcon = ({ navigation }) => {
-  const onPressEdit = () => {
-    navigation.navigate('EditTemplate');
-  };
-
-  return (
-    <TouchableOpacity onPress={onPressEdit}>
-      <MaterialCommunityIcons name='pencil' size={25} color='#65676B' />
-    </TouchableOpacity>
-  );
+/* icons from materialcommunity icons */
+const CustomEditIcon = (props) => {
+  <MaterialCommunityIcons
+    {...props}
+    name='square-edit-outline'
+    size={25}
+    color='#65676B'
+  />;
 };
-
 const CustomDeleteIcon = (props) => (
   <MaterialCommunityIcons {...props} name='delete' size={25} color='#65676B' />
 );
@@ -103,12 +90,6 @@ const SavedTemplatesScreen = ({ navigation }) => {
     },
   ];
   const [templates, setTemplates] = useState(templatesList);
-  let [fontsLoaded] = useFonts({
-    PTSans_400Regular,
-    PTSans_400Regular_Italic,
-    PTSans_700Bold,
-    PTSans_700Bold_Italic,
-  });
 
   const handleDelete = (deletingTemplate) => {
     const newTemplates = templates.filter((template) => {
@@ -162,9 +143,9 @@ const SavedTemplatesScreen = ({ navigation }) => {
                     <Text style={styles.sub_text_style}>Time: {item.time}</Text>
                   </View>
                   <View style={styles.col_03}>
-                    <Icon
-                      name='edit'
-                      size='25'
+                    <MaterialCommunityIcons
+                      name='square-edit-outline'
+                      size={25}
                       color='#65676B'
                       onPress={() => {
                         navigation.navigate('EditTemplate');
