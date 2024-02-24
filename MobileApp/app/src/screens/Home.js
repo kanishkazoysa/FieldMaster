@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
-  SafeAreaView,
+  Modal,
   TextInput,
   FlatList,
 } from "react-native";
@@ -16,6 +16,7 @@ import * as Location from "expo-location";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLocationCrosshairs,faLayerGroup } from "@fortawesome/free-solid-svg-icons";
+import SelectionModal from "../components/SelectionModal";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,6 +27,8 @@ export default function Home() {
   const [showCurrentLocation, setShowCurrentLocation] = useState(false);
   const [searchedLocation, setSearchedLocation] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
   const mapRef = React.useRef(null);
 
   useEffect(() => {
@@ -40,6 +43,13 @@ export default function Home() {
       setCurrentLocation(location);
     })();
   }, []);
+
+
+  const startMeasure = () => {
+    setModalVisible(true);
+  };
+
+  const options = ['Option 1', 'Option 2', 'Option 3'];
 
   const mapTypes = [
     { name: "Standard", value: "standard" },
@@ -196,13 +206,20 @@ export default function Home() {
         <FontAwesomeIcon icon={faLocationCrosshairs} size={25} color="#fff" />
       </TouchableOpacity>
 
+      <SelectionModal 
+        modalVisible={modalVisible} 
+        setModalVisible={setModalVisible} 
+        options={options} 
+      />
+
+
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
           <Button
             buttonColor="#007BFF"
             icon="walk"
             mode="contained"
-            onPress={() => console.log("Left Button Pressed")}
+            onPress={startMeasure}
             style={styles.button}
           >
             Start Measure

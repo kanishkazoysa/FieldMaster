@@ -15,7 +15,7 @@ import Otp from "./src/screens/Otp";
 import CreateNewPassword from "./src/screens/CreateNewPassword";
 import Home from "./src/screens/Home";
 import WalkaroundLand from "./src/screens/WalkaroundLand";
-import BackButton from "./src/components/BackButton";
+
 
 
 

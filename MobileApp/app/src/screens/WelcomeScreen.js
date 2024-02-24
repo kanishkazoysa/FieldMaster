@@ -63,7 +63,7 @@ export default function WelcomeScreen() {
           LOGIN
         </Button>
 
-        <Button mode="contained" onPress={() => navigation.navigate("WalkaroundLand")} style={styles.button}>
+        <Button mode="contained" onPress={() => navigation.navigate("Home")} style={styles.button}>
           SWITCH PAGE
         </Button>
         
