@@ -181,6 +181,16 @@ export default function Fence() {
                     items={fenceTypeOptions}
                     onValueChange={(value) => setFenceTypeSelectedValue(value)}
                     value={FenceTypeselectedValue}
+                    style={{
+                      inputIOS: {
+                        textAlign: "center", // Center text horizontally
+                        // Add additional styles if needed
+                      },
+                      inputAndroid: {
+                        textAlign: "center", // Center text horizontally
+                        // Add additional styles if needed
+                      },
+                    }}
                   />
                 </View>
               </View>

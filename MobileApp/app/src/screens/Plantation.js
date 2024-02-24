@@ -177,6 +177,17 @@ import {
                       items={PlantSpaceUnitOptions}
                       onValueChange={(value) => PlantSpaceUnitSetSelectedValue(value)}
                       value={PlantSpaceUnitselectedValue}
+
+                      style={{
+                        inputIOS: {
+                          textAlign: "center", // Center text horizontally
+                          // Add additional styles if needed
+                        },
+                        inputAndroid: {
+                          textAlign: "center", // Center text horizontally
+                          // Add additional styles if needed
+                        },
+                      }}
                     />
                   </View>
                 </View>
@@ -215,6 +226,17 @@ import {
                       items={RowSpacingUnitOptions}
                       onValueChange={(value) => RowSpacingUnitSetSelectedValue(value)}
                       value={RowSpacingUnitselectedValue}
+
+                      style={{
+                        inputIOS: {
+                          textAlign: "center", // Center text horizontally
+                          // Add additional styles if needed
+                        },
+                        inputAndroid: {
+                          textAlign: "center", // Center text horizontally
+                          // Add additional styles if needed
+                        },
+                      }}
                     />
                   </View>
                 </View>

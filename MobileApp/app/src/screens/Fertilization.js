@@ -292,6 +292,17 @@ export default function Fertilization() {
                     items={FertilizerAmountUnitOptions}
                     onValueChange={(value) => FertilizerAmountUnitsetSelectedValue(value)}
                     value={FertilizerAmountUnitselectedValue}
+
+                    style={{
+                      inputIOS: {
+                        textAlign: "center", // Center text horizontally
+                        // Add additional styles if needed
+                      },
+                      inputAndroid: {
+                        textAlign: "center", // Center text horizontally
+                        // Add additional styles if needed
+                      },
+                    }}
                   />
                 </View>
               </View>
