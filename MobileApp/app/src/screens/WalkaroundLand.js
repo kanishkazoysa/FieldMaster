@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
   FlatList,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import { Button, Appbar } from "react-native-paper";
 import * as Location from "expo-location";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -20,20 +20,24 @@ export default function Home() {
   const navigation = useNavigation();
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
-  const mapRef = React.useRef(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [pathCoordinates, setPathCoordinates] = useState([]);
+  const [trackingStarted, setTrackingStarted] = useState(false);
+  const [showCurrentLocation, setShowCurrentLocation] = useState(false);
+  const mapRef = useRef(null);
 
-//   useEffect(() => {
-//     (async () => {
-//       let { status } = await Location.requestForegroundPermissionsAsync();
-//       if (status !== "granted") {
-//         console.error("Permission to access location was denied");
-//         return;
-//       }
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
+        return;
+      }
 
-//       let location = await Location.getCurrentPositionAsync({});
-//       setCurrentLocation(location);
-//     })();
-//   }, []);
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation(location);
+    })();
+  }, []);
 
   const mapTypes = [
     { name: "Standard", value: "standard" },
@@ -49,6 +53,18 @@ export default function Home() {
   const selectMapType = (index) => {
     setMapTypeIndex(index);
     setShowDropdown(false);
+  };
+
+  const focusOnCurrentLocation = () => {
+    setShowCurrentLocation(!showCurrentLocation);
+    if (!showCurrentLocation && currentLocation && mapRef.current) {
+      mapRef.current.animateToRegion({
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
+        latitudeDelta: 0.0007,
+        longitudeDelta: 0.0007,
+      });
+    }
   };
 
   return (
@@ -81,7 +97,24 @@ export default function Home() {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-      ></MapView>
+      >
+      {showCurrentLocation && currentLocation && (
+        <Marker
+          coordinate={{
+            latitude: currentLocation.coords.latitude,
+            longitude: currentLocation.coords.longitude,
+          }}
+          title="Current Location"
+        />
+      )}
+        {pathCoordinates.length > 0 && (
+          <Polyline
+            coordinates={pathCoordinates}
+            strokeColor="#FF0000"
+            strokeWidth={2}
+          />
+        )}
+      </MapView>
 
       <TouchableOpacity
         style={styles.layerIconContainer}
@@ -113,7 +146,7 @@ export default function Home() {
             icon="play-outline"
             size={50}
             mode="contained"
-            onPress={() => console.log("Left Button Pressed")}
+            onPress={focusOnCurrentLocation}
             style={styles.button}
           >
             Start
