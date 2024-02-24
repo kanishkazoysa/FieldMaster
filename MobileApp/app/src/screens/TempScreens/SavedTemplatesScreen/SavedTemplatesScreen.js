@@ -102,14 +102,20 @@ const SavedTemplatesScreen = ({ navigation }) => {
   return (
     <>
       <View>
-        <Appbar.Header style={styles.top_Bar} dark={true} mode='center-aligned'>
-          <Appbar.BackAction
-            onPress={() => {
-              navigation.navigate('SaveScreen');
-            }}
-          />
-          <Appbar.Content title='Saved Templates' />
-        </Appbar.Header>
+        {
+          <Appbar.Header
+            style={styles.top_Bar}
+            dark={true}
+            mode='center-aligned'
+          >
+            <Appbar.BackAction
+              onPress={() => {
+                navigation.navigate('SaveScreen');
+              }}
+            />
+            <Appbar.Content title='Saved Templates' />
+          </Appbar.Header>
+        }
       </View>
       <View style={styles.low_outer}>
         {/* template */}

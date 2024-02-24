@@ -4,6 +4,7 @@ import { Appbar, ThemeProvider, TextInput } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './EditTemplateStyle';
 /* import { Icon } from '@uiw/react-native'; */
+import { useState } from 'react';
 
 const ClearLandIcon = (props) => (
   <MaterialCommunityIcons {...props} name='palm-tree' size={25} color='white' />
@@ -26,7 +27,12 @@ const TypeIcon = (props) => (
   />
 );
 const PerimeterIcon = (props) => (
-  <MaterialCommunityIcons {...props} name='crop' size={25} color='grey' />
+  <MaterialCommunityIcons
+    {...props}
+    name='vector-square'
+    size={25}
+    color='grey'
+  />
 );
 
 const AreaIcon = (props) => (
@@ -39,6 +45,9 @@ const AreaIcon = (props) => (
 );
 
 const EditTemplate = ({ navigation }) => {
+  const [measureNameText, setMeasureNameText] = useState('');
+  const [landTypeText, setLandTypeText] = React.useState('');
+
   return (
     <ThemeProvider>
       <View>
@@ -100,8 +109,8 @@ const EditTemplate = ({ navigation }) => {
           <View style={styles.inputBlock}>
             <Text stye={styles.text02Styling}>Measure Name :</Text>
             <TextInput
-              value={'Rubber estate'}
-              onChangeText={(text) => setText(text)}
+              placeholder='Enter Measure Name'
+              onChangeText={(text) => setMeasureNameText(text)}
               backgroundColor='#edeff2'
               style={styles.textInput}
             />
@@ -109,8 +118,8 @@ const EditTemplate = ({ navigation }) => {
           <View style={styles.inputBlock}>
             <Text stye={styles.text02Styling}>Land Type :</Text>
             <TextInput
-              value={'Flat'}
-              onChangeText={(text) => setText(text)}
+              placeholder='Enter Land Type'
+              onChangeText={(text) => setLandTypeText(text)}
               backgroundColor='#edeff2'
               style={styles.textInput02}
             />

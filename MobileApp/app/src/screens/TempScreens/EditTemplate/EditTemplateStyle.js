@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
   infoBlock: {
     backgroundColor: 'white',
     marginTop: 20,
-    marginHorizontal: 30,
+    marginHorizontal: 10,
     borderRadius: 10,
     padding: 10,
   },
@@ -89,13 +89,13 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   descriptionBlock: {
-    marginHorizontal: 30,
+    marginHorizontal: 10,
     marginTop: 20,
     height: 120,
     backgroundColor: 'white',
     borderRadius: 10,
     paddingTop: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
     marginBottom: 30,
   },
   subTextOuter: {
@@ -115,7 +115,7 @@ export const styles = StyleSheet.create({
     fontSize: 15,
   },
   inputBlock: {
-    marginHorizontal: 30,
+    marginHorizontal: 10,
     marginTop: 20,
     backgroundColor: 'white',
     borderRadius: 10,
@@ -127,13 +127,13 @@ export const styles = StyleSheet.create({
   textInput: {
     backgroundColor: 'white',
     height: 40,
-    width: '60%',
+    width: '65%',
     marginHorizontal: 10,
   },
   textInput02: {
     backgroundColor: 'white',
     height: 40,
-    width: '60%',
+    width: '65%',
     marginLeft: 40,
   },
 });

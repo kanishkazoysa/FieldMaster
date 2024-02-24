@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StatusBar } from 'react-native';
 import { Appbar, TextInput } from 'react-native-paper';
 import { styles } from './SaveScreenStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -28,8 +28,10 @@ export function SaveScreen({ navigation }) {
   const [descriptionText, setDescriptionText] = React.useState('');
 
   return (
-    <>
-      <Appbar.Header style={styles.top_Bar_Whole}>
+    <View>
+      <StatusBar barStyle={'light-content'} backgroundColor={'#0866FF'} />
+      {/* get rid of the top white space above the appbar */}
+      <Appbar.Header style={styles.top_Bar_Whole} statusBarHeight={0}>
         <View style={styles.top_Bar_View}>
           <Text
             style={styles.top_Text_Styling}
@@ -43,7 +45,7 @@ export function SaveScreen({ navigation }) {
         </View>
       </Appbar.Header>
       {/* three inner views */}
-      <ScrollView>
+      <ScrollView style={{ backgroundColor: '#ffffff8a' }}>
         <View style={styles.low_outer}>
           <View style={[styles.inner_View, styles.inner_View_01]}>
             <View style={styles.inner_View_01_inner}>
@@ -107,9 +109,10 @@ export function SaveScreen({ navigation }) {
               />
             </View>
           </View>
+          <View style={styles.low_outer_02}></View>
         </View>
       </ScrollView>
-    </>
+    </View>
   );
 }
 

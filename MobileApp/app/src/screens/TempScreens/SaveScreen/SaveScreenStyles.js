@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'lightblue',
+    backgroundColor: '#ffffff8a',
     padding: 20,
     borderRadius: 10,
     width: 200,
@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
     marginTop: 0,
   },
   inner_View: {
-    backgroundColor: 'lightgrey',
+    backgroundColor: '#ffffff8a',
   },
   inner_view_text_style: {
     fontSize: 15,
@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
   inner_View_01: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff9f9b6',
+
     height: 200,
   },
   inner_View_01_inner: {
@@ -66,8 +66,13 @@ export const styles = StyleSheet.create({
     /*  */
   },
   low_outer: {
-    flex: 1,
+    flex: 0.5,
     backgroundColor: 'lightgrey',
+  },
+  low_outer_02: {
+    flex: 1,
+    backgroundColor: '#ffffff8a',
+    height: 300,
   },
   row_02_col_01: {
     flexDirection: 'row',
@@ -85,9 +90,7 @@ export const styles = StyleSheet.create({
   area_text_styling: {
     marginLeft: 4,
   },
-  inner_view_02_inner: {
-    backgroundColor: 'lightgrey',
-  },
+  inner_view_02_inner: {},
   input_view: {
     backgroundColor: 'white',
     flexDirection: 'row',
