@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./Navbar.css";
 import MobileNav from "./MobileNav/MobileNav";
 import { Link } from "react-scroll";
+import About from "./About";
 
 
 function NavBar() {
@@ -31,10 +32,10 @@ function NavBar() {
             </li>
 
             <li>
-              <Link activeClass="active" to="About" smooth spy offset={-120} className="menu-item">About</Link>
+              <Link activeClass="active" to="./About" smooth spy offset={-120} className="menu-item">About</Link>
             </li>
             <li>
-              <Link activeClass="active" to="setup" smooth spy offset={-120} className="menu-item">Setup</Link>
+              <Link activeClass="active" to="./Setup" smooth spy offset={-120} className="menu-item">Setup</Link>
             </li>
 
             <li>
