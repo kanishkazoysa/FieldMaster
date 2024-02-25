@@ -24,6 +24,7 @@ import Fertilization from "./src/screens/Fertilization";
 import FertilizationDetails from "./src/screens/FertilizationDetails";
 import SavedTemplatesScreen from "./src/screens/SavedTemplatesScreen;";
 import EditTemplate from "./src/screens/EditTemplate";
+import ResizeMap from "./src/screens/ResizeMap";
 
 const Stack = createStackNavigator();
 
@@ -120,6 +121,8 @@ const App = () => {
         <Stack.Screen name="FertilizationDetails" component={FertilizationDetails} />
         <Stack.Screen name="SavedTemplatesScreen" component={SavedTemplatesScreen} />
         <Stack.Screen name="EditTemplate" component={EditTemplate} />
+        <Stack.Screen name="ResizeMap" component={ResizeMap} />
+
 
 
 

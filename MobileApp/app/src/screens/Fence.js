@@ -81,7 +81,7 @@ export default function Fence() {
     label: "M",
     value: null,
     color: "red",
-    width: "1000%",
+    width: "100%",
   };
 
   const lengthUnitOptions = [

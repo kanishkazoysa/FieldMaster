@@ -187,7 +187,6 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   low_outer: {
-
     height: '100%',
   },
   top_Bar: {
@@ -290,7 +289,7 @@ const styles = StyleSheet.create({
   descriptionBlock: {
     marginHorizontal: 40,
     marginTop: 20,
-    height: 200,
+    height:"max-content",
   },
   subTextOuter: {
     marginTop: 10,

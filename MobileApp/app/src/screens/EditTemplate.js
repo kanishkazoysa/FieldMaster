@@ -161,6 +161,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#007BFF',
     color: 'white',
+
   },
   imageView: {
     alignItems: 'center',
@@ -258,9 +259,8 @@ export const styles = StyleSheet.create({
   },
   appBarTextStyle: {
     color: 'white',
-    marginHorizontal: 120,
-    fontWeight: 'bold',
-    fontSize: 15,
+    marginHorizontal: 150,
+    fontSize: 18,
   },
   inputBlock: {
     marginHorizontal: 10,

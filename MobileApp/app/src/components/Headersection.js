@@ -20,7 +20,7 @@ const Headersection = ({ navigation, title }) => {
 
 const styles = {
   header: {
-    height: 50,
+    height: 45,
     backgroundColor: "#007BFF",
 
     ...Platform.select({
