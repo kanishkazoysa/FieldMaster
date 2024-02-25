@@ -22,6 +22,7 @@ import TemplateView from "./src/screens/TemplateView";
 import PlantationDetails from "./src/screens/PlantationDetails";
 import Fertilization from "./src/screens/Fertilization";
 import FertilizationDetails from "./src/screens/FertilizationDetails";
+import SavedTemplatesScreen from "./src/screens/SavedTemplatesScreen;";
 
 const Stack = createStackNavigator();
 
@@ -116,6 +117,8 @@ const App = () => {
         <Stack.Screen name="PlantationDetails" component={PlantationDetails} />
         <Stack.Screen name="Fertilization" component={Fertilization} />
         <Stack.Screen name="FertilizationDetails" component={FertilizationDetails} />
+        <Stack.Screen name="SavedTemplatesScreen" component={SavedTemplatesScreen} />
+
 
         
       </Stack.Navigator>

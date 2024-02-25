@@ -112,6 +112,9 @@ export default function Home() {
     setSearchQuery("");
   };
 
+  const handleTemplatePress = () => {
+    navigation.navigate("SavedTemplatesScreen");
+  }
 
   
 
@@ -212,7 +215,7 @@ export default function Home() {
             buttonColor="#007BFF"
             icon="content-save-all"
             mode="contained"
-            onPress={() => console.log("Right Button Pressed")}
+            onPress={handleTemplatePress}
             style={styles.button}
           >
             Templates
