@@ -99,7 +99,8 @@ const TemplateView = ({ navigation }) => {
         <View style={styles.iconBlockStyling}>
           <View style={styles.iconBlockInner}>
             <View style={styles.iconOuter_01}>
-            <TouchableOpacity ><ClearLandIcon /></TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+              navigation.navigate('ClearLand');}}><ClearLandIcon /></TouchableOpacity>
             </View>
             <Text>Clear land</Text>
           </View>
