@@ -32,7 +32,7 @@ export default function LoginScreen() {
       
       const response = await fetch(
         
-        `http://10.10.5.238:5000/api/users/login`,
+        `http://10.10.20.85:5000/api/users/login`,
         {
           method: "POST",
           headers: {

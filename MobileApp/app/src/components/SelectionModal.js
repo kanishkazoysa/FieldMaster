@@ -1,7 +1,8 @@
 // SelectionModal.js
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
-
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
+import { IconButton } from "react-native-paper";
+import { BlurView } from "expo-blur";
 const SelectionModal = ({ modalVisible, setModalVisible, options }) => {
   const closeModal = () => {
     setModalVisible(false);
@@ -9,50 +10,110 @@ const SelectionModal = ({ modalVisible, setModalVisible, options }) => {
 
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={modalVisible}
       onRequestClose={closeModal}
     >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          {options.map((option, index) => (
-            <TouchableOpacity key={index} onPress={closeModal}>
-              <Text style={styles.modalText}>{option}</Text>
-            </TouchableOpacity>
-          ))}
+    <BlurView intensity={30} style={styles.modalBackground}>
+        <View style={styles.centeredView}>
+        <IconButton
+          icon="close"
+          iconColor="white"
+          size={30}
+          onPress={closeModal}
+          style={styles.cancelButton}
+        />
+          <View style={styles.modalView}>
+          
+            {options.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.modalOption}
+                onPress={closeModal}
+              >
+                <View style={styles.innerView1}>
+                  <IconButton icon={option.icon} iconColor="white" size={45} />
+                </View>
+                <View style={styles.innerView2}>
+                  <Text style={styles.modelHeader}>{option.Header}</Text>
+                  <Text style={styles.modelText}>{option.Text}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
-      </View>
+        </BlurView>
+
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
+    marginTop: 12,
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    padding: 15,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
-      height: 2
+      width: 5,
+      height: 9,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.4,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
+    width: "80%",
+    height: "50%",
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  }
+  modalOption: {
+    flex: 1,
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 10,
+    padding: 10,
+    backgroundColor: "#007BFF",
+    borderRadius: 11,
+  },
+  modelHeader: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  modelText: {
+    marginTop: 10,
+    color: "white",
+    fontSize: 12,
+    
+  },
+
+  innerView1: {
+    alignItems: "center",
+    flex: 1.2,
+    height: "100%",
+  },
+  innerView2: {
+    flex: 4,
+    height: "100%",
+  },
+  cancelButton: {
+    position: 'absolute',
+    top: 180,
+    right: 25,
+  },
 });
 
 export default SelectionModal;
