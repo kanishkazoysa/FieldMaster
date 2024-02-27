@@ -56,7 +56,7 @@ const Otp = ({ route }) => {
     }
   };
   const handleTryAgain = async () => {
-    const response = await fetch("http://10.10.5.238:5000/api/mail/otp", {
+    const response = await fetch("http://10.10.20.85:5000/api/mail/otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
