@@ -93,10 +93,8 @@ const styles = StyleSheet.create({
     borderRadius: 11,
     width: 90,
     height: 40,
-    marginBottom: 5,
     marginLeft: -70,
-    marginTop: 25,
-    padding: -10
+    marginTop: 30,
   },
   pressedButton: {
     borderColor: '#0866FF', 

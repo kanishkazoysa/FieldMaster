@@ -25,7 +25,17 @@ const Dropdown = () => {
         items={options}
         onValueChange={(value) => setSelectedValue(value)}
         value={selectedValue}
-        style={{cursor: 'pointer', }}
+        
+        style={{
+          inputIOS: {
+            textAlign: 'center',
+          },
+          inputAndroid: {
+            textAlign: 'center',
+          }
+          
+          
+        }}
        />
     </View>
   );

@@ -36,13 +36,12 @@ import DropdownStones from "../components/DropdownStones";
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
 
-
 export default function ClearLand() {
   const [text, setText] = React.useState("");
 
   const [searchItem, setSearchItem] = useState("");
   const [searchItems, setSearchItems] = useState([]);
-  
+
   const handleSearchItem = () => {
     if (searchItem.trim() !== "") {
       setSearchItems([...searchItems, { item: searchItem, machineCount }]);
@@ -62,17 +61,14 @@ export default function ClearLand() {
   };
 
   const handleClear = () => {
-    navigation.navigate("EffortOutput",{
-      laborCount : laborCount,
-      workHours : workHours,  
-      machineCount :machineCount,
-      plantCount : plantCount,
-      stonesCount : stonesCount,
-      
-
+    navigation.navigate("EffortOutput", {
+      laborCount: laborCount,
+      workHours: workHours,
+      machineCount: machineCount,
+      plantCount: plantCount,
+      stonesCount: stonesCount,
     });
-
-  }
+  };
 
   /*displAY*/
 
@@ -94,25 +90,25 @@ export default function ClearLand() {
     setDisplayValues(newDisplayValues);
   };
 
-
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
     //validation part Add button
 
     const combinedValue1 = plantCount + " x " + "low";
-    const newDisplayValues1 = [...displayValues1, combinedValue1].filter(Boolean);
+    const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
+      Boolean
+    );
     setDisplayValues1(newDisplayValues1);
     setStonesCount("");
     //setinputValueFenceAmount("");
   };
 
-  const handleRemoveValue1 = (index) => {  
+  const handleRemoveValue1 = (index) => {
     const newDisplayValues1 = [...displayValues1];
     newDisplayValues1.splice(index, 1);
     setDisplayValues1(newDisplayValues1);
   };
-
 
   const [displayValues2, setDisplayValues2] = useState([]);
 
@@ -120,7 +116,9 @@ export default function ClearLand() {
     //validation part Add button
 
     const combinedValue2 = plantCount + " x " + "low";
-    const newDisplayValues2 = [...displayValues2, combinedValue2].filter(Boolean);
+    const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
+      Boolean
+    );
     setDisplayValues2(newDisplayValues2);
     setPlantCount("");
     //setinputValueFenceAmount("");
@@ -147,12 +145,12 @@ export default function ClearLand() {
             <Card.Content
               style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
             >
-             <MaterialCommunityIcons
-                    name="sprout-outline"
-                    size={20}
-                    color="#65676B"
-                  />
-              <Text style={{marginLeft: 5 }} variant="titleLarge">
+              <MaterialCommunityIcons
+                name="sprout-outline"
+                size={20}
+                color="#65676B"
+              />
+              <Text style={{ marginLeft: 5 }} variant="titleLarge">
                 Weeds
               </Text>
               <ButtonForWeed></ButtonForWeed>
@@ -164,18 +162,14 @@ export default function ClearLand() {
             <Card.Content
               style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
             >
-              <MaterialCommunityIcons
-                    name="sprout"
-                    size={20}
-                    color="#65676B"
-                  />
+              <MaterialCommunityIcons name="sprout" size={20} color="#65676B" />
               <Text style={{ marginLeft: 5 }} variant="titleLarge">
                 Plants
               </Text>
               <DropdownPlants />
               <Text style={{ marginTop: 30, marginLeft: 10, fontSize: 16 }}>
                 Count :{" "}
-                <View style={{ marginTop: -20 }}>
+                <View style={{ marginTop: -1 }}>
                   <TextInput
                     style={{
                       backgroundColor: "transparent",
@@ -203,8 +197,6 @@ export default function ClearLand() {
               >
                 Add
               </Button>
-
-              
             </Card.Content>
 
             {/* Display values */}
@@ -236,13 +228,13 @@ export default function ClearLand() {
                 style={{ marginRight: 5 }}
                 source={require("../../assets/Stones.png")}
               />
-              <Text style={{ }} variant="titleLarge">
+              <Text style={{}} variant="titleLarge">
                 Stones
               </Text>
               <DropdownStones />
               <Text style={{ marginTop: 30, marginLeft: 10, fontSize: 16 }}>
                 Count :{" "}
-                <View style={{ marginTop: -20 }}>
+                <View style={{ marginTop: -1 }}>
                   <TextInput
                     style={{
                       backgroundColor: "transparent",
@@ -265,7 +257,7 @@ export default function ClearLand() {
                 style={styles.addButton}
                 labelStyle={styles.addButtonText}
                 buttonColor="#007BFF"
-                mode="contained-tonal"
+                mode="contained"
                 onPress={handleAdd1}
               >
                 Add
@@ -298,11 +290,11 @@ export default function ClearLand() {
               style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
             >
               <MaterialCommunityIcons
-                    name="account-hard-hat"
-                    size={20}
-                    color="#65676B"
-                  />
-              <Text style={{ marginLeft: 5}} variant="titleLarge">
+                name="account-hard-hat"
+                size={20}
+                color="#65676B"
+              />
+              <Text style={{ marginLeft: 5 }} variant="titleLarge">
                 Labors :
               </Text>
               <View style={{ marginTop: -5 }}>
@@ -331,11 +323,11 @@ export default function ClearLand() {
             <Card.Content
               style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
             >
-             <MaterialCommunityIcons
-                    name="clock-time-eight-outline"
-                    size={20}
-                    color="#65676B"
-                  />
+              <MaterialCommunityIcons
+                name="clock-time-eight-outline"
+                size={20}
+                color="#65676B"
+              />
               <Text style={{ marginLeft: 5 }} variant="titleLarge">
                 Work Hours :
               </Text>
@@ -366,10 +358,10 @@ export default function ClearLand() {
               style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
             >
               <MaterialCommunityIcons
-                    name="excavator"
-                    size={20}
-                    color="#65676B"
-                  />
+                name="excavator"
+                size={20}
+                color="#65676B"
+              />
               <Text style={{ marginLeft: 5 }} variant="titleLarge">
                 Machinery
               </Text>
@@ -458,9 +450,15 @@ export default function ClearLand() {
           </Card>
 
           {/* Calculate button */}
-          <View style={{ display: "flex", flexDirection: "column", marginTop: 90,justifyContent:"space-between" ,width: "87%" }}>
-
-          <CustomButton
+          <View
+            style={{
+            
+              marginTop: 50,
+              marginBottom: 50,
+           
+            }}
+          >
+            <CustomButton
               onPress={handleClear}
               text="Calculate"
               iconName="calculator" // Change the icon name as needed
@@ -475,37 +473,37 @@ export default function ClearLand() {
 }
 
 const styles = StyleSheet.create({
- 
   container2: {
     alignItems: "center",
-    
   },
 
   card1: {
-    height: 'max-content',
+    height: "max-content",
     borderRadius: 11,
-    marginTop: 10,
-    width : '93%',
+    marginTop: 15,
+    paddingBottom: 5,
+    width: "93%",
     backgroundColor: "#fff",
   },
   card2: {
-    height: 'max-content',
-    marginTop: 10,
-    width : '93%',
+    height: "max-content",
+    marginTop: 15,
+    width: "93%",
     backgroundColor: "#fff",
     borderRadius: 11,
   },
   card3: {
-    height: 'max-content',
-    marginTop: 10,
-    width : '93%',
+    height: "max-content",
+    marginTop: 15,
+    paddingBottom: 10,
+    width: "93%",
     borderRadius: 11,
     backgroundColor: "#fff",
   },
   calButtton: {
     justifyContent: "center",
     borderRadius: 11,
-    width : '90%',
+    width: "90%",
     marginTop: 30,
   },
   buttonText: {
@@ -523,20 +521,19 @@ const styles = StyleSheet.create({
     width: 253,
   },
   addButton: {
-    width: 10,
+    width: 20,
     height: 35,
     borderRadius: 11,
     marginTop: 27,
-    marginLeft: 15,
+    marginLeft: 25,
     justifyContent: "center",
     alignItems: "center",
   },
   addButtonText: {
     color: "#fff",
-    width: '80%',
+    width: "80%",
     height: 20,
   },
-
 
   displayValuesContainer: {
     flexDirection: "row",
