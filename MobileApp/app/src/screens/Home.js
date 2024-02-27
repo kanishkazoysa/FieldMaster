@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
-  Modal,
+ KeyboardAvoidingView,
   TextInput,
   FlatList,
 } from "react-native";
@@ -141,6 +141,7 @@ export default function Home() {
   };
 
   return (
+    <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : "`  `"}>
     <View style={styles.container}>
       <MapView
         ref={mapRef}
@@ -256,6 +257,7 @@ export default function Home() {
         </View>
       </View>
     </View>
+    </KeyboardAvoidingView>
   );
 }
 

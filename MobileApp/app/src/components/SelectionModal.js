@@ -3,19 +3,30 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import { IconButton } from "react-native-paper";
 import { BlurView } from "expo-blur";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+
+
 const SelectionModal = ({ modalVisible, setModalVisible, options }) => {
   const closeModal = () => {
     setModalVisible(false);
   };
+  const navigation = useNavigation();
+  const handleOptionClick = (option, index) => {
+    if (index === 0) {
+      navigation.navigate('WalkaroundLand'); 
+    }
+    closeModal();
+  };
+
 
   return (
     <Modal
-      animationType="fade"
+      animationType="slide"
       transparent={true}
       visible={modalVisible}
       onRequestClose={closeModal}
     >
-    <BlurView intensity={30} style={styles.modalBackground}>
+    <BlurView intensity={20} style={styles.modalBackground}>
         <View style={styles.centeredView}>
         <IconButton
           icon="close"
@@ -30,7 +41,7 @@ const SelectionModal = ({ modalVisible, setModalVisible, options }) => {
               <TouchableOpacity
                 key={index}
                 style={styles.modalOption}
-                onPress={closeModal}
+                onPress={() => handleOptionClick(option, index)}
               >
                 <View style={styles.innerView1}>
                   <IconButton icon={option.icon} iconColor="white" size={45} />
