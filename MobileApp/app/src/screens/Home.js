@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
- KeyboardAvoidingView,
   TextInput,
   FlatList,
 } from "react-native";
@@ -20,6 +19,7 @@ import {
   faLayerGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import SelectionModal from "../components/SelectionModal";
+import ProfileModel from "../components/ProfileModel";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,6 +31,7 @@ export default function Home() {
   const [searchedLocation, setSearchedLocation] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [profileModalVisible, setProfileModalVisible] = useState(false);
 
   const mapRef = React.useRef(null);
 
@@ -49,6 +50,9 @@ export default function Home() {
 
   const startMeasure = () => {
     setModalVisible(true);
+  };
+  const ProfileManage = () => {
+    setProfileModalVisible(true);
   };
 
   const options = [
@@ -141,7 +145,7 @@ export default function Home() {
   };
 
   return (
-    <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : "`  `"}>
+   
     <View style={styles.container}>
       <MapView
         ref={mapRef}
@@ -195,7 +199,9 @@ export default function Home() {
           </TouchableOpacity>
         )}
         <View style={{ marginLeft: 10 }}>
-          <Avatar.Image size={44} source={require("../images/zoysa.png")} />
+        <TouchableOpacity onPress={ProfileManage}>
+          <Avatar.Image size={44} source={require("../images/profilePhoto.png")}   />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -232,6 +238,11 @@ export default function Home() {
         options={options}
       />
 
+      <ProfileModel
+        profileModalVisible={profileModalVisible}
+        setProfileModalVisible={setProfileModalVisible}
+      />
+
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
           <Button
@@ -257,7 +268,7 @@ export default function Home() {
         </View>
       </View>
     </View>
-    </KeyboardAvoidingView>
+    
   );
 }
 
@@ -275,7 +286,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     right: 10,
-    top: Platform.OS === "android" ? "25%" : "27%",
+    top: Platform.OS === "android" ? "22%" : "27%",
     transform: [{ translateY: -12 }], // Adjust translateY to vertically center the icon
     zIndex: 1,
     flexDirection: "row",
@@ -305,7 +316,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0, 0.7)",
     padding: 10,
     borderRadius: 5,
-    top: Platform.OS === "android" ? "15%" : "18%",
+    top: Platform.OS === "android" ? "13%" : "18%",
     right: 10,
   },
   buttonContainer: {

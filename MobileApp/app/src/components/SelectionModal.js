@@ -2,7 +2,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import { IconButton } from "react-native-paper";
-import { BlurView } from "expo-blur";
+
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 
@@ -21,12 +21,18 @@ const SelectionModal = ({ modalVisible, setModalVisible, options }) => {
 
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={modalVisible}
       onRequestClose={closeModal}
     >
-    <BlurView intensity={20} style={styles.modalBackground}>
+    <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.overlay}
+          activeOpacity={1} // Prevents clicks on the overlay from propagating to the modal
+          onPress={closeModal}
+        />
+    
         <View style={styles.centeredView}>
         <IconButton
           icon="close"
@@ -54,18 +60,19 @@ const SelectionModal = ({ modalVisible, setModalVisible, options }) => {
             ))}
           </View>
         </View>
-        </BlurView>
+        </View>
 
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  modalBackground: {
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.7 )", // Semi-transparent overlay color
   },
+  
+ 
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -84,7 +91,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.4,
     shadowRadius: 4,
-    elevation: 5,
     width: "80%",
     height: "50%",
   },
@@ -122,7 +128,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     position: 'absolute',
-    top: 180,
+    top: 160,
     right: 25,
   },
 });

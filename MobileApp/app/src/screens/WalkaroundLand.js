@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     right: 10,
-    top: Platform.OS === "android" ? "25%" : "18%",
+    top: Platform.OS === "android" ? "15%" : "18%",
     transform: [{ translateY: -12 }], // Adjust translateY to vertically center the icon
     zIndex: 1,
     flexDirection: "row",
