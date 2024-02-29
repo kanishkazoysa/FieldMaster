@@ -16,6 +16,7 @@ import {
   responsiveWidth,
 } from "react-native-responsive-dimensions";
 import { Appbar, TextInput,Button } from "react-native-paper";
+import axios from "axios";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -28,13 +29,7 @@ export default function ForgotPassword() {
         return;
       }
 
-      const response = await fetch("http://10.10.5.238:5000/api/mail/otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+      const response = await axios.post("http://10.10.20.85:5000/api/mail/otp", {email});
 
       if (response.status === 200) {
         const data = await response.json();

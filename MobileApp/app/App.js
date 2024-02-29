@@ -14,9 +14,13 @@ import ForgotPassword from "./src/screens/ForgotPassword";
 import Otp from "./src/screens/Otp";
 import CreateNewPassword from "./src/screens/CreateNewPassword";
 import Home from "./src/screens/Home";
+import WalkaroundLand from "./src/screens/WalkaroundLand";
 import BackButton from "./src/components/BackButton";
 import Fence from "./src/screens/Fence";
 import FenceDetails from "./src/screens/FenceDetails";
+
+
+
 
 const Stack = createStackNavigator();
 
@@ -31,17 +35,47 @@ const App = () => {
         }}
       >
         <Stack.Screen name="splashScreen" component={SplashScreen} />
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Forgot" component={ForgotPassword} />
-        <Stack.Screen name="Otp" component={Otp} />
-        <Stack.Screen name="NewPassword" component={CreateNewPassword} />
-        <Stack.Screen name="Home" component={Home} />
-
-        <Stack.Screen name="Fence" component={Fence} />
-        <Stack.Screen name="FenceDetails" component={FenceDetails} />
+        <Stack.Screen
+          name="Welcome"
+          component={WelcomeScreen}
+         
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+         
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
         
+        />
+        <Stack.Screen
+          name="Forgot"
+          component={ForgotPassword}
+        
+        />
+        <Stack.Screen
+          name="Otp"
+          component={Otp}
+         
+        />
+        <Stack.Screen
+          name="NewPassword"
+          component={CreateNewPassword}
+         
+        />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          
+       />
+       <Stack.Screen
+          name="WalkaroundLand"
+          component={WalkaroundLand}
+       />
+       <Stack.Screen name="Fence" component={Fence} />
+        <Stack.Screen name="FenceDetails" component={FenceDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );
