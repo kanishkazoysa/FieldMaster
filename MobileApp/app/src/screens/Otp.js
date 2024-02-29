@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Appbar, Button } from "react-native-paper";
-
+import axios from "axios";
 import {
   responsiveHeight,
   responsiveWidth,
@@ -26,18 +26,13 @@ const Otp = ({ route }) => {
   const inputRefs = Array.from({ length: 6 }, () => React.createRef());
   const { Otp, email } = route.params;
 
+
   // Implement logic to handle OTP verification
   const handleContinue = async () => {
-    console.log("gfdgh");
     const enteredOTP = otp.join("");
     try {
-      const response = await fetch(`http://10.10.5.238:5000/api/mail/verify`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, enteredOTP }),
-      });
+      const response = await axios.post(`http://10.10.5.238:5000/api/mail/verify`, {email, enteredOTP});
+
       if (response.ok) {
         console.log("OTP is correct, navigating to NewPassword screen.");
         navigation.navigate("NewPassword", { email });
@@ -45,18 +40,13 @@ const Otp = ({ route }) => {
         const data = await response.json();
         Alert.alert("Error", data.error);
       }
-      //   if (enteredOTP == Otp) {
-      //     console.log("OTP is correct, navigating to NewPassword screen.");
-      //     navigation.navigate("NewPassword", { email });
-      //   } else {
-      //     alert("Invalid OTP");
-      //   }
+    
     } catch {
       Alert.alert("Error", "Something went wrong");
     }
   };
   const handleTryAgain = async () => {
-    const response = await fetch("http://10.10.5.238:5000/api/mail/otp", {
+    const response = await fetch("http://10.10.20.85:5000/api/mail/otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

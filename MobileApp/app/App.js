@@ -14,7 +14,8 @@ import ForgotPassword from "./src/screens/ForgotPassword";
 import Otp from "./src/screens/Otp";
 import CreateNewPassword from "./src/screens/CreateNewPassword";
 import Home from "./src/screens/Home";
-import BackButton from "./src/components/BackButton";
+import WalkaroundLand from "./src/screens/WalkaroundLand";
+
 
 
 
@@ -34,75 +35,38 @@ const App = () => {
         <Stack.Screen
           name="Welcome"
           component={WelcomeScreen}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-          })}
+         
         />
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => <BackButton navigation={navigation} />
-          })}
         />
         <Stack.Screen
           name="Login"
           component={LoginScreen}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => <BackButton navigation={navigation} />
-          
-          })}
         />
         <Stack.Screen
           name="Forgot"
           component={ForgotPassword}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => <BackButton navigation={navigation} />
-          })}
+          
         />
         <Stack.Screen
           name="Otp"
           component={Otp}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-           headerLeft: () => <BackButton navigation={navigation} />
-          })}
+       
         />
         <Stack.Screen
           name="NewPassword"
           component={CreateNewPassword}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => (
-              <IconButton
-                icon="arrow-left"
-                iconColor="#fff"
-                onPress={() => navigation.goBack()}
-              />
-            ),
-          })}
+          
         />
+        <Stack.Screen
+          name="WalkaroundLand"
+          component={WalkaroundLand}
+       />
         <Stack.Screen
           name="Home"
           component={Home}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-          })}
        />
       </Stack.Navigator>
     </NavigationContainer>
