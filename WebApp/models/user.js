@@ -19,19 +19,12 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
-    token: {
-      type: String,
-      default: "",
-    },
   },
   {
     timestamps: true,
   }
 );
-const userModel = mongoose.model("users", userSchema);
-module.exports = userModel;
 
+const userModel = mongoose.model("users", userSchema);
+
+module.exports = userModel;
