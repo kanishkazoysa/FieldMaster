@@ -113,7 +113,7 @@ export default function Home() {
   };
 
   const handleTemplatePress = () => {
-    navigation.navigate("SavedTemplatesScreen");
+    navigation.navigate("");
   }
 
   
