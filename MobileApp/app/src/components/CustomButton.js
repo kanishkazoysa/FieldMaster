@@ -17,7 +17,7 @@ const CustomButton = ({ onPress, text, iconName, iconColor, buttonColor, textSty
 
 const styles = {
   button: {
-    width: 337,
+    width: 347,
     height: 40,
     marginTop: 10,
     borderRadius: 11,

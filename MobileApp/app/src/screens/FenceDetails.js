@@ -165,7 +165,8 @@ export default function FenceDetails({ route }) {
 
 
       {/* Top section */}
-      <View style={styles.box}>
+      <View style={styles.container1}>
+
         <View style={styles.box1}>
           <Text style={styles.titleText}>Total posts / Sticks</Text>
           <View style={styles.propertyBox}>
@@ -190,13 +191,13 @@ export default function FenceDetails({ route }) {
             </View>
           </View>
         </View>
-      </View>
+      
 
       {/* Second section */}
 
-      <View style={styles.box}>
+      
         <View style={styles.box2}>
-          <View style={styles.box2Inner}>
+         
             <View style={styles.box2Property}>
               <MaterialCommunityIcons
                 name="vector-square"
@@ -218,16 +219,16 @@ export default function FenceDetails({ route }) {
                 <Text style={styles.Box2PropertyLabel}>Area</Text>
                 <Text style={styles.Box2PropertyValue}>100 acres</Text>
               </View>
-            </View>
+          
           </View>
-        </View>
+        
       </View>
 
       {/* Third section */}
 
-      <View style={styles.box}>
+    
         <View style={styles.box3}>
-          <View style={styles.inner}>
+          
             <Text style={styles.innertopText}>Result based on</Text>
 
             <View style={styles.innercenter}>
@@ -253,16 +254,14 @@ export default function FenceDetails({ route }) {
               {data.map((value, index) => (
                 <Text key={index}>{value}</Text>
                    ))}
-                <Text style={styles.perimeterText}></Text>
               </View>
             </View>
-          </View>
-        </View>
+      
       </View>
 
       {/* Bottom section */}
 
-      <View style={styles.box}>
+  
         <View style={styles.bottom}>
           <CustomButton
               onPress={print}
@@ -295,7 +294,7 @@ const styles = StyleSheet.create({
 
   /*Top Section*/
 
-  box: {
+  container1: {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
@@ -309,6 +308,10 @@ const styles = StyleSheet.create({
     marginTop: 50,
     alignItems: "center",
     borderRadius: 11,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 8,
   },
 
   titleText: {
@@ -332,7 +335,6 @@ const styles = StyleSheet.create({
     justifyContent: "center", // or remove it for default behavior
     backgroundColor: "white",
     width: "46%",
-    height: 50,
     padding: 7,
   },
 
@@ -340,7 +342,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     marginLeft: 5,
     width: "70%",
-    height: 40,
     backgroundColor: "white",
   },
 
@@ -357,35 +358,33 @@ const styles = StyleSheet.create({
 
   box2: {
     width: 337,
-    height: 74,
+    height: 80,
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "row",
+    padding: 10,
     backgroundColor: "white",
     marginTop: 15,
     borderRadius: 11,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 8,
   },
 
-  box2Inner: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "80%",
-    width: "100%",
-    backgroundColor: "white",
-  },
+  
   box2Property: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "left",
     backgroundColor: "white",
     width: "46%",
-    height: 50,
   },
+
   box2PropertyDetails: {
     flexDirection: "column",
     marginLeft: 5,
     width: "50%",
-    height: 40,
     backgroundColor: "white",
   },
   Box2PropertyLabel: {
@@ -400,18 +399,16 @@ const styles = StyleSheet.create({
 
   box3: {
     width: 337,
-    height: 210,
-    alignItems: "center",
-    justifyContent: "center",
+   // height: "max-content",
+    height: 220,
     backgroundColor: "white",
     marginTop: 15,
     borderRadius: 11,
-  },
-
-  inner: {
-    width: "80%",
-    height: "80%",
-    backgroundColor: "white",
+    padding: 30,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 8,
   },
 
   innertopText: {
@@ -422,16 +419,13 @@ const styles = StyleSheet.create({
   innercenter: {
     flexDirection: "row",
     width: "100%",
-    height: 50,
-    alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "white",
-    marginVertical: 5,
+    marginVertical: 8,
   },
 
   innersquareleft: {
     width: "50%",
-    height: 40,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -440,7 +434,6 @@ const styles = StyleSheet.create({
 
   innersquareright: {
     width: "45%",
-    height: 40,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",
@@ -449,11 +442,10 @@ const styles = StyleSheet.create({
   innersquareright1: {
     width: "45%",
     height: 20,
-    flexDirection: "row",
-    alignItems: "center",
+    marginTop: 10,
+    justifyContent: "flex-start",
     backgroundColor: "white",
     flexDirection: "column",
-    alignItems: "flex-start",
   },
 
   /* bottom section */
@@ -461,7 +453,7 @@ const styles = StyleSheet.create({
   bottom: {
     alignItems: "flex-end",
     justifyContent: "flex-end",
-    marginTop: 80,
+    marginTop: 50,
   },
 
 });

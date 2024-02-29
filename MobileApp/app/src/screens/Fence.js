@@ -20,12 +20,13 @@ import CustomButton from "../components/CustomButton";
 
 export default function Fence() {
   const [FenceTypeselectedValue, setFenceTypeSelectedValue] = useState(null);
-  const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] =useState(null);
+  const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] =
+    useState(null);
   const [inputValueFenceLength, setinputValueFenceLength] = useState("");
   const [inputValueFenceAmount, setinputValueFenceAmount] = useState("");
   const [inputValuePostspace, setinputValuePostspace] = useState("");
-  const [perimeter,setperimeter] = useState('1500');
-  const [totalstickamount,settotalstickamount] = useState(0);
+  const [perimeter, setperimeter] = useState("1500");
+  const [totalstickamount, settotalstickamount] = useState(0);
   const navigation = useNavigation();
 
   const [displayValues, setDisplayValues] = useState([]);
@@ -68,7 +69,6 @@ export default function Fence() {
     label: "Select Type",
     value: null,
     color: "blue",
-   
   };
 
   const fenceTypeOptions = [
@@ -80,8 +80,7 @@ export default function Fence() {
   const placeholderPostSpaceUnit = {
     label: "M",
     value: null,
-    color: "red",
-    width: "100%",
+    color: "blue",
   };
 
   const lengthUnitOptions = [
@@ -90,9 +89,13 @@ export default function Fence() {
   ];
 
   const handleFenceDetails = () => {
-    if (!PostSpaceUnitselectedValue || !FenceTypeselectedValue || !inputValuePostspace) {
+    if (
+      !PostSpaceUnitselectedValue ||
+      !FenceTypeselectedValue ||
+      !inputValuePostspace
+    ) {
       // Display error message
-      Alert.alert('Error', 'Please fill in all fields');
+      Alert.alert("Error", "Please fill in all fields");
       return;
     }
 
@@ -103,13 +106,11 @@ export default function Fence() {
       fenceAmount: inputValueFenceAmount,
       PostSpaceUnit: PostSpaceUnitselectedValue,
       postSpace: inputValuePostspace,
-      totalstickamount:perimeter/inputValuePostspace 
+      totalstickamount: perimeter / inputValuePostspace,
     });
   };
 
   /* for print pdf*/
-
-  
 
   return (
     <KeyboardAvoidingView
@@ -119,7 +120,6 @@ export default function Fence() {
     >
       {/* Static section at the top */}
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-      
 
       {/*Header section*/}
       <Headersection navigation={navigation} title="Fence" />
@@ -127,32 +127,31 @@ export default function Fence() {
       {/* Scrollable content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Top section */}
-        <View style={styles.box}>
-          <View style={styles.Box1}>
-            <View style={styles.innerContainer}>
-              <Text style={styles.titleText}>Land Info</Text>
-              <View style={styles.propertyBox}>
-                <View style={styles.property}>
-                  <MaterialCommunityIcons
-                    name="vector-square"
-                    size={36}
-                    color="#65676B"
-                  />
-                  <View style={styles.propertyDetails}>
-                    <Text style={styles.propertyLabel}>Perimeter</Text>
-                    <Text style={styles.propertyValue}>1.5Km</Text>
-                  </View>
+
+        <View style={styles.Box1}>
+          <View>
+            <Text style={styles.titleText}>Land Info</Text>
+            <View style={styles.propertyBox}>
+              <View style={styles.property}>
+                <MaterialCommunityIcons
+                  name="vector-square"
+                  size={36}
+                  color="#65676B"
+                />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyLabel}>Perimeter</Text>
+                  <Text style={styles.propertyValue}>1.5Km</Text>
                 </View>
-                <View style={styles.property}>
-                  <MaterialCommunityIcons
-                    name="texture-box"
-                    size={36}
-                    color="#65676B"
-                  />
-                  <View style={styles.propertyDetails}>
-                    <Text style={styles.propertyLabel}>Area</Text>
-                    <Text style={styles.propertyValue}>100 acres</Text>
-                  </View>
+              </View>
+              <View style={styles.property}>
+                <MaterialCommunityIcons
+                  name="texture-box"
+                  size={36}
+                  color="#65676B"
+                />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyLabel}>Area</Text>
+                  <Text style={styles.propertyValue}>100 acres</Text>
                 </View>
               </View>
             </View>
@@ -160,90 +159,79 @@ export default function Fence() {
         </View>
 
         {/* Second section */}
-        <View style={styles.box}>
-          <View style={styles.box2}>
-            <View style={styles.box2Inner}>
-              <View style={styles.box2Property}>
-                <MaterialCommunityIcons
-                  name="gate"
-                  size={40}
-                  color="#65676B"
-                  style={styles.squareIcon}
-                />
-                <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Fence Type</Text>
-                </View>
-              </View>
-              <View style={styles.box2Property}>
-                <View style={styles.Box2DropdownContainer}>
-                  <RNPickerSelect
-                    placeholder={placeholderFenceType}
-                    items={fenceTypeOptions}
-                    onValueChange={(value) => setFenceTypeSelectedValue(value)}
-                    value={FenceTypeselectedValue}
-                    style={{
-                      inputIOS: {
-                        textAlign: "center", // Center text horizontally
-                        // Add additional styles if needed
-                      },
-                      inputAndroid: {
-                        textAlign: "center", // Center text horizontally
-                        // Add additional styles if needed
-                      },
-                    }}
-                  />
-                </View>
-              </View>
+
+        <View style={styles.box2}>
+          <View style={styles.box2Property}>
+            <MaterialCommunityIcons
+              name="gate"
+              size={40}
+              color="#65676B"
+              style={styles.squareIcon}
+            />
+            <View style={styles.box2PropertyDetails}>
+              <Text style={styles.Box2PropertyLabel}>Fence Type</Text>
+            </View>
+          </View>
+          <View style={styles.box2Property}>
+            <View style={styles.Box2DropdownContainer}>
+              <RNPickerSelect
+                placeholder={placeholderFenceType}
+                items={fenceTypeOptions}
+                onValueChange={(value) => setFenceTypeSelectedValue(value)}
+                value={FenceTypeselectedValue}
+                style={{
+                  inputIOS: {
+                    textAlign: "center",
+                  },
+                  inputAndroid: {
+                    textAlign: "center",
+                  },
+                }}
+              />
             </View>
           </View>
         </View>
 
         {/* Third section */}
 
-        <View style={styles.box}>
-          <View style={styles.box3}>
-            <View style={styles.box3Inner}>
-              <View style={styles.box3Property}>
-                <MaterialCommunityIcons
-                  name="format-line-spacing"
-                  size={30}
-                  color="#65676B"
-                  rotation={270}
+        <View style={styles.box3}>
+          <View style={styles.box3Property}>
+            <MaterialCommunityIcons
+              name="format-line-spacing"
+              size={30}
+              color="#65676B"
+              rotation={270}
+            />
+            <View style={styles.box3PropertyDetails}>
+              <Text style={styles.Box3PropertyLabel}>Post Space</Text>
+            </View>
+          </View>
+          <View style={styles.box3Property}>
+            <View style={styles.box3inputContainer}>
+              <TextInput
+                style={styles.box3input}
+                keyboardType="numeric"
+                placeholder="00"
+                value={inputValuePostspace}
+                onChangeText={handleInputPostspaceChange}
+              />
+              <View style={styles.dropdownContainer}>
+                <RNPickerSelect
+                  placeholder={placeholderPostSpaceUnit}
+                  items={lengthUnitOptions}
+                  onValueChange={(value) =>
+                    setPostSpaceUnitSelectedValue1(value)
+                  }
+                  value={PostSpaceUnitselectedValue}
+                  style={{
+                    inputIOS: {
+                      textAlign: "center",
+                    },
+                    inputAndroid: {
+                      textAlign: "center",
+                    },
+                  }}
                 />
-                <View style={styles.box3PropertyDetails}>
-                  <Text style={styles.Box3PropertyLabel}>Post Space</Text>
-                </View>
-              </View>
-              <View style={styles.box3Property}>
-                <View style={styles.box3inputContainer}>
-                  <TextInput
-                    style={styles.box3input}
-                    keyboardType="numeric"
-                    placeholder="00"
-                    value={inputValuePostspace}
-                    onChangeText={handleInputPostspaceChange}
-                  />
-                  <View style={styles.dropdownContainer}>
-                    <RNPickerSelect
-                      placeholder={placeholderPostSpaceUnit}
-                      items={lengthUnitOptions}
-                      onValueChange={(value) =>
-                        setPostSpaceUnitSelectedValue1(value)
-                      }
-                      value={PostSpaceUnitselectedValue}
-                      style={{
-                        inputIOS: {
-                          textAlign: "center", // Center text horizontally
-                          // Add additional styles if needed
-                        },
-                        inputAndroid: {
-                          textAlign: "center", // Center text horizontally
-                          // Add additional styles if needed
-                        },
-                      }}
-                    />
-                  </View>
-                </View>
               </View>
             </View>
           </View>
@@ -251,82 +239,79 @@ export default function Fence() {
 
         {/* Forth section */}
 
-        <View style={styles.box}>
-          <View style={styles.box4}>
-            <View style={styles.box4innertop}>
-              <MaterialCommunityIcons
-                name="boom-gate"
-                size={36}
-                color="#65676B"
+        <View style={styles.box4}>
+          <View style={styles.box4innertop}>
+            <MaterialCommunityIcons
+              name="boom-gate"
+              size={36}
+              color="#65676B"
+            />
+            <Text style={styles.Box4TopText}>Gates</Text>
+          </View>
+          <View style={styles.box4InnerCenter}>
+            <View style={styles.line}>
+              <Text style={styles.linetext}>Length :</Text>
+              <TextInput
+                keyboardType="numeric"
+                style={styles.linetextinput}
+                placeholder="Enter Lenght of Gate"
+                marginLeft={10}
+                borderBottomWidth={1}
+                height={20}
+                borderBottomColor="lightgray"
+                returnKeyType="next"
+                onChangeText={handleFenceLengthChange}
+                value={inputValueFenceLength}
+                onSubmitEditing={() => {
+                  // Focus on the next input field
+                  inputValueFenceAmountRef.focus();
+                }}
               />
-              <Text style={styles.Box4TopText}>Gates</Text>
             </View>
-            <View style={styles.box4InnerCenter}>
-              <View style={styles.line}>
-                <Text style={styles.linetext}>Length :</Text>
-                <TextInput
-                  keyboardType="numeric"
-                  style={styles.linetextinput}
-                  placeholder="Enter Lenght of Gate"
-                  marginLeft={10}
-                  borderBottomWidth={1}
-                  height={20}
-                  borderBottomColor="lightgray"
-                  returnKeyType="next"
-                  onChangeText={handleFenceLengthChange}
-                  value={inputValueFenceLength}
-                  onSubmitEditing={() => {
-                    // Focus on the next input field
-                    inputValueFenceAmountRef.focus();
-                  }}
-                />
-              </View>
-              <View style={styles.line}>
-                <Text style={styles.linetext}>Count :</Text>
-                <TextInput
-                  keyboardType="numeric"
-                  style={styles.linetextinput}
-                  placeholder="Enter Count of Gate"
-                  marginLeft={10}
-                  borderBottomWidth={1}
-                  alignItems="center"
-                  justifyContent="center"
-                  height={20}
-                  returnKeyType="done"
-                  borderBottomColor="lightgray"
-                  onChangeText={handleFenceAmountChange}
-                  value={inputValueFenceAmount}
-                  ref={(input) => {
-                    // Assign a reference to the second input field
-                    inputValueFenceAmountRef = input;
-                  }}
-                  onSubmitEditing={handleAdd}
-                />
-              </View>
+            <View style={styles.line}>
+              <Text style={styles.linetext}>Count :</Text>
+              <TextInput
+                keyboardType="numeric"
+                style={styles.linetextinput}
+                placeholder="Enter Count of Gate"
+                marginLeft={10}
+                borderBottomWidth={1}
+                alignItems="center"
+                justifyContent="center"
+                height={20}
+                returnKeyType="done"
+                borderBottomColor="lightgray"
+                onChangeText={handleFenceAmountChange}
+                value={inputValueFenceAmount}
+                ref={(input) => {
+                  inputValueFenceAmountRef = input;
+                }}
+                onSubmitEditing={handleAdd}
+              />
             </View>
-            <View style={styles.Box4InnerBottom}>
-              <TouchableOpacity style={styles.Box4Button} onPress={handleAdd}>
-                <Text style={styles.Box4ButtonText}>Add</Text>
-              </TouchableOpacity>
-            </View>
+          </View>
+          <View style={styles.Box4InnerBottom}>
+            <TouchableOpacity style={styles.Box4Button} onPress={handleAdd}>
+              <Text style={styles.Box4ButtonText}>Add</Text>
+            </TouchableOpacity>
+          </View>
 
-            <View style={styles.displayValuesContainer}>
-              {displayValues.map((value, index) => (
-                <View key={index} style={styles.displayValueContainer}>
-                  <Text style={styles.displayValueText}>{value}</Text>
-                  <TouchableOpacity
-                    onPress={() => handleRemoveValue(index)}
-                    style={styles.closeButton}
-                  >
-                    <MaterialCommunityIcons
-                      name="close-circle-outline"
-                      size={20}
-                      color="#007BFF"
-                    />
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
+          <View style={styles.displayValuesContainer}>
+            {displayValues.map((value, index) => (
+              <View key={index} style={styles.displayValueContainer}>
+                <Text style={styles.displayValueText}>{value}</Text>
+                <TouchableOpacity
+                  onPress={() => handleRemoveValue(index)}
+                  style={styles.closeButton}
+                >
+                  <MaterialCommunityIcons
+                    name="close-circle-outline"
+                    size={20}
+                    color="#007BFF"
+                  />
+                </TouchableOpacity>
+              </View>
+            ))}
           </View>
         </View>
 
@@ -337,10 +322,10 @@ export default function Fence() {
             <CustomButton
               onPress={handleFenceDetails}
               text="Calculate"
-              iconName="calculator" // Change the icon name as needed
-              iconColor="white" // Change the color of the icon
-              buttonColor="#0866FF" // Change the background color of the button
-              style={styles.calculateButton} // Apply custom styles
+              iconName="calculator"
+              iconColor="white"
+              buttonColor="#0866FF"
+              style={styles.calculateButton}
             />
           </View>
         </View>
@@ -354,10 +339,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  /*Top section*/
+  /*First section*/
 
-  box: {
-    
+  scrollContent: {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
@@ -371,12 +355,11 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: 30,
     borderRadius: 11,
-  },
-
-  innerContainer: {
-    width: "100%",
-    height: "85%",
-    backgroundColor: "white",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 8,
+    padding: 0,
   },
 
   titleText: {
@@ -424,22 +407,19 @@ const styles = StyleSheet.create({
   /* Second section */
 
   box2: {
-    width: "95%",
+    width: "92%",
     height: 71,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#FFFFFF",
-    marginTop: 30,
-    borderRadius: 11,
-  },
-
-  box2Inner: {
-    width: "100%",
-    height: "80%",
-    backgroundColor: "white",
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "white",
+    marginTop: 25,
+    borderRadius: 11,
+    padding: 0,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 8,
   },
 
   box2Property: {
@@ -448,7 +428,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "white",
     width: "46%",
-    height: 50,
     padding: 7,
   },
 
@@ -457,50 +436,52 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 5,
     width: "70%",
-    height: 40,
     backgroundColor: "white",
   },
+
   Box2PropertyLabel: {
     fontSize: 16,
     marginLeft: 7,
   },
+
   Box2DropdownContainer: {
     backgroundColor: "#F0F2F5",
-    borderRadius: 10,
+    borderRadius: 11,
     width: "100%",
-    height: 30,
+    height: 35,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#CED0D4",
   },
 
   /* Third section */
 
   box3: {
-    width: "95%",
+    width: "92%",
     height: 71,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FFFFFF",
+    flexDirection: "row",
     marginTop: 10,
     borderRadius: 11,
+    padding: 0,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 8,
   },
-  box3Inner: {
-    width: "100%",
-    height: "80%",
-    backgroundColor: "white",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
+
   box3Property: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
     width: "46%",
-    height: 50,
     padding: 7,
   },
+
   box3inputContainer: {
     flexDirection: "row",
     backgroundColor: "white",
@@ -509,14 +490,15 @@ const styles = StyleSheet.create({
     width: "90%",
     height: "100%",
   },
+
   box3PropertyDetails: {
     flexDirection: "column",
     justifyContent: "center",
     marginLeft: 5,
     width: "70%",
-    height: 40,
     backgroundColor: "white",
   },
+
   Box3PropertyLabel: {
     fontSize: 16,
     marginLeft: 7,
@@ -524,30 +506,36 @@ const styles = StyleSheet.create({
   box3input: {
     backgroundColor: "white",
     width: "35%",
-    height: 30,
     borderBottomWidth: 1,
     borderBottomColor: "lightgray",
     justifyContent: "center",
     alignItems: "center",
   },
+
   dropdownContainer: {
     backgroundColor: "#F0F2F5",
     borderRadius: 10,
     borderColor: "black",
-    width: "67%",
-    height: 30,
+    width: "70%",
+    height: 35,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#CED0D4",
   },
 
   /* Forth section */
 
   box4: {
-    width: "95%",
-    height: 235,
+    width: "92%",
+    height: 225,
     backgroundColor: "white",
     marginTop: 10,
     borderRadius: 11,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 8,
   },
 
   box4innertop: {
@@ -567,7 +555,6 @@ const styles = StyleSheet.create({
 
   box4InnerCenter: {
     width: "100%",
-    height: "30%",
     backgroundColor: "white",
     flexDirection: "column",
     alignItems: "center",
@@ -622,12 +609,13 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: "max-content",
     borderRadius: 11,
+    width: "100%",
   },
   displayValueContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
-    backgroundColor: "whitesmoke",
+    backgroundColor: "white",
     marginRight: 5,
     marginLeft: 5,
     marginBottom: 10,
@@ -653,7 +641,7 @@ const styles = StyleSheet.create({
   bottom: {
     alignItems: "center",
     justifyContent: "flex-end",
-    marginTop: 30,
+    marginTop: 50,
     height: 80,
     width: "100%",
   },
