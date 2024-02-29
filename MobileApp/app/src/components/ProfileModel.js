@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { IconButton, Avatar, Button, Icon } from "react-native-paper";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import Gravatar from "./Gravatar";
+
 
 const SelectionModal = ({ profileModalVisible, setProfileModalVisible, email }) => {
   const closeModal = () => {
@@ -45,7 +45,7 @@ const SelectionModal = ({ profileModalVisible, setProfileModalVisible, email }) 
             <Text style={styles.headerText}>example@gmail.com</Text>
             <View>
          
-              <Gravatar email={email} />
+            <Avatar.Image size={100} source={require("../images/profilePhoto.png")}   />
              
             </View>
 

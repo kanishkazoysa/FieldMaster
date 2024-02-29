@@ -74,8 +74,8 @@ export default function Home() {
   ];
 
   const mapTypes = [
+     { name: "Satellite", value: "satellite" },
     { name: "Standard", value: "standard" },
-    { name: "Satellite", value: "satellite" },
     { name: "Hybrid", value: "hybrid" },
     { name: "Terrain", value: "terrain" },
   ];

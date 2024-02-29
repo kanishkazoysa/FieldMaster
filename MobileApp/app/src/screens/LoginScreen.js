@@ -17,6 +17,9 @@ import {
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 import { Appbar, TextInput,Button } from "react-native-paper";
+import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -29,40 +32,32 @@ export default function LoginScreen() {
         Alert.alert("Please fill in all fields");
         return;
       }
-      
-      const response = await fetch(
-        
-        `http://10.10.20.85:5000/api/users/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        }
-      );
-
-      if (response.ok) {
+  
+      const response = await axios.post("http://10.10.20.85:5000/api/users/login", { email, password });
+  
+      if (response.status === 200) {
+        const token = response.data.token;
+  
+        // Store token in AsyncStorage
+        await AsyncStorage.setItem("token", token);
+  
+        // Display login success message
         Alert.alert(
           "Success",
           "Login successfully",
-          [
-            {
-              text: "OK",
-              onPress: () => navigation.navigate("Home"),
-            },
-          ],
-          { cancelable: false }
         );
+
+        navigation.navigate("Home",{email:email});
       } else {
         const data = await response.json();
         Alert.alert("Error", data.error || "Something went wrong");
       }
     } catch (error) {
-      console.error("Error during registration:", error);
+      console.error("Error during login:", error);
       Alert.alert("Error", "Something went wrong");
     }
   };
+  
 
   const handleForgotPassword = () => {
     console.log("Forgot Password");

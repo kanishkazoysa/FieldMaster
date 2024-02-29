@@ -22,7 +22,7 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
-
+import axios from "axios";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -86,16 +86,7 @@ export default function RegisterScreen() {
         return;
       }
 
-      const response = await fetch(
-        "http://10.10.20.85:5000/api/users/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        }
-      );
+      const response = await axios.post("http://10.10.20.85:5000/api/users/register",{ email, password });
 
       if (response.ok) {
         Alert.alert(
