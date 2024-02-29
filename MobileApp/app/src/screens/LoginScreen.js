@@ -1,159 +1,208 @@
-import React, { useState } from "react";
-
-
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
+  Platform,
   StatusBar,
-  TextInput,
+  Alert,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import InputField from "../components/InputField";
-import Button from "../components/Button";
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
-import { faLock } from '@fortawesome/free-solid-svg-icons'
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
+import { Appbar, TextInput,Button } from "react-native-paper";
+import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 
 export default function LoginScreen() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    console.log("Logging in...", { username, password });
-    navigation.navigate("Welcome");
+  const handleLogin = async () => {
+    try {
+      if (!email || !password) {
+        Alert.alert("Please fill in all fields");
+        return;
+      }
+  
+      const response = await axios.post("http://10.10.20.85:5000/api/users/login", { email, password });
+  
+      if (response.status === 200) {
+        const token = response.data.token;
+  
+        // Store token in AsyncStorage
+        await AsyncStorage.setItem("token", token);
+  
+        // Display login success message
+        Alert.alert(
+          "Success",
+          "Login successfully",
+        );
+
+        navigation.navigate("Home",{email:email});
+      } else {
+        const data = await response.json();
+        Alert.alert("Error", data.error || "Something went wrong");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      Alert.alert("Error", "Something went wrong");
+    }
   };
+  
+
   const handleForgotPassword = () => {
-    // Handle the logic for forgot password (e.g., navigate to the forgot password screen)
     console.log("Forgot Password");
     navigation.navigate("Forgot");
   };
 
   const handleSignUp = () => {
-    // Navigate to the register screen when "Sign in" is pressed
     navigation.navigate("Register");
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      setEmail("");
+      setPassword("");
+    }, [])
+  );
+
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Static section at the top */}
-      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-      <View style={styles.staticSection}></View>
-
-      {/* Scrollable content */}
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.header}>Welcome !</Text>
-        <Text style={styles.text}>Sign in to continue</Text>
-
-        <View style={styles.feild1}>
-        
-       
-        <FontAwesomeIcon icon={faEnvelope} />
-          <InputField
-            placeholder="Email"
-            value={username}
-            onChangeText={(text) => setUsername(text)}
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <Appbar.Header style={styles.header}>
+          <Appbar.BackAction
+            onPress={() => navigation.goBack()}
+            color="white"
           />
+        </Appbar.Header>
 
+        <View style={styles.textSection}>
+          <Text style={styles.welcomeText}>Welcome </Text>
+          <Text style={styles.signInText}>Sign in to continue</Text>
+        </View>
+
+        <View style={styles.field}>
+          <View style={{marginBottom:responsiveHeight(2) }}>
+          <TextInput
+            label="email"
+            mode="outlined"
+            outlineColor="#d9d7d2"
+            activeOutlineColor="#007BFF"
+            width={responsiveWidth(85)}
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          />
           </View>
-          <View style={styles.feild2}>
-           <FontAwesomeIcon icon={faLock} />
-          <InputField
-            placeholder="Password"
+          
+          <View>
+          <TextInput
+            label="password"
+            mode="outlined"
+            outlineColor="#d9d7d2"
+            activeOutlineColor="#007BFF"
+            width={responsiveWidth(85)}
+            secureTextEntry         
             value={password}
             onChangeText={(text) => setPassword(text)}
-            secureTextEntry
           />
+          </View>
+          
+          <Button mode="contained" onPress={handleLogin} style={styles.button}>
+          LOGIN
+          </Button>
+
+          <View>
+            <TouchableOpacity onPress={handleForgotPassword}>
+              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        <View style={styles.button}  >
-          <Button title="LOGIN"onPress={handleLogin} />
-         
-        </View>
-
-       <TouchableOpacity onPress={handleForgotPassword}>
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-        </TouchableOpacity>
-      
         <View style={styles.signupTextContainer}>
           <Text style={styles.signupText}>Don’t have an account? </Text>
           <TouchableOpacity onPress={handleSignUp}>
             <Text style={[styles.signupText, styles.signupLink]}>Sign up</Text>
           </TouchableOpacity>
         </View>
-
-      </ScrollView>
-    </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
-    fontSize: 40,
-    fontWeight: "bold",
-    position: "absolute",
-    top: 20,
-    left: 25,
+    height: 50,
+    backgroundColor: "#007BFF",
+
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
   },
-  text: {
-    fontSize: 20,
-    position: "absolute",
-    top: 70,
-    left: 25,
+  button: {
+ marginTop: responsiveHeight(5),
+    backgroundColor: "#007BFF",
+    width: 337,
+    padding: 2,
+
+  },
+  welcomeText: {
+    fontSize: responsiveFontSize(5),
+    fontWeight: "bold",
+    top: responsiveHeight(0.1),
+  },
+  signInText: {
+    fontSize: responsiveFontSize(2),
   },
   container: {
     flex: 1,
+    backgroundColor: "white",
   },
-  staticSection: {
-    padding: 16,
-    height: 100,
-    backgroundColor: "#007BFF", // Set your desired background color
-    borderBottomWidth: 1,
-    borderBottomColor: "#007BFF", // Set your desired border color
-    color: "#fff",
+  textSection: {
+    marginLeft: responsiveWidth(5),
   },
-  scrollContent: {
-    flexGrow: 1,
-    alignItems: "center",
-    padding: 16,
-  },
-  feild1: {
-    position: "absolute",
-    top: 220,
-    flexDirection: "row",
-    
-  },
-  feild2: {
-    position: "absolute",
-    top: 280,
-    
-  },
-  button: {
-    position: "absolute",
-    top: 400,
+ 
+
+  field: {
+    width: responsiveWidth(100),
+    top: responsiveHeight(5),
+  alignItems: "center",
+   
   },
   forgotPasswordText: {
-   
     color: "#007BFF",
-    top: 440,
-    fontSize: 16,
+    fontSize: responsiveFontSize(2),
     textDecorationLine: "none",
+    textAlign: "right",
+    top: responsiveHeight(3),
   },
   signupTextContainer: {
     flexDirection: "row",
-    marginTop: 570,
+    marginLeft: responsiveWidth(6),
+    top: responsiveHeight(15),
   },
   signupText: {
     color: "#000",
-    fontSize: 16,
+    fontSize: responsiveFontSize(2),
   },
   signupLink: {
     color: "#007BFF",
+    marginLeft: responsiveFontSize(0.5),
     textDecorationLine: "none",
-    fontSize: 16,
   },
 });

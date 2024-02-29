@@ -3,29 +3,48 @@ import {
   View,
   Text,
   StatusBar,
-  TextInput,
-  TouchableOpacity,
   StyleSheet,
-  ScrollView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import InputField from "../components/InputField";
-import Button from "../components/Button";
 import { Alert } from "react-native";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
+import { Appbar, Button, TextInput } from "react-native-paper";
+import axios from "axios";
 
-
-export default function ForgotPassword() {
-  const [NewPassword, setNewPassword] = useState("");
-  const [ConfirmPassword, setConfirmPassword] = useState("");
+export default function ForgotPassword({ route }) {
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const navigation = useNavigation();
+  const { email } = route.params;
 
-  
-    
+  const handleChangePassword = async () => {
+    try {
+      if (!newPassword || !confirmPassword) {
+        Alert.alert("Error", "Please fill in all fields");
+        return;
+      }
+      if (!(newPassword === confirmPassword)) {
+        Alert.alert("Error", "Passwords do not match");
+        return;
+      }
+      const response = await axios.post(
+        "http://10.10.20.85:5000/api/users/change-password",
+        {
+          email: email,
+          newPassword: newPassword,
+        }
+      );
 
-    const handleChangePassword = () => {
-        // Perform your password change logic here
-      
-        // Assuming your password change is successful, show the success message
+      const data = await response.json();
+
+      if (response.ok) {
         Alert.alert(
           "Password Changed Successfully",
           "Your password has been changed successfully.",
@@ -33,88 +52,122 @@ export default function ForgotPassword() {
             {
               text: "OK",
               onPress: () => {
-                // Navigate to the desired screen or perform any other action
-                navigation.navigate("Login"); // Change this to the screen you want to navigate to
+                navigation.navigate("Login");
               },
             },
           ],
           { cancelable: false }
         );
-      };
-      
-  
+      } else {
+        Alert.alert("Error", data.error || "Password change failed.");
+      }
+    } catch {
+      Alert.alert("Error", "An error occurred while changing password");
+    }
+  };
+
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Static section at the top */}
-      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-      <View style={styles.staticSection}></View>
-
-      {/* Scrollable content */}
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.header}>Create New Password</Text>
-        <Text style={styles.text}>
-        Password must be at least 8 digits
-        </Text>
-
-        <View style={styles.feild}>
-          <InputField
-            placeholder="New Password"
-            value={NewPassword}
-            onChangeText={(text) => setNewPassword(text)}
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <Appbar.Header style={styles.header}>
+          <Appbar.BackAction
+            onPress={() => navigation.goBack()}
+            color="white"
           />
-          <InputField
-            placeholder="Confirm Password"
-            value={ConfirmPassword}
-            onChangeText={(text) => setConfirmPassword(text)}
-          />
+        </Appbar.Header>
+
+        <View style={styles.Content}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.head}>Create New Password</Text>
+            <Text style={styles.text}>Password must be at least 8 digits</Text>
+          </View>
+
+          <View style={styles.field}>
+            <View style={{ marginBottom: 10 }}>
+              <TextInput
+                label="New Password"
+                mode="outlined"
+                outlineColor="#d9d7d2"
+                activeOutlineColor="#007BFF"
+                width={responsiveWidth(85)}
+                value={newPassword}
+                onChangeText={(text) => setNewPassword(text)}
+              />
+            </View>
+
+            <TextInput
+              label="confirm Password"
+              mode="outlined"
+              outlineColor="#d9d7d2"
+              activeOutlineColor="#007BFF"
+              width={responsiveWidth(85)}
+              value={confirmPassword}
+              onChangeText={(text) => setConfirmPassword(text)}
+            />
+          </View>
+
+          <Button
+            mode="contained"
+            onPress={handleChangePassword}
+            style={styles.button}
+          >
+            Change Password
+          </Button>
         </View>
-
-        <View style={styles.button}  >
-          <Button title="Change Password" onPress={handleChangePassword} />
-        </View>
-
-
-      </ScrollView>
-    </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
-    fontSize: 20,
+    height: 50,
+    backgroundColor: "#007BFF",
+
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
+  },
+  headerContainer: {
+    width: "90%",
+  },
+  head: {
+    fontSize: responsiveFontSize(3),
     fontWeight: "bold",
-    position: "absolute",
-    top: 20,
-    left: 25,
+    marginTop: "3%",
   },
   text: {
-    fontSize: 16,
-    position: "absolute",
-    top: 55,
-    left: 25,
+    fontSize: responsiveFontSize(2),
+    marginTop: "1%",
   },
   container: {
     flex: 1,
   },
   staticSection: {
-    padding: 16,
-    height: 100,
-    backgroundColor: "#007BFF", // Set your desired background color
-    borderBottomWidth: 1,
-    borderBottomColor: "#007BFF", // Set your desired border color
-    color: "#fff",
+    height:
+      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
+    backgroundColor: "#007BFF",
+    justifyContent: "center",
   },
-  scrollContent: {
-    flexGrow: 1,
+  Content: {
+    flex: 1,
     alignItems: "center",
-    padding: 16,
+    backgroundColor: "#fff",
   },
-  feild: {
-    position: "absolute",
-    top: 120,
+  field: {
+    marginTop: responsiveHeight(3),
   },
   button: {
-    position: "absolute",
-    top: 280,
+    marginTop: responsiveHeight(5),
+    backgroundColor: "#007BFF",
+    width: 337,
+    padding: 2,
   },
 });

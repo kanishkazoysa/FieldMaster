@@ -3,89 +3,137 @@ import {
   View,
   Text,
   StatusBar,
-  TextInput,
-  TouchableOpacity,
+  Platform,
   StyleSheet,
-  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert, // Import Alert
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import InputField from "../components/InputField";
-import Button from "../components/Button";
+import {
+  responsiveHeight,
+  responsiveFontSize,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
+import { Appbar, TextInput,Button } from "react-native-paper";
+import axios from "axios";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
 
-  const handleForgotPassword = () => {
-    navigation.navigate("Otp");
-  }
+  const handleForgotPassword = async () => {
+    try {
+      if (!email) {
+        Alert.alert("Please fill in all fields");
+        return;
+      }
+
+      const response = await axios.post("http://10.10.20.85:5000/api/mail/otp", {email});
+
+      if (response.status === 200) {
+        const data = await response.json();
+        Alert.alert("OTP sent successfully");
+        navigation.navigate("Otp", { email, Otp: data.otp});
+      } else {
+        const data = await response.json();
+        Alert.alert("Error", data.error || "Something went wrong");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Internal Server Error");
+    }
+  };
+
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Static section at the top */}
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-      <View style={styles.staticSection}></View>
+      <Appbar.Header style={styles.header} >
+        <Appbar.BackAction
+          onPress={() => navigation.goBack()}
+          color="white"
+        />
+      </Appbar.Header>
 
-      {/* Scrollable content */}
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.header}>Forgot Password</Text>
-        <Text style={styles.text}>
-          The verification code will be send to this email address
-        </Text>
+        <View style={styles.Content}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.head}>Forgot Password</Text>
+            <Text style={styles.text}>
+              The verification code will be sent to this email address
+            </Text>
+          </View>
 
-        <View style={styles.feild}>
-          <InputField
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
+          <View style={styles.field}>
+          <TextInput
+          label="email"
+          mode="outlined"
+          outlineColor="#d9d7d2"
+          activeOutlineColor="#007BFF"
+          width={responsiveWidth(85)}
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        />
+          </View>
+
+          <Button mode="contained" onPress={handleForgotPassword} style={styles.button}>
+          Continue
+          </Button>
         </View>
-
-        <View style={styles.button}  >
-          <Button title="Continue" onPress={handleForgotPassword} />
-        </View>
-
-
-      </ScrollView>
-    </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
+
   header: {
-    fontSize: 20,
+    height: 50,
+    backgroundColor: "#007BFF",
+    
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
+  },
+  
+  headerContainer: {
+    width: "90%",
+  },
+  head: {
+    fontSize: responsiveFontSize(3),
     fontWeight: "bold",
-    position: "absolute",
-    top: 20,
-    left: 25,
+    marginTop: "3%",
   },
   text: {
-    fontSize: 16,
-    position: "absolute",
-    top: 70,
-    left: 25,
+    fontSize: responsiveFontSize(2),
+    marginTop: "1%",
   },
   container: {
     flex: 1,
   },
   staticSection: {
-    padding: 16,
-    height: 100,
-    backgroundColor: "#007BFF", // Set your desired background color
-    borderBottomWidth: 1,
-    borderBottomColor: "#007BFF", // Set your desired border color
-    color: "#fff",
+    height:
+      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
+    backgroundColor: "#007BFF",
+    justifyContent: "center",
   },
-  scrollContent: {
-    flexGrow: 1,
+  Content: {
+    flex: 1,
     alignItems: "center",
-    padding: 16,
+    backgroundColor: "white",
   },
-  feild: {
-    position: "absolute",
-    top: 140,
+  field: {
+    marginTop: responsiveHeight(3),
   },
   button: {
-    position: "absolute",
-    top: 210,
+    marginTop: responsiveHeight(5),
+       backgroundColor: "#007BFF",
+       width: 337,
+       padding: 2,
   },
 });
