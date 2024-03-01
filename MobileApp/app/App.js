@@ -14,7 +14,6 @@ import ForgotPassword from "./src/screens/ForgotPassword";
 import Otp from "./src/screens/Otp";
 import CreateNewPassword from "./src/screens/CreateNewPassword";
 import Home from "./src/screens/Home";
-import BackButton from "./src/components/BackButton";
 import WalkaroundLand from "./src/screens/WalkaroundLand";
 import Fence from "./src/screens/Fence";
 import FenceDetails from "./src/screens/FenceDetails";
