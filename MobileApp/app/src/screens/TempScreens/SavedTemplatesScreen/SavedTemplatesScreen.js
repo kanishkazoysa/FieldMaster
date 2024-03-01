@@ -17,7 +17,12 @@ const CustomEditIcon = (props) => {
   />;
 };
 const CustomDeleteIcon = (props) => (
-  <MaterialCommunityIcons {...props} name='delete' size={25} color='#65676B' />
+  <MaterialCommunityIcons
+    {...props}
+    name='trash-can-outline'
+    size={25}
+    color='#65676B'
+  />
 );
 
 /* data */
