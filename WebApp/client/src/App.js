@@ -3,13 +3,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import Navbar from './components/navbar/Navbar';
-import Hero from './components/Hero/Hero';
-import About from './components/About';
-import Footer from './components/Footer';
-import Pricing from './components/Pricing';
-import Setup from './components/SetupCard';
-import ContactForm from './components/contact/contact';
+import Navbar from './components/HomeComponents/navbar/Navbar';
+import Hero from './components/HomeComponents/Hero/Hero';
+import About from './components/HomeComponents/About';
+import Footer from './components/HomeComponents/Footer';
+import Pricing from './components/HomeComponents/Pricing';
+import Setup from './components/HomeComponents/SetupCard';
+import ContactForm from './components/HomeComponents/contact/contact';
 import './index.css';
 export default function App() {
   return (

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Navbar.css";
 import MobileNav from "../MobileNav/MobileNav";
 import { Link } from "react-scroll";
-import logo from "../../images/logo.png"
+import logo from "../../../images/logo.png"
 
 
 

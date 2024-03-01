@@ -1,7 +1,7 @@
 import React from "react";
 import "./Hero.css";
 import { Button } from "@mui/material";
-import video1 from "../../assets/home_video.mp4";
+import video1 from "../../../assets/home_video.mp4";
 
 const Hero = () => {
   return (
