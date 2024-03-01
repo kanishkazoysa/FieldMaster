@@ -1,6 +1,6 @@
 // App.js
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import {
   createStackNavigator,
   CardStyleInterpolators,
@@ -14,6 +14,16 @@ import ForgotPassword from "./src/screens/ForgotPassword";
 import Otp from "./src/screens/Otp";
 import CreateNewPassword from "./src/screens/CreateNewPassword";
 import Home from "./src/screens/Home";
+import WalkaroundLand from "./src/screens/WalkaroundLand";
+import Fence from "./src/screens/Fence";
+import FenceDetails from "./src/screens/FenceDetails";
+
+/* Template screens importing */
+import SaveScreen from './src/screens/TempScreens/SaveScreen/SaveScreen';
+import ResizeMap from './src/screens/TempScreens/ResizeMap/ResizeMap';
+import TemplateView from './src/screens/TempScreens/TemplateView/TemplateView';
+import EditTemplate from './src/screens/TempScreens/EditTemplate/EditTemplate';
+import SavedTemplatesScreen from './src/screens/TempScreens/SavedTemplatesScreen/SavedTemplatesScreen';
 import BackButton from "./src/components/BackButton";
 import Fertilization from "./src/screens/Fertilization";
 import PlantationDetails from "./src/screens/PlantationDetails";
@@ -28,150 +38,83 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="splashScreen"
+        initialRouteName='TemplatesScreen'
         screenOptions={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Slide-in/slide-out animation
         }}
       >
-        <Stack.Screen name="splashScreen" component={SplashScreen} />
+        <Stack.Screen name='splashScreen' component={SplashScreen} />
         <Stack.Screen
-          name="Welcome"
+          name='Welcome'
           component={WelcomeScreen}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-          })}
-        />
-        <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => <BackButton navigation={navigation} />
-          })}
-        />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => <BackButton navigation={navigation} />
           
-          })}
         />
         <Stack.Screen
-          name="Forgot"
+          name='Register'
+          component={RegisterScreen}
+          
+        />
+        <Stack.Screen
+          name='Login'
+          component={LoginScreen}
+         
+        />
+        <Stack.Screen
+          name='Forgot'
           component={ForgotPassword}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => <BackButton navigation={navigation} />
-          })}
+          
         />
         <Stack.Screen
-          name="Otp"
+          name='Otp'
           component={Otp}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-           headerLeft: () => <BackButton navigation={navigation} />
-          })}
+         
         />
         <Stack.Screen
-          name="NewPassword"
+          name='NewPassword'
           component={CreateNewPassword}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => (
-              <IconButton
-                icon="arrow-left"
-                iconColor="#fff"
-                onPress={() => navigation.goBack()}
-              />
-            ),
-          })}
+          
         />
 
         <Stack.Screen
-          name="Home"
+          name='Home'
           component={Home}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-          })}
+         
+       />
+       <Stack.Screen
+          name="WalkaroundLand"
+          component={WalkaroundLand}
+       />
+       <Stack.Screen name="Fence" component={Fence} />
+        <Stack.Screen name="FenceDetails" component={FenceDetails} />
+        <Stack.Screen name='SaveScreen' component={SaveScreen} />
+        <Stack.Screen name='ResizeMap' component={ResizeMap} />
+        <Stack.Screen name='TemplateView' component={TemplateView} />
+        <Stack.Screen name='EditTemplate' component={EditTemplate} />
+        <Stack.Screen
+          name='SavedTemplatesScreen'
+          component={SavedTemplatesScreen}
+        
        />
         <Stack.Screen
           name="Plantation"
           component={Plantation}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => (
-              <IconButton
-                icon="arrow-left"
-                iconColor="#fff"
-                onPress={() => navigation.goBack()}
-              />
-            ),
-          })}
+          
         />
         <Stack.Screen
           name="PlantationDetails"
           component={PlantationDetails}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => (
-              <IconButton
-                icon="arrow-left"
-                iconColor="#fff"
-                onPress={() => navigation.goBack()}
-              />
-            ),
-          })}
+          
         />
         <Stack.Screen
           name="Fertilization"
           component={Fertilization}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => (
-              <IconButton
-                icon="arrow-left"
-                iconColor="#fff"
-                onPress={() => navigation.goBack()}
-              />
-            ),
-          })}
+         
         />
         <Stack.Screen
           name="FertilizationDetails"
           component={FertilizationDetails}
-          options={({ navigation }) => ({
-            headerShown: false,
-            title: "",
-            headerTransparent: true,
-            headerLeft: () => (
-              <IconButton
-                icon="arrow-left"
-                iconColor="#fff"
-                onPress={() => navigation.goBack()}
-              />
-            ),
-          })}
+          
         />
 
       </Stack.Navigator>

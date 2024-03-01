@@ -1,14 +1,14 @@
 const nodemailer = require("nodemailer");
 const express = require("express");
 const router = express.Router();
-const formData = require("form-data");
-const Mailgun = require("mailgun.js");
+// const formData = require("form-data");
+// const Mailgun = require("mailgun.js");
 const User = require("../models/user");
 const userVerificationSchema = require("../models/userVerification");
-const API_KEY = "730e60442716fcae468c296398272c4f-8c90f339-d99a8e17";
-const DOMAIN = "sandbox1a76532aacd4416188f2f79fde12a6bc.mailgun.org";
-const mailgun = new Mailgun(formData);
-const client = mailgun.client({ username: "api", key: API_KEY });
+// const API_KEY = "730e60442716fcae468c296398272c4f-8c90f339-d99a8e17";
+// const DOMAIN = "sandbox1a76532aacd4416188f2f79fde12a6bc.mailgun.org";
+// const mailgun = new Mailgun(formData);
+// const client = mailgun.client({ username: "api", key: API_KEY });
 
 let transporter = nodemailer.createTransport({
   service: "gmail",

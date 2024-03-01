@@ -14,7 +14,12 @@ import { Button, Avatar } from "react-native-paper";
 import * as Location from "expo-location";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faLocationCrosshairs,faLayerGroup } from "@fortawesome/free-solid-svg-icons";
+import {
+  faLocationCrosshairs,
+  faLayerGroup,
+} from "@fortawesome/free-solid-svg-icons";
+import SelectionModal from "../components/SelectionModal";
+import ProfileModel from "../components/ProfileModel";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,6 +30,9 @@ export default function Home() {
   const [showCurrentLocation, setShowCurrentLocation] = useState(false);
   const [searchedLocation, setSearchedLocation] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [profileModalVisible, setProfileModalVisible] = useState(false);
+
   const mapRef = React.useRef(null);
 
   useEffect(() => {
@@ -40,12 +48,36 @@ export default function Home() {
     })();
   }, []);
 
+  const startMeasure = () => {
+    setModalVisible(true);
+  };
+  const ProfileManage = () => {
+    setProfileModalVisible(true);
+  };
+
+  const options = [
+    {
+      icon: "walk",
+      Header: "Walk around the land",
+      Text: "Click on Start button and it will track your phone’s live position.",
+    },
+    { 
+      icon: "map-marker-radius",
+      Header: "Point edges on map" ,
+      Text: "Add points to map manually,drag and drop to specific place.",
+    },
+    { 
+      icon: "calculator",
+      Header: "Manual Calculator" ,
+      Text: "Manually add area and perimeter for the calculation.",
+    },
+  ];
+
   const mapTypes = [
+     { name: "Satellite", value: "satellite" },
     { name: "Standard", value: "standard" },
-    { name: "Satellite", value: "satellite" },
     { name: "Hybrid", value: "hybrid" },
     { name: "Terrain", value: "terrain" },
-   
   ];
 
   const toggleMapType = () => {
@@ -112,6 +144,9 @@ export default function Home() {
     setSearchQuery("");
   };
 
+  // const handleTemplatePress = () => {
+  //   navigation.navigate("");
+  // }
 
   
 
@@ -162,17 +197,25 @@ export default function Home() {
           onSubmitEditing={searchLocation}
         />
         {searchQuery !== "" && (
-          <TouchableOpacity onPress={clearSearchQuery} style={styles.clearIconContainer}>
+          <TouchableOpacity
+            onPress={clearSearchQuery}
+            style={styles.clearIconContainer}
+          >
             <MaterialIcons name="cancel" size={24} color="#707070" />
           </TouchableOpacity>
         )}
         <View style={{ marginLeft: 10 }}>
-          <Avatar.Image size={44} source={require("../images/zoysa.png")} />
+        <TouchableOpacity onPress={ProfileManage}>
+          <Avatar.Image size={44} source={require("../images/profilePhoto.png")}   />
+          </TouchableOpacity>
         </View>
       </View>
 
-      <TouchableOpacity style={styles.layerIconContainer} onPress={toggleMapType}>
-      <FontAwesomeIcon icon={faLayerGroup} size={25} color="#fff"/>
+      <TouchableOpacity
+        style={styles.layerIconContainer}
+        onPress={toggleMapType}
+      >
+        <FontAwesomeIcon icon={faLayerGroup} size={25} color="#fff" />
         {showDropdown && (
           <View style={styles.dropdownContainer}>
             <FlatList
@@ -182,7 +225,7 @@ export default function Home() {
                   style={styles.dropdownItem}
                   onPress={() => selectMapType(index)}
                 >
-                  <Text  style={{ color: '#fff' }}>{item.name}</Text>
+                  <Text style={{ color: "#fff" }}>{item.name}</Text>
                 </TouchableOpacity>
               )}
               keyExtractor={(item) => item.value}
@@ -195,13 +238,24 @@ export default function Home() {
         <FontAwesomeIcon icon={faLocationCrosshairs} size={25} color="#fff" />
       </TouchableOpacity>
 
+      <SelectionModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        options={options}
+      />
+
+      <ProfileModel
+        profileModalVisible={profileModalVisible}
+        setProfileModalVisible={setProfileModalVisible}
+      />
+
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
           <Button
             buttonColor="#007BFF"
             icon="walk"
             mode="contained"
-            onPress={() => console.log("Left Button Pressed")}
+            onPress={startMeasure}
             style={styles.button}
           >
             Start Measure
@@ -212,7 +266,7 @@ export default function Home() {
             buttonColor="#007BFF"
             icon="content-save-all"
             mode="contained"
-            onPress={() => console.log("Right Button Pressed")}
+            // onPress={handleTemplatePress}
             style={styles.button}
           >
             Templates
@@ -220,7 +274,7 @@ export default function Home() {
         </View>
       </View>
     </View>
-  
+    
   );
 }
 
@@ -238,7 +292,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     right: 10,
-    top: Platform.OS === "android" ? "15%" : "27%",
+    top: Platform.OS === "android" ? "22%" : "27%",
     transform: [{ translateY: -12 }], // Adjust translateY to vertically center the icon
     zIndex: 1,
     flexDirection: "row",
@@ -246,7 +300,7 @@ const styles = StyleSheet.create({
   },
   dropdownContainer: {
     position: "absolute",
-    top:0,
+    top: 0,
     right: 50,
     backgroundColor: "rgba(0,0,0, 0.7)",
     borderRadius: 5,
@@ -261,14 +315,14 @@ const styles = StyleSheet.create({
   },
   dropdownItem: {
     padding: 10,
-    color: '#fff',
+    color: "#fff",
   },
   button2: {
     position: "absolute",
     backgroundColor: "rgba(0,0,0, 0.7)",
     padding: 10,
     borderRadius: 5,
-    top: Platform.OS === "android" ? "15%" : "18%",
+    top: Platform.OS === "android" ? "13%" : "18%",
     right: 10,
   },
   buttonContainer: {
@@ -309,7 +363,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: "80%",
     backgroundColor: "rgba(255, 255, 255, 0.6)",
-    color:"#000",
+    color: "#000",
     borderWidth: 1,
     borderColor: "#CED0D4",
   },
@@ -323,7 +377,7 @@ const styles = StyleSheet.create({
   },
   clearIconContainer: {
     position: "absolute",
-    left:"75%",
+    left: "75%",
     top: "50%",
     transform: [{ translateY: -12 }],
     zIndex: 1,
