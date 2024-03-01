@@ -24,7 +24,7 @@ export default function Fertilization() {
   const navigation = useNavigation();
   const handleFertilizationDetails = () => {
 
-  if (!textFertilizationType || !textFertilizationNUmberoftime || !textFertilizationAmount || !FertilizerAmountUnitselectedValue || !selectedButton) {
+  if (!textFertilizationType || !textFertilizationNUmberoftime || !textFertilizationAmount || !FertilizerAmountUnitselectedValue || selectedButton === null) {
       // Display error message
       Alert.alert('Error', 'Please fill in all fields');
       return;
@@ -344,6 +344,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: 40,
     borderRadius: 11,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 8,
   },
   innerContainer: {
     width: "100%",
@@ -401,6 +405,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     marginTop: 30,
     borderRadius: 11,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 8,
   },
 
   Box2innerContainer: {
@@ -449,6 +457,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     marginTop: 10,
     borderRadius: 11,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 8,
   },
 
   Box3innerContainer: {
@@ -478,6 +490,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     marginTop: 10,
     borderRadius: 11,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 8,
   },
 
   Box5propertyBox: {

@@ -10,7 +10,9 @@ const Headersection = ({ navigation, title }) => {
           onPress={() => navigation.goBack()}
           color="white"
         />
+        <View style={{marginTop:40,left:10,width:"70%"}}>
         <Text style={styles.headerText}>{title}</Text>
+        </View>
       </Appbar.Header>
     </View>
   );
@@ -18,7 +20,7 @@ const Headersection = ({ navigation, title }) => {
 
 const styles = {
   header: {
-    height: 50,
+    height: 45,
     backgroundColor: "#007BFF",
 
     ...Platform.select({
@@ -28,6 +30,7 @@ const styles = {
     }),
   },
   headerText: {
+   
     fontSize: 18,
     textAlign: "center",
     color: "white",
