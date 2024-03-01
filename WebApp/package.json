@@ -13,6 +13,8 @@
     "@emailjs/browser": "^4.1.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@fortawesome/free-brands-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@material-tailwind/react": "^2.1.9",
     "@mui/joy": "^5.0.0-beta.28",
     "@mui/material": "^5.15.10",
@@ -34,6 +36,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.50.1",
     "react-router-dom": "^6.22.0",
+    "react-router-hash-link": "^2.4.3",
     "react-scroll": "^1.9.0",
     "reactstrap": "^9.2.2",
     "uuid": "^9.0.1"
