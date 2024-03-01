@@ -263,6 +263,10 @@ import {
       backgroundColor: "white",
       marginTop: 30,
       borderRadius: 11,
+      shadowColor: "#000",
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
+      elevation: 8,
     },
   
     innerContainer: {
@@ -316,13 +320,17 @@ import {
     /*Second section*/
   
     Box2: {
-      width: "95%",
+      width: "93%",
       height: 85,
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "#FFFFFF",
       marginTop: 30,
       borderRadius: 11,
+      shadowColor: "#000",
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
+      elevation: 8,
     },
   
     Box2innerContainer: {
@@ -347,13 +355,17 @@ import {
     /*Third section*/
   
     Box3: {
-      width: "95%",
+      width: "93%",
       height: 85,
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "#FFFFFF",
       marginTop: 10,
       borderRadius: 11,
+      shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 8,
     },
   
     Box3propertyBox: {

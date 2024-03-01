@@ -347,6 +347,10 @@ import {
       marginTop: 20,
       alignItems: "center",
       borderRadius: 11,
+      shadowColor: "#000",
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
+      elevation: 8,
     },
   
     titleText: {
@@ -401,6 +405,10 @@ import {
       backgroundColor: "white",
       marginTop: 15,
       borderRadius: 11,
+      shadowColor: "#000",
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
+      elevation: 8,
     },
   
     box2Inner: {
@@ -444,6 +452,10 @@ import {
       backgroundColor: "white",
       marginTop: 15,
       borderRadius: 11,
+      shadowColor: "#000",
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
+      elevation: 8,
     },
   
     inner: {
