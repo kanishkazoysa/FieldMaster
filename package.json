@@ -8,6 +8,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nodemailer": "^6.9.9"
+    "@babel/plugin-transform-async-generator-functions": "^7.23.9",
+    "@babel/plugin-transform-class-properties": "^7.23.3",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.23.4",
+    "@babel/plugin-transform-numeric-separator": "^7.23.4",
+    "@babel/plugin-transform-object-rest-spread": "^7.23.4",
+    "@babel/plugin-transform-optional-catch-binding": "^7.23.4",
+    "@babel/plugin-transform-optional-chaining": "^7.23.4",
+    "@expo-google-fonts/pt-sans": "^0.2.3",
+    "@mdi/react": "^1.6.1",
+    "@uiw/react-native": "^4.1.1",
+    "expo-app-loading": "^2.1.1",
+    "nodemailer": "^6.9.9",
+    "react-native-vector-icons": "^10.0.3"
   }
 }

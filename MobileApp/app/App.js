@@ -1,6 +1,6 @@
 // App.js
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import {
   createStackNavigator,
   CardStyleInterpolators,
@@ -18,8 +18,12 @@ import WalkaroundLand from "./src/screens/WalkaroundLand";
 import Fence from "./src/screens/Fence";
 import FenceDetails from "./src/screens/FenceDetails";
 
-
-
+/* Template screens importing */
+import SaveScreen from './src/screens/TempScreens/SaveScreen/SaveScreen';
+import ResizeMap from './src/screens/TempScreens/ResizeMap/ResizeMap';
+import TemplateView from './src/screens/TempScreens/TemplateView/TemplateView';
+import EditTemplate from './src/screens/TempScreens/EditTemplate/EditTemplate';
+import SavedTemplatesScreen from './src/screens/TempScreens/SavedTemplatesScreen/SavedTemplatesScreen';
 
 const Stack = createStackNavigator();
 
@@ -27,47 +31,47 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="splashScreen"
+        initialRouteName='TemplatesScreen'
         screenOptions={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Slide-in/slide-out animation
         }}
       >
-        <Stack.Screen name="splashScreen" component={SplashScreen} />
+        <Stack.Screen name='splashScreen' component={SplashScreen} />
         <Stack.Screen
-          name="Welcome"
+          name='Welcome'
           component={WelcomeScreen}
-         
+          
         />
         <Stack.Screen
-          name="Register"
+          name='Register'
           component={RegisterScreen}
+          
+        />
+        <Stack.Screen
+          name='Login'
+          component={LoginScreen}
          
         />
         <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-        
-        />
-        <Stack.Screen
-          name="Forgot"
+          name='Forgot'
           component={ForgotPassword}
-        
+          
         />
         <Stack.Screen
-          name="Otp"
+          name='Otp'
           component={Otp}
          
         />
         <Stack.Screen
-          name="NewPassword"
+          name='NewPassword'
           component={CreateNewPassword}
-         
+          
         />
         <Stack.Screen
-          name="Home"
+          name='Home'
           component={Home}
-          
+         
        />
        <Stack.Screen
           name="WalkaroundLand"
@@ -75,6 +79,14 @@ const App = () => {
        />
        <Stack.Screen name="Fence" component={Fence} />
         <Stack.Screen name="FenceDetails" component={FenceDetails} />
+        <Stack.Screen name='SaveScreen' component={SaveScreen} />
+        <Stack.Screen name='ResizeMap' component={ResizeMap} />
+        <Stack.Screen name='TemplateView' component={TemplateView} />
+        <Stack.Screen name='EditTemplate' component={EditTemplate} />
+        <Stack.Screen
+          name='SavedTemplatesScreen'
+          component={SavedTemplatesScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
