@@ -31,47 +31,11 @@ const About = () => {
     <h2 style={{ textAlign: 'center' ,color: '#007BFF',padding: '1rem'}}>How we Stand Out</h2>
     <p style={{ textAlign: 'center',fontSize:'1.3rem'}}>We aim to exceed expectations by continuously enhancing the application's accuracy, usability, and functionalities. Our commitment to early validation against known fields ensures reliability and accuracy from the initial stages of your project.</p>
     <div style={{alignContent: 'center' , textAlign: 'center'}}>
-    <img style={{width:'50%',height:'auto'}} src='https://t3.ftcdn.net/jpg/04/47/51/22/360_F_447512287_bRkW2GaFN5Z38AIAZZLTTZHZBGY5TDFL.jpg' className='img-fluid shadow-4' alt='...' />
+    
    
     </div>
 
         </div>
-         
-
-      {/* <List style={styles.keyFeaturesContainer}>
-        
-      <Typography variant="h4" style={styles.heading}>
-          &nbsp; &nbsp;Key Features
-      </Typography>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Efficient Mapping: Walk around land boundaries or paths to map areas or routes accurately.</div>
-        </ListItem>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Customization and Organization: Name, label, group, and subgroup mapped areas for easy management.</div>
-        </ListItem>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Web and Mobile Accessibility: Access and edit features seamlessly on both mobile and web platforms.</div>
-        </ListItem>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Enhanced Accuracy: Utilize advanced technologies like GIS for superior accuracy beyond standard GPS.</div>
-        </ListItem>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Google Maps Integration: Overlay land plots onto Google Maps for enhanced visualization.</div>
-        </ListItem>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Third-party Sharing: Share measured information easily with third parties for viewing without the app.</div>
-        </ListItem>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Manual Adjustment Tools: Correct or modify mapped perimeters manually for improved accuracy.</div>
-        </ListItem>
-      </List> */}
 
     <div className="hero-video" style={{
         alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column', 
@@ -139,8 +103,7 @@ const styles = {
   },
   visionHeading: {
     color: "#007BFF",
-    fontWeight: "bold",
-    marginBottom: 20,
+
     textAlign: "center",
   },
   mobileAppImage: {
