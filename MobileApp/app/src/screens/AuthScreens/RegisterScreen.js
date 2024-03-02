@@ -205,7 +205,7 @@ export default function RegisterScreen() {
           >
             <View style={{ left: -20,  }}>
               <Image
-              source={require("../images/google.png")} />
+              source={require("../../images/google.png")} />
             </View>
             <View>
               <Text style={{ marginTop: 8, left:-3 }}>SIGN WITH GOOGLE</Text>
