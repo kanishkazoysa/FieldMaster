@@ -2,10 +2,11 @@ import React from 'react';
 import { MDBListGroup, MDBListGroupItem, MDBContainer } from "mdbreact";
 import { List, ListItem, Typography } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
+import video1 from "../../assets/key_features_video.mp4";
 
 const About = () => {
   return (
-    <section id="about" className='about'>
+    <section id="about" className='about' style={{alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column'}}>
         <div>
         <h2 style={{ textAlign: 'center' ,color: '#007BFF',padding: '1rem'}}>Our Vision</h2>
             <p style={{ textAlign: 'center',fontSize:'1.3rem',padding: '2rem'}}>
@@ -37,7 +38,7 @@ const About = () => {
         </div>
          
 
-      <List style={styles.keyFeaturesContainer}>
+      {/* <List style={styles.keyFeaturesContainer}>
         
       <Typography variant="h4" style={styles.heading}>
           &nbsp; &nbsp;Key Features
@@ -70,7 +71,22 @@ const About = () => {
           <CheckIcon style={styles.icon} />
           <div className="feature-text">Manual Adjustment Tools: Correct or modify mapped perimeters manually for improved accuracy.</div>
         </ListItem>
-      </List>
+      </List> */}
+
+    <div className="hero-video" style={{
+        alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column', 
+    }}>
+        
+       <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column'
+          }}>
+       <video width="100%" height="100%"  autoPlay loop muted>
+        <source src={video1} type="video/mp4" />
+        </video>
+      
+       </div>
+
+    
+    </div>
     
     </section>
  

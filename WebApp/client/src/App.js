@@ -11,6 +11,7 @@ import Pricing from './components/HomeComponents/Pricing';
 import Setup from './components/HomeComponents/SetupCard';
 import ContactForm from './components/HomeComponents/contact/contact';
 import './index.css';
+import { Carousel } from 'bootstrap';
 export default function App() {
   return (
 
@@ -19,6 +20,7 @@ export default function App() {
       <div className='container'>
         <Hero />
         <About />
+       
         <Setup />
         <Pricing />
       </div>
