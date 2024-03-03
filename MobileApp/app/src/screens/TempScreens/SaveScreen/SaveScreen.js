@@ -35,6 +35,8 @@ export function SaveScreen({ navigation }) {
     React.useState('demo description');
 
   const onSaveButtonPress = () => {
+    console.log('pressed save');
+
     const data = {
       perimeter: perimeter,
       area: area,
@@ -46,8 +48,9 @@ export function SaveScreen({ navigation }) {
     };
 
     axios
-      .post('http://192.168.56.1:3000/api/mapTemplate/saveTemplate', data)
+      .post('http://10.0.2.2:3000/api/mapTemplate/saveTemplate', data)
       .then((response) => {
+        console.log('data saved');
         console.log(response.data);
         navigation.navigate('SavedTemplatesScreen');
       })

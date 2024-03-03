@@ -30,19 +30,19 @@ export const styles = StyleSheet.create({
   image_style: {
     width: 90,
     height: 90,
-    left: -29,
   },
   col_01: {
-    flex: 2,
+    width: 100,
     alignItems: 'center',
     justifyContent: 'center',
   },
   col_02: {
+    width: 200,
     flex: 3,
-    left: -54,
+    left: 10,
   },
   col_03: {
-    flex: 1,
+    width: 50,
     justifyContent: 'space-between',
     alignItems: 'center',
     right: -20,

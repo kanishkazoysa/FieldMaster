@@ -6,6 +6,7 @@ import { styles } from './SavedTemplatesScreenStyles';
 /* import AppLoading from 'expo-app-loading'; */
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from 'react-native';
+import axios from 'axios';
 
 /* icons from materialcommunity icons */
 const CustomEditIcon = (props) => {
@@ -28,72 +29,20 @@ const CustomDeleteIcon = (props) => (
 /* data */
 
 const SavedTemplatesScreen = ({ navigation }) => {
-  const templatesList = [
-    {
-      id: 1,
-      name: 'Rubber estate',
-      location: 'Kandy',
-      date: '23/12/2024',
-      time: '15:25',
-    },
-    {
-      id: 2,
-      name: 'Template 02',
-      location: 'Colombo',
-      date: '23/12/2024',
-      time: '15:25',
-    },
-    {
-      id: 3,
-      name: 'Template 03',
-      location: 'Galle',
-      date: '23/12/2024',
-      time: '15:25',
-    },
-    {
-      id: 4,
-      name: 'Template 04',
-      location: 'Kandy',
-      date: '23/12/2024',
-      time: '15:25',
-    },
-    {
-      id: 5,
-      name: 'Template 05',
-      location: 'Kandy',
-      date: '23/12/2024',
-      time: '15:25',
-    },
-    {
-      id: 6,
-      name: 'Template 06',
-      location: 'Kandy',
-      date: '23/12/2024',
-      time: '15:25',
-    },
-    {
-      id: 7,
-      name: 'Template 07',
-      location: 'Kandy',
-      date: '23/12/2024',
-      time: '15:25',
-    },
-    {
-      id: 8,
-      name: 'Template 08',
-      location: 'Kandy',
-      date: '23/12/2024',
-      time: '15:25',
-    },
-    {
-      id: 9,
-      name: 'Tea estate',
-      location: 'Kandy',
-      date: '23/12/2024',
-      time: '15:25',
-    },
-  ];
-  const [templates, setTemplates] = useState(templatesList);
+  const [templates, setTemplates] = useState([]);
+
+  useEffect(() => {
+    console.log('calling api...');
+    axios
+      .get('http://192.168.56.1:3000/api/mapTemplate/getAllTemplates')
+      .then((response) => {
+        setTemplates(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const handleDelete = (deletingTemplate) => {
     const newTemplates = templates.filter((template) => {
@@ -127,7 +76,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
           <ScrollView style={{ flex: 1 }}>
             {templates.map((item, index) => {
               return (
-                <View key={item.id} style={styles.template_style}>
+                <View key={index} style={styles.template_style}>
                   <View style={styles.col_01}>
                     <TouchableOpacity
                       onPress={() => {
@@ -148,7 +97,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
                     }}
                   >
                     <View style={styles.col_02}>
-                      <Text style={styles.bold_text}>{item.name}</Text>
+                      <Text style={styles.bold_text}>{item.templateName}</Text>
                       <Text style={styles.sub_text_style}>
                         Location: {item.location}
                       </Text>
