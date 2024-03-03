@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
   image_style: {
     width: 90,
     height: 90,
-    left: -23,
+    left: -29,
   },
   col_01: {
     flex: 2,
@@ -39,13 +39,13 @@ export const styles = StyleSheet.create({
   },
   col_02: {
     flex: 3,
-    left: -45,
+    left: -54,
   },
   col_03: {
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    right: -16,
+    right: -20,
   },
   bold_text: {
     fontWeight: 'bold',

@@ -19,8 +19,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imageStyling: {
-    width: 395,
-    height: 800,
+    width: 420,
+    height: 810,
   },
   iconBlockStyling: {
     flexDirection: 'row',

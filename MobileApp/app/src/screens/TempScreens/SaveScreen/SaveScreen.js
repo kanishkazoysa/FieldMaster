@@ -4,6 +4,7 @@ import { Appbar, TextInput } from 'react-native-paper';
 import { styles } from './SaveScreenStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const CustomPerimeterIcon = (props) => (
   <MaterialCommunityIcons
@@ -33,14 +34,15 @@ export function SaveScreen({ navigation }) {
       {/* get rid of the top white space above the appbar */}
       <Appbar.Header style={styles.top_Bar_Whole} statusBarHeight={0}>
         <View style={styles.top_Bar_View}>
-          <Text
-            style={styles.top_Text_Styling}
+          <TouchableOpacity
             onPress={() => {
               navigation.navigate('SavedTemplatesScreen');
             }}
           >
-            Save
-          </Text>
+            <View>
+              <Text style={styles.top_Text_Styling}>Save</Text>
+            </View>
+          </TouchableOpacity>
           <Text style={styles.top_Text_Styling}>Cancel</Text>
         </View>
       </Appbar.Header>
