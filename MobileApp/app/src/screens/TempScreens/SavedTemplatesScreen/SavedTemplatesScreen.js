@@ -93,7 +93,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
                   </View>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate('TemplateView');
+                      navigation.navigate('TemplateView', { item: item });
                     }}
                   >
                     <View style={styles.col_02}>

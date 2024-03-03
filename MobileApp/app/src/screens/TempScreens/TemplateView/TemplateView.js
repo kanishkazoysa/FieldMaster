@@ -63,7 +63,8 @@ const CustomEditIcon = ({ navigation }) => (
   />
 );
 
-const TemplateView = ({ navigation }) => {
+const TemplateView = ({ route, navigation }) => {
+  const { item } = route.params;
   return (
     <>
       <View>
@@ -74,7 +75,7 @@ const TemplateView = ({ navigation }) => {
               navigation.navigate('SavedTemplatesScreen');
             }}
           />
-          <Appbar.Content title='Template Name' />
+          <Appbar.Content title={item.templateName} />
           {/* pencil/ pen icon  */}
           <CustomEditIcon navigation={navigation} />
         </Appbar.Header>
@@ -118,14 +119,14 @@ const TemplateView = ({ navigation }) => {
                 <TypeIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Type</Text>
-                  <Text style={styles.text02Styling}>Flat</Text>
+                  <Text style={styles.text02Styling}>{item.landType}</Text>
                 </View>
               </View>
               <View style={styles.blockView}>
                 <PerimeterIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Perimeter</Text>
-                  <Text style={styles.text02Styling}>13km</Text>
+                  <Text style={styles.text02Styling}>{item.perimeter} km</Text>
                 </View>
               </View>
             </View>
@@ -134,14 +135,14 @@ const TemplateView = ({ navigation }) => {
                 <AreaIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Area</Text>
-                  <Text style={styles.text02Styling}>100 Acres</Text>
+                  <Text style={styles.text02Styling}>{item.area} acres</Text>
                 </View>
               </View>
               <View style={styles.blockView}>
                 <CustomMapIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Location</Text>
-                  <Text style={styles.text02Styling}>Balapitiya</Text>
+                  <Text style={styles.text02Styling}>{item.location}</Text>
                 </View>
               </View>
             </View>
@@ -151,11 +152,7 @@ const TemplateView = ({ navigation }) => {
         <View style={styles.descriptionBlock}>
           <Text style={styles.text02Styling}>Description</Text>
           <View style={styles.subTextOuter}>
-            <Text style={styles.subTextStyle}>
-              Nestled amidst the beaches of Balapitiya lies a parcel of land
-              that captivates with its vastness and natural splendor. Spanning
-              an impressive 100 acres. alike.
-            </Text>
+            <Text style={styles.subTextStyle}>{item.description}</Text>
           </View>
         </View>
       </View>
