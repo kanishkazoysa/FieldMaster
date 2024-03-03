@@ -22,8 +22,7 @@ import axios from "axios";
 
 export default function Fence() {
   const [FenceTypeselectedValue, setFenceTypeSelectedValue] = useState(null);
-  const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] =
-    useState(null);
+  const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] = useState(null);
   const [inputValueFenceLength, setinputValueFenceLength] = useState("");
   const [inputValueFenceAmount, setinputValueFenceAmount] = useState("");
   const [inputValuePostspace, setinputValuePostspace] = useState("");
@@ -101,7 +100,7 @@ export default function Fence() {
       return;
     }
 
-    const response = await axios.post("http://192.168.105.237:5000/api/users/register",{ FenceTypeselectedValue,PostSpaceUnitselectedValue,inputValueFenceLength,inputValueFenceAmount,inputValuePostspace});
+    const response = await axios.post("http://192.168.120.237:5000/api/users/register",{ FenceTypeselectedValue,PostSpaceUnitselectedValue,inputValueFenceLength,inputValueFenceAmount,inputValuePostspace});
 
     navigation.navigate("FenceDetails", {
       data: displayValues,
