@@ -30,6 +30,7 @@ export const styles = StyleSheet.create({
   image_style: {
     width: 90,
     height: 90,
+    left: 5,
   },
   col_01: {
     width: 100,
