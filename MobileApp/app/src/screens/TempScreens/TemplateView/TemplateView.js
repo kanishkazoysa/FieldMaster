@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { View, Image, Text, StyleSheet,TouchableOpacity } from 'react-native';
 import { Appbar, ThemeProvider } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './TemplateViewStyles';
@@ -100,12 +100,14 @@ const TemplateView = ({ navigation }) => {
             </View>
             <Text>Plantation</Text>
           </View>
-          <View style={styles.iconBlockInner}>
+          <TouchableOpacity onPress={() => navigation.navigate('Fence')}>
+            <View style={styles.iconBlockInner}>
             <View style={styles.iconOuter_03}>
               <FenceSetupIcon />
             </View>
             <Text>Fence setup</Text>
           </View>
+        </TouchableOpacity>
         </View>
         {/* info_block */}
         <View style={styles.infoBlock}>

@@ -24,7 +24,6 @@ import ResizeMap from './src/screens/TempScreens/ResizeMap/ResizeMap';
 import TemplateView from './src/screens/TempScreens/TemplateView/TemplateView';
 import EditTemplate from './src/screens/TempScreens/EditTemplate/EditTemplate';
 import SavedTemplatesScreen from './src/screens/TempScreens/SavedTemplatesScreen/SavedTemplatesScreen';
-import BackButton from "./src/components/BackButton";
 import Fertilization from "./src/screens/Fertilization";
 import PlantationDetails from "./src/screens/PlantationDetails";
 import FertilizationDetails from "./src/screens/FertilizationDetails";

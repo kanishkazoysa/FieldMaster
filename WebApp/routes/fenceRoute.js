@@ -5,10 +5,17 @@ const fenceModel = require("../models/fence");
 
 router.post("/fence", async (req, res) => {
     const { FenceType, PostSpace, PostSpaceUnit, Gatelength, NumberofGates } = req.body;
+    
+    const newfence = new fenceModel({
+        FenceType : FenceTypeselectedValue,
+        PostSpace : inputValuePostspace,
+        PostSpaceUnit : PostSpaceUnitselectedValue,
+        Gatelength : inputValueFenceLength,
+        NumberofGates : inputValueFenceAmount
 
-    try {
-        
-    }
+    })
+  
+    await newfence.save();
 })
 
 

@@ -17,6 +17,8 @@ import { useNavigation } from "@react-navigation/native";
 
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
+import axios from "axios";
+
 
 export default function Fence() {
   const [FenceTypeselectedValue, setFenceTypeSelectedValue] = useState(null);
@@ -88,7 +90,7 @@ export default function Fence() {
     { label: "Foot", value: "Foot" },
   ];
 
-  const handleFenceDetails = () => {
+  const handleFenceDetails = async () => {
     if (
       !PostSpaceUnitselectedValue ||
       !FenceTypeselectedValue ||
@@ -98,6 +100,8 @@ export default function Fence() {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
+
+    const response = await axios.post("http://192.168.105.237:5000/api/users/register",{ FenceTypeselectedValue,PostSpaceUnitselectedValue,inputValueFenceLength,inputValueFenceAmount,inputValuePostspace});
 
     navigation.navigate("FenceDetails", {
       data: displayValues,
