@@ -35,13 +35,13 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName='splashScreen'
+        initialRouteName='SavedTemplatesScreen'
         screenOptions={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Slide-in/slide-out animation
         }}
       >
-        <Stack.Screen name='splashScreen' component={SplashScreen} />
+        {/* <Stack.Screen name='splashScreen' component={SplashScreen} />
         <Stack.Screen name='Welcome' component={WelcomeScreen} />
         <Stack.Screen name='Register' component={RegisterScreen} />
         <Stack.Screen name='Login' component={LoginScreen} />
@@ -52,7 +52,7 @@ const App = () => {
         <Stack.Screen name='Home' component={Home} />
         <Stack.Screen name='WalkaroundLand' component={WalkaroundLand} />
         <Stack.Screen name='Fence' component={Fence} />
-        <Stack.Screen name='FenceDetails' component={FenceDetails} />
+        <Stack.Screen name='FenceDetails' component={FenceDetails} /> */}
         <Stack.Screen
           name='SavedTemplatesScreen'
           component={SavedTemplatesScreen}

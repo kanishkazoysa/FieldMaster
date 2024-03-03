@@ -96,7 +96,8 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     paddingTop: 10,
     paddingHorizontal: 15,
-    marginBottom: 30,
+    paddingBottom: 25,
+    marginBottom: 86,
   },
   subTextOuter: {
     marginTop: 10,
@@ -135,5 +136,8 @@ export const styles = StyleSheet.create({
     height: 40,
     width: '65%',
     marginLeft: 40,
+  },
+  descriptionInput: {
+    backgroundColor: 'white',
   },
 });

@@ -115,7 +115,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
                       size={25}
                       color='#65676B'
                       onPress={() => {
-                        navigation.navigate('EditTemplate');
+                        navigation.navigate('EditTemplate', { item: item });
                       }}
                     />
                     <CustomDeleteIcon onPress={() => handleDelete(item)} />
