@@ -5,6 +5,7 @@ import { styles } from './SaveScreenStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import axios from 'axios';
 
 const CustomPerimeterIcon = (props) => (
   <MaterialCommunityIcons
@@ -24,26 +25,56 @@ const CustomAreaIcon = (props) => (
 );
 
 export function SaveScreen({ navigation }) {
-  const [measureNameText, setMeasureNameText] = React.useState('');
-  const [landTypeText, setLandTypeText] = React.useState('');
-  const [descriptionText, setDescriptionText] = React.useState('');
+  const [perimeter, setPerimeter] = React.useState(200);
+  const [area, setArea] = React.useState(100);
+  const [templateName, setTemplateName] = React.useState('demo template');
+  const [measureName, setMeasureName] = React.useState('Tea');
+  const [landType, setLandType] = React.useState('Slope');
+  const [location, setLocation] = React.useState('Kandy');
+  const [descriptionText, setDescriptionText] =
+    React.useState('demo description');
+
+  const onSaveButtonPress = () => {
+    const data = {
+      perimeter: perimeter,
+      area: area,
+      templateName: templateName,
+      measureName: measureName,
+      landType: landType,
+      location: location,
+      description: descriptionText,
+    };
+
+    axios
+      .post('http://192.168.56.1:3000/api/mapTemplate/saveTemplate', data)
+      .then((response) => {
+        console.log(response.data);
+        navigation.navigate('SavedTemplatesScreen');
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  };
 
   return (
     <View>
       <StatusBar barStyle={'light-content'} backgroundColor={'#0866FF'} />
-      {/* get rid of the top white space above the appbar */}
       <Appbar.Header style={styles.top_Bar_Whole} statusBarHeight={0}>
         <View style={styles.top_Bar_View}>
+          <TouchableOpacity onPress={onSaveButtonPress}>
+            <View>
+              <Text style={styles.top_Text_Styling}>Save</Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('SavedTemplatesScreen');
             }}
           >
             <View>
-              <Text style={styles.top_Text_Styling}>Save</Text>
+              <Text style={styles.top_Text_Styling}>Cancel</Text>
             </View>
           </TouchableOpacity>
-          <Text style={styles.top_Text_Styling}>Cancel</Text>
         </View>
       </Appbar.Header>
       {/* three inner views */}
@@ -82,18 +113,18 @@ export function SaveScreen({ navigation }) {
                 <Text style={styles.bold_text}>Measure Name :</Text>
                 <TextInput
                   style={styles.input_text}
-                  value={measureNameText}
+                  value={measureName}
                   placeholder='Measures Name'
-                  onChangeText={(text) => setMeasureNameText(text)}
+                  onChangeText={(text) => setMeasureName(text)}
                 />
               </View>
               <View style={styles.input_view}>
                 <Text style={styles.bold_text}>Land Type :</Text>
                 <TextInput
                   style={styles.input_text}
-                  value={landTypeText}
+                  value={landType}
                   placeholder='Land Type'
-                  onChangeText={(text) => setLandTypeText(text)}
+                  onChangeText={(text) => setLandType(text)}
                   outlineColor='black'
                   underlineColor='black'
                 />
