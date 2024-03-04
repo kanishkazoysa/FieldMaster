@@ -12,19 +12,27 @@ import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from "@react-native-picker/picker";
+import CalculatorSelect from "./calculatorSelect";
 
-const CalculatorModel = ({
+const CalculatorSelectModel = ({
   calculatorModalVisible,
   setCalculatorModalVisible,
 }) => {
+  const [calculatorSelectModalVisible, setCalculatorSelectModalVisible] = useState(false);
   const [selectedValue, setSelectedValue] = useState("sqm");
+
   const closeModal = () => {
     setCalculatorModalVisible(false);
+  };
+
+  const handleCalculate = () => {
+    setCalculatorSelectModalVisible(true);
   };
 
   const navigation = useNavigation();
 
   return (
+    <View>
     <Modal
       animationType="slide"
       transparent={true}
@@ -115,6 +123,7 @@ const CalculatorModel = ({
               mode="contained"
               style={styles.calculateButton}
               buttonColor="#007BFF"
+              onPress={handleCalculate}
             >
               Calculate
             </Button>
@@ -122,6 +131,11 @@ const CalculatorModel = ({
         </View>
       </View>
     </Modal>
+    <CalculatorSelect
+    calculatorSelectModalVisible={calculatorSelectModalVisible}
+    setCalculatorSelectModalVisible={setCalculatorSelectModalVisible}
+  />
+    </View>
   );
 };
 
@@ -198,4 +212,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CalculatorModel;
+export default CalculatorSelectModel;
