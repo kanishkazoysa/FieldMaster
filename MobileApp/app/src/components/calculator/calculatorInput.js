@@ -12,6 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from "@react-native-picker/picker";
+import DropDownPicker from 'react-native-dropdown-picker';
+
 import CalculatorSelect from "./calculatorSelect";
 
 const CalculatorSelectModel = ({
