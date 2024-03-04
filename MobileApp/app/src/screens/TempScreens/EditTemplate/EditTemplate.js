@@ -47,6 +47,7 @@ const EditTemplate = ({ route, navigation }) => {
       )
       .then((response) => {
         console.log(response);
+        alert('Template updated');
         navigation.navigate('SavedTemplatesScreen');
       })
       .catch((error) => {

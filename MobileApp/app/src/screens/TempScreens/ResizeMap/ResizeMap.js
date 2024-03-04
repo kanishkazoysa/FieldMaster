@@ -1,10 +1,31 @@
-import React from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
-import { Appbar, ThemeProvider } from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, { useEffect, useState } from 'react';
+import { View, Text } from 'react-native';
+import { Appbar } from 'react-native-paper';
 import { styles } from './ResizeMapStyles';
+import MapView from 'react-native-maps';
+import * as Location from 'expo-location';
 
 const ResizeMap = ({ navigation }) => {
+  const [region, setRegion] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.error('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    })();
+  }, []);
+
   return (
     <>
       <View>
@@ -30,13 +51,8 @@ const ResizeMap = ({ navigation }) => {
           </View>
         </Appbar.Header>
       </View>
-      {/* Image view */}
-      <View style={styles.imageView}>
-        <Image
-          style={styles.imageStyling}
-          source={{ uri: 'https://i.ibb.co/GkDvJSp/map-img.jpg' }}
-        />
-      </View>
+      {/* including map view */}
+      {region && <MapView style={{ flex: 1 }} region={region} />}
     </>
   );
 };

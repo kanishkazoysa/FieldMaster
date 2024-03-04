@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 
-import { TouchableOpacity, View, Text, Image, Button } from 'react-native';
+import { TouchableOpacity, View, Text, Image, ScrollView } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { styles } from './SavedTemplatesScreenStyles';
-/* import AppLoading from 'expo-app-loading'; */
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { ScrollView } from 'react-native';
+
 import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 
 /* icons from materialcommunity icons */
 const CustomEditIcon = (props) => {
@@ -26,30 +26,42 @@ const CustomDeleteIcon = (props) => (
   />
 );
 
-/* data */
-
 const SavedTemplatesScreen = ({ navigation }) => {
   const [templates, setTemplates] = useState([]);
 
-  useEffect(() => {
+  const fetchData = () => {
     console.log('calling api...');
     axios
       .get('http://192.168.56.1:3000/api/mapTemplate/getAllTemplates')
       .then((response) => {
         setTemplates(response.data);
-        console.log(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   const handleDelete = (deletingTemplate) => {
-    const newTemplates = templates.filter((template) => {
-      return template.id !== deletingTemplate.id;
-    });
-    setTemplates(newTemplates);
-    console.log('delete item');
+    axios
+      .delete(
+        `http://192.168.56.1:3000/api/mapTemplate/deleteTemplate/${deletingTemplate._id}`
+      )
+      .then((response) => {
+        console.log(response);
+        alert('Template deleted');
+        setTemplates(
+          templates.filter((template) => template._id !== deletingTemplate._id)
+        );
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -73,7 +85,10 @@ const SavedTemplatesScreen = ({ navigation }) => {
       <View style={styles.low_outer}>
         {/* template */}
         <View style={styles.scrollViewOuterStyle}>
-          <ScrollView style={{ flex: 1 }}>
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ paddingBottom: 20 }}
+          >
             {templates.map((item, index) => {
               return (
                 <View key={index} style={styles.template_style}>
