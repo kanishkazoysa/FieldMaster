@@ -14,7 +14,6 @@ export const styles = StyleSheet.create({
     fontSize: 20,
   },
   low_outer: {
-    backgroundColor: 'lightgrey',
     height: '100%',
   },
   template_style: {
@@ -58,4 +57,6 @@ export const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 70,
   },
+
+  
 });

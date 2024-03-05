@@ -56,7 +56,7 @@ const CustomEditIcon = ({ navigation }) => (
     name='square-edit-outline'
     size={25}
     color={'white'}
-    style={{ marginRight: 10 }}
+    style={{ marginLeft: 35}}
     onPress={() => {
       navigation.navigate('EditTemplate');
     }}
@@ -66,19 +66,18 @@ const CustomEditIcon = ({ navigation }) => (
 const TemplateView = ({ navigation }) => {
   return (
     <>
-      <View>
-        {/* Appbar */}
-        <Appbar.Header style={styles.top_Bar} dark={true} mode='center-aligned'>
+      <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
           <Appbar.BackAction
             onPress={() => {
-              navigation.navigate('SavedTemplatesScreen');
+              navigation.navigate("SavedTemplatesScreen");
             }}
           />
-          <Appbar.Content title='Template Name' />
+          <View style={{ marginTop: 40, left: 10, width: "67%" }}>
+            <Text style={styles.headerText}>Template View</Text>
+          </View>
           {/* pencil/ pen icon  */}
           <CustomEditIcon navigation={navigation} />
         </Appbar.Header>
-      </View>
       <View style={styles.low_outer}>
         <View style={styles.imageView}>
           <Image
@@ -88,28 +87,44 @@ const TemplateView = ({ navigation }) => {
         </View>
         {/* icons_block */}
         <View style={styles.iconBlockStyling}>
+
           <TouchableOpacity onPress={() => {
               navigation.navigate('Clearland');
             }}>
+
+
+
           <View style={styles.iconBlockInner}>
+          <TouchableOpacity onPress={() => navigation.navigate('ClearLand')}>
             <View style={styles.iconOuter_01}>
               <ClearLandIcon />
             </View>
+            </TouchableOpacity>
             <Text>Clear land</Text>
           </View>
-          </TouchableOpacity>
+
+
+          <TouchableOpacity onPress={() => navigation.navigate('Plantation')}>
+
+
           <View style={styles.iconBlockInner}>
+          <TouchableOpacity onPress={() => navigation.navigate('Plantation')}>
             <View style={styles.iconOuter_02}>
               <PlantationIcon />
             </View>
+            </TouchableOpacity> 
             <Text>Plantation</Text>
           </View>
-          <View style={styles.iconBlockInner}>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate('Fence')}>
+            <View style={styles.iconBlockInner}>
             <View style={styles.iconOuter_03}>
               <FenceSetupIcon />
             </View>
             <Text>Fence setup</Text>
           </View>
+        </TouchableOpacity>
         </View>
         {/* info_block */}
         <View style={styles.infoBlock}>
