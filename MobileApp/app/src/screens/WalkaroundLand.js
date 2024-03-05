@@ -1,43 +1,131 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
-  Text,
-  TouchableOpacity,
   StyleSheet,
   Platform,
   StatusBar,
-  TextInput,
-  FlatList,
+  TouchableOpacity,
+  Text,
+  FlatList, 
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
-import { Button, Appbar } from "react-native-paper";
+import MapView, { PROVIDER_GOOGLE, Polyline, Circle } from "react-native-maps";
 import * as Location from "expo-location";
+import { useNavigation } from "@react-navigation/native";
+import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 
+// function kalmanFilter(currentMeasurement, lastEstimation) {
+//   // Define constants for the Kalman filter
+//   const measurementNoise = 0.0001;
+//   const processNoise = 0.01;
+
+//   // Kalman gain calculation
+//   const kalmanGain = lastEstimation.errorEstimate / (lastEstimation.errorEstimate + measurementNoise);
+
+//   // State update estimation
+//   const updatedEstimation = {
+//     value: lastEstimation.value + kalmanGain * (currentMeasurement - lastEstimation.value),
+//     errorEstimate: (1 - kalmanGain) * lastEstimation.errorEstimate + processNoise
+//   };
+
+//   return updatedEstimation.value;
+// }
+// export default function Home() {
+//   const [currentLocation, setCurrentLocation] = useState(null);
+//   const [pathCoordinates, setPathCoordinates] = useState([]);
+//   const [trackingStarted, setTrackingStarted] = useState(false);
+//   const mapRef = useRef(null);
+//   const lastLocation = useRef(null); // Store last location for filtering
+
+//   useEffect(() => {
+//     let watchLocation;
+//     if (trackingStarted) {
+//       watchLocation = Location.watchPositionAsync(
+//         {
+//           accuracy: Location.Accuracy.BestForNavigation,
+//           timeInterval: 1000, // Update every 1 second
+//           distanceInterval: 1, // Update every 1 meter
+//         },
+//         (location) => {
+//           // Apply Kalman filter to smooth location data
+//           const smoothedLatitude = lastLocation.current ?
+//             kalmanFilter(location.coords.latitude, lastLocation.current.coords.latitude) :
+//             location.coords.latitude;
+//           const smoothedLongitude = lastLocation.current ?
+//             kalmanFilter(location.coords.longitude, lastLocation.current.coords.longitude) :
+//             location.coords.longitude;
+
+//           setCurrentLocation({
+//             coords: {
+//               latitude: smoothedLatitude,
+//               longitude: smoothedLongitude,
+//             }
+//           });
+
+//           setPathCoordinates(prevCoordinates => [
+//             ...prevCoordinates,
+//             {
+//               latitude: smoothedLatitude,
+//               longitude: smoothedLongitude,
+//             },
+//           ]);
+
+//           lastLocation.current = location;
+//         }
+//       );
+//     } else {
+//       // Clear path coordinates if tracking is stopped
+//       setPathCoordinates([]);
+//     }
+
+//     return () => {
+//       if (watchLocation && watchLocation.remove) {
+//         watchLocation.remove();
+//       }
+//     };
+//   }, [trackingStarted]);
+
 export default function Home() {
-  const navigation = useNavigation();
-  const [mapTypeIndex, setMapTypeIndex] = useState(0);
-  const [showDropdown, setShowDropdown] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [pathCoordinates, setPathCoordinates] = useState([]);
   const [trackingStarted, setTrackingStarted] = useState(false);
-  const [showCurrentLocation, setShowCurrentLocation] = useState(false);
+  const [mapTypeIndex, setMapTypeIndex] = useState(0);
+  const [showDropdown, setShowDropdown] = useState(false);
+    const navigation = useNavigation(); 
   const mapRef = useRef(null);
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.error("Permission to access location was denied");
-        return;
-      }
+    let watchLocation;
+    if (trackingStarted) {
+      watchLocation = Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.BestForNavigation,
+          timeInterval: 1000, // Update every 1 second
+          distanceInterval: 1, // Update every 1 meter
+        },
+        (location) => {
+          setCurrentLocation(location);
+          setPathCoordinates((prevCoordinates) => [
+            ...prevCoordinates,
+            {
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            },
+          ]);
+        }
+      );
+    } else {
+      // Clear path coordinates if tracking is stopped
+      setPathCoordinates([]);
+    }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setCurrentLocation(location);
-    })();
-  }, []);
+    return () => {
+      if (watchLocation && watchLocation.remove) {
+        watchLocation.remove();
+      }
+    };
+  }, [trackingStarted]);
 
   const mapTypes = [
     { name: "Standard", value: "standard" },
@@ -56,13 +144,25 @@ export default function Home() {
   };
 
   const focusOnCurrentLocation = () => {
-    setShowCurrentLocation(!showCurrentLocation);
-    if (!showCurrentLocation && currentLocation && mapRef.current) {
-      mapRef.current.animateToRegion({
-        latitude: currentLocation.coords.latitude,
-        longitude: currentLocation.coords.longitude,
-        latitudeDelta: 0.0007,
-        longitudeDelta: 0.0007,
+    setTrackingStarted(!trackingStarted); // Toggle tracking started state
+
+    if (!trackingStarted) {
+      Location.getCurrentPositionAsync({}).then((location) => {
+        setCurrentLocation(location);
+        setPathCoordinates([
+          {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          },
+        ]);
+        if (mapRef.current && location) {
+          mapRef.current.animateToRegion({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.001,
+            longitudeDelta: 0.001,
+          });
+        }
       });
     }
   };
@@ -70,7 +170,6 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-
       <Appbar.Header style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -85,12 +184,11 @@ export default function Home() {
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
       </Appbar.Header>
-
       <MapView
         ref={mapRef}
         style={styles.map}
-        provider={PROVIDER_GOOGLE}
         mapType={mapTypes[mapTypeIndex].value}
+        provider={PROVIDER_GOOGLE}
         initialRegion={{
           latitude: 6.2427,
           longitude: 80.0607,
@@ -98,20 +196,22 @@ export default function Home() {
           longitudeDelta: 0.0421,
         }}
       >
-      {showCurrentLocation && currentLocation && (
-        <Marker
-          coordinate={{
-            latitude: currentLocation.coords.latitude,
-            longitude: currentLocation.coords.longitude,
-          }}
-          title="Current Location"
-        />
-      )}
-        {pathCoordinates.length > 0 && (
+        {trackingStarted && currentLocation && (
+          <Circle
+            center={{
+              latitude: currentLocation.coords.latitude,
+              longitude: currentLocation.coords.longitude,
+            }}
+            radius={5} // Adjust radius as needed
+            strokeColor="#000"
+            fillColor="rgba(255, 0, 0, 0.5)" // Semi-transparent red
+          />
+        )}
+        {trackingStarted && pathCoordinates.length > 1 && (
           <Polyline
             coordinates={pathCoordinates}
-            strokeColor="#FF0000"
-            strokeWidth={2}
+            strokeColor="#0000FF" // Blue color
+            strokeWidth={5}
           />
         )}
       </MapView>
@@ -144,12 +244,11 @@ export default function Home() {
           <Button
             buttonColor="#007BFF"
             icon="play-outline"
-            size={50}
             mode="contained"
             onPress={focusOnCurrentLocation}
             style={styles.button}
           >
-            Start
+            {trackingStarted ? "Stop" : "Start"}
           </Button>
         </View>
         <View style={styles.buttonWrapper}>
@@ -169,26 +268,6 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    height: 50,
-    backgroundColor: "#007BFF",
-    flexDirection: "row",
-    alignItems: "center",
-    ...Platform.select({
-      android: {
-        marginTop: StatusBar.currentHeight,
-      },
-    }),
-  },
-  appbarButton: {
-    padding: 8,
-    marginRight: 8,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-  },
-
   layerIconContainer: {
     position: "absolute",
     backgroundColor: "rgba(0,0,0, 0.7)",
@@ -220,13 +299,42 @@ const styles = StyleSheet.create({
     padding: 10,
     color: "#fff",
   },
-  button2: {
+  header: {
+    height: 50,
+    backgroundColor: "#007BFF",
+    flexDirection: "row",
+    alignItems: "center",
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
+  },
+  appbarButton: {
+    padding: 8,
+    marginRight: 8,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+  },
+  container: {
+    flex: 1,
+  },
+  map: {
+    flex: 1,
+  },
+  startButton: {
     position: "absolute",
-    backgroundColor: "rgba(0,0,0, 0.7)",
+    backgroundColor: "#007BFF",
     padding: 10,
     borderRadius: 5,
-    top: Platform.OS === "android" ? "15%" : "18%",
-    right: 10,
+    bottom: 16,
+    alignSelf: "center",
+  },
+  buttonText: {
+    color: "#FFF",
+    fontSize: 18,
   },
   buttonContainer: {
     position: "absolute",
@@ -242,47 +350,5 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: "#fff",
-  },
-  container: {
-    flex: 1,
-  },
-  searchbar: {
-    width: "100%",
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "absolute",
-    top: Platform.OS === "android" ? "4%" : "8%",
-    zIndex: 1,
-  },
-  searchbarInput: {
-    borderRadius: 30,
-    paddingLeft: 40,
-    height: 50,
-    width: "80%",
-    backgroundColor: "rgba(255, 255, 255, 0.6)",
-    color: "#000",
-    borderWidth: 1,
-    borderColor: "#CED0D4",
-  },
-  searchbarInputFocused: {
-    backgroundColor: "#fff",
-    borderColor: "#007BFF", // Change border color when focused
-  },
-  map: {
-    width: "100%",
-    height: "100%",
-  },
-  clearIconContainer: {
-    position: "absolute",
-    left: "75%",
-    top: "50%",
-    transform: [{ translateY: -12 }],
-    zIndex: 1,
   },
 });
