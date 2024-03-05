@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#007BFF',
     color: 'white',
+    height: 75,
   },
   imageView: {
     alignItems: 'center',
@@ -111,6 +112,7 @@ export const styles = StyleSheet.create({
     color: 'white',
     marginHorizontal: 120,
     fontSize: 16,
+    marginTop: 20,
   },
   inputBlock: {
     marginHorizontal: 10,

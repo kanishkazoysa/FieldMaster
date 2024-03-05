@@ -139,7 +139,7 @@ export default function Fence() {
                 <MaterialCommunityIcons
                   name="vector-square"
                   size={36}
-                  color="#65676B"
+                  color="gray"
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>Perimeter</Text>
@@ -150,7 +150,7 @@ export default function Fence() {
                 <MaterialCommunityIcons
                   name="texture-box"
                   size={36}
-                  color="#65676B"
+                  color="gray"
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>Area</Text>
@@ -168,7 +168,7 @@ export default function Fence() {
             <MaterialCommunityIcons
               name="gate"
               size={40}
-              color="#65676B"
+              color="gray"
               style={styles.squareIcon}
             />
             <View style={styles.box2PropertyDetails}>
@@ -202,7 +202,7 @@ export default function Fence() {
             <MaterialCommunityIcons
               name="format-line-spacing"
               size={30}
-              color="#65676B"
+              color="gray"
               rotation={270}
             />
             <View style={styles.box3PropertyDetails}>
@@ -247,7 +247,7 @@ export default function Fence() {
             <MaterialCommunityIcons
               name="boom-gate"
               size={36}
-              color="#65676B"
+              color="gray"
             />
             <Text style={styles.Box4TopText}>Gates</Text>
           </View>
