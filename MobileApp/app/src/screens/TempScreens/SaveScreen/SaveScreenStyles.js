@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
   },
 
   top_Bar_Whole: {
-    backgroundColor: '#007BFF';
+    backgroundColor: '#007BFF',
     marginTop: 0,
     height: 80,
   },
