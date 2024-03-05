@@ -279,6 +279,15 @@ export default function Fertilization() {
                     items={FertilizerAmountUnitOptions}
                     onValueChange={(value) => FertilizerAmountUnitsetSelectedValue(value)}
                     value={FertilizerAmountUnitselectedValue}
+
+                    style={{
+                      inputIOS: {
+                        textAlign: "center",
+                      },
+                      inputAndroid: {
+                        textAlign: "center",
+                      },
+                    }}
                   />
                 </View>
               </View>
@@ -488,9 +497,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "black",
     width: "36%",
-    height: 30,
+    height: 35,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#CED0D4",
   },
 
   Box5bottomText: {

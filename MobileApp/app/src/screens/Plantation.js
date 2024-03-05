@@ -166,6 +166,14 @@ export default function Plantation() {
                       PlantSpaceUnitSetSelectedValue(value)
                     }
                     value={PlantSpaceUnitselectedValue}
+                    style={{
+                      inputIOS: {
+                        textAlign: "center",
+                      },
+                      inputAndroid: {
+                        textAlign: "center",
+                      },
+                    }}
                   />
                 </View>
               </View>
@@ -202,6 +210,14 @@ export default function Plantation() {
                       RowSpacingUnitSetSelectedValue(value)
                     }
                     value={RowSpacingUnitselectedValue}
+                    style={{
+                      inputIOS: {
+                        textAlign: "center",
+                      },
+                      inputAndroid: {
+                        textAlign: "center",
+                      },
+                    }}
                   />
                 </View>
               </View>
@@ -340,9 +356,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "black",
     width: "36%",
-    height: 30,
+    height: 35,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#CED0D4",
   },
 
   /* bottom section */
