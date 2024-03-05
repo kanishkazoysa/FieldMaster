@@ -93,12 +93,15 @@ const TemplateView = ({ navigation }) => {
             </View>
             <Text>Clear land</Text>
           </View>
+          <TouchableOpacity onPress={() => navigation.navigate('Plantation')}>
           <View style={styles.iconBlockInner}>
             <View style={styles.iconOuter_02}>
               <PlantationIcon />
             </View>
             <Text>Plantation</Text>
           </View>
+          </TouchableOpacity>
+
           <TouchableOpacity onPress={() => navigation.navigate('Fence')}>
             <View style={styles.iconBlockInner}>
             <View style={styles.iconOuter_03}>

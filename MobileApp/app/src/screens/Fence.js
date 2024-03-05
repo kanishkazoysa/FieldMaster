@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 6,
     padding: 0,
   },
 
@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 6,
   },
 
   box2Property: {
@@ -473,7 +473,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 6,
   },
 
   box3Property: {
@@ -538,7 +538,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 6,
   },
 
   box4innertop: {

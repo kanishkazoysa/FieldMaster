@@ -96,7 +96,6 @@ export default function Fertilization() {
       {/* Scrollable content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Top section */}
-        <View style={styles.box}>
           <View style={styles.Box1}>
             <View style={styles.innerContainer}>
               <Text style={styles.titleText}>Plantation Info</Text>
@@ -155,11 +154,9 @@ export default function Fertilization() {
               </View>
             </View>
           </View>
-        </View>
 
         {/* Second section */}
 
-        <View style={styles.box}>
           <View style={styles.Box2}>
 
             <View style={styles.Box2innerContainer}>
@@ -197,13 +194,10 @@ export default function Fertilization() {
             </View>
 
           </View>
-        </View>
 
         {/* Third section */}
 
-        <View style={styles.box}>
           <View style={styles.Box3}>
-            <View style={styles.Box3innerContainer}>
               <View style={styles.Box3TopText}>
                 <MaterialCommunityIcons
                   name="flask-outline"
@@ -227,14 +221,10 @@ export default function Fertilization() {
                 marginLeft={10}
               />
             </View>
-          </View>
-        </View>
 
         {/* Forth section */}
 
-        <View style={styles.box}>
           <View style={styles.Box3}>
-            <View style={styles.Box3innerContainer}>
               <View style={styles.Box3TopText}>
                 <MaterialCommunityIcons
                   name="ticket-confirmation"
@@ -258,12 +248,9 @@ export default function Fertilization() {
                 marginLeft={10}
               />
             </View>
-          </View>
-        </View>
 
         {/* Fifth section */}
 
-        <View style={styles.box}>
           <View style={styles.Box5}>
             <View style={styles.Box2innerContainer}>
               <View style={styles.TopText}>
@@ -301,11 +288,9 @@ export default function Fertilization() {
               </Text>
             </View>
           </View>
-        </View>
 
         {/* Bottom section */}
 
-        <View style={styles.box}>
           <View style={styles.bottom}>
             
             <CustomButton
@@ -318,7 +303,6 @@ export default function Fertilization() {
 
 
           </View>
-        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -331,7 +315,7 @@ const styles = StyleSheet.create({
 
   /*Top section*/
 
-  box: {
+  scrollContent: {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
@@ -347,7 +331,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 3,
   },
   innerContainer: {
     width: "100%",
@@ -408,7 +392,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 3,
   },
 
   Box2innerContainer: {
@@ -451,25 +435,19 @@ const styles = StyleSheet.create({
 
   Box3: {
     width: "95%",
-    height: 45,
+    flexDirection: "row",
+    height: 50,
     alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#FFFFFF",
-    marginTop: 10,
+    marginTop: 12,
     borderRadius: 11,
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 3,
+    padding: 12,
   },
 
-  Box3innerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    height: "80%",
-    width: "90%",
-    backgroundColor: "white",
-  },
 
   Box3TopText: {
     flexDirection: "row",
@@ -493,7 +471,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 3,
   },
 
   Box5propertyBox: {

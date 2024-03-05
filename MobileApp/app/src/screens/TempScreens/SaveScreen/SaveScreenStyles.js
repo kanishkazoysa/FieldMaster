@@ -89,7 +89,7 @@ export const styles = StyleSheet.create({
   },
 
   input_view: {
-    width: '95%',	
+    width: '92%',	
     height: 50,  
     backgroundColor: 'white',
     alignItems: "center",
