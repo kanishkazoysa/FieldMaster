@@ -5,13 +5,12 @@ export const styles = StyleSheet.create({
     color: 'red',
   },
   low_outer: {
-    backgroundColor: 'lightgrey',
     height: '100%',
   },
   top_Bar: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0866FF',
+    backgroundColor: '#007BFF',
     color: 'white',
   },
   imageView: {
@@ -106,13 +105,12 @@ export const styles = StyleSheet.create({
   },
   appBarContent: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
   },
   appBarTextStyle: {
     color: 'white',
     marginHorizontal: 120,
-    fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 16,
   },
   inputBlock: {
     marginHorizontal: 10,

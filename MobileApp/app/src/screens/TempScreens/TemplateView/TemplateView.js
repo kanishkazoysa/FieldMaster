@@ -56,7 +56,7 @@ const CustomEditIcon = ({ navigation }) => (
     name='square-edit-outline'
     size={25}
     color={'white'}
-    style={{ marginRight: 10 }}
+    style={{ marginLeft: 35}}
     onPress={() => {
       navigation.navigate('EditTemplate');
     }}
@@ -66,19 +66,18 @@ const CustomEditIcon = ({ navigation }) => (
 const TemplateView = ({ navigation }) => {
   return (
     <>
-      <View>
-        {/* Appbar */}
-        <Appbar.Header style={styles.top_Bar} dark={true} mode='center-aligned'>
+      <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
           <Appbar.BackAction
             onPress={() => {
-              navigation.navigate('SavedTemplatesScreen');
+              navigation.navigate("SavedTemplatesScreen");
             }}
           />
-          <Appbar.Content title='Template Name' />
+          <View style={{ marginTop: 40, left: 10, width: "67%" }}>
+            <Text style={styles.headerText}>Template View</Text>
+          </View>
           {/* pencil/ pen icon  */}
           <CustomEditIcon navigation={navigation} />
         </Appbar.Header>
-      </View>
       <View style={styles.low_outer}>
         <View style={styles.imageView}>
           <Image
