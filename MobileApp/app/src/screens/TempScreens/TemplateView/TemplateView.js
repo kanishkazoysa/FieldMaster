@@ -88,6 +88,12 @@ const TemplateView = ({ navigation }) => {
         {/* icons_block */}
         <View style={styles.iconBlockStyling}>
 
+          <TouchableOpacity onPress={() => {
+              navigation.navigate('Clearland');
+            }}>
+
+
+
           <View style={styles.iconBlockInner}>
           <TouchableOpacity onPress={() => navigation.navigate('ClearLand')}>
             <View style={styles.iconOuter_01}>
@@ -97,7 +103,9 @@ const TemplateView = ({ navigation }) => {
             <Text>Clear land</Text>
           </View>
 
+
           <TouchableOpacity onPress={() => navigation.navigate('Plantation')}>
+
 
           <View style={styles.iconBlockInner}>
           <TouchableOpacity onPress={() => navigation.navigate('Plantation')}>
