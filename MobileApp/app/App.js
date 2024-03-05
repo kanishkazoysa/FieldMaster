@@ -24,11 +24,12 @@ import ResizeMap from './src/screens/TempScreens/ResizeMap/ResizeMap';
 import TemplateView from './src/screens/TempScreens/TemplateView/TemplateView';
 import EditTemplate from './src/screens/TempScreens/EditTemplate/EditTemplate';
 import SavedTemplatesScreen from './src/screens/TempScreens/SavedTemplatesScreen/SavedTemplatesScreen';
-import BackButton from "./src/components/BackButton";
 import Fertilization from "./src/screens/Fertilization";
 import PlantationDetails from "./src/screens/PlantationDetails";
 import FertilizationDetails from "./src/screens/FertilizationDetails";
 import Plantation from "./src/screens/Plantation";
+import Clearland from './src/screens/Clearland';
+import EffortOutput from './src/screens/EffortOutput';
 
 
 
@@ -114,6 +115,18 @@ const App = () => {
         <Stack.Screen
           name="FertilizationDetails"
           component={FertilizationDetails}
+          
+        />
+
+<Stack.Screen
+          name="Clearland"
+          component={Clearland}
+          
+        />
+
+<Stack.Screen
+          name="EffortOutput"
+          component={EffortOutput}
           
         />
 
