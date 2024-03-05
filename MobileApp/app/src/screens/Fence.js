@@ -17,11 +17,12 @@ import { useNavigation } from "@react-navigation/native";
 
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
+import axios from "axios";
+
 
 export default function Fence() {
   const [FenceTypeselectedValue, setFenceTypeSelectedValue] = useState(null);
-  const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] =
-    useState(null);
+  const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] = useState(null);
   const [inputValueFenceLength, setinputValueFenceLength] = useState("");
   const [inputValueFenceAmount, setinputValueFenceAmount] = useState("");
   const [inputValuePostspace, setinputValuePostspace] = useState("");
@@ -88,7 +89,7 @@ export default function Fence() {
     { label: "Foot", value: "Foot" },
   ];
 
-  const handleFenceDetails = () => {
+  const handleFenceDetails = async () => {
     if (
       !PostSpaceUnitselectedValue ||
       !FenceTypeselectedValue ||
@@ -98,6 +99,8 @@ export default function Fence() {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
+
+    const response = await axios.post("http://192.168.120.237:5000/api/users/register",{ FenceTypeselectedValue,PostSpaceUnitselectedValue,inputValueFenceLength,inputValueFenceAmount,inputValuePostspace});
 
     navigation.navigate("FenceDetails", {
       data: displayValues,
@@ -136,7 +139,7 @@ export default function Fence() {
                 <MaterialCommunityIcons
                   name="vector-square"
                   size={36}
-                  color="#65676B"
+                  color="gray"
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>Perimeter</Text>
@@ -147,7 +150,7 @@ export default function Fence() {
                 <MaterialCommunityIcons
                   name="texture-box"
                   size={36}
-                  color="#65676B"
+                  color="gray"
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>Area</Text>
@@ -165,7 +168,7 @@ export default function Fence() {
             <MaterialCommunityIcons
               name="gate"
               size={40}
-              color="#65676B"
+              color="gray"
               style={styles.squareIcon}
             />
             <View style={styles.box2PropertyDetails}>
@@ -199,7 +202,7 @@ export default function Fence() {
             <MaterialCommunityIcons
               name="format-line-spacing"
               size={30}
-              color="#65676B"
+              color="gray"
               rotation={270}
             />
             <View style={styles.box3PropertyDetails}>
@@ -244,7 +247,7 @@ export default function Fence() {
             <MaterialCommunityIcons
               name="boom-gate"
               size={36}
-              color="#65676B"
+              color="gray"
             />
             <Text style={styles.Box4TopText}>Gates</Text>
           </View>
@@ -358,7 +361,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 6,
     padding: 0,
   },
 
@@ -419,7 +422,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 6,
   },
 
   box2Property: {
@@ -470,7 +473,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 6,
   },
 
   box3Property: {
@@ -535,7 +538,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 6,
   },
 
   box4innertop: {

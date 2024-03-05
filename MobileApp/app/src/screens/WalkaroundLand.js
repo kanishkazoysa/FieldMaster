@@ -178,7 +178,7 @@ export default function Home() {
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => console.log("Save pressed")}
+          onPress={() => navigation.navigate("SaveScreen")}
           style={[styles.appbarButton, { marginLeft: "auto" }]}
         >
           <Text style={styles.buttonText}>Save</Text>

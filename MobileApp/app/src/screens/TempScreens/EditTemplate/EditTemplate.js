@@ -59,14 +59,7 @@ const EditTemplate = ({ navigation }) => {
             mode='center-aligned'
           >
             <View style={styles.appBarContent}>
-              <Text
-                style={styles.appBarTextStyle}
-                onPress={() => {
-                  navigation.navigate('SavedTemplatesScreen');
-                }}
-              >
-                Save
-              </Text>
+             
               <Text
                 style={styles.appBarTextStyle}
                 onPress={() => {
@@ -74,6 +67,14 @@ const EditTemplate = ({ navigation }) => {
                 }}
               >
                 Cancel
+              </Text>
+              <Text
+                style={styles.appBarTextStyle}
+                onPress={() => {
+                  navigation.navigate('SavedTemplatesScreen');
+                }}
+              >
+                Save
               </Text>
             </View>
           </Appbar.Header>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { View, Image, Text, StyleSheet ,StatusBar} from 'react-native';
 import { Appbar, ThemeProvider } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './ResizeMapStyles';
@@ -9,8 +9,20 @@ const ResizeMap = ({ navigation }) => {
     <>
       <View>
         {/* Appbar */}
+
+        <StatusBar barStyle={'light-content'} backgroundColor={'#007BFF'} />
+
         <Appbar.Header style={styles.top_Bar} dark={true} mode='center-aligned'>
           <View style={styles.appBarContent}>
+          <Text
+              style={styles.appBarTextStyle}
+              onPress={() => {
+                navigation.navigate('SavedTemplatesScreen');
+              }}
+            >
+              Cancel
+            </Text>
+           
             <Text
               style={styles.appBarTextStyle}
               onPress={() => {
@@ -19,14 +31,7 @@ const ResizeMap = ({ navigation }) => {
             >
               Save
             </Text>
-            <Text
-              style={styles.appBarTextStyle}
-              onPress={() => {
-                navigation.navigate('SavedTemplatesScreen');
-              }}
-            >
-              Cancel
-            </Text>
+            
           </View>
         </Appbar.Header>
       </View>
