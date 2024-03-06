@@ -100,7 +100,7 @@ export default function Fence() {
       return;
     }
 
-    const response = await axios.post("http://192.168.120.237:5000/api/users/register",{ FenceTypeselectedValue,PostSpaceUnitselectedValue,inputValueFenceLength,inputValueFenceAmount,inputValuePostspace});
+    //const response = await axios.post("http://192.168.120.237:5000/api/users/register",{ FenceTypeselectedValue,PostSpaceUnitselectedValue,inputValueFenceLength,inputValueFenceAmount,inputValuePostspace});
 
     navigation.navigate("FenceDetails", {
       data: displayValues,
@@ -130,7 +130,8 @@ export default function Fence() {
       {/* Scrollable content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Top section */}
-
+        
+        <View style={styles.top}>
         <View style={styles.Box1}>
           <View>
             <Text style={styles.titleText}>Land Info</Text>
@@ -317,10 +318,10 @@ export default function Fence() {
             ))}
           </View>
         </View>
+        </View>
 
         {/* Bottom section */}
 
-        <View style={styles.box}>
           <View style={styles.bottom}>
             <CustomButton
               onPress={handleFenceDetails}
@@ -331,7 +332,6 @@ export default function Fence() {
               style={styles.calculateButton}
             />
           </View>
-        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -346,8 +346,14 @@ const styles = StyleSheet.create({
 
   scrollContent: {
     flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    height: "100%",
+
+  },
+  
+  top: {
+   alignItems: "center",
+   width: "100%",
   },
 
   Box1: {
@@ -643,9 +649,6 @@ const styles = StyleSheet.create({
 
   bottom: {
     alignItems: "center",
-    justifyContent: "flex-end",
-    marginTop: 50,
-    height: 80,
-    width: "100%",
+    bottom: 10,    
   },
 });
