@@ -522,7 +522,7 @@ const styles = StyleSheet.create({
 
   bottom: {
     alignItems: "center",
-    bottom: 10,
+    bottom: 30,
   },
   
 });

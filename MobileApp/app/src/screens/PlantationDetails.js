@@ -513,7 +513,7 @@ import {
   
     bottom: {
       alignItems: "center",
-      bottom: 10,
+      bottom: 30,
     },
   
   });
