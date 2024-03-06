@@ -179,7 +179,8 @@ import {
           
         
         <ScrollView contentContainerStyle={styles.scrollContent}>
-        
+
+        <View style={styles.top}>
           <AlertButton></AlertButton>
   
           {/* Top section */}
@@ -291,6 +292,7 @@ import {
                 </View>
               </View>
             </View>
+            </View>
   
           {/* Bottom section */}
             <View style={styles.bottom}>
@@ -327,9 +329,16 @@ import {
   
     scrollContent: {
       flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
+      justifyContent: "space-between",
+      height: "100%",
+
     },
+
+    top: {
+      alignItems: "center",
+      width: "100%",
+  
+     },
   
     box1: {
       flexDirection: "column",
@@ -503,9 +512,8 @@ import {
     /* bottom section */
   
     bottom: {
-      alignItems: "flex-end",
-      justifyContent: "flex-end",
-      marginTop: 50,
+      alignItems: "center",
+      bottom: 30,
     },
   
   });

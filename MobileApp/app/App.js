@@ -20,16 +20,22 @@ import FenceDetails from "./src/screens/FenceDetails";
 
 /* Template screens importing */
 
+
 import SaveScreen from "./src/screens/TempScreens/SaveScreen/SaveScreen";
 import ResizeMap from "./src/screens/TempScreens/ResizeMap/ResizeMap";
 import TemplateView from "./src/screens/TempScreens/TemplateView/TemplateView";
 import EditTemplate from "./src/screens/TempScreens/EditTemplate/EditTemplate";
 import SavedTemplatesScreen from "./src/screens/TempScreens/SavedTemplatesScreen/SavedTemplatesScreen";
 
+
 import Fertilization from "./src/screens/Fertilization";
 import PlantationDetails from "./src/screens/PlantationDetails";
 import FertilizationDetails from "./src/screens/FertilizationDetails";
 import Plantation from "./src/screens/Plantation";
+import Clearland from './src/screens/Clearland';
+import EffortOutput from './src/screens/EffortOutput';
+
+
 import testScreen from "./src/screens/testScreen";
 
 const Stack = createStackNavigator();
@@ -71,7 +77,21 @@ const App = () => {
           name="FertilizationDetails"
           component={FertilizationDetails}
         />
+
+<Stack.Screen
+          name="Clearland"
+          component={Clearland}
+          
+        />
+
+<Stack.Screen
+          name="EffortOutput"
+          component={EffortOutput}
+          
+        />
+
         <Stack.Screen name="testScreen" component={testScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
