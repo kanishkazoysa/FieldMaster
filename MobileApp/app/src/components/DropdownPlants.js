@@ -25,7 +25,14 @@ const Dropdown = () => {
         items={options}
         onValueChange={(value) => setSelectedValue(value)}
         value={selectedValue}
-        style={{cursor: 'pointer', }}
+        style={{
+          inputIOS: {
+            textAlign: "center",
+          },
+          inputAndroid: {
+            textAlign: "center",
+          },
+        }}
        />
     </View>
   );
@@ -40,7 +47,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft:-60,
-    marginTop:30
+    marginTop:30,
+    borderWidth: 1,
+    borderColor: "#CED0D4",
     
   },
 
