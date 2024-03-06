@@ -70,7 +70,7 @@ export default function ClearLand() {
     });
   };
 
-  /displAY/
+  /*display*/
 
   const [displayValues, setDisplayValues] = useState([]);
 
@@ -140,11 +140,10 @@ export default function ClearLand() {
       {/* ScrollView section */}
       <ScrollView>
         <View style={styles.container2}>
+
           {/* Weeds box */}
           <Card style={styles.card1}>
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row" }}
-            >
+            <Card.Content style={{ display: "flex", flexDirection: "row" }}>
               <MaterialCommunityIcons
                 name="sprout-outline"
                 size={20}
@@ -286,9 +285,7 @@ export default function ClearLand() {
 
           {/* Labors box */}
           <Card style={styles.card2}>
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row",  }}
-            >
+            <Card.Content style={{ display: "flex", flexDirection: "row" }}>
               <MaterialCommunityIcons
                 name="account-hard-hat"
                 size={20}
@@ -320,9 +317,7 @@ export default function ClearLand() {
 
           {/* Work hours box */}
           <Card style={styles.card2}>
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row",  }}
-            >
+            <Card.Content style={{ display: "flex", flexDirection: "row" }}>
               <MaterialCommunityIcons
                 name="clock-time-eight-outline"
                 size={20}
@@ -479,7 +474,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   card2: {
-    height: "max-content",	
+    height: "max-content",
     justifyContent: "center",
     marginTop: 10,
     width: "93%",
@@ -495,8 +490,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   calButtton: {
-    
-   
     marginTop: 10,
   },
   buttonText: {
