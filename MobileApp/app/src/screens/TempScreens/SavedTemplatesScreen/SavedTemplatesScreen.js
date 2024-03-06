@@ -30,11 +30,12 @@ const SavedTemplatesScreen = ({ navigation }) => {
   const [templates, setTemplates] = useState([]);
 
   const fetchData = () => {
-    console.log('calling api...');
+    console.log('calling api to get all templates...');
     axios
-      .get('http://192.168.56.1:3000/api/mapTemplate/getAllTemplates')
+      .get('http://192.168.81.109:3000/api/mapTemplate/getAllTemplates')
       .then((response) => {
         setTemplates(response.data);
+        console.log('fetching successful');
       })
       .catch((error) => {
         console.error(error);
@@ -50,7 +51,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
   const handleDelete = (deletingTemplate) => {
     axios
       .delete(
-        `http://192.168.56.1:3000/api/mapTemplate/deleteTemplate/${deletingTemplate._id}`
+        `http://192.168.81.109:3000/api/mapTemplate/deleteTemplate/${deletingTemplate._id}`
       )
       .then((response) => {
         console.log(response);
@@ -95,7 +96,9 @@ const SavedTemplatesScreen = ({ navigation }) => {
                   <View style={styles.col_01}>
                     <TouchableOpacity
                       onPress={() => {
-                        navigation.navigate('ResizeMap');
+                        navigation.navigate('ResizeMap', {
+                          templateId: item._id,
+                        });
                       }}
                     >
                       <Image

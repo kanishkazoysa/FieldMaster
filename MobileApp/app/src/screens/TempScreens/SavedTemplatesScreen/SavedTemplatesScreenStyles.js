@@ -19,13 +19,12 @@ export const styles = StyleSheet.create({
   },
   template_style: {
     backgroundColor: 'white',
-    marginLeft: 20,
-    marginTop: 15,
+    marginVertical: 8,
+    marginHorizontal: 10,
     borderRadius: 10,
     flexDirection: 'row',
-    paddingVertical: 10,
-    width: '90%',
-    paddingHorizontal: 2,
+    /* padding: 10, */
+    paddingVertical: 12,
   },
   image_style: {
     width: 90,
@@ -33,20 +32,20 @@ export const styles = StyleSheet.create({
     left: 5,
   },
   col_01: {
-    width: 100,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    left: -8,
   },
   col_02: {
-    width: 200,
     flex: 3,
-    left: 10,
+    left: -10,
   },
   col_03: {
-    width: 50,
+    flex: 1,
     justifyContent: 'space-between',
-    alignItems: 'center',
-    right: -20,
+    alignItems: 'flex-end',
+    paddingRight: 10,
   },
   bold_text: {
     fontWeight: 'bold',

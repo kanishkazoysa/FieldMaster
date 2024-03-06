@@ -134,4 +134,24 @@ export const styles = StyleSheet.create({
     width: '60%',
     marginLeft: 40,
   },
+  buttonStyle: {
+    backgroundColor: '#0866FF',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 11,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+  },
+  buttonView: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    paddingBottom: 10,
+  },
 });
