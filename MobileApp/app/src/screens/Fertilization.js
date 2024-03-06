@@ -95,6 +95,8 @@ export default function Fertilization() {
 
       {/* Scrollable content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
+
+        <View  style={styles.top}>
         {/* Top section */}
           <View style={styles.Box1}>
             <View style={styles.innerContainer}>
@@ -297,6 +299,7 @@ export default function Fertilization() {
               </Text>
             </View>
           </View>
+          </View>
 
         {/* Bottom section */}
 
@@ -326,9 +329,16 @@ const styles = StyleSheet.create({
 
   scrollContent: {
     flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    height: "100%",
   },
+
+  top: {
+    alignItems: "center",
+    width: "100%",
+
+   },
+
   Box1: {
     width: "87%",
     height: 161,
@@ -511,9 +521,8 @@ const styles = StyleSheet.create({
   /* bottom section */
 
   bottom: {
-    alignItems: "f",
-    justifyContent: "flex-end",
-    marginTop: 80,
+    alignItems: "center",
+    bottom: 10,
   },
   
 });

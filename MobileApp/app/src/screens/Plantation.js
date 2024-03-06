@@ -90,6 +90,7 @@ export default function Plantation() {
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Top section */}
+        <View style={styles.top}>
 
           <View style={styles.Box1}>
 
@@ -222,6 +223,7 @@ export default function Plantation() {
                 </View>
               </View>
             </View>
+            </View>
 
         {/* Bottom section */}
 
@@ -249,8 +251,15 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    height: "100%",
+
   },
+
+  top: {
+    alignItems: "center",
+    width: "100%",
+   },
 
   Box1: {
     width: "87%",
@@ -366,8 +375,7 @@ const styles = StyleSheet.create({
   /* bottom section */
 
   bottom: {
-    alignItems: "flex-end",
-    justifyContent: "flex-end",
-    marginTop: 170,
+    alignItems: "center",
+    bottom: 10,
   },
 });

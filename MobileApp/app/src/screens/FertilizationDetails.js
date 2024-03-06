@@ -158,9 +158,9 @@ export default function FertilizationDetails({route}) {
       {/*Header section*/}  
       <Headersection navigation={navigation} title="Fertilizing Details" />
 
-    <View style={styles.box}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
 
-
+    <View style={styles.top}>
         {/* Top section */}
           <View style={styles.box1}>
             <Text style={styles.titleText}>Total Amount of Fertilizing</Text>
@@ -254,6 +254,7 @@ export default function FertilizationDetails({route}) {
               </View>
             </View>
           </View>
+          </View>
 
          {/* Bottom section */}
 
@@ -275,7 +276,7 @@ export default function FertilizationDetails({route}) {
               buttonColor="#007BFF" // Change the background color of the button
             />
           </View>
-        </View>
+       </ScrollView>
 
 
 
@@ -291,11 +292,16 @@ const styles = StyleSheet.create({
       
       /*Top Section*/
 
-  box: {
+  scrollContent: {
     flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    height: "100%",
   },
+
+  top: {
+    alignItems: "center",
+    width: "100%",
+   },
 
   box1: {
     flexDirection: "column",
@@ -463,9 +469,8 @@ const styles = StyleSheet.create({
    /* bottom section */
 
    bottom: {
-    alignItems: "flex-end",
-    justifyContent: "flex-end",
-    marginTop: 140,
+    alignItems: "center",
+    bottom: 10,
   },
 
 
