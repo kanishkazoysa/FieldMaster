@@ -86,7 +86,16 @@ export default function RegisterScreen() {
         return;
       }
 
-      const response = await axios.post("http://10.10.20.85:5000/api/users/register",{ email, password });
+      const response = await fetch(
+        "http://10.10.1.130:5000/api/users/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       if (response.ok) {
         Alert.alert(
