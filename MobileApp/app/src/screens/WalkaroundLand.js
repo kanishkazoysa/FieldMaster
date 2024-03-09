@@ -6,85 +6,18 @@ import {
   StatusBar,
   TouchableOpacity,
   Text,
-  FlatList, 
+  FlatList,
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Polyline, Circle } from "react-native-maps";
 import * as Location from "expo-location";
+import * as TaskManager from "expo-task-manager"; // Import TaskManager
 import { useNavigation } from "@react-navigation/native";
 import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 
-// function kalmanFilter(currentMeasurement, lastEstimation) {
-//   // Define constants for the Kalman filter
-//   const measurementNoise = 0.0001;
-//   const processNoise = 0.01;
-
-//   // Kalman gain calculation
-//   const kalmanGain = lastEstimation.errorEstimate / (lastEstimation.errorEstimate + measurementNoise);
-
-//   // State update estimation
-//   const updatedEstimation = {
-//     value: lastEstimation.value + kalmanGain * (currentMeasurement - lastEstimation.value),
-//     errorEstimate: (1 - kalmanGain) * lastEstimation.errorEstimate + processNoise
-//   };
-
-//   return updatedEstimation.value;
-// }
-// export default function Home() {
-//   const [currentLocation, setCurrentLocation] = useState(null);
-//   const [pathCoordinates, setPathCoordinates] = useState([]);
-//   const [trackingStarted, setTrackingStarted] = useState(false);
-//   const mapRef = useRef(null);
-//   const lastLocation = useRef(null); // Store last location for filtering
-
-//   useEffect(() => {
-//     let watchLocation;
-//     if (trackingStarted) {
-//       watchLocation = Location.watchPositionAsync(
-//         {
-//           accuracy: Location.Accuracy.BestForNavigation,
-//           timeInterval: 1000, // Update every 1 second
-//           distanceInterval: 1, // Update every 1 meter
-//         },
-//         (location) => {
-//           // Apply Kalman filter to smooth location data
-//           const smoothedLatitude = lastLocation.current ?
-//             kalmanFilter(location.coords.latitude, lastLocation.current.coords.latitude) :
-//             location.coords.latitude;
-//           const smoothedLongitude = lastLocation.current ?
-//             kalmanFilter(location.coords.longitude, lastLocation.current.coords.longitude) :
-//             location.coords.longitude;
-
-//           setCurrentLocation({
-//             coords: {
-//               latitude: smoothedLatitude,
-//               longitude: smoothedLongitude,
-//             }
-//           });
-
-//           setPathCoordinates(prevCoordinates => [
-//             ...prevCoordinates,
-//             {
-//               latitude: smoothedLatitude,
-//               longitude: smoothedLongitude,
-//             },
-//           ]);
-
-//           lastLocation.current = location;
-//         }
-//       );
-//     } else {
-//       // Clear path coordinates if tracking is stopped
-//       setPathCoordinates([]);
-//     }
-
-//     return () => {
-//       if (watchLocation && watchLocation.remove) {
-//         watchLocation.remove();
-//       }
-//     };
-//   }, [trackingStarted]);
+// Define the name of your background task
+const BACKGROUND_LOCATION_TASK = "background-location-task";
 
 export default function Home() {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -92,47 +25,79 @@ export default function Home() {
   const [trackingStarted, setTrackingStarted] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
-    const navigation = useNavigation(); 
+  const navigation = useNavigation();
   const mapRef = useRef(null);
 
+  // Handle background location updates
+  TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
+    if (error) {
+      console.error("Background location task error:", error);
+      return;
+    }
+
+    if (data) {
+      const { locations } = data;
+      // Process the received locations
+      console.log("Received background location update:", locations);
+    // Update pathCoordinates with the new location
+    setPathCoordinates(prevCoordinates => [...prevCoordinates, {
+      latitude: locations[0].coords.latitude,
+      longitude: locations[0].coords.longitude,
+    }]);
+  }
+  });
+
   useEffect(() => {
-    let watchLocation;
     if (trackingStarted) {
-      watchLocation = Location.watchPositionAsync(
-        {
-          accuracy: Location.Accuracy.BestForNavigation,
-          timeInterval: 1000, // Update every 1 second
-          distanceInterval: 1, // Update every 1 meter
-        },
-        (location) => {
-          setCurrentLocation(location);
-          setPathCoordinates((prevCoordinates) => [
-            ...prevCoordinates,
-            {
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            },
-          ]);
-        }
-      );
+      startLocationUpdates();
     } else {
-      // Clear path coordinates if tracking is stopped
-      setPathCoordinates([]);
+      stopLocationUpdates();
     }
 
     return () => {
-      if (watchLocation && watchLocation.remove) {
-        watchLocation.remove();
-      }
+      stopLocationUpdates();
     };
   }, [trackingStarted]);
 
-  const mapTypes = [
-    { name: "Standard", value: "standard" },
-    { name: "Satellite", value: "satellite" },
-    { name: "Hybrid", value: "hybrid" },
-    { name: "Terrain", value: "terrain" },
-  ];
+  const startLocationUpdates = async () => {
+    try {
+      // Request foreground and background location permissions
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.error("Foreground location permission not granted");
+        return;
+      }
+
+      // Start the background location task
+      await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
+        accuracy: Location.Accuracy.BestForNavigation,
+        timeInterval: 1000, // Update every 1 second
+        distanceInterval: 1, // Update every 1 meter
+        foregroundService: {
+          notificationTitle: "Tracking location",
+          notificationBody: "Your location is being tracked in the background",
+        },
+      });
+
+      console.log("Background location updates started");
+    } catch (error) {
+      console.error("Error starting background location updates:", error);
+    }
+  };
+
+  const stopLocationUpdates = async () => {
+    try {
+      // Check if the task is running before trying to stop it
+      const isTaskRunning = await TaskManager.isTaskRegisteredAsync(BACKGROUND_LOCATION_TASK);
+      if (isTaskRunning) {
+        // Stop the background location task
+        await Location.stopLocationUpdatesAsync(BACKGROUND_LOCATION_TASK);
+        console.log("Background location updates stopped");
+      }
+    } catch (error) {
+      console.error("Error stopping background location updates:", error);
+    }
+  };
 
   const toggleMapType = () => {
     setShowDropdown(!showDropdown);
@@ -167,6 +132,12 @@ export default function Home() {
     }
   };
 
+  const mapTypes = [
+    { name: "Standard", value: "standard" },
+    { name: "Satellite", value: "satellite" },
+    { name: "Hybrid", value: "hybrid" },
+    { name: "Terrain", value: "terrain" },
+  ];
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
@@ -324,18 +295,6 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  startButton: {
-    position: "absolute",
-    backgroundColor: "#007BFF",
-    padding: 10,
-    borderRadius: 5,
-    bottom: 16,
-    alignSelf: "center",
-  },
-  buttonText: {
-    color: "#FFF",
-    fontSize: 18,
-  },
   buttonContainer: {
     position: "absolute",
     flexDirection: "row",
@@ -352,3 +311,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
