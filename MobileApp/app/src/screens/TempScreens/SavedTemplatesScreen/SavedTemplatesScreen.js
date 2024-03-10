@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-import { TouchableOpacity, View, Text, Image, Button } from 'react-native';
+import { TouchableOpacity, View, Text, Image, Button,StatusBar } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { styles } from './SavedTemplatesScreenStyles';
 /* import AppLoading from 'expo-app-loading'; */
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from 'react-native';
+import Headersection from '../../../components/Headersection';
 
 /* icons from materialcommunity icons */
 const CustomEditIcon = (props) => {
@@ -105,22 +106,9 @@ const SavedTemplatesScreen = ({ navigation }) => {
 
   return (
     <>
-      <View>
-        {
-          <Appbar.Header
-            style={styles.top_Bar}
-            dark={true}
-            mode='center-aligned'
-          >
-            <Appbar.BackAction
-              onPress={() => {
-                navigation.navigate('SaveScreen');
-              }}
-            />
-            <Appbar.Content title='Saved Templates' />
-          </Appbar.Header>
-        }
-      </View>
+      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+
+      <Headersection navigation={navigation} title="Saved Templates" />
       <View style={styles.low_outer}>
         {/* template */}
         <View style={styles.scrollViewOuterStyle}>

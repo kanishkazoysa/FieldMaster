@@ -70,7 +70,7 @@ export default function ClearLand() {
     });
   };
 
-  /displAY/
+  /*display*/
 
   const [displayValues, setDisplayValues] = useState([]);
 
@@ -140,11 +140,10 @@ export default function ClearLand() {
       {/* ScrollView section */}
       <ScrollView>
         <View style={styles.container2}>
+
           {/* Weeds box */}
           <Card style={styles.card1}>
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
-            >
+            <Card.Content style={{ display: "flex", flexDirection: "row" }}>
               <MaterialCommunityIcons
                 name="sprout-outline"
                 size={20}
@@ -286,9 +285,7 @@ export default function ClearLand() {
 
           {/* Labors box */}
           <Card style={styles.card2}>
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
-            >
+            <Card.Content style={{ display: "flex", flexDirection: "row" }}>
               <MaterialCommunityIcons
                 name="account-hard-hat"
                 size={20}
@@ -320,9 +317,7 @@ export default function ClearLand() {
 
           {/* Work hours box */}
           <Card style={styles.card2}>
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
-            >
+            <Card.Content style={{ display: "flex", flexDirection: "row" }}>
               <MaterialCommunityIcons
                 name="clock-time-eight-outline"
                 size={20}
@@ -450,14 +445,7 @@ export default function ClearLand() {
           </Card>
 
           {/* Calculate button */}
-          <View
-            style={{
-            
-              marginTop: 50,
-              marginBottom: 50,
-           
-            }}
-          >
+          <View style={styles.calButtton}>
             <CustomButton
               onPress={handleClear}
               text="Calculate"
@@ -480,31 +468,29 @@ const styles = StyleSheet.create({
   card1: {
     height: "max-content",
     borderRadius: 11,
-    marginTop: 15,
+    marginTop: 10,
     paddingBottom: 5,
     width: "93%",
     backgroundColor: "#fff",
   },
   card2: {
     height: "max-content",
-    marginTop: 15,
+    justifyContent: "center",
+    marginTop: 10,
     width: "93%",
     backgroundColor: "#fff",
     borderRadius: 11,
   },
   card3: {
     height: "max-content",
-    marginTop: 15,
+    marginTop: 10,
     paddingBottom: 10,
     width: "93%",
     borderRadius: 11,
     backgroundColor: "#fff",
   },
   calButtton: {
-    justifyContent: "center",
-    borderRadius: 11,
-    width: "90%",
-    marginTop: 30,
+    marginTop: 10,
   },
   buttonText: {
     color: "#fff",

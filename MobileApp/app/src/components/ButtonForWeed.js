@@ -7,7 +7,7 @@ export default function ButtonForWeed() {
 
   return (
     <PaperProvider>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 5, marginTop: -5 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 5, marginTop: 5 }}>
         <Button
           style={[styles.button, pressed === 'low' && styles.pressedButton]}
           labelStyle={[styles.text, pressed === 'low' && styles.pressedText]}
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     borderRadius: 11,
     width: 90,
     height: 40,
-    marginBottom: 5,
+  
     marginLeft: -70,
     marginTop: 25,
     padding: -10
