@@ -39,13 +39,17 @@ export default function Home() {
       const { locations } = data;
       // Process the received locations
       console.log("Received background location update:", locations);
-    // Update pathCoordinates with the new location
-    setPathCoordinates(prevCoordinates => [...prevCoordinates, {
-      latitude: locations[0].coords.latitude,
-      longitude: locations[0].coords.longitude,
-    }]);
-  }
+      // Update pathCoordinates with the new location
+      setPathCoordinates(prevCoordinates => [...prevCoordinates, {
+        latitude: locations[0].coords.latitude,
+        longitude: locations[0].coords.longitude,
+      }]);
+    }
   });
+
+  useEffect(() => {
+    focusOnCurrentLocation();
+  }, []);
 
   useEffect(() => {
     if (trackingStarted) {
@@ -108,28 +112,25 @@ export default function Home() {
     setShowDropdown(false);
   };
 
-  const focusOnCurrentLocation = () => {
-    setTrackingStarted(!trackingStarted); // Toggle tracking started state
-
-    if (!trackingStarted) {
-      Location.getCurrentPositionAsync({}).then((location) => {
-        setCurrentLocation(location);
-        setPathCoordinates([
-          {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          },
-        ]);
-        if (mapRef.current && location) {
-          mapRef.current.animateToRegion({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: 0.001,
-            longitudeDelta: 0.001,
-          });
-        }
-      });
+  const focusOnCurrentLocation = async () => {
+    try {
+      const location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation(location);
+      if (mapRef.current && location) {
+        mapRef.current.animateToRegion({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001,
+        });
+      }
+    } catch (error) {
+      console.error("Error getting current location:", error);
     }
+  };
+
+  const toggleTracking = () => {
+    setTrackingStarted(!trackingStarted);
   };
 
   const mapTypes = [
@@ -167,7 +168,7 @@ export default function Home() {
           longitudeDelta: 0.0421,
         }}
       >
-        {trackingStarted && currentLocation && (
+        {currentLocation && (
           <Circle
             center={{
               latitude: currentLocation.coords.latitude,
@@ -214,9 +215,9 @@ export default function Home() {
         <View style={styles.buttonWrapper}>
           <Button
             buttonColor="#007BFF"
-            icon="play-outline"
+            icon={trackingStarted ? "stop" : "play-outline"}
             mode="contained"
-            onPress={focusOnCurrentLocation}
+            onPress={toggleTracking}
             style={styles.button}
           >
             {trackingStarted ? "Stop" : "Start"}
@@ -311,4 +312,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
