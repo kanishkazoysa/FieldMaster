@@ -34,16 +34,16 @@ export default function Home() {
       console.error("Background location task error:", error);
       return;
     }
-
+  
     if (data) {
       const { locations } = data;
-      // Process the received locations
       console.log("Received background location update:", locations);
-      // Update pathCoordinates with the new location
-      setPathCoordinates(prevCoordinates => [...prevCoordinates, {
-        latitude: locations[0].coords.latitude,
-        longitude: locations[0].coords.longitude,
-      }]);
+      if (trackingStarted) {
+        setPathCoordinates(prevCoordinates => [...prevCoordinates, {
+          latitude: locations[0].coords.latitude,
+          longitude: locations[0].coords.longitude,
+        }]);
+      }
     }
   });
 
@@ -76,7 +76,7 @@ export default function Home() {
       await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
         accuracy: Location.Accuracy.BestForNavigation,
         timeInterval: 1000, // Update every 1 second
-        distanceInterval: 1, // Update every 1 meter
+        distanceInterval: 0.5, // Update every 1 meter
         foregroundService: {
           notificationTitle: "Tracking location",
           notificationBody: "Your location is being tracked in the background",
@@ -129,10 +129,14 @@ export default function Home() {
     }
   };
 
-  const toggleTracking = () => {
-    setTrackingStarted(!trackingStarted);
+  const toggleTracking = async () => {
+    if (trackingStarted) {
+      await stopLocationUpdates();
+      setTrackingStarted(false);
+    } else {
+      setTrackingStarted(true);
+    }
   };
-
   const mapTypes = [
     { name: "Standard", value: "standard" },
     { name: "Satellite", value: "satellite" },
@@ -179,11 +183,22 @@ export default function Home() {
             fillColor="rgba(255, 0, 0, 0.5)" // Semi-transparent red
           />
         )}
-        {trackingStarted && pathCoordinates.length > 1 && (
+        {trackingStarted && pathCoordinates.length > 0 && (
+          <Circle
+            center={{
+              latitude: pathCoordinates[pathCoordinates.length - 1].latitude,
+              longitude: pathCoordinates[pathCoordinates.length - 1].longitude,
+            }}
+            radius={5} // Adjust radius as needed
+            strokeColor="#000"
+            fillColor="rgba(255, 0, 0, 0.5)" // Semi-transparent red
+          />
+        )}
+        {pathCoordinates.length > 0 && (
           <Polyline
             coordinates={pathCoordinates}
             strokeColor="#0000FF" // Blue color
-            strokeWidth={5}
+            strokeWidth={2}
           />
         )}
       </MapView>
