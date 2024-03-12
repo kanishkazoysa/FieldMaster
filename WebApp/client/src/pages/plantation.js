@@ -4,8 +4,7 @@ import React from 'react';
 const NewPage = () => {
   return (
     <div>
-      <Sidebar />
-      
+      <Sidebar /> 
     </div>
   );
 };
