@@ -29,7 +29,13 @@ export default function ForgotPassword() {
         return;
       }
 
-      const response = await axios.post("http://10.10.20.85:5000/api/mail/otp", {email});
+      const response = await fetch("http://10.10.1.130:5000/api/mail/otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
 
       if (response.status === 200) {
         const data = await response.json();

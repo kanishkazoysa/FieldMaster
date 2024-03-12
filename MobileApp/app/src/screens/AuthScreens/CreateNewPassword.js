@@ -34,13 +34,17 @@ export default function ForgotPassword({ route }) {
         Alert.alert("Error", "Passwords do not match");
         return;
       }
-      const response = await axios.post(
-        "http://10.10.20.85:5000/api/users/change-password",
-        {
+      const response = await fetch('http://10.10.1.130:5000/api/users/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           email: email,
           newPassword: newPassword,
         }
-      );
+        ),
+      });
 
       const data = await response.json();
 

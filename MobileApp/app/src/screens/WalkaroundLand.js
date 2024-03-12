@@ -6,85 +6,18 @@ import {
   StatusBar,
   TouchableOpacity,
   Text,
-  FlatList, 
+  FlatList,
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Polyline, Circle } from "react-native-maps";
 import * as Location from "expo-location";
+import * as TaskManager from "expo-task-manager"; // Import TaskManager
 import { useNavigation } from "@react-navigation/native";
 import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 
-// function kalmanFilter(currentMeasurement, lastEstimation) {
-//   // Define constants for the Kalman filter
-//   const measurementNoise = 0.0001;
-//   const processNoise = 0.01;
-
-//   // Kalman gain calculation
-//   const kalmanGain = lastEstimation.errorEstimate / (lastEstimation.errorEstimate + measurementNoise);
-
-//   // State update estimation
-//   const updatedEstimation = {
-//     value: lastEstimation.value + kalmanGain * (currentMeasurement - lastEstimation.value),
-//     errorEstimate: (1 - kalmanGain) * lastEstimation.errorEstimate + processNoise
-//   };
-
-//   return updatedEstimation.value;
-// }
-// export default function Home() {
-//   const [currentLocation, setCurrentLocation] = useState(null);
-//   const [pathCoordinates, setPathCoordinates] = useState([]);
-//   const [trackingStarted, setTrackingStarted] = useState(false);
-//   const mapRef = useRef(null);
-//   const lastLocation = useRef(null); // Store last location for filtering
-
-//   useEffect(() => {
-//     let watchLocation;
-//     if (trackingStarted) {
-//       watchLocation = Location.watchPositionAsync(
-//         {
-//           accuracy: Location.Accuracy.BestForNavigation,
-//           timeInterval: 1000, // Update every 1 second
-//           distanceInterval: 1, // Update every 1 meter
-//         },
-//         (location) => {
-//           // Apply Kalman filter to smooth location data
-//           const smoothedLatitude = lastLocation.current ?
-//             kalmanFilter(location.coords.latitude, lastLocation.current.coords.latitude) :
-//             location.coords.latitude;
-//           const smoothedLongitude = lastLocation.current ?
-//             kalmanFilter(location.coords.longitude, lastLocation.current.coords.longitude) :
-//             location.coords.longitude;
-
-//           setCurrentLocation({
-//             coords: {
-//               latitude: smoothedLatitude,
-//               longitude: smoothedLongitude,
-//             }
-//           });
-
-//           setPathCoordinates(prevCoordinates => [
-//             ...prevCoordinates,
-//             {
-//               latitude: smoothedLatitude,
-//               longitude: smoothedLongitude,
-//             },
-//           ]);
-
-//           lastLocation.current = location;
-//         }
-//       );
-//     } else {
-//       // Clear path coordinates if tracking is stopped
-//       setPathCoordinates([]);
-//     }
-
-//     return () => {
-//       if (watchLocation && watchLocation.remove) {
-//         watchLocation.remove();
-//       }
-//     };
-//   }, [trackingStarted]);
+// Define the name of your background task
+const BACKGROUND_LOCATION_TASK = "background-location-task";
 
 export default function Home() {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -92,47 +25,102 @@ export default function Home() {
   const [trackingStarted, setTrackingStarted] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
-    const navigation = useNavigation(); 
+  const navigation = useNavigation();
   const mapRef = useRef(null);
 
+  // Handle background location updates
+  TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
+    if (error) {
+      console.error("Background location task error:", error);
+      return;
+    }
+  
+    if (data) {
+      const { locations } = data;
+      console.log("Received background location update:", locations);
+      if (trackingStarted) {
+        setPathCoordinates(prevCoordinates => {
+          if (prevCoordinates.length > 0) {
+            // Calculate the midpoint between the last point and the newly generated circle
+            const lastCoordinate = prevCoordinates[prevCoordinates.length - 1];
+            const newCoordinate = {
+              latitude: locations[0].coords.latitude,
+              longitude: locations[0].coords.longitude,
+            };
+
+            const midpoint = {
+              latitude: (lastCoordinate.latitude + newCoordinate.latitude) / 2,
+              longitude: (lastCoordinate.longitude + newCoordinate.longitude) / 2,
+            };
+
+            // Update pathCoordinates to start from the midpoint
+            return [...prevCoordinates, midpoint, newCoordinate];
+          } else {
+            return [{
+              latitude: locations[0].coords.latitude,
+              longitude: locations[0].coords.longitude,
+            }];
+          }
+        });
+      }
+    }
+  });
+
   useEffect(() => {
-    let watchLocation;
+    focusOnCurrentLocation();
+  }, []);
+
+  useEffect(() => {
     if (trackingStarted) {
-      watchLocation = Location.watchPositionAsync(
-        {
-          accuracy: Location.Accuracy.BestForNavigation,
-          timeInterval: 1000, // Update every 1 second
-          distanceInterval: 1, // Update every 1 meter
-        },
-        (location) => {
-          setCurrentLocation(location);
-          setPathCoordinates((prevCoordinates) => [
-            ...prevCoordinates,
-            {
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            },
-          ]);
-        }
-      );
+      startLocationUpdates();
     } else {
-      // Clear path coordinates if tracking is stopped
-      setPathCoordinates([]);
+      stopLocationUpdates();
     }
 
     return () => {
-      if (watchLocation && watchLocation.remove) {
-        watchLocation.remove();
-      }
+      stopLocationUpdates();
     };
   }, [trackingStarted]);
 
-  const mapTypes = [
-    { name: "Standard", value: "standard" },
-    { name: "Satellite", value: "satellite" },
-    { name: "Hybrid", value: "hybrid" },
-    { name: "Terrain", value: "terrain" },
-  ];
+  const startLocationUpdates = async () => {
+    try {
+      // Request foreground and background location permissions
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.error("Foreground location permission not granted");
+        return;
+      }
+
+      // Start the background location task
+      await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
+        accuracy: Location.Accuracy.BestForNavigation,
+        timeInterval: 1000, // Update every 1 second
+        distanceInterval: 0.5, // Update every 1 meter
+        foregroundService: {
+          notificationTitle: "Tracking location",
+          notificationBody: "Your location is being tracked in the background",
+        },
+      });
+
+      console.log("Background location updates started");
+    } catch (error) {
+      console.error("Error starting background location updates:", error);
+    }
+  };
+
+  const stopLocationUpdates = async () => {
+    try {
+      // Check if the task is running before trying to stop it
+      const isTaskRunning = await TaskManager.isTaskRegisteredAsync(BACKGROUND_LOCATION_TASK);
+      if (isTaskRunning) {
+        // Stop the background location task
+        await Location.stopLocationUpdatesAsync(BACKGROUND_LOCATION_TASK);
+        console.log("Background location updates stopped");
+      }
+    } catch (error) {
+      console.error("Error stopping background location updates:", error);
+    }
+  };
 
   const toggleMapType = () => {
     setShowDropdown(!showDropdown);
@@ -143,30 +131,37 @@ export default function Home() {
     setShowDropdown(false);
   };
 
-  const focusOnCurrentLocation = () => {
-    setTrackingStarted(!trackingStarted); // Toggle tracking started state
-
-    if (!trackingStarted) {
-      Location.getCurrentPositionAsync({}).then((location) => {
-        setCurrentLocation(location);
-        setPathCoordinates([
-          {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          },
-        ]);
-        if (mapRef.current && location) {
-          mapRef.current.animateToRegion({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: 0.001,
-            longitudeDelta: 0.001,
-          });
-        }
-      });
+  const focusOnCurrentLocation = async () => {
+    try {
+      const location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation(location);
+      if (mapRef.current && location) {
+        mapRef.current.animateToRegion({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001,
+        });
+      }
+    } catch (error) {
+      console.error("Error getting current location:", error);
     }
   };
 
+  const toggleTracking = async () => {
+    if (trackingStarted) {
+      await stopLocationUpdates();
+      setTrackingStarted(false);
+    } else {
+      setTrackingStarted(true);
+    }
+  };
+  const mapTypes = [
+    { name: "Standard", value: "standard" },
+    { name: "Satellite", value: "satellite" },
+    { name: "Hybrid", value: "hybrid" },
+    { name: "Terrain", value: "terrain" },
+  ];
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
@@ -196,22 +191,33 @@ export default function Home() {
           longitudeDelta: 0.0421,
         }}
       >
-        {trackingStarted && currentLocation && (
+        {currentLocation && (
           <Circle
             center={{
               latitude: currentLocation.coords.latitude,
               longitude: currentLocation.coords.longitude,
             }}
-            radius={5} // Adjust radius as needed
+            radius={2} // Adjust radius as needed
+            strokeColor="#000"
+            fillColor="#007BFF" // Semi-transparent red
+          />
+        )}
+        {trackingStarted && pathCoordinates.length > 0 && (
+          <Circle
+            center={{
+              latitude: pathCoordinates[pathCoordinates.length - 1].latitude,
+              longitude: pathCoordinates[pathCoordinates.length - 1].longitude,
+            }}
+            radius={2} // Adjust radius as needed
             strokeColor="#000"
             fillColor="rgba(255, 0, 0, 0.5)" // Semi-transparent red
           />
         )}
-        {trackingStarted && pathCoordinates.length > 1 && (
+        {pathCoordinates.length > 0 && (
           <Polyline
             coordinates={pathCoordinates}
             strokeColor="#0000FF" // Blue color
-            strokeWidth={5}
+            strokeWidth={2}
           />
         )}
       </MapView>
@@ -243,9 +249,9 @@ export default function Home() {
         <View style={styles.buttonWrapper}>
           <Button
             buttonColor="#007BFF"
-            icon="play-outline"
+            icon={trackingStarted ? "stop" : "play-outline"}
             mode="contained"
-            onPress={focusOnCurrentLocation}
+            onPress={toggleTracking}
             style={styles.button}
           >
             {trackingStarted ? "Stop" : "Start"}
@@ -323,18 +329,6 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
-  },
-  startButton: {
-    position: "absolute",
-    backgroundColor: "#007BFF",
-    padding: 10,
-    borderRadius: 5,
-    bottom: 16,
-    alignSelf: "center",
-  },
-  buttonText: {
-    color: "#FFF",
-    fontSize: 18,
   },
   buttonContainer: {
     position: "absolute",

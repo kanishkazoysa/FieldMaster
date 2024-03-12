@@ -10,7 +10,7 @@ const app = express();
 const dbconfig = require("./db");
 const userRoute = require("./routes/usersRoute.js");
 const mailRoute = require("./routes/mailRoute.js");
-const fenceRoute = require("./routes/fenceRoute.js");
+// const fenceRoute = require("./routes/fenceRoute.js");
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use("/api/users", userRoute);
 app.use("/api/mail", mailRoute);
-app.use("/api/fence", fenceRoute);
+// app.use("/api/fence", fenceRoute);
 
 const port = process.env.PORT || 5000;
 
