@@ -7,7 +7,7 @@ import video3 from "../../../assets/contact_video.mp4";
 function ContactForm() {
   return (
     <div className="contact">
-      <div style={{ textAlign: "center", color: "#007BFF", margin: "5rem" }}>
+      <div style={{ textAlign: "center", color: "#007BFF", margin: "2rem" }}>
         <h2>Contact Us</h2>
       </div>
 

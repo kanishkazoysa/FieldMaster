@@ -59,8 +59,8 @@ const tiers = [
 function Pricing() {
   return (
    <div id="pricing" className="pricing">  
-    <Container maxWidth="md" component="main" style={{marginBottom:"5rem"}}>
-       <div style={{ textAlign: "center", color: "#007BFF", margin:"5rem"}}><h2>Pricing</h2></div>
+    <Container maxWidth="md" component="main" style={{marginBottom:"1rem"}}>
+       <div style={{ textAlign: "center", color: "#007BFF", margin:"2rem"}}><h2>Pricing</h2></div>
       <Grid container spacing={5} alignItems="flex-end">
         {tiers.map((tier) => (
           <Grid

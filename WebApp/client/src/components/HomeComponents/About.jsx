@@ -78,14 +78,14 @@ const styles = {
   heading: {
     color: "black",
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 5,
     textAlign: "left",
     
   },
   paragraph: {
     color: "#333",
     fontSize: 16,
-    marginBottom: 20,
+    marginBottom: 10,
     textAlign: "center",
   },
   visionContainer: {
@@ -96,7 +96,7 @@ const styles = {
     boxShadow: "0px 0px 10px rgba(0, 123, 255, 0.3)",
     padding: "20px",
     borderRadius: 5,
-    marginBottom: 20,
+    marginBottom: 10,
     display: "flex",
     flexDirection: "column",
     alignItems:"space-between"
