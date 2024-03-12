@@ -135,7 +135,7 @@ const TemplateView = ({ route, navigation }) => {
                 <AreaIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Area</Text>
-                  <Text style={styles.text02Styling}>{item.area} acres</Text>
+                  <Text style={styles.text02Styling}>{item.area} perches</Text>
                 </View>
               </View>
               <View style={styles.blockView}>

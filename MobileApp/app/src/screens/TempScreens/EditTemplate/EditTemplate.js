@@ -38,7 +38,9 @@ const EditTemplate = ({ route, navigation }) => {
   const handleSave = () => {
     axios
       .put(
-        `http://192.168.56.1:3000/api/mapTemplate/updateTemplate/${item._id}`,
+        /* `http://192.168.56.1:3000/api/mapTemplate/updateTemplate/${item._id}`, */
+        /* `http://192.168.1.3:3000/api/mapTemplate/updateTemplate/${item._id}`, */
+        `http://192.168.115.109:3000/api/mapTemplate/updateTemplate/${item._id}`,
         {
           measureName: measureName,
           landType: landType,

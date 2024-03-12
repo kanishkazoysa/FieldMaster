@@ -134,11 +134,32 @@ export const styles = StyleSheet.create({
     width: '60%',
     marginLeft: 40,
   },
+  mapIconContainer: {
+    position: 'absolute',
+    top: 60,
+    right: 12,
+    backgroundColor: 'white',
+    opacity: 0.7,
+    borderRadius: 2,
+    padding: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
   buttonStyle: {
     backgroundColor: '#0866FF',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 11,
+    marginTop: 10,
+  },
+  textStyle: {
+    color: 'white',
   },
   buttonText: {
     color: 'white',
