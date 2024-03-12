@@ -39,10 +39,29 @@ export default function Home() {
       const { locations } = data;
       console.log("Received background location update:", locations);
       if (trackingStarted) {
-        setPathCoordinates(prevCoordinates => [...prevCoordinates, {
-          latitude: locations[0].coords.latitude,
-          longitude: locations[0].coords.longitude,
-        }]);
+        setPathCoordinates(prevCoordinates => {
+          if (prevCoordinates.length > 0) {
+            // Calculate the midpoint between the last point and the newly generated circle
+            const lastCoordinate = prevCoordinates[prevCoordinates.length - 1];
+            const newCoordinate = {
+              latitude: locations[0].coords.latitude,
+              longitude: locations[0].coords.longitude,
+            };
+
+            const midpoint = {
+              latitude: (lastCoordinate.latitude + newCoordinate.latitude) / 2,
+              longitude: (lastCoordinate.longitude + newCoordinate.longitude) / 2,
+            };
+
+            // Update pathCoordinates to start from the midpoint
+            return [...prevCoordinates, midpoint, newCoordinate];
+          } else {
+            return [{
+              latitude: locations[0].coords.latitude,
+              longitude: locations[0].coords.longitude,
+            }];
+          }
+        });
       }
     }
   });
@@ -178,9 +197,9 @@ export default function Home() {
               latitude: currentLocation.coords.latitude,
               longitude: currentLocation.coords.longitude,
             }}
-            radius={5} // Adjust radius as needed
+            radius={2} // Adjust radius as needed
             strokeColor="#000"
-            fillColor="rgba(255, 0, 0, 0.5)" // Semi-transparent red
+            fillColor="#007BFF" // Semi-transparent red
           />
         )}
         {trackingStarted && pathCoordinates.length > 0 && (
@@ -189,7 +208,7 @@ export default function Home() {
               latitude: pathCoordinates[pathCoordinates.length - 1].latitude,
               longitude: pathCoordinates[pathCoordinates.length - 1].longitude,
             }}
-            radius={5} // Adjust radius as needed
+            radius={2} // Adjust radius as needed
             strokeColor="#000"
             fillColor="rgba(255, 0, 0, 0.5)" // Semi-transparent red
           />
