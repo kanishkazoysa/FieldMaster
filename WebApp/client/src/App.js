@@ -22,7 +22,7 @@ export default function App() {
         <Route path='/' element={<MainContent />} />
 
         {/* Route for the new page */}
-        <Route path='/newpage' element={<plantation />} />
+        {/*<Route path='/newpage' element={<plantation />} />*/}
       </Routes>
     </Router>
   );

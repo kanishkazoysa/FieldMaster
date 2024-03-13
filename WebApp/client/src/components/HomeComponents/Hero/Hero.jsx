@@ -2,8 +2,13 @@ import React from "react";
 import "./Hero.css";
 import { Button } from "@mui/material";
 import video1 from "../../../assets/home_video.mp4";
+import CustomGetStarted from "../../../components/GetStarted"; // Renamed to avoid collision
 
 const Hero = () => {
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
   return (
     <section id="hero" className="hero-container">
       <div>
@@ -15,7 +20,7 @@ const Hero = () => {
           <p>Trusted by beginners,marketers & 
         professionals ; Built with usability and performance in mind.</p>
         <div className="hero-btn">
-        <button className="contact-btn">
+        <button className="contact-btn" onClick={toggleModal}>
               Download Now
             </button>
         </div>
@@ -32,6 +37,7 @@ const Hero = () => {
 
       
       </div>
+      {isModalOpen && <CustomGetStarted toggleModal={toggleModal}/>} {/* Renamed imported component */}
      
     </section>
     

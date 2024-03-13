@@ -1,10 +1,10 @@
-import Sidebar from '../components/SideBar';
+
 import React from 'react';
 
 const NewPage = () => {
   return (
     <div>
-      <Sidebar /> 
+      <h1>Plantation Page</h1>
     </div>
   );
 };

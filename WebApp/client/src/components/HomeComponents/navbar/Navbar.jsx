@@ -14,6 +14,7 @@ function NavBar() {
     setOpenMenu(!openMenu);
   };
 
+
   return (
     <>
       <MobileNav isOpen={openMenu} toggleMenu={toggleMenu} />
