@@ -33,11 +33,21 @@ export function SaveScreen({ navigation }) {
   const [location, setLocation] = React.useState('Kandy');
   const [descriptionText, setDescriptionText] =
     React.useState('demo description');
+  const [locationPoints, setLocationPoints] = React.useState([
+    {
+      latitude: 40.7128,
+      longitude: -74.006,
+    },
+    {
+      latitude: 48.8566,
+      longitude: 2.3522,
+    },
+  ]);
 
   const onSaveButtonPress = () => {
     console.log('pressed save');
 
-    const data = {
+    const dataItem = {
       perimeter: perimeter,
       area: area,
       templateName: templateName,
@@ -45,10 +55,12 @@ export function SaveScreen({ navigation }) {
       landType: landType,
       location: location,
       description: descriptionText,
+      locationPoints: locationPoints,
     };
 
+    console.log(dataItem);
     axios
-      .post('http://10.0.2.2:3000/api/mapTemplate/saveTemplate', data)
+      .post('http://192.168.56.1:3000/api/mapTemplate/saveTemplate', dataItem)
       .then((response) => {
         console.log('data saved');
         console.log(response.data);
@@ -113,12 +125,32 @@ export function SaveScreen({ navigation }) {
           <View style={[styles.inner_View, styles.inner_view_02]}>
             <View style={styles.inner_view_02_inner}>
               <View style={styles.input_view}>
+                <Text style={styles.bold_text}>Template Name :</Text>
+                <TextInput
+                  style={styles.input_text}
+                  value={templateName}
+                  placeholder='Template Name'
+                  onChangeText={(text) => setTemplateName(text)}
+                />
+              </View>
+              <View style={styles.input_view}>
                 <Text style={styles.bold_text}>Measure Name :</Text>
                 <TextInput
                   style={styles.input_text}
                   value={measureName}
                   placeholder='Measures Name'
                   onChangeText={(text) => setMeasureName(text)}
+                />
+              </View>
+              <View style={styles.input_view}>
+                <Text style={styles.bold_text}>Location :</Text>
+                <TextInput
+                  style={styles.input_text}
+                  value={location}
+                  placeholder='Location'
+                  onChangeText={(text) => setLocation(text)}
+                  outlineColor='black'
+                  underlineColor='black'
                 />
               </View>
               <View style={styles.input_view}>

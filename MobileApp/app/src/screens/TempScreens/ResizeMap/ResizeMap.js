@@ -51,7 +51,8 @@ const ResizeMap = ({ navigation, route }) => {
         locationPoints,
       };
       await axios.put(
-        `http://192.168.115.109:3000/api/mapTemplate/updateTemplate/${templateId}`,
+        /* `http://192.168.115.109:3000/api/mapTemplate/updateTemplate/${templateId}`, */
+        `http://192.168.56.1:3000/api/mapTemplate/updateTemplate/${templateId}`,
         mapTemplate
       );
       console.log('Map template updated successfully');

@@ -32,9 +32,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
   const fetchData = () => {
     console.log('calling api to get all templates...');
     axios
-      /* .get('http://192.168.81.109:3000/api/mapTemplate/getAllTemplates') */
-      /* .get('http://192.168.1.3:3000/api/mapTemplate/getAllTemplates') */
-      .get('http://192.168.115.109:3000/api/mapTemplate/getAllTemplates')
+      .get('http://192.168.56.1:3000/api/mapTemplate/getAllTemplates')
       .then((response) => {
         setTemplates(response.data);
         console.log('fetching successful');
@@ -53,12 +51,10 @@ const SavedTemplatesScreen = ({ navigation }) => {
   const handleDelete = (deletingTemplate) => {
     axios
       .delete(
-        /* `http://192.168.81.109:3000/api/mapTemplate/deleteTemplate/${deletingTemplate._id}` */
-        /* `http://192.168.1.3:3000/api/mapTemplate/deleteTemplate/${deletingTemplate._id}` */
-        `http://192.168.115.109:3000/api/mapTemplate/deleteTemplate/${deletingTemplate._id}`
+        `http://192.168.56.1:3000/api/mapTemplate/deleteTemplate/${deletingTemplate._id}`
       )
       .then((response) => {
-        console.log(response);
+        /* console.log(response); */
         alert('Template deleted');
         setTemplates(
           templates.filter((template) => template._id !== deletingTemplate._id)
