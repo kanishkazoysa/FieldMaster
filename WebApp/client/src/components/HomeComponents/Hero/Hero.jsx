@@ -2,7 +2,7 @@ import React from "react";
 import "./Hero.css";
 import { Button } from "@mui/material";
 import video1 from "../../../assets/home_video.mp4";
-import CustomGetStarted from "../../../components/GetStarted"; // Renamed to avoid collision
+import GetStarted from "../../GetStarted"; // Renamed to avoid collision
 
 const Hero = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -37,7 +37,7 @@ const Hero = () => {
 
       
       </div>
-      {isModalOpen && <CustomGetStarted toggleModal={toggleModal}/>} {/* Renamed imported component */}
+      {isModalOpen && <GetStarted toggleModal={toggleModal}/>} {/* Renamed imported component */}
      
     </section>
     

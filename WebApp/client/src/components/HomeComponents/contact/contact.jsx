@@ -53,13 +53,13 @@ function ContactForm() {
       </form>
           </div>
         </div>
-        <div className="social">
-          <FontAwesomeIcon icon={faLinkedin} />&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faGithub} />&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faFacebook} />&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faInstagram} />&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faTwitter} />&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faYoutube} />&nbsp;&nbsp;&nbsp;
+        <div className="social-icon" style={{ textAlign: "center", marginBottom: "2rem"}}>
+          <FontAwesomeIcon icon={faLinkedin} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
+          <FontAwesomeIcon icon={faGithub} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
+          <FontAwesomeIcon icon={faFacebook} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
+          <FontAwesomeIcon icon={faInstagram} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
+          <FontAwesomeIcon icon={faTwitter} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
+          <FontAwesomeIcon icon={faYoutube} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
         </div>
         <div className="info">
           <div className="legal">

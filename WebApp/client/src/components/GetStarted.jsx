@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { AiOutlineClose } from 'react-icons/ai'; // Importing close icon from react-icons library
 import logo from '../images/logo.png'; 
-import MobileImage from '../images/MobileImage.jpg'; // Import MobileImage
+import MobileImage from '../images/MobileImage.png'; // Import MobileImage
 import WebImage from '../images/WebImage.png'; // Import web image
 
 const GetStarted = ({ toggleModal }) => {
