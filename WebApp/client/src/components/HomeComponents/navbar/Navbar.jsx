@@ -3,7 +3,7 @@ import "./Navbar.css";
 import MobileNav from "../MobileNav/MobileNav";
 import { Link } from "react-scroll";
 import logo from "../../../images/logo.png"
-
+import GetStarted from "../../GetStarted"; 
 
 
 
@@ -13,7 +13,10 @@ function NavBar() {
   const toggleMenu = () => {
     setOpenMenu(!openMenu);
   };
-
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   return (
     <>
@@ -49,11 +52,12 @@ function NavBar() {
               <Link activeClass="active" to="contact"  className="menu-item">Contact </Link>
             </li>
 
-            <button className="contact-btn" onClick={() => {}}>
+            <button className="contact-btn" onClick={toggleModal}>
               Get Started
             </button>
           </ul>
           </div>
+          {isModalOpen && <GetStarted toggleModal={toggleModal}/>}
 
           <button class="menu-btn" onClick={toggleMenu}>
             <span

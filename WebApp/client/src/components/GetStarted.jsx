@@ -26,12 +26,14 @@ const GetStarted = ({ toggleModal }) => {
             </div>
             <div style={contentStyles}>
                 <div style={leftContentStyles}>
+                    <h3>Mobile App</h3>
                     <img src={MobileImage} alt="Mobile Image" style={imageStyles} />
                     <p style={paragraphStyles}>GeoMeasure, a user-friendly web app, simplifies complex geographical measurements, allowing users to effortlessly calculate distances, areas, and coordinates for enhanced spatial analysis and planning.</p>
                     <button style={buttonStyles}>Get Started</button>
                 </div>
                 <h5 style={orTextStyle}>or</h5>
                 <div style={rightContentStyles}>
+                <h3>Web App</h3>
                     <img src={WebImage} alt="Web Image" style={imageStyles} />
                     <p style={paragraphStyles}>This app empowers you to easily calculate and record accurate area measurements while on the move and at your convenience at your desired place anywhere at anytime with super realtime mapping of the area.</p>
                     <button style={buttonStyles}>Download Now</button>
@@ -51,14 +53,15 @@ const modalStyles = {
     },
     content: {
         width: '830px', 
-        height: '500px', 
+        height: '520px', 
         borderRadius: '10px',
         outline: 'none', // Remove default outline
         border: 'none', // Remove border
-        padding: '20px',
+        padding: '10px',
         position: 'relative', // Ensure close button is positioned correctly
         background: 'whitesmoke', // Set background to whitesmoke
         display: 'flex',
+        boxShadow: '50px black',
         flexDirection: 'column'
     }
 };
@@ -76,13 +79,17 @@ const logoStyles = {
 };
 
 const closeIconStyles = {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    paddingRight: '20px'
 };
 
 const contentStyles = {
     display: 'flex',
     flex: 1,
-    marginBottom: '20px'
+    marginBottom: '20px',
+    paddingLeft: '20px',
+    paddingRight: '20px',
+    
 };
 
 const leftContentStyles = {
@@ -93,7 +100,8 @@ const leftContentStyles = {
     padding: '20px',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
 };
 
 const rightContentStyles = {
@@ -104,7 +112,8 @@ const rightContentStyles = {
     padding: '20px',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
 };
 
 const imageStyles = {
