@@ -24,7 +24,8 @@ export default function SideNavbar() {
   };
 
   return (
-    <Sidebar collapsed={collapsed} style={{ height: "100vh" }}>
+    <Sidebar collapsed={collapsed}  
+    style={{ height: "100vh", width: collapsed ? '50px' : '300px' }}>
       <div style={styles.head}>
         <div onClick={handleToggleSidebar}>
           <FaBars color="#65676b" />
@@ -60,7 +61,7 @@ export default function SideNavbar() {
                 : {}),
             }}
           >
-            <IoBookmarks fontSize={20} style={{ marginRight: "10px" }} />
+            <IoBookmarks fontSize={18} style={{ marginRight: "15px" }} />
             {!collapsed && "Templates"}
           </MenuItem>
         </Menu>

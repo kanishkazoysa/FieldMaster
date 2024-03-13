@@ -59,16 +59,12 @@ const CalculatorModel = ({
                 >
                 <View style={{flexDirection:"row"}}>
                   <View style={{ left: -20 }}>
-                    <MaterialCommunityIcons
-                      name="google"
-                      size={24}
-                      color="black"
-                    />
+                   
                   </View>
 
                   <View>
-                    <Text style={{ marginTop: 8, left: -3 }}>
-                      SIGN WITH GOOGLE
+                    <Text style={{ marginTop: 8, left: -3,color:"#FFF" }}>
+                     CLEAR LAND
                     </Text>
                   </View>
                   </View>
@@ -82,15 +78,11 @@ const CalculatorModel = ({
                   onPress={() => promptAsync()}
                 >
                   <View style={{ left: -20 }}>
-                    <MaterialCommunityIcons
-                      name="google"
-                      size={24}
-                      color="black"
-                    />
+                  
                   </View>
                   <View>
-                    <Text style={{ marginTop: 8, left: -3 }}>
-                      SIGN WITH GOOGLE
+                    <Text style={{ marginTop: 8, left: -3, color:"#FFF" }}>
+                      PLANTATION
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -102,15 +94,11 @@ const CalculatorModel = ({
                   onPress={() => promptAsync()}
                 >
                   <View style={{ left: -20 }}>
-                    <MaterialCommunityIcons
-                      name="google"
-                      size={24}
-                      color="black"
-                    />
+                  
                   </View>
                   <View>
-                    <Text style={{ marginTop: 8, left: -3 }}>
-                      SIGN WITH GOOGLE
+                    <Text style={{ marginTop: 8, left: -3 ,color:"#FFF" }}>
+                      FENCE SETUP
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -133,18 +121,21 @@ const styles = StyleSheet.create({
     borderColor: "#007BFF",
     borderWidth: 1,
     borderRadius: 24,
-    color: "#007BFF",
+    backgroundColor:"#007BFF",
     width: 330,
+    color: "#fff",
     padding: 5.9,
   },
   buttonContainer: {
     marginTop: "20%",
     flexDirection: "column",
     width: 337,
+    height: 150,
   },
   button: {
     marginBottom: 20,
     justifyContent: "center",
+    
   },
 
   headerText: {
