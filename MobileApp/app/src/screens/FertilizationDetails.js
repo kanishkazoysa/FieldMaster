@@ -158,8 +158,10 @@ export default function FertilizationDetails({route}) {
       {/*Header section*/}  
       <Headersection navigation={navigation} title="Fertilizing Details" />
 
-    {/* Top section */}
-    <View style={styles.box}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+
+    <View style={styles.top}>
+        {/* Top section */}
           <View style={styles.box1}>
             <Text style={styles.titleText}>Total Amount of Fertilizing</Text>
             <View style={styles.propertyBox}>
@@ -187,13 +189,10 @@ export default function FertilizationDetails({route}) {
               </View>
             </View>
           </View>
-        </View>
 
         {/* Second section */}
 
-        <View style={styles.box}>
           <View style={styles.box2}>
-            <View style={styles.box2Inner}>
               <View style={styles.box2Property}>
                 <MaterialCommunityIcons
                   name="vector-square"
@@ -216,13 +215,10 @@ export default function FertilizationDetails({route}) {
                   <Text style={styles.Box2PropertyValue}>100 acres</Text>
                 </View>
               </View>
-            </View>
           </View>
-        </View>
 
         {/* Third section */}
 
-        <View style={styles.box}>
           <View style={styles.box3}>
             <View style={styles.inner}>
               <Text style={styles.innertopText}>Result based on</Text>
@@ -258,11 +254,10 @@ export default function FertilizationDetails({route}) {
               </View>
             </View>
           </View>
-        </View>
+          </View>
 
          {/* Bottom section */}
 
-         <View style={styles.box}>
           <View style={styles.bottom}>
             
             <CustomButton
@@ -281,7 +276,7 @@ export default function FertilizationDetails({route}) {
               buttonColor="#007BFF" // Change the background color of the button
             />
           </View>
-        </View>
+       </ScrollView>
 
 
 
@@ -297,11 +292,16 @@ const styles = StyleSheet.create({
       
       /*Top Section*/
 
-  box: {
+  scrollContent: {
     flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    height: "100%",
   },
+
+  top: {
+    alignItems: "center",
+    width: "100%",
+   },
 
   box1: {
     flexDirection: "column",
@@ -311,6 +311,10 @@ const styles = StyleSheet.create({
     marginTop: 40,
     alignItems: "center",
     borderRadius: 11,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
 
   titleText: {
@@ -320,7 +324,7 @@ const styles = StyleSheet.create({
   },
 
   propertyBox: {
-    width: "100%",
+    width: "98%",
     height: "70%",
     backgroundColor: "white",
     flexDirection: "row",
@@ -359,22 +363,20 @@ const styles = StyleSheet.create({
 
   box2: {
     width: "87%",
-    height: 74,
+    height: 80,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
     marginTop: 15,
     borderRadius: 11,
+    padding: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
 
-  box2Inner: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "80%",
-    width: "100%",
-    backgroundColor: "white",
-  },
   box2Property: {
     flexDirection: "row",
     alignItems: "center",
@@ -408,6 +410,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: 15,
     borderRadius: 11,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
 
   inner: {
@@ -463,9 +469,8 @@ const styles = StyleSheet.create({
    /* bottom section */
 
    bottom: {
-    alignItems: "flex-end",
-    justifyContent: "flex-end",
-    marginTop: 140,
+    alignItems: "center",
+    bottom: 30,
   },
 
 

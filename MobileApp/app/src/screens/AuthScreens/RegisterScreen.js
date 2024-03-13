@@ -86,7 +86,16 @@ export default function RegisterScreen() {
         return;
       }
 
-      const response = await axios.post("http://10.10.20.85:5000/api/users/register",{ email, password });
+      const response = await fetch(
+        "http://10.10.1.130:5000/api/users/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       if (response.ok) {
         Alert.alert(
@@ -205,7 +214,7 @@ export default function RegisterScreen() {
           >
             <View style={{ left: -20,  }}>
               <Image
-              source={require("../images/google.png")} />
+              source={require("../../images/google.png")} />
             </View>
             <View>
               <Text style={{ marginTop: 8, left:-3 }}>SIGN WITH GOOGLE</Text>

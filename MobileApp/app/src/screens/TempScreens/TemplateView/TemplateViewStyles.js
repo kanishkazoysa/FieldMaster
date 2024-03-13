@@ -1,19 +1,35 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet ,StatusBar, Platform} from 'react-native';
 
 export const styles = StyleSheet.create({
   testingText: {
     color: 'red',
   },
+
+  top_Bar: {
+    height: 45,
+    backgroundColor: "#007BFF",
+
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
+  },
+
+  headerText: {
+    fontSize: 18,
+    textAlign: "center",
+    color: "white",
+    position: "absolute",
+    bottom: 7,
+    left: 0,
+    right: 0,
+  },
+
   low_outer: {
-    backgroundColor: 'lightgrey',
     height: '100%',
   },
-  top_Bar: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#0866FF',
-    color: 'white',
-  },
+
   imageView: {
     alignItems: 'center',
     justifyContent: 'center',
