@@ -133,7 +133,9 @@ export default function Home() {
 
   const focusOnCurrentLocation = async () => {
     try {
-      const location = await Location.getCurrentPositionAsync({});
+      const location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.High,
+      });
       setCurrentLocation(location);
       if (mapRef.current && location) {
         mapRef.current.animateToRegion({
@@ -147,7 +149,6 @@ export default function Home() {
       console.error("Error getting current location:", error);
     }
   };
-
   const toggleTracking = async () => {
     if (trackingStarted) {
       await stopLocationUpdates();
