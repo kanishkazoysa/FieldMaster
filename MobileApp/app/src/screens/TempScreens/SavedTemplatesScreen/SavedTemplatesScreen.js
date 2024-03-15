@@ -7,6 +7,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
+import backendUrl from '../../../../urlFile';
 
 /* icons from materialcommunity icons */
 const CustomEditIcon = (props) => {
@@ -32,7 +33,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
   const fetchData = () => {
     console.log('calling api to get all templates...');
     axios
-      .get('http://192.168.56.1:3000/api/mapTemplate/getAllTemplates')
+      .get(`${backendUrl}/api/mapTemplate/getAllTemplates`)
       .then((response) => {
         setTemplates(response.data);
         console.log('fetching successful');
@@ -51,7 +52,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
   const handleDelete = (deletingTemplate) => {
     axios
       .delete(
-        `http://192.168.56.1:3000/api/mapTemplate/deleteTemplate/${deletingTemplate._id}`
+        `${backendUrl}/api/mapTemplate/deleteTemplate/${deletingTemplate._id}`
       )
       .then((response) => {
         /* console.log(response); */

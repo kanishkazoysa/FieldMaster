@@ -6,6 +6,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import axios from 'axios';
+import backendUrl from '../../../../urlFile';
+import { errorUtils } from '../../../common.app';
 
 const CustomPerimeterIcon = (props) => (
   <MaterialCommunityIcons
@@ -33,7 +35,7 @@ export function SaveScreen({ navigation }) {
   const [location, setLocation] = React.useState('Kandy');
   const [descriptionText, setDescriptionText] =
     React.useState('demo description');
-  const [locationPoints, setLocationPoints] = React.useState([
+  /* const [locationPoints, setLocationPoints] = React.useState([
     {
       latitude: 40.7128,
       longitude: -74.006,
@@ -42,7 +44,7 @@ export function SaveScreen({ navigation }) {
       latitude: 48.8566,
       longitude: 2.3522,
     },
-  ]);
+  ]); */
 
   const onSaveButtonPress = () => {
     console.log('pressed save');
@@ -55,19 +57,19 @@ export function SaveScreen({ navigation }) {
       landType: landType,
       location: location,
       description: descriptionText,
-      locationPoints: locationPoints,
+      /* locationPoints: locationPoints, */
     };
 
     console.log(dataItem);
     axios
-      .post('http://192.168.56.1:3000/api/mapTemplate/saveTemplate', dataItem)
+      .post(`${backendUrl}/api/mapTemplate/saveTemplate`, dataItem)
       .then((response) => {
         console.log('data saved');
         console.log(response.data);
         navigation.navigate('SavedTemplatesScreen');
       })
       .catch((error) => {
-        console.error(error.message);
+        console.error(errorUtils.getError(error));
       });
   };
 

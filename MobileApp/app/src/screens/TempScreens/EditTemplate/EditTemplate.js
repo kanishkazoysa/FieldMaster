@@ -5,6 +5,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { styles } from './EditTemplateStyle';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import axios from 'axios';
+import backendUrl from '../../../../urlFile';
 
 const theme = {
   ...DefaultTheme,
@@ -37,14 +38,11 @@ const EditTemplate = ({ route, navigation }) => {
 
   const handleSave = () => {
     axios
-      .put(
-        `http://192.168.56.1:3000/api/mapTemplate/updateTemplate/${item._id}`,
-        {
-          measureName: measureName,
-          landType: landType,
-          description: description,
-        }
-      )
+      .put(`${backendUrl}/api/mapTemplate/updateTemplate/${item._id}`, {
+        measureName: measureName,
+        landType: landType,
+        description: description,
+      })
       .then((response) => {
         alert('Template updated');
         navigation.navigate('SavedTemplatesScreen');

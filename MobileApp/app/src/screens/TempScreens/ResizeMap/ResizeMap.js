@@ -13,6 +13,7 @@ import { styles } from './ResizeMapStyles';
 import MapView, { MAP_TYPES } from 'react-native-maps';
 import * as Location from 'expo-location';
 import axios from 'axios';
+import backendUrl from '../../../../urlFile';
 
 const ResizeMap = ({ navigation, route }) => {
   const templateId = route.params.templateId;
@@ -51,8 +52,7 @@ const ResizeMap = ({ navigation, route }) => {
         locationPoints,
       };
       await axios.put(
-        /* `http://192.168.115.109:3000/api/mapTemplate/updateTemplate/${templateId}`, */
-        `http://192.168.56.1:3000/api/mapTemplate/updateTemplate/${templateId}`,
+        `${backendUrl}/api/mapTemplate/updateTemplate/${templateId}`,
         mapTemplate
       );
       console.log('Map template updated successfully');
