@@ -31,13 +31,15 @@ const Otp = ({ route }) => {
   const handleContinue = async () => {
     const enteredOTP = otp.join("");
     try {
-      const response = await fetch(`http://10.10.1.130:5000/api/mail/verify`, {
+      const response = await fetch(`http://192.168.1.104:5000/api/mail/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, enteredOTP }),
       });
+
+      // const response = await axios.post("http://10.10.1.130:5000/api/mail/verify",{ email, enteredOTP });
 
       if (response.ok) {
         console.log("OTP is correct, navigating to NewPassword screen.");
@@ -46,6 +48,8 @@ const Otp = ({ route }) => {
         const data = await response.json();
         Alert.alert("Error", data.error);
       }
+
+      // console.log(response);
     
     } catch {
       Alert.alert("Error", "Something went wrong");

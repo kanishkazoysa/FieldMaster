@@ -12,6 +12,7 @@ import Setup from "./components/HomeComponents/SetupCard";
 import ContactForm from "./components/HomeComponents/contact/contact";
 import "./index.css";
 import Home from "./pages/Home";
+import EmailVerified from "./pages/EmailVerified"
 
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainContent />} />
         <Route path="/Home" element={<Home />} />
+        <Route path="/emailVerification" element={<EmailVerified />} />
       </Routes>
     </Router>
   );

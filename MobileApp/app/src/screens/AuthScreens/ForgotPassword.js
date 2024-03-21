@@ -29,20 +29,29 @@ export default function ForgotPassword() {
         return;
       }
 
-      const response = await fetch("http://10.10.1.130:5000/api/mail/otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+      // const response = await fetch("http://10.10.1.130:5000/api/mail/otp", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ email }),
+      // });
+     
+      const response = await axios.post("http://192.168.1.104:5000/api/mail/otp",{email})
 
-      if (response.status === 200) {
-        const data = await response.json();
+      console.log(response.data);
+
+
+      if (response.status == 200) {
+        const data = await response.data.otp;
+
         Alert.alert("OTP sent successfully");
-        navigation.navigate("Otp", { email, Otp: data.otp});
+
+        navigation.navigate("Otp", { email, Otp: data});
+        
+
       } else {
-        const data = await response.json();
+        // const data = await response.json();
         Alert.alert("Error", data.error || "Something went wrong");
       }
     } catch (error) {

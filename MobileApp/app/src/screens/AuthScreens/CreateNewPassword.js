@@ -34,7 +34,7 @@ export default function ForgotPassword({ route }) {
         Alert.alert("Error", "Passwords do not match");
         return;
       }
-      const response = await fetch('http://10.10.1.130:5000/api/users/change-password', {
+      const response = await fetch('http://192.168.1.104:5000/api/users/change-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

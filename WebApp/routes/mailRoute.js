@@ -71,7 +71,14 @@ router.post("/otp", async (req, res) => {
     });
     await newUser.save();
     console.log(otp);
-    res.status(200).json({ otp });
+
+    res.status(200).send({ 
+       otp : otp,
+       success:true,
+       message:"otp send successfull"
+     });
+
+     
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
