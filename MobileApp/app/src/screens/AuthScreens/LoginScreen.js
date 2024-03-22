@@ -33,21 +33,24 @@ export default function LoginScreen() {
         return;
       }
   
-      const response = await axios.post("http://10.10.1.130:5000/api/users/login", { email, password });
+      const response = await axios.post("http://192.168.1.103:5000/api/users/login",{ email, password });
   
       if (response.status === 200) {
         const token = response.data.token;
   
         // Store token in AsyncStorage
         await AsyncStorage.setItem("token", token);
+
+        
   
+        navigation.navigate("Home",{email:email});
         // Display login success message
         Alert.alert(
           "Success",
           "Login successfully",
         );
 
-        navigation.navigate("Home",{email:email});
+        
       } else {
         const data = await response.json();
         Alert.alert("Error", data.error || "Something went wrong");

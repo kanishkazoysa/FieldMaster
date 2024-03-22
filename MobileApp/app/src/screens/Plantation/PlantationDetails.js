@@ -15,9 +15,9 @@ import {
   import * as Print from 'expo-print';
   import { shareAsync } from 'expo-sharing';
   
-  import Headersection from "../components/Headersection";
-  import CustomButton from "../components/CustomButton";
-  import AlertButton from "../components/AlertButton";
+  import Headersection from "../../components/Headersection";
+  import CustomButton from "../../components/CustomButton";
+  import AlertButton from "../../components/AlertButton";
   
   export default function PlantationDetails({ route }) {
   

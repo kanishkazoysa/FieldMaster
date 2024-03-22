@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Appbar, Button } from "react-native-paper";
@@ -25,41 +26,76 @@ const Otp = ({ route }) => {
   const isFocused = useIsFocused();
   const inputRefs = Array.from({ length: 6 }, () => React.createRef());
   const { Otp, email } = route.params;
-
+  const [endTime, setEndTime] = useState(null);
+  const [remainingTime, setRemainingTime] = useState(null);
+  const countdownInterval = useRef(null);
 
   // Implement logic to handle OTP verification
   const handleContinue = async () => {
     const enteredOTP = otp.join("");
     try {
-      const response = await fetch(`http://10.10.1.130:5000/api/mail/verify`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, enteredOTP }),
-      });
-
-      if (response.ok) {
-        console.log("OTP is correct, navigating to NewPassword screen.");
+      const response = await axios.post(
+        "http://192.168.1.103:5000/api/mail/verify",
+        { email, enteredOTP }
+      );
+      if (response.status === 200) {
         navigation.navigate("NewPassword", { email });
-      } else {
-        const data = await response.json();
-        Alert.alert("Error", data.error);
       }
-    
-    } catch {
-      Alert.alert("Error", "Something went wrong");
+    } catch (error) {
+      if (error.response) {
+        Alert.alert(
+          "Error",
+          error.response.data.error || error.response.data.message
+        );
+      } else if (error.request) {
+        Alert.alert("Error", "No response from server");
+      } else {
+        Alert.alert("Error", "Something went wrong");
+      }
     }
   };
+
   const handleTryAgain = async () => {
-    const response = await fetch("http://10.10.1.130:5000/api/mail/otp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email }),
-    });
+    try {
+      const response = await axios.post(
+        "http://192.168.1.103:5000/api/mail/otp",
+        { email }
+      );
+
+      if (response.status == 200) {
+        const data = await response.data.otp;
+        Alert.alert("OTP sent successfully");
+      } else {
+        Alert.alert("Error", data.error || "Something went wrong");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Internal Server Error");
+    }
+
+    setEndTime(Date.now() + 60000);
   };
+
+  useEffect(() => {
+    if (endTime) {
+      countdownInterval.current = setInterval(() => {
+        const timeLeft = Math.floor((endTime - Date.now()) / 1000);
+
+        if (timeLeft <= 0) {
+          clearInterval(countdownInterval.current);
+          setEndTime(null);
+          setRemainingTime(null);
+        } else {
+          setRemainingTime(timeLeft);
+        }
+      }, 1000);
+    }
+
+    return () => {
+      if (countdownInterval.current) {
+        clearInterval(countdownInterval.current);
+      }
+    };
+  }, [endTime]);
 
   const handleChangeOtp = (index, value) => {
     const newOtp = [...otp];
@@ -135,19 +171,28 @@ const Otp = ({ route }) => {
             ))}
           </View>
 
+          <View style={styles.resendBtn}>
+            
+            <View>
+              {remainingTime === null ? (
+                <TouchableOpacity onPress={handleTryAgain}>
+                  <Text style={styles.text2}> Resend OTP</Text>
+                </TouchableOpacity>
+              ) : (
+                <Text style={styles.text2}>
+                  Try again after:
+                  <Text style={{ color: "red" }}>{remainingTime} seconds</Text>
+                </Text>
+              )}
+            </View>
+          </View>
+
           <Button
             mode="contained"
             onPress={handleContinue}
             style={styles.button}
           >
             Continue
-          </Button>
-          <Button
-            mode="contained"
-            onPress={handleTryAgain}
-            style={styles.button}
-          >
-            Try Again
           </Button>
         </View>
       </View>
@@ -198,14 +243,13 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(3),
   },
   otpInput: {
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: "#C4C4C4",
-    borderRadius: 11,
-    width: responsiveWidth(13),
+    width: responsiveWidth(10),
     height: responsiveHeight(7),
+    marginLeft: responsiveWidth(2),
     margin:
       Platform.OS === "android" ? responsiveHeight(0.5) : responsiveHeight(0.5),
-    backgroundColor: "#fff",
     textAlign: "center",
     fontSize: responsiveFontSize(2.5),
   },
@@ -214,6 +258,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#007BFF",
     width: 337,
     padding: 2,
+  },
+  resendBtn: {
+    flexDirection: "row",
+    marginTop: responsiveHeight(3),
+    width: "90%",
+  },
+  text1: {
+    fontSize: responsiveFontSize(1.9),
+    marginTop: "1%",
+  },
+  text2: {
+    fontSize: responsiveFontSize(1.9),
+    marginTop: "1%",
+    color: "#007BFF",
   },
 });
 

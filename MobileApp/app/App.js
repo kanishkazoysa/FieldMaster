@@ -7,16 +7,15 @@ import {
 } from "@react-navigation/stack";
 import RegisterScreen from "./src/screens/AuthScreens/RegisterScreen";
 import LoginScreen from "./src/screens/AuthScreens/LoginScreen";
-import { IconButton } from "react-native-paper";
-import SplashScreen from "./src/screens/splashScreen";
-import WelcomeScreen from "./src/screens/WelcomeScreen";
+import SplashScreen from "./src/screens/StartingScreens/splashScreen";
+import WelcomeScreen from "./src/screens/StartingScreens/WelcomeScreen";
 import ForgotPassword from "./src/screens/AuthScreens/ForgotPassword";
 import Otp from "./src/screens/AuthScreens/Otp";
 import CreateNewPassword from "./src/screens/AuthScreens/CreateNewPassword";
 import Home from "./src/screens/Home";
 import WalkaroundLand from "./src/screens/WalkaroundLand";
-import Fence from "./src/screens/Fence";
-import FenceDetails from "./src/screens/FenceDetails";
+import Fence from "./src/screens/FenceSetup/Fence";
+import FenceDetails from "./src/screens/FenceSetup/FenceDetails";
 
 /* Template screens importing */
 
@@ -28,15 +27,13 @@ import EditTemplate from "./src/screens/TempScreens/EditTemplate/EditTemplate";
 import SavedTemplatesScreen from "./src/screens/TempScreens/SavedTemplatesScreen/SavedTemplatesScreen";
 
 
-import Fertilization from "./src/screens/Fertilization";
-import PlantationDetails from "./src/screens/PlantationDetails";
-import FertilizationDetails from "./src/screens/FertilizationDetails";
-import Plantation from "./src/screens/Plantation";
-import Clearland from './src/screens/Clearland';
-import EffortOutput from './src/screens/EffortOutput';
+import Fertilization from "./src/screens/Fertilizing/Fertilization";
+import PlantationDetails from "./src/screens/Plantation/PlantationDetails";
+import FertilizationDetails from "./src/screens/Fertilizing/FertilizationDetails";
+import Plantation from "./src/screens/Plantation/Plantation";
+import Clearland from './src/screens/ClearLand/Clearland';
+import EffortOutput from './src/screens/ClearLand/EffortOutput';
 
-
-import testScreen from "./src/screens/testScreen";
 
 const Stack = createStackNavigator();
 
@@ -90,7 +87,7 @@ const App = () => {
           
         />
 
-        <Stack.Screen name="testScreen" component={testScreen} />
+       
 
       </Stack.Navigator>
     </NavigationContainer>

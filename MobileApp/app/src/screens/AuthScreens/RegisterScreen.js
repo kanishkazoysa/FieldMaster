@@ -64,7 +64,7 @@ export default function RegisterScreen() {
       const response = await fetch(
         "https://www.googleapis.com/userinfo/v2/me",
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}`},
         }
       );
 
@@ -86,36 +86,28 @@ export default function RegisterScreen() {
         return;
       }
 
-      const response = await fetch(
-        "http://10.10.1.130:5000/api/users/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        }
-      );
+    const response = await axios.post("http://192.168.1.103:5000/api/users/register",{ email, password })
 
-      if (response.ok) {
-        Alert.alert(
-          "Success",
-          "Please verify your email",
-          [
-            {
-              text: "OK",
-              onPress: () => navigation.navigate("Login"),
-            },
-          ],
-          { cancelable: false }
-        );
-        navigation.navigate("Login");
-      } else {
-        const data = await response.json();
-        Alert.alert("Error", data.error || "Something went wrong");
-      }
-    } catch (error) {
-      console.error("Error during registration:", error);
+    
+
+    if(response.data.success){
+       Alert.alert(
+            "Success",
+            "Please verify your email",
+            [
+              {
+                text: "OK",
+                onPress: () => navigation.navigate("Login"),
+              },
+            ],
+            { cancelable: false }
+          );
+          
+          navigation.navigate("Login");
+    }
+
+    }
+    catch (error) {
       Alert.alert("Error", "Something went wrong");
     }
   };
