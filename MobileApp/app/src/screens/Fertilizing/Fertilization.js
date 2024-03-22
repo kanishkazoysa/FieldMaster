@@ -16,8 +16,8 @@ import { Button } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 
-import Headersection from "../components/Headersection";
-import CustomButton from "../components/CustomButton";
+import Headersection from "../../components/Headersection";
+import CustomButton from "../../components/CustomButton";
 
 
 export default function Fertilization() {

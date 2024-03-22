@@ -86,20 +86,9 @@ export default function RegisterScreen() {
         return;
       }
 
-      // const response = await fetch(
-      //   "http://192.168.1.104:5000/api/users/register",
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({ email, password }),
-      //   }
-      // );
+    const response = await axios.post("http://192.168.1.103:5000/api/users/register",{ email, password })
 
-    const response = await axios.post("http://192.168.1.104:5000/api/users/register",{ email, password })
-
-    console.log(response.data.success);
+    
 
     if(response.data.success){
        Alert.alert(
@@ -117,27 +106,8 @@ export default function RegisterScreen() {
           navigation.navigate("Login");
     }
 
-      // if (response.ok) {
-      //   Alert.alert(
-      //     "Success",
-      //     "Please verify your email",
-      //     [
-      //       {
-      //         text: "OK",
-      //         onPress: () => navigation.navigate("Login"),
-      //       },
-      //     ],
-      //     { cancelable: false }
-      //   );
-      //   navigation.navigate("Login");
-      // } else {
-      //   const data = await response.json();
-      //   Alert.alert("Error", data.error || "Something went wrong");
-      // }
-
     }
     catch (error) {
-      console.error("Error during registration:", error);
       Alert.alert("Error", "Something went wrong");
     }
   };

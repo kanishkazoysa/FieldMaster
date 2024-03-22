@@ -169,7 +169,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/change-password",middleware,controller)
+
 
 router.post("/change-password", async (req, res) => {
   const { email, newPassword } = req.body;
@@ -188,7 +188,10 @@ router.post("/change-password", async (req, res) => {
     await user.save();
 
     // Password changed successfully
-    res.status(200).json({ message: "Password changed successfully" });
+    res.status(200).send({
+      success: true,
+    });
+  
   } catch (error) {
     console.error("Error changing password:", error);
     res.status(500).json({ error: "Internal server error" });

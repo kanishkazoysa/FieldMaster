@@ -33,7 +33,7 @@ export default function LoginScreen() {
         return;
       }
   
-      const response = await axios.post("http://192.168.1.104:5000/api/users/login",{ email, password });
+      const response = await axios.post("http://192.168.1.103:5000/api/users/login",{ email, password });
   
       if (response.status === 200) {
         const token = response.data.token;
