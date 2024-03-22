@@ -46,7 +46,7 @@ export default function ForgotPassword({ route }) {
       //   ),
       // });
 
-      const response = await axios.post("http://192.168.1.103:5000/api/users/change-password",{ email, newPassword });
+      const response = await axios.post("http://10.10.29.38:5000/api/users/change-password",{ email, newPassword });
 
       
 

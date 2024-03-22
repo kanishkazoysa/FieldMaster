@@ -30,7 +30,7 @@ export default function ForgotPassword() {
       }
 
       const response = await axios.post(
-        "http://192.168.1.103:5000/api/mail/otp",
+        "http://10.10.29.38:5000/api/mail/otp",
         { email }
       );
 
