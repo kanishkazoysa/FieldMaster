@@ -8,20 +8,20 @@ const calculateFertilizerAmountForYear = (frequency, NoOfTimes, AmountOfOneTime,
     let factor = 1;
 
     // Determine the factor based on the frequency
-    switch (frequency.toLowerCase()) {
-        case "daily":
+    switch (frequency) {
+        case "Daily":
             factor = 365;
             break;
-        case "weekly":
+        case "Weekly":
             factor = 4; // Weekly amount for one month
             break;
-        case "monthly":
+        case "Monthly":
             factor = 12;
             break;
-        case "quarterly":
+        case "Quarterly":
             factor = 4;
             break;
-        case "yearly":
+        case "Yearly":
             factor = 1;
             break;
         default:
@@ -32,7 +32,7 @@ const calculateFertilizerAmountForYear = (frequency, NoOfTimes, AmountOfOneTime,
     const totalAmount = factor * NoOfTimes * AmountOfOneTime;
 
     // Convert the amount to kilograms if the unit is grams
-    if (unit.toLowerCase() === "g") {
+    if (unit === "g") {
         return totalAmount / 1000; // Convert grams to kilograms
     } else {
         return totalAmount; // Return the total amount directly if the unit is kilograms
@@ -43,15 +43,15 @@ const calculateFertilizerAmountForYear = (frequency, NoOfTimes, AmountOfOneTime,
 router.post("/fertilizer", async (req, res) => {
     
     try{
-        const { textFertilizationType,textFertilizationNUmberoftime,textFertilizationAmount,FertilizerAmountUnitselectedValue} = req.body;
+        const { textFertilizationType,textFertilizationNUmberoftime,textFertilizationAmount,FertilizerAmountUnitselectedValue,Frequency} = req.body;
         const area = 100; // Acres
 
-        const frequency="weekly";
+        const HowOften=Frequency;
         const NoOfTimes = textFertilizationNUmberoftime;
         const AmountOfOneTime = textFertilizationAmount;
         const unit = FertilizerAmountUnitselectedValue;
         
-        const totalAmount = calculateFertilizerAmountForYear(frequency, NoOfTimes, AmountOfOneTime, unit);
+        const totalAmount = calculateFertilizerAmountForYear(HowOften, NoOfTimes, AmountOfOneTime, unit);
         
         console.log("Total amount:", totalAmount);
         res.json({status:"ok" , data: "Counted the amount of fertilizer"});
