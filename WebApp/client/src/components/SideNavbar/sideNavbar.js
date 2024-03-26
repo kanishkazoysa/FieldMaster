@@ -36,14 +36,14 @@ export default function SideNavbar() {
     setAnimateStartMeasure(false);
     setTimeout(() => {
       setShowStartMeasurePage(false);
-    }, 300); // delay of 300ms to match the transition duration
+    }, 300);
   };
 
   return (
     <Sidebar collapsed={collapsed} style={{ height: "100vh", width: collapsed ? '50px' : '300px' }}>
       <div style={styles.head}>
-        <div onClick={handleToggleSidebar}>
-          <FaBars color="#65676b" />
+        <div style={{cursor:"pointer"}} onClick={handleToggleSidebar}>
+          <FaBars color="#65676b"/>
         </div>
         <div style={styles.logoContainer}>
           {!collapsed && <img src={logo} alt="Logo" style={styles.logo} />}
@@ -122,7 +122,7 @@ const styles = {
     flex: 1,
   },
   hoveredMenuItem: {
-    backgroundColor: "#0866FF",
+    backgroundColor: "#1640D6",
     color: "white",
   },
   content: {

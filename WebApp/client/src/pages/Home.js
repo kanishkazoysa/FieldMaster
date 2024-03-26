@@ -1,6 +1,7 @@
 import React, { useRef, useState, useCallback } from "react";
 import { GoogleMap, LoadScript, StandaloneSearchBox, Marker } from "@react-google-maps/api";
 import SideNavbar from "../components/SideNavbar/sideNavbar";
+import { MdLocationOn } from "react-icons/md";
 
 export default function Home() {
   const mapRef = useRef(null);
@@ -77,17 +78,22 @@ export default function Home() {
               onClick={handleMarkerClick}
             />
           )}
+          <MdLocationOn fontSize={27} style={{ marginLeft: '10px', marginTop: '10px' }} color="#fff" />
+
           <StandaloneSearchBox
           onLoad={onSearchBoxLoad}
           onPlacesChanged={handlePlacesChanged}
         >
+
           <input
+          
             type="text"
             placeholder="Search location"
             style={styles.searchBox}
             onKeyDown={handleKeyDown}
           />
         </StandaloneSearchBox>
+
         </GoogleMap>
       </LoadScript>
     </div>
@@ -104,8 +110,8 @@ const styles = {
   searchBox: {
     boxSizing: 'border-box',
     border: '1px solid transparent',
-    width: '240px',
-    height: '32px',
+    width: '300px',
+    height: '38px',
     padding: '0 12px',
     borderRadius: '11px',
     boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
@@ -113,7 +119,7 @@ const styles = {
     outline: 'none',
     textOverflow: 'ellipsis',
     position: 'absolute',
-    left: '75%',
+    right:'15%',
     top: '2%',
   },
 };
