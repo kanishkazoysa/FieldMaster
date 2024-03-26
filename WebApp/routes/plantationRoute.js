@@ -43,7 +43,8 @@ router.post("/plantation", async (req, res) => {
             PlantType : textPlant,
             PlantSpace : textplantspace,
             RowSpace :textRowspace ,
-            NoOfPlants : numberOfPlants
+            NoOfPlants : numberOfPlants,
+            
         })
       
         await newPlantation.save();
