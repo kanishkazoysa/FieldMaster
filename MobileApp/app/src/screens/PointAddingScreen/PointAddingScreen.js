@@ -53,6 +53,11 @@ const ResizeMap = ({ navigation, route }) => {
   const handleClearPoints = () => {
     setPoints([]);
   };
+  const handleCompleteMap = () => {
+    if (points.length > 0) {
+      setPoints([...points, points[0]]);
+    }
+  };
 
   const handleSave = async () => {
     try {
@@ -141,6 +146,7 @@ const ResizeMap = ({ navigation, route }) => {
             <Icon name='map-outline' size={28} color='#666666' />
           </TouchableOpacity>
           <Button title='Clear Points' onPress={handleClearPoints} />
+          <Button title='Complete Map' onPress={handleCompleteMap} />
         </View>
       )}
     </>
