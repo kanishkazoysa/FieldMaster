@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import {
   View,
   Text,
@@ -11,6 +12,7 @@ import { Appbar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from './PointAddingScreenStyles';
 import MapView, { MAP_TYPES } from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import axios from 'axios';
 import backendUrl from '../../../urlFile';
@@ -21,6 +23,7 @@ const ResizeMap = ({ navigation, route }) => {
   const [locationPoints, setLocationPoints] = useState([]);
   const [mapType, setMapType] = useState(MAP_TYPES.STANDARD);
   const [modalVisible, setModalVisible] = useState(false);
+  const [points, setPoints] = useState([]);
 
   const closeModal = () => {
     setModalVisible(false);
@@ -45,6 +48,10 @@ const ResizeMap = ({ navigation, route }) => {
       });
     })();
   }, []);
+
+  const handleClearPoints = () => {
+    setPoints([]);
+  };
 
   const handleSave = async () => {
     try {
@@ -87,42 +94,7 @@ const ResizeMap = ({ navigation, route }) => {
         visible={modalVisible}
         onRequestClose={closeModal}
       >
-        <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        >
-          <View
-            style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}
-          >
-            <Text>Select Map Type</Text>
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              onPress={() => {
-                setMapType(MAP_TYPES.STANDARD);
-                closeModal();
-              }}
-            >
-              <Text style={styles.textStyle}>Standard</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              onPress={() => {
-                setMapType(MAP_TYPES.SATELLITE);
-                closeModal();
-              }}
-            >
-              <Text style={styles.textStyle}>Satellite</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              onPress={() => {
-                setMapType(MAP_TYPES.HYBRID);
-                closeModal();
-              }}
-            >
-              <Text style={styles.textStyle}>Hybrid</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        {/* ... */}
       </Modal>
       <View>{/* Appbar */}</View>
       {/* including map view */}
@@ -141,15 +113,20 @@ const ResizeMap = ({ navigation, route }) => {
             }}
             mapType={mapType}
             onPress={(event) => {
-              console.log(event.nativeEvent.coordinate);
+              setPoints([...points, event.nativeEvent.coordinate]);
             }}
-          />
+          >
+            {points.map((point, index) => (
+              <Marker key={index} coordinate={point} />
+            ))}
+          </MapView>
           <TouchableOpacity
             style={styles.mapIconContainer}
             onPress={handleSwitchMapType}
           >
             <Icon name='map-outline' size={28} color='#666666' />
           </TouchableOpacity>
+          <Button title='Clear Points' onPress={handleClearPoints} />
         </View>
       )}
     </>
