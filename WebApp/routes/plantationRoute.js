@@ -48,7 +48,7 @@ router.post("/plantation", async (req, res) => {
       
         await newPlantation.save();
         
-        res.json({status:"ok" , data: "Plantation model Created"});
+        res.json({status:"ok" , data: "Plantation Created"});
     }
     catch(error){
         res.status(500).json({status:"error" , data: error.message});
