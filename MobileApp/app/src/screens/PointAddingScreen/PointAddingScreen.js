@@ -13,6 +13,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from './PointAddingScreenStyles';
 import MapView, { MAP_TYPES } from 'react-native-maps';
 import { Marker } from 'react-native-maps';
+import { Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import axios from 'axios';
 import backendUrl from '../../../urlFile';
@@ -119,6 +120,19 @@ const ResizeMap = ({ navigation, route }) => {
             {points.map((point, index) => (
               <Marker key={index} coordinate={point} />
             ))}
+            <Polyline
+              coordinates={points}
+              strokeColor='#000' // fallback for when `strokeColors` is not supported by the map-provider
+              strokeColors={[
+                '#7F0000',
+                '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
+                '#B24112',
+                '#E5845C',
+                '#238C23',
+                '#7F0000',
+              ]}
+              strokeWidth={6}
+            />
           </MapView>
           <TouchableOpacity
             style={styles.mapIconContainer}
