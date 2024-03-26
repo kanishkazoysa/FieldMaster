@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
   },
 
   propertyBox: {
-    width: "100%",
+    width: "98%",
     height: "70%",
     backgroundColor: "white",
     flexDirection: "row",
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
   /*Second Section*/
 
   box2: {
-    width: 337,
+    width: "87%",
     height: 80,
     alignItems: "center",
     justifyContent: "center",
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
   /*Third Section*/
 
   box3: {
-    width: 337,
+    width: "87%",
    // height: "max-content",
     height: 220,
     backgroundColor: "white",
