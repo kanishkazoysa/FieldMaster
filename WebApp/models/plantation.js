@@ -6,10 +6,10 @@ const plantationSchema = mongoose.Schema(
             type: String,
         },
         PlantSpace: {
-            type: int,
+            type: String,
         },
         RowSpace: {
-            type: int,
+            type: String,
         },
        
     }

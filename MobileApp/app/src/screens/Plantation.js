@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
+import axios from "axios";
 
 export default function Plantation() {
   const [textPlant, setTextPlant] = useState("");
@@ -66,6 +67,19 @@ export default function Plantation() {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
+    try{
+      const response = axios.post("http://10.10.12.72:5000/api/plantation/plantation", {
+        textPlant,
+        textplantspace,
+        textRowspace,
+      });
+
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Something went wrong");
+    }
+    
 
     navigation.navigate("PlantationDetails", {
       textPlant: textPlant,
