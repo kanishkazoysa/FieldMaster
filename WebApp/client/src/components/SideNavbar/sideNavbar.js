@@ -6,10 +6,12 @@ import { FaBars } from "react-icons/fa";
 import logo from "../../images/logo.png";
 import { IoBookmarks } from "react-icons/io5";
 import { RiWalkFill } from "react-icons/ri";
+import YourNewComponent from "../MeasureOption/measureOption";
 
 export default function SideNavbar() {
   const [collapsed, setCollapsed] = useState(true);
   const [hoveredMenuItem, setHoveredMenuItem] = useState(null);
+  const [isStartMeasureClicked, setIsStartMeasureClicked] = useState(false);
 
   const handleMouseEnter = (item) => {
     setHoveredMenuItem(item);
@@ -21,6 +23,10 @@ export default function SideNavbar() {
 
   const handleToggleSidebar = () => {
     setCollapsed(!collapsed);
+  };
+
+  const handleStartMeasureClick = () => { 
+    setIsStartMeasureClicked(true);
   };
 
   return (
@@ -35,9 +41,14 @@ export default function SideNavbar() {
         </div>
       </div>
 
+      {isStartMeasureClicked ? (
+        <YourNewComponent onBackClick={() => setIsStartMeasureClicked(false)} />
+      ) : (
+
       <div style={styles.content}>
         <Menu>
           <MenuItem
+          onClick={handleStartMeasureClick}
             onMouseEnter={() => handleMouseEnter("startmeasure")}
             onMouseLeave={handleMouseLeave}
             style={{
@@ -67,6 +78,7 @@ export default function SideNavbar() {
         </Menu>
         <div>{/* You can put anything you want here */}</div>
       </div>
+   )}
     </Sidebar>
   );
 }
