@@ -11,6 +11,10 @@ const plantationSchema = mongoose.Schema(
         RowSpace: {
             type: String,
         },
+        NoOfPlants:
+        {
+            type: String,
+        }
        
     }
 ); 
