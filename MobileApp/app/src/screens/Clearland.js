@@ -35,6 +35,7 @@ import DropdownStones from "../components/DropdownStones";
 // import MachineInput from "../components/MachineInput";
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
+import axios from "axios";
 
 export default function ClearLand() {
   const [text, setText] = React.useState("");
@@ -49,6 +50,23 @@ export default function ClearLand() {
       setMachineCount(""); // Reset machineCount after adding
     }
   };
+  try{
+    const response =axios.post("http://10.10.12.174:5000/api/clearLand/clearLand",{
+      Pressed,
+      plantTypeSelectedValue,
+      plantCount,
+      stoneTypeSelectedValue,
+      stonesCount,
+      laborCount,
+      workHours,
+      searchItem,
+      machineCount
+    });
+    console.log(response.data);
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Something went wrong");
+  }
 
   const [laborCount, setLaborCount] = useState("");
   const [workHours, setWorkHours] = useState("");

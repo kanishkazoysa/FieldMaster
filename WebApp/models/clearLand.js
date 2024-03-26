@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 
-const ClearLandSchema = mongoose.Schema(
+const clearLandSchema = mongoose.Schema(
     {
-        WeedType:{
+        WeedType: {
             type: String,
         },
-        PlantType: {
+
+         PlantType: {
             type: String,
         },
         PlantCount: {
@@ -28,7 +29,9 @@ const ClearLandSchema = mongoose.Schema(
         },
         MachineCount: {
             trpe: String,
-        }
+        },
+    }
+    );
 
-
-    });
+const clearLandModel = mongoose.model("clearLand", clearLandSchema);
+module.exports = clearLandModel;

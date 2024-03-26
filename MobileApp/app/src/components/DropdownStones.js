@@ -3,7 +3,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { View, Text ,StyleSheet } from 'react-native';
 
 const Dropdown = () => {
-  const [selectedValue, setSelectedValue] = useState(null);
+  const [stoneTypeSelectedValue, setStoneTypeSelectedValue] = useState(null);
 
   const placeholder = {
     label: 'Select Type',
@@ -23,8 +23,8 @@ const Dropdown = () => {
       <RNPickerSelect 
         placeholder={placeholder}
         items={options}
-        onValueChange={(value) => setSelectedValue(value)}
-        value={selectedValue}
+        onValueChange={(value) => setStoneTypeSelectedValue(value)}
+        value={stoneTypeSelectedValue}
       />
     </View>
   );
