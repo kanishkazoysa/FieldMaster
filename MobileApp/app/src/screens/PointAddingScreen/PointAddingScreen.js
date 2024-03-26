@@ -17,6 +17,7 @@ import { Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import axios from 'axios';
 import backendUrl from '../../../urlFile';
+import { BlurView } from '@react-native-community/blur';
 
 const ResizeMap = ({ navigation, route }) => {
   /* const templateId = route.params.templateId; */
@@ -59,6 +60,11 @@ const ResizeMap = ({ navigation, route }) => {
     }
   };
 
+  const handleUndoLastPoint = () => {
+    if (points.length > 0) {
+      setPoints(points.slice(0, -1));
+    }
+  };
   const handleSave = async () => {
     try {
       const mapTemplate = {
@@ -78,6 +84,10 @@ const ResizeMap = ({ navigation, route }) => {
 
   const handleSwitchMapType = () => {
     setModalVisible(true);
+  };
+  const handleSetMapType = (type) => {
+    setMapType(type);
+    setModalVisible(false);
   };
 
   const handleAddPoint = () => {
@@ -100,9 +110,44 @@ const ResizeMap = ({ navigation, route }) => {
         visible={modalVisible}
         onRequestClose={closeModal}
       >
-        {/* ... */}
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)', // This will create a semi-transparent black background
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <TouchableOpacity
+                style={styles.btnStyle}
+                onPress={() => handleSetMapType(MAP_TYPES.SATELLITE)}
+              >
+                <Text style={styles.btmBtnStyle}>Satellite</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btnStyle}
+                onPress={() => handleSetMapType(MAP_TYPES.STANDARD)}
+              >
+                <Text style={styles.btmBtnStyle}>Standard</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btnStyle}
+                onPress={() => handleSetMapType(MAP_TYPES.HYBRID)}
+              >
+                <Text style={styles.btmBtnStyle}>Hybrid</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       </Modal>
-      <View>{/* Appbar */}</View>
+      <View>
+        <Appbar.Header style={{ backgroundColor: '#0866FF' }}>
+          <Appbar.BackAction color='#ffffff' onPress={handleCancel} />
+          <Appbar.Content title='Create Map' color='#ffffff' />
+        </Appbar.Header>
+      </View>
       {/* including map view */}
       {region && (
         <View style={{ flex: 1 }}>
@@ -145,8 +190,26 @@ const ResizeMap = ({ navigation, route }) => {
           >
             <Icon name='map-outline' size={28} color='#666666' />
           </TouchableOpacity>
-          <Button title='Clear Points' onPress={handleClearPoints} />
-          <Button title='Complete Map' onPress={handleCompleteMap} />
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={handleClearPoints}
+              style={styles.btnStyle}
+            >
+              <Text style={styles.btmBtnStyle}>Clear Points</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleCompleteMap}
+              style={styles.btnStyle}
+            >
+              <Text style={styles.btmBtnStyle}>Complete Map</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleUndoLastPoint}
+              style={styles.btnStyle}
+            >
+              <Text style={styles.btmBtnStyle}>Undo Last Point</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
     </>

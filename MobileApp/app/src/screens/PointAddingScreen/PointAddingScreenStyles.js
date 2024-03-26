@@ -175,6 +175,34 @@ export const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     paddingBottom: 10,
   },
+  buttonViewStyle: {
+    flexDirection: 'row',
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: 'transparent',
+    marginBottom: 10,
+  },
+  btnStyle: {
+    backgroundColor: '#0866FF',
+    padding: 10,
+    margin: 10,
+    borderRadius: 11,
+    alignItems: 'center',
+  },
+  btmBtnStyle: {
+    color: 'white',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 100, // Adjust this value as needed
+  },
 });
 
 export default styles;
