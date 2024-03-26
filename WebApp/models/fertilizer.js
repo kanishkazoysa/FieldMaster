@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 const fertilizerSchema = mongoose.Schema(
     {
-        TimePeriod: {
-            type: String,
-        },
+        // TimePeriod: {
+        //     type: String,
+        // },
         FertilizerType: {
             type: String,
         },
