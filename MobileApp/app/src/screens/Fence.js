@@ -89,19 +89,29 @@ export default function Fence() {
     { label: "Foot", value: "Foot" },
   ];
 
-  const handleFenceDetails = async () => {
-    if (
-      !PostSpaceUnitselectedValue ||
-      !FenceTypeselectedValue ||
-      !inputValuePostspace
-    ) {
-      // Display error message
-      Alert.alert("Error", "Please fill in all fields");
-      return;
-    }
+const handleFenceDetails = async () => {
+  if (
+    !PostSpaceUnitselectedValue ||
+    !FenceTypeselectedValue ||
+    !inputValuePostspace 
+    
+  ) {
+    // Display error message
+    Alert.alert("Error", "Please fill in all fields");
+    return;
+  }
 
-    //const response = await axios.post("http://192.168.120.237:5000/api/users/register",{ FenceTypeselectedValue,PostSpaceUnitselectedValue,inputValueFenceLength,inputValueFenceAmount,inputValuePostspace});
+  try {
+    const response = await axios.post('http://192.168.196.237:5000/api/fence/fence', {
+      FenceTypeselectedValue,
+      inputValuePostspace,
+      PostSpaceUnitselectedValue,
+      inputValueFenceLength,
+      inputValueFenceAmount
+    });
 
+    // Handle success response
+    console.log(response.data);
     navigation.navigate("FenceDetails", {
       data: displayValues,
       fenceType: FenceTypeselectedValue,
@@ -111,7 +121,12 @@ export default function Fence() {
       postSpace: inputValuePostspace,
       totalstickamount: perimeter / inputValuePostspace,
     });
-  };
+  } catch (error) {
+    // Handle error response
+    console.error("Error:", error.response.data);
+    Alert.alert("Error", "Failed to create fence. Please try again.");
+  }
+};
 
   /* for print pdf*/
 
