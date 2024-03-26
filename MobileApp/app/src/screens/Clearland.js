@@ -27,12 +27,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import ButtonForWeed from "../components/ButtonForWeed";
 import DropdownPlants from "../components/DropdownPlants";
-// import LaborInputField from "../components/LaborInputField";
-// import WorkHourInput from "../components/WorkHourInput";
-// import PlantInput from "../components/PlantInput";
 import DropdownStones from "../components/DropdownStones";
-// import AddButton from "../components/AddButton";
-// import MachineInput from "../components/MachineInput";
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
 import axios from "axios";
