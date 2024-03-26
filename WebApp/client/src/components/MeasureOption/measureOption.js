@@ -1,20 +1,14 @@
 import React from 'react';
-import { FaArrowLeft } from 'react-icons/fa';
-import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 
-
-
-
-const YourNewComponent = ({ onBackClick }) => { // Accept onBackClick as a prop
+const StartMeasurePage = () => {
   return (
-    <Sidebar>
-      
-    <div style={{ padding: '10px', position: 'relative' }}>
-      <FaArrowLeft onClick={onBackClick} style={{ position: 'absolute', top: 0, left: 0, cursor: 'pointer' }} />
-    <p>haerfbh hwgbefhwegbf uieghwfuygwuf  iuwehrfuihwf ihewf</p>
+    <div>
+      {/* Content for the Start Measure page */}
+      <h3>Option 1</h3>
+      <h3>Option 2</h3>
+      <h3>Option 3</h3>
     </div>
-    </Sidebar>
   );
 };
 
-export default YourNewComponent;
+export default StartMeasurePage;
