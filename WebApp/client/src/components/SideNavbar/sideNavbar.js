@@ -133,6 +133,9 @@ const styles = {
   },
   menuItem: {
     marginTop: "5px",
+    marginRight:"8px",
+    marginLeft:"8px",
+    borderRadius:"5px",
     borderBottom: "1px solid #CED0D4",
     transition: "background-color 0.3s ease, color 0.3s ease",
   },

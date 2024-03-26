@@ -130,8 +130,9 @@ const styles = {
     width:"90%",
     height:'90px',
     marginBottom:'20px',
-    backgroundColor: "#007BFF",
+    backgroundColor: "#1640D6",
     borderRadius: "11px",
+    
   },
 
 textContainer :{
