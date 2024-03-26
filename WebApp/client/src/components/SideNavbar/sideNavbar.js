@@ -1,12 +1,12 @@
 // SideNavbar.js
 import React from "react";
 import { useState } from "react";
-import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
+import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { FaBars } from "react-icons/fa";
 import logo from "../../images/logo.png";
 import { IoBookmarks } from "react-icons/io5";
 import { RiWalkFill } from "react-icons/ri";
-import StartMeasurePage from '../MeasureOption/measureOption.js'; 
+import StartMeasurePage from '../MeasureOption/measureOption.js';
 
 
 export default function SideNavbar() {
@@ -14,7 +14,7 @@ export default function SideNavbar() {
   const [hoveredMenuItem, setHoveredMenuItem] = useState(null);
   const [showStartMeasurePage, setShowStartMeasurePage] = useState(false);
   const [animateStartMeasure, setAnimateStartMeasure] = useState(false);
-
+ 
 
   const handleMouseEnter = (item) => {
     setHoveredMenuItem(item);
@@ -29,13 +29,18 @@ export default function SideNavbar() {
   };
 
   const handleStartMeasureClick = () => {
-    setShowStartMeasurePage(true); 
+    setShowStartMeasurePage(true);
     setAnimateStartMeasure(true);
+  };
+  const handleBackClick = () => {
+    setAnimateStartMeasure(false);
+    setTimeout(() => {
+      setShowStartMeasurePage(false);
+    }, 300); // delay of 300ms to match the transition duration
   };
 
   return (
-    <Sidebar collapsed={collapsed}  
-    style={{ height: "100vh", width: collapsed ? '50px' : '300px' }}>
+    <Sidebar collapsed={collapsed} style={{ height: "100vh", width: collapsed ? '50px' : '300px' }}>
       <div style={styles.head}>
         <div onClick={handleToggleSidebar}>
           <FaBars color="#65676b" />
@@ -44,62 +49,55 @@ export default function SideNavbar() {
           {!collapsed && <img src={logo} alt="Logo" style={styles.logo} />}
         </div>
       </div>
-
-      
-
       <div style={styles.content}>
-      {!showStartMeasurePage && ( // Render the menu if Start Measure page is not shown
-      <Menu>
-        <MenuItem
-          onClick={handleStartMeasureClick}
-          onMouseEnter={() => handleMouseEnter('startmeasure')}
-          onMouseLeave={handleMouseLeave}
+        {!showStartMeasurePage && (
+          <Menu>
+            <MenuItem
+              onClick={handleStartMeasureClick}
+              onMouseEnter={() => handleMouseEnter('startmeasure')}
+              onMouseLeave={handleMouseLeave}
+              style={{
+                ...styles.menuItem,
+                ...(hoveredMenuItem === 'startmeasure' ? styles.hoveredMenuItem : {}),
+              }}
+            >
+              <RiWalkFill fontSize={25} style={{ marginRight: '10px' }} />
+              {!collapsed && 'Start measure'}
+            </MenuItem>
+            <MenuItem
+              onMouseEnter={() => handleMouseEnter("Templates")}
+              onMouseLeave={handleMouseLeave}
+              style={{
+                ...styles.menuItem,
+                ...(hoveredMenuItem === "Templates" ? styles.hoveredMenuItem : {}),
+              }}
+            >
+              <IoBookmarks fontSize={18} style={{ marginRight: "15px" }} />
+              {!collapsed && "Templates"}
+            </MenuItem>
+          </Menu>
+        )}
+        <div
           style={{
-            ...styles.menuItem,
-            ...(hoveredMenuItem === 'startmeasure' ? styles.hoveredMenuItem : {}),
+            ...styles.startMeasureContainer,
+            transform: animateStartMeasure ? 'translateX(0)' : 'translateX(-100%)',
+            transition: 'transform 0.3s ease-in-out',
+            height: showStartMeasurePage ? 'calc(100vh - 60px)' : '0', // Set height to remaining height after header
+            overflow: 'auto', // Add scrollbar if content exceeds container height
           }}
         >
-          <RiWalkFill fontSize={25} style={{ marginRight: '10px' }} />
-          {!collapsed && 'Start measure'}
-        </MenuItem>
-
-          <MenuItem
-            onMouseEnter={() => handleMouseEnter("Templates")}
-            onMouseLeave={handleMouseLeave}
-            style={{
-              ...styles.menuItem,
-              ...(hoveredMenuItem === "Templates"
-                ? styles.hoveredMenuItem
-                : {}),
-            }}
-          >
-            <IoBookmarks fontSize={18} style={{ marginRight: "15px" }} />
-            {!collapsed && "Templates"}
-          </MenuItem>
-          </Menu>
-          )}
-          <div
-            style={{
-              ...styles.startMeasureContainer,
-              transform: animateStartMeasure ? 'translateX(0)' : 'translateX(-100%)', // Apply the animation
-              transition: 'transform 0.3s ease-in-out', // Add a transition effect
-            }}
-          >
-            {showStartMeasurePage && <StartMeasurePage />}
-          </div>
+          {showStartMeasurePage && <StartMeasurePage onBackToSidebar={handleBackClick}  />}
         </div>
+      </div>
     </Sidebar>
   );
 }
 
 const styles = {
   startMeasureContainer: {
-    position: 'relative',
     top: 0,
     left: 0,
     width: '100%',
-    height: "100vh",
-    overflowY: 'auto',
     backgroundColor: '#fff',
     padding: '20px',
     boxSizing: 'border-box',
@@ -123,13 +121,15 @@ const styles = {
     alignItems: "center",
     flex: 1,
   },
-
   hoveredMenuItem: {
     backgroundColor: "#0866FF",
     color: "white",
   },
   content: {
     marginTop: "5px",
+    height: 'calc(100vh - 65px)', // Set height to remaining height after header and marginTop
+    display: 'flex',
+    flexDirection: 'column',
   },
   menuItem: {
     marginTop: "5px",
