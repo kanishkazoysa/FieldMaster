@@ -3,66 +3,48 @@ import {
   View,
   Text,
   StatusBar,
-  StyleSheet,
   Platform,
+  StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Alert } from "react-native";
 import {
   responsiveHeight,
-  responsiveWidth,
   responsiveFontSize,
+  responsiveWidth,
 } from "react-native-responsive-dimensions";
-import { Appbar, Button, TextInput } from "react-native-paper";
+import { Appbar, TextInput, Button } from "react-native-paper";
 import axios from "axios";
 
-export default function ForgotPassword({ route }) {
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+export default function ForgotPassword() {
+  const [email, setEmail] = useState("");
   const navigation = useNavigation();
-  const { email } = route.params;
 
-  const handleChangePassword = async () => {
+  const handleForgotPassword = async () => {
     try {
-      if (!newPassword || !confirmPassword) {
-        Alert.alert("Error", "Please fill in all fields");
+      if (!email) {
+        Alert.alert("Please fill in all fields");
         return;
       }
-      if (!(newPassword === confirmPassword)) {
-        Alert.alert("Error", "Passwords do not match");
-        return;
-      }
+
       const response = await axios.post(
-        "http://10.10.20.85:5000/api/users/change-password",
-        {
-          email: email,
-          newPassword: newPassword,
-        }
+        "http://192.168.1.103:5000/api/mail/otp",
+        { email }
       );
 
-      const data = await response.json();
+      if (response.status == 200) {
+        const data = await response.data.otp;
 
-      if (response.ok) {
-        Alert.alert(
-          "Password Changed Successfully",
-          "Your password has been changed successfully.",
-          [
-            {
-              text: "OK",
-              onPress: () => {
-                navigation.navigate("Login");
-              },
-            },
-          ],
-          { cancelable: false }
-        );
+        Alert.alert("OTP sent successfully");
+
+        navigation.navigate("Otp", { email, Otp: data });
       } else {
-        Alert.alert("Error", data.error || "Password change failed.");
+        Alert.alert("Error", data.error || "Something went wrong");
       }
-    } catch {
-      Alert.alert("Error", "An error occurred while changing password");
+    } catch (error) {
+      Alert.alert("Error", "Internal Server Error");
     }
   };
 
@@ -83,40 +65,30 @@ export default function ForgotPassword({ route }) {
 
         <View style={styles.Content}>
           <View style={styles.headerContainer}>
-            <Text style={styles.head}>Create New Password</Text>
-            <Text style={styles.text}>Password must be at least 8 digits</Text>
+            <Text style={styles.head}>Forgot Password</Text>
+            <Text style={styles.text}>
+              The verification code will be sent to this email address
+            </Text>
           </View>
 
           <View style={styles.field}>
-            <View style={{ marginBottom: 10 }}>
-              <TextInput
-                label="New Password"
-                mode="outlined"
-                outlineColor="#d9d7d2"
-                activeOutlineColor="#007BFF"
-                width={responsiveWidth(85)}
-                value={newPassword}
-                onChangeText={(text) => setNewPassword(text)}
-              />
-            </View>
-
             <TextInput
-              label="confirm Password"
+              label="email"
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
               width={responsiveWidth(85)}
-              value={confirmPassword}
-              onChangeText={(text) => setConfirmPassword(text)}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
             />
           </View>
 
           <Button
             mode="contained"
-            onPress={handleChangePassword}
+            onPress={handleForgotPassword}
             style={styles.button}
           >
-            Change Password
+            Continue
           </Button>
         </View>
       </View>
@@ -135,6 +107,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
+
   headerContainer: {
     width: "90%",
   },
@@ -159,7 +132,7 @@ const styles = StyleSheet.create({
   Content: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "white",
   },
   field: {
     marginTop: responsiveHeight(3),

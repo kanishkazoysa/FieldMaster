@@ -15,9 +15,9 @@ import {
   import * as Print from 'expo-print';
   import { shareAsync } from 'expo-sharing';
   
-  import Headersection from "../components/Headersection";
-  import CustomButton from "../components/CustomButton";
-  import AlertButton from "../components/AlertButton";
+  import Headersection from "../../components/Headersection";
+  import CustomButton from "../../components/CustomButton";
+  import AlertButton from "../../components/AlertButton";
   
   export default function PlantationDetails({ route }) {
   
@@ -179,11 +179,11 @@ import {
           
         
         <ScrollView contentContainerStyle={styles.scrollContent}>
-        
+
+        <View style={styles.top}>
           <AlertButton></AlertButton>
   
           {/* Top section */}
-          <View style={styles.box}>
             <View style={styles.box1}>
               <Text style={styles.titleText}>Total Plants</Text>
               <View style={styles.propertyBox}>
@@ -211,11 +211,9 @@ import {
                 </View>
               </View>
             </View>
-          </View>
   
           {/* Second section */}
   
-          <View style={styles.box}>
             <View style={styles.box2}>
               <View style={styles.box2Inner}>
                 <View style={styles.box2Property}>
@@ -242,11 +240,9 @@ import {
                 </View>
               </View>
             </View>
-          </View>
   
           {/* Third section */}
   
-          <View style={styles.box}>
             <View style={styles.box3}>
               <View style={styles.inner}>
                 <Text style={styles.innertopText}>Result based on</Text>
@@ -296,10 +292,9 @@ import {
                 </View>
               </View>
             </View>
-          </View>
+            </View>
   
           {/* Bottom section */}
-          <View style={styles.box}>
             <View style={styles.bottom}>
   
                 <CustomButton
@@ -319,7 +314,6 @@ import {
               />
   
                 </View>
-            </View>
         
         </ScrollView>
       </KeyboardAvoidingView>
@@ -333,11 +327,18 @@ import {
   
     /*Top Section*/
   
-    box: {
+    scrollContent: {
       flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
+      justifyContent: "space-between",
+      height: "100%",
+
     },
+
+    top: {
+      alignItems: "center",
+      width: "100%",
+  
+     },
   
     box1: {
       flexDirection: "column",
@@ -350,7 +351,7 @@ import {
       shadowColor: "#000",
       shadowOpacity: 0.1,
       shadowRadius: 5,
-      elevation: 8,
+      elevation: 6,
     },
   
     titleText: {
@@ -360,7 +361,7 @@ import {
     },
   
     propertyBox: {
-      width: "100%",
+      width: "95%",
       height: "70%",
       backgroundColor: "white",
       flexDirection: "row",
@@ -399,7 +400,7 @@ import {
   
     box2: {
       width: "87%",
-      height: 74,
+      height: 80,
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "white",
@@ -408,7 +409,7 @@ import {
       shadowColor: "#000",
       shadowOpacity: 0.1,
       shadowRadius: 5,
-      elevation: 8,
+      elevation: 6,
     },
   
     box2Inner: {
@@ -416,7 +417,7 @@ import {
       alignItems: "center",
       justifyContent: "center",
       height: "80%",
-      width: "100%",
+      width: "95%",
       backgroundColor: "white",
     },
     box2Property: {
@@ -455,7 +456,7 @@ import {
       shadowColor: "#000",
       shadowOpacity: 0.1,
       shadowRadius: 5,
-      elevation: 8,
+      elevation: 6,
     },
   
     inner: {
@@ -511,9 +512,8 @@ import {
     /* bottom section */
   
     bottom: {
-      alignItems: "flex-end",
-      justifyContent: "flex-end",
-      marginTop: 50,
+      alignItems: "center",
+      bottom: 30,
     },
   
   });

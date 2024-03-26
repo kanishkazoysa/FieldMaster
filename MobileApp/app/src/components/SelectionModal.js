@@ -1,48 +1,54 @@
-// SelectionModal.js
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import { IconButton } from "react-native-paper";
-
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import CalculatorInput from "./calculator/calculatorInput";
 
-
-const SelectionModal = ({ modalVisible, setModalVisible, options }) => {
+const SelectionModal = ({ modalVisible, setModalVisible, options  }) => {
   const closeModal = () => {
     setModalVisible(false);
   };
+  const [calculatorModalVisible, setCalculatorModalVisible] = useState(false);
   const navigation = useNavigation();
+
+ 
+
   const handleOptionClick = (option, index) => {
     if (index === 0) {
-      navigation.navigate('WalkaroundLand'); 
+      navigation.navigate("WalkaroundLand");
+    }
+    if (index === 2) {
+     
+        setCalculatorModalVisible(true);
+      
     }
     closeModal();
   };
 
-
   return (
+    <View>
     <Modal
       animationType="fade"
       transparent={true}
       visible={modalVisible}
       onRequestClose={closeModal}
     >
-    <View style={styles.container}>
+      <View style={styles.container}>
         <TouchableOpacity
           style={styles.overlay}
-          activeOpacity={1} // Prevents clicks on the overlay from propagating to the modal
+          activeOpacity={1} 
           onPress={closeModal}
         />
-    
+
         <View style={styles.centeredView}>
-        <IconButton
-          icon="close"
-          iconColor="white"
-          size={30}
-          onPress={closeModal}
-          style={styles.cancelButton}
-        />
+          <IconButton
+            icon="close"
+            iconColor="white"
+            size={30}
+            onPress={closeModal}
+            style={styles.cancelButton}
+          />
           <View style={styles.modalView}>
-          
             {options.map((option, index) => (
               <TouchableOpacity
                 key={index}
@@ -60,9 +66,14 @@ const SelectionModal = ({ modalVisible, setModalVisible, options }) => {
             ))}
           </View>
         </View>
-        </View>
-
+      </View>
+    
     </Modal>
+    <CalculatorInput
+    calculatorModalVisible={calculatorModalVisible} 
+    setCalculatorModalVisible={setCalculatorModalVisible} 
+  />
+    </View>
   );
 };
 
@@ -71,8 +82,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.7 )", // Semi-transparent overlay color
   },
-  
- 
+
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -114,7 +124,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: "white",
     fontSize: 12,
-    
   },
 
   innerView1: {
@@ -127,7 +136,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   cancelButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 160,
     right: 25,
   },

@@ -1,117 +1,148 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#ffffff8a',
-    padding: 20,
-    borderRadius: 10,
-    width: 200,
-  },
+
   top_Text_Styling: {
     color: 'white',
-    fontSize: 15,
+    fontSize: 16,
   },
+
   top_Bar_View: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: 30,
-    marginTop: 10,
+    marginTop: 20,
   },
+
   top_Bar_Whole: {
-    backgroundColor: '#0866FF',
+    backgroundColor: '#007BFF',
     marginTop: 0,
+    height: 80,
   },
-  inner_View: {
-    backgroundColor: '#ffffff8a',
-  },
-  inner_view_text_style: {
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-  inner_View_01: {
-    justifyContent: 'center',
+
+  
+  low_outer: {
+    flex: 1,
     alignItems: 'center',
 
-    height: 200,
   },
-  inner_View_01_inner: {
-    borderRadius: 10,
-    marginVertical: 10,
-    marginHorizontal: 10,
-    width: '90%',
-    padding: 10,
-    borderColor: 'black',
-    backgroundColor: 'white',
+
+
+   /*box1*/
+
+   Box1: {
+    width: "87%",
+    height: 101,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+    marginTop: 30,
+    borderRadius: 11,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 4,
+    padding: 0,
   },
-  land_Info_Inner: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+
+  titleText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginLeft: 16,
   },
-  perimeter_col_01: {
-    borderWidth: 1,
-    borderColor: 'green',
-    justifyContent: 'center',
-    alignItems: 'center',
+
+  propertyBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    width: "100%",
+    backgroundColor: "white",
+    marginTop: 7,
   },
-  bold_text: {
-    fontWeight: 'bold',
+
+  property: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "left",
+    backgroundColor: "white",
+    width: "46%",
+    height: 50,
   },
-  row_02: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginTop: 10,
+
+  propertyDetails: {
+    flexDirection: "column",
+    marginLeft: 5,
+    width: "50%",
+    height: 40,
+    backgroundColor: "white",
   },
-  row_01: {
-    /*  */
+
+  propertyLabel: {
+    fontSize: 14,
   },
-  low_outer: {
-    flex: 0.5,
-    backgroundColor: 'lightgrey',
+
+  propertyValue: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
-  low_outer_02: {
-    flex: 1,
-    backgroundColor: '#ffffff8a',
-    height: 300,
-  },
-  row_02_col_01: {
-    flexDirection: 'row',
-  },
-  row_02_col_02: {
-    flexDirection: 'row',
-  },
-  col_02_col_01: {
-    /*  */
-  },
-  area_col_styling: {
-    justifyContent: 'space-evenly',
-    marginLeft: 10,
-  },
-  area_text_styling: {
-    marginLeft: 4,
-  },
-  inner_view_02_inner: {},
+
   input_view: {
+    width: '92%',	
+    height: 50,  
     backgroundColor: 'white',
+    alignItems: "center",
     flexDirection: 'row',
-    marginHorizontal: 20,
-    borderRadius: 10,
-    justifyContent: 'space-around',
-    marginVertical: 30,
+    marginTop: 20,
+    borderRadius: 11,
     paddingVertical: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 4,
+    
   },
+
+  bold_text: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginLeft: 20,
+  },
+
+  bold_text1: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    
+  },
+
   input_text: {
-    height: 23,
-    width: 200,
+    height: 20,
+    width: 150,
     backgroundColor: 'white',
+    marginLeft: 5,
+    fontSize: 14,
+    
   },
   inner_view_03: {
+    width: '87%',
     marginHorizontal: 20,
-    paddingVertical: 20,
+    marginTop: 25,
+   
   },
   description_input: {
     marginVertical: 10,
-    borderRadius: 10,
+    borderRadius: 11,
+    borderTopLeftRadius: 11,
+    borderTopRightRadius: 11,
     backgroundColor: 'white',
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 4,
   },
+
+ 
+
+
 });

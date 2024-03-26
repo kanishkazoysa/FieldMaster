@@ -16,8 +16,8 @@ import { Button } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 
-import Headersection from "../components/Headersection";
-import CustomButton from "../components/CustomButton";
+import Headersection from "../../components/Headersection";
+import CustomButton from "../../components/CustomButton";
 
 
 export default function Fertilization() {
@@ -95,8 +95,9 @@ export default function Fertilization() {
 
       {/* Scrollable content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
+
+        <View  style={styles.top}>
         {/* Top section */}
-        <View style={styles.box}>
           <View style={styles.Box1}>
             <View style={styles.innerContainer}>
               <Text style={styles.titleText}>Plantation Info</Text>
@@ -155,11 +156,9 @@ export default function Fertilization() {
               </View>
             </View>
           </View>
-        </View>
 
         {/* Second section */}
 
-        <View style={styles.box}>
           <View style={styles.Box2}>
 
             <View style={styles.Box2innerContainer}>
@@ -197,13 +196,10 @@ export default function Fertilization() {
             </View>
 
           </View>
-        </View>
 
         {/* Third section */}
 
-        <View style={styles.box}>
           <View style={styles.Box3}>
-            <View style={styles.Box3innerContainer}>
               <View style={styles.Box3TopText}>
                 <MaterialCommunityIcons
                   name="flask-outline"
@@ -227,14 +223,10 @@ export default function Fertilization() {
                 marginLeft={10}
               />
             </View>
-          </View>
-        </View>
 
         {/* Forth section */}
 
-        <View style={styles.box}>
           <View style={styles.Box3}>
-            <View style={styles.Box3innerContainer}>
               <View style={styles.Box3TopText}>
                 <MaterialCommunityIcons
                   name="ticket-confirmation"
@@ -258,12 +250,9 @@ export default function Fertilization() {
                 marginLeft={10}
               />
             </View>
-          </View>
-        </View>
 
         {/* Fifth section */}
 
-        <View style={styles.box}>
           <View style={styles.Box5}>
             <View style={styles.Box2innerContainer}>
               <View style={styles.TopText}>
@@ -292,6 +281,15 @@ export default function Fertilization() {
                     items={FertilizerAmountUnitOptions}
                     onValueChange={(value) => FertilizerAmountUnitsetSelectedValue(value)}
                     value={FertilizerAmountUnitselectedValue}
+
+                    style={{
+                      inputIOS: {
+                        textAlign: "center",
+                      },
+                      inputAndroid: {
+                        textAlign: "center",
+                      },
+                    }}
                   />
                 </View>
               </View>
@@ -301,11 +299,10 @@ export default function Fertilization() {
               </Text>
             </View>
           </View>
-        </View>
+          </View>
 
         {/* Bottom section */}
 
-        <View style={styles.box}>
           <View style={styles.bottom}>
             
             <CustomButton
@@ -318,7 +315,6 @@ export default function Fertilization() {
 
 
           </View>
-        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -331,11 +327,18 @@ const styles = StyleSheet.create({
 
   /*Top section*/
 
-  box: {
+  scrollContent: {
     flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    height: "100%",
   },
+
+  top: {
+    alignItems: "center",
+    width: "100%",
+
+   },
+
   Box1: {
     width: "87%",
     height: 161,
@@ -347,7 +350,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 3,
   },
   innerContainer: {
     width: "100%",
@@ -408,7 +411,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 3,
   },
 
   Box2innerContainer: {
@@ -451,25 +454,19 @@ const styles = StyleSheet.create({
 
   Box3: {
     width: "95%",
-    height: 45,
+    flexDirection: "row",
+    height: 50,
     alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#FFFFFF",
-    marginTop: 10,
+    marginTop: 12,
     borderRadius: 11,
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 3,
+    padding: 12,
   },
 
-  Box3innerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    height: "80%",
-    width: "90%",
-    backgroundColor: "white",
-  },
 
   Box3TopText: {
     flexDirection: "row",
@@ -493,7 +490,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 8,
+    elevation: 3,
   },
 
   Box5propertyBox: {
@@ -510,9 +507,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "black",
     width: "36%",
-    height: 30,
+    height: 35,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#CED0D4",
   },
 
   Box5bottomText: {
@@ -522,9 +521,8 @@ const styles = StyleSheet.create({
   /* bottom section */
 
   bottom: {
-    alignItems: "f",
-    justifyContent: "flex-end",
-    marginTop: 80,
+    alignItems: "center",
+    bottom: 30,
   },
   
 });

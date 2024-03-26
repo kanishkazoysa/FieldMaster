@@ -34,14 +34,14 @@ export default function WelcomeScreen() {
       <View style={styles.imgSection}>
         <Animatable.Image
           ref={img2Ref}
-          source={require('../images/new.png')}
+          source={require('../../images/new.png')}
           style={styles.img2}
           duration={5000}
           animation='bounceIn'
         />
         <Animatable.Image
           ref={img1Ref}
-          source={require('../images/welcome_1.png')}
+          source={require('../../images/welcome_1.png')}
           style={styles.img1}
           duration={3500}
           animation='bounceInDown'
@@ -72,7 +72,7 @@ export default function WelcomeScreen() {
 
         <Button
           mode='contained'
-          onPress={() => navigation.navigate('SaveScreen')}
+          onPress={() => navigation.navigate('Home')}
           style={styles.button}
         >
           SWITCH PAGE

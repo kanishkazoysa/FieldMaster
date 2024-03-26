@@ -7,7 +7,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  Button
+  Button,
+  ScrollView,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -15,8 +16,8 @@ import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 
 
-import Headersection from "../components/Headersection";
-import CustomButton from "../components/CustomButton";
+import Headersection from "../../components/Headersection";
+import CustomButton from "../../components/CustomButton";
 
 
 export default function FenceDetails({ route }) {
@@ -165,8 +166,9 @@ export default function FenceDetails({ route }) {
 
 
       {/* Top section */}
-      <View style={styles.container1}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
 
+      <View style={styles.top}>
         <View style={styles.box1}>
           <Text style={styles.titleText}>Total posts / Sticks</Text>
           <View style={styles.propertyBox}>
@@ -256,7 +258,7 @@ export default function FenceDetails({ route }) {
                    ))}
               </View>
             </View>
-      
+            </View>
       </View>
 
       {/* Bottom section */}
@@ -280,7 +282,7 @@ export default function FenceDetails({ route }) {
             />
 
         </View>
-      </View>
+     </ScrollView>
     </KeyboardAvoidingView>
   );
 }
@@ -294,14 +296,20 @@ const styles = StyleSheet.create({
 
   /*Top Section*/
 
-  container1: {
+  scrollContent: {
     flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    height: "100%",
+   
   },
 
+  top: {
+    alignItems: "center",
+    width: "100%",
+
+   },
+
   box1: {
-    flexDirection: "column",
     backgroundColor: "white",
     width: "87%",
     height: 123,
@@ -451,9 +459,8 @@ const styles = StyleSheet.create({
   /* bottom section */
 
   bottom: {
-    alignItems: "flex-end",
-    justifyContent: "flex-end",
-    marginTop: 50,
+    alignItems: "center",
+    bottom: 30,
   },
 
 });
