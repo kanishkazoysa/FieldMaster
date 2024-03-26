@@ -40,7 +40,7 @@ export default function Plantation() {
   const PlantSpaceUnitOptions = [
     { label: "cm", value: "cm" },
     { label: "m", value: "m" },
-    { label: "inch", value: "inch" },
+   
   ];
 
   const RowSpacingUnitplaceholder = {
@@ -52,7 +52,6 @@ export default function Plantation() {
   const RowSpacingUnitOptions = [
     { label: "cm", value: "cm" },
     { label: "m", value: "m" },
-    { label: "inch", value: "inch" },
   ];
 
   const handlePlantationDetails = () => {
@@ -60,8 +59,8 @@ export default function Plantation() {
       !textPlant ||
       !textplantspace ||
       !textRowspace ||
-      !PlantSpaceUnitselectedValue ||
-      !RowSpacingUnitselectedValue
+      !PlantSpaceUnitselectedValue
+ 
     ) {
       // Display error message
       Alert.alert("Error", "Please fill in all fields");
@@ -159,7 +158,7 @@ export default function Plantation() {
           <View style={styles.Box2}>
               <View style={styles.TopText}>
                 <MaterialCommunityIcons name="apps" size={20} color="gray" />
-                <Text style={styles.Box2titleText}>Plant Spacing</Text>
+                <Text style={styles.Box2titleText}>Column Spacing</Text>
               </View>
               <View style={styles.Box3propertyBox}>
                 <TextInput
@@ -222,9 +221,9 @@ export default function Plantation() {
                     placeholder={RowSpacingUnitplaceholder}
                     items={RowSpacingUnitOptions}
                     onValueChange={(value) =>
-                      RowSpacingUnitSetSelectedValue(value)
+                      PlantSpaceUnitSetSelectedValue(value)
                     }
-                    value={RowSpacingUnitselectedValue}
+                    value={PlantSpaceUnitselectedValue}
                     style={{
                       inputIOS: {
                         textAlign: "center",
