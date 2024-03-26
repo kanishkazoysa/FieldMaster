@@ -1,6 +1,6 @@
 import React, { useRef, useState, useCallback } from "react";
 import { GoogleMap, LoadScript, StandaloneSearchBox, Marker } from "@react-google-maps/api";
-import SideNavbar from "../components/SideNavbar/sideNavbar1";
+import SideNavbar from "../components/SideNavbar/sideNavbar";
 
 export default function Home() {
   const mapRef = useRef(null);
