@@ -208,7 +208,7 @@ export const styles = StyleSheet.create({
     alignContent: 'space-around',
   },
   sideIconStyle: {
-    backgroundColor: '#2b2f36',
+    backgroundColor: 'rgba(0,0,0, 0.7)',
     padding: 10,
     marginTop: 10,
   },

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Polygon } from 'react-native-maps';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
 import { Appbar } from 'react-native-paper';
@@ -216,24 +217,22 @@ const PointAddingScreen = ({ navigation, route }) => {
             {points.map((point, index) => (
               <Marker key={index} coordinate={point} />
             ))}
-            <Polyline
-              coordinates={points}
-              strokeColor='#000'
-              strokeColors={[
-                '#7F0000',
-                '#00000000',
-                '#B24112',
-                '#E5845C',
-                '#238C23',
-                '#7F0000',
-              ]}
-              strokeWidth={6}
-            />
+            {points.length > 0 && (
+              <Polygon
+                coordinates={points}
+                strokeColor='#000'
+                fillColor='rgba(199, 192, 192, 0.5)'
+                strokeWidth={1}
+              />
+            )}
           </MapView>
 
           <TouchableOpacity
             style={styles.layerIconContainer}
-            onPress={toggleMapType}
+            onPress={() => {
+              setIsButtonPressed(true);
+              toggleMapType();
+            }}
           >
             <FontAwesomeIcon icon={faLayerGroup} size={25} color='#fff' />
             {showDropdown && (
