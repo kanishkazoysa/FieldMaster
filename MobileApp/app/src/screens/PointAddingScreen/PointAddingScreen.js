@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import {
@@ -16,6 +16,8 @@ import * as Location from 'expo-location';
 import axios from 'axios';
 import backendUrl from '../../../urlFile';
 
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 const PointAddingScreen = ({ navigation, route }) => {
   const [region, setRegion] = useState(null);
   const [locationPoints, setLocationPoints] = useState([]);
@@ -28,6 +30,13 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [searchedLocation, setSearchedLocation] = useState(null);
   const mapRef = React.useRef(null);
+  const [isButtonPressed, setIsButtonPressed] = useState(false);
+
+  /* buttons */
+  /* cancel button Icon */
+  const cancelIcon = (
+    <MaterialCommunityIcons name='cancel' size={24} color='white' />
+  );
 
   const closeModal = () => {
     setModalVisible(false);
@@ -37,7 +46,7 @@ const PointAddingScreen = ({ navigation, route }) => {
     setShowDropdown(false);
   };
   const focusOnCurrentLocation = () => {
-    setSearchedLocation(null); // Clear searched location
+    setSearchedLocation(null);
     setShowCurrentLocation((prevShowCurrentLocation) => {
       const newShowCurrentLocation = !prevShowCurrentLocation;
       if (newShowCurrentLocation && currentLocation && mapRef.current) {
@@ -198,7 +207,9 @@ const PointAddingScreen = ({ navigation, route }) => {
             }}
             mapType={mapTypes[mapTypeIndex].value}
             onPress={(event) => {
-              setPoints([...points, event.nativeEvent.coordinate]);
+              if (!isButtonPressed) {
+                setPoints([...points, event.nativeEvent.coordinate]);
+              }
             }}
             mapPadding={{ top: 0, right: -100, bottom: 0, left: 0 }}
           >
@@ -252,25 +263,53 @@ const PointAddingScreen = ({ navigation, route }) => {
               color='#fff'
             />
           </TouchableOpacity>
-
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
+          <View>
+            {/* cancel icon */}
+            {/*  <TouchableOpacity
+              style={styles.sideIconStyle}
               onPress={handleClearPoints}
-              style={styles.btnStyle}
             >
-              <Text style={styles.btmBtnStyle}>Clear Points</Text>
-            </TouchableOpacity>
+              {cancelIcon}
+            </TouchableOpacity> */}
+            <View style={styles.sideIconWrap}>
+              <TouchableWithoutFeedback
+                onPressIn={() => setIsButtonPressed(true)}
+                onPressOut={() => setIsButtonPressed(false)}
+              >
+                <MaterialCommunityIcons
+                  name='arrow-u-left-top'
+                  size={24}
+                  color='white'
+                  style={styles.sideIconStyle}
+                  onPress={handleUndoLastPoint}
+                />
+              </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback
+                onPressIn={() => setIsButtonPressed(true)}
+                onPressOut={() => setIsButtonPressed(false)}
+              >
+                <MaterialCommunityIcons
+                  name='shape-polygon-plus'
+                  size={24}
+                  color='white'
+                  style={styles.sideIconStyle}
+                  onPress={handleCompleteMap}
+                />
+              </TouchableWithoutFeedback>
+            </View>
+          </View>
+          <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={handleCompleteMap}
               style={styles.btnStyle}
             >
-              <Text style={styles.btmBtnStyle}>Complete Map</Text>
+              <Text style={styles.btmBtnStyle}>Save</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={handleUndoLastPoint}
-              style={styles.btnStyle}
+              onPress={handleClearPoints}
+              style={styles.cancelBtnStyle}
             >
-              <Text style={styles.btmBtnStyle}>Undo Last Point</Text>
+              <Text style={styles.btmBtnStyle}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>

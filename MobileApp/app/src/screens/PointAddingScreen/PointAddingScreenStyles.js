@@ -194,9 +194,29 @@ export const styles = StyleSheet.create({
     borderRadius: 11,
     alignItems: 'center',
   },
+  cancelBtnStyle: {
+    backgroundColor: '#FF0000',
+    padding: 10,
+    margin: 10,
+    borderRadius: 11,
+    alignItems: 'center',
+  },
+  sideIconWrap: {
+    position: 'absolute',
+    bottom: 120,
+    right: 10,
+    alignContent: 'space-around',
+  },
+  sideIconStyle: {
+    backgroundColor: '#2b2f36',
+    padding: 10,
+    marginTop: 10,
+  },
   btmBtnStyle: {
     color: 'white',
+    paddingHorizontal: 50,
   },
+
   centeredView: {
     flex: 1,
     justifyContent: 'center',
@@ -227,7 +247,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0, 0.7)',
     padding: 10,
     borderRadius: 5,
-    top: Platform.OS === 'android' ? '14%' : '18%',
+    top: Platform.OS === 'android' ? '15%' : '18%',
     right: 10,
   },
   layerIconContainer: {
@@ -237,7 +257,7 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     right: 10,
     top: Platform.OS === 'android' ? '10%' : '27%',
-    transform: [{ translateY: -12 }], // Adjust translateY to vertically center the icon
+    transform: [{ translateY: -12 }],
     zIndex: 1,
     flexDirection: 'row',
     alignItems: 'center',
