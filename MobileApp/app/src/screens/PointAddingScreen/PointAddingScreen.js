@@ -1,36 +1,56 @@
 import React, { useEffect, useState } from 'react';
 
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Alert,
-  Modal,
-  Button,
-} from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
 import { Appbar } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {
+  faLayerGroup,
+  faLocationCrosshairs,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { styles } from './PointAddingScreenStyles';
 import MapView, { MAP_TYPES } from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import { Polyline } from 'react-native-maps';
+1;
 import * as Location from 'expo-location';
 import axios from 'axios';
 import backendUrl from '../../../urlFile';
-import { BlurView } from '@react-native-community/blur';
 
-const ResizeMap = ({ navigation, route }) => {
-  /* const templateId = route.params.templateId; */
+const PointAddingScreen = ({ navigation, route }) => {
   const [region, setRegion] = useState(null);
   const [locationPoints, setLocationPoints] = useState([]);
   const [mapType, setMapType] = useState(MAP_TYPES.STANDARD);
   const [modalVisible, setModalVisible] = useState(false);
   const [points, setPoints] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [mapTypeIndex, setMapTypeIndex] = useState(0);
+  const [showCurrentLocation, setShowCurrentLocation] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [searchedLocation, setSearchedLocation] = useState(null);
+  const mapRef = React.useRef(null);
 
   const closeModal = () => {
     setModalVisible(false);
   };
-
+  const selectMapType = (index) => {
+    setMapTypeIndex(index);
+    setShowDropdown(false);
+  };
+  const focusOnCurrentLocation = () => {
+    setSearchedLocation(null); // Clear searched location
+    setShowCurrentLocation((prevShowCurrentLocation) => {
+      const newShowCurrentLocation = !prevShowCurrentLocation;
+      if (newShowCurrentLocation && currentLocation && mapRef.current) {
+        mapRef.current.animateToRegion({
+          latitude: currentLocation.coords.latitude,
+          longitude: currentLocation.coords.longitude,
+          latitudeDelta: 0.0005,
+          longitudeDelta: 0.0005,
+        });
+      }
+      return newShowCurrentLocation;
+    });
+  };
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -38,7 +58,6 @@ const ResizeMap = ({ navigation, route }) => {
         console.error('Permission to access location was denied');
         return;
       }
-
       let location = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.High,
       });
@@ -48,6 +67,7 @@ const ResizeMap = ({ navigation, route }) => {
         latitudeDelta: 0.0005,
         longitudeDelta: 0.0005,
       });
+      setCurrentLocation(location);
     })();
   }, []);
 
@@ -65,6 +85,7 @@ const ResizeMap = ({ navigation, route }) => {
       setPoints(points.slice(0, -1));
     }
   };
+
   const handleSave = async () => {
     try {
       const mapTemplate = {
@@ -101,6 +122,16 @@ const ResizeMap = ({ navigation, route }) => {
   const handleCancel = () => {
     navigation.navigate('SavedTemplatesScreen');
   };
+  const mapTypes = [
+    { name: 'Satellite', value: 'satellite' },
+    { name: 'Standard', value: 'standard' },
+    { name: 'Hybrid', value: 'hybrid' },
+    { name: 'Terrain', value: 'terrain' },
+  ];
+
+  const toggleMapType = () => {
+    setShowDropdown(!showDropdown);
+  };
 
   return (
     <>
@@ -115,7 +146,7 @@ const ResizeMap = ({ navigation, route }) => {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)', // This will create a semi-transparent black background
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
           }}
         >
           <View style={styles.centeredView}>
@@ -152,30 +183,34 @@ const ResizeMap = ({ navigation, route }) => {
       {region && (
         <View style={{ flex: 1 }}>
           <MapView
+            ref={mapRef}
             style={{ flex: 1, paddingTop: 100 }}
             region={region}
             showsUserLocation={true}
             onUserLocationChange={(event) => {
+              const { latitude, longitude } = event.nativeEvent.coordinate;
               setRegion({
                 ...region,
                 latitude: event.nativeEvent.coordinate.latitude,
                 longitude: event.nativeEvent.coordinate.longitude,
               });
+              setCurrentLocation({ coords: { latitude, longitude } });
             }}
-            mapType={mapType}
+            mapType={mapTypes[mapTypeIndex].value}
             onPress={(event) => {
               setPoints([...points, event.nativeEvent.coordinate]);
             }}
+            mapPadding={{ top: 0, right: -100, bottom: 0, left: 0 }}
           >
             {points.map((point, index) => (
               <Marker key={index} coordinate={point} />
             ))}
             <Polyline
               coordinates={points}
-              strokeColor='#000' // fallback for when `strokeColors` is not supported by the map-provider
+              strokeColor='#000'
               strokeColors={[
                 '#7F0000',
-                '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
+                '#00000000',
                 '#B24112',
                 '#E5845C',
                 '#238C23',
@@ -184,12 +219,40 @@ const ResizeMap = ({ navigation, route }) => {
               strokeWidth={6}
             />
           </MapView>
+
           <TouchableOpacity
-            style={styles.mapIconContainer}
-            onPress={handleSwitchMapType}
+            style={styles.layerIconContainer}
+            onPress={toggleMapType}
           >
-            <Icon name='map-outline' size={28} color='#666666' />
+            <FontAwesomeIcon icon={faLayerGroup} size={25} color='#fff' />
+            {showDropdown && (
+              <View style={styles.dropdownContainer}>
+                <FlatList
+                  data={mapTypes}
+                  renderItem={({ item, index }) => (
+                    <TouchableOpacity
+                      style={styles.dropdownItem}
+                      onPress={() => selectMapType(index)}
+                    >
+                      <Text style={{ color: '#fff' }}>{item.name}</Text>
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={(item) => item.value}
+                />
+              </View>
+            )}
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button2}
+            onPress={focusOnCurrentLocation}
+          >
+            <FontAwesomeIcon
+              icon={faLocationCrosshairs}
+              size={25}
+              color='#fff'
+            />
+          </TouchableOpacity>
+
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={handleClearPoints}
@@ -216,4 +279,4 @@ const ResizeMap = ({ navigation, route }) => {
   );
 };
 
-export default ResizeMap;
+export default PointAddingScreen;

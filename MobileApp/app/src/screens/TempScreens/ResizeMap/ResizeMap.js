@@ -14,6 +14,7 @@ import MapView, { MAP_TYPES } from 'react-native-maps';
 import * as Location from 'expo-location';
 import axios from 'axios';
 import backendUrl from '../../../../urlFile';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 const ResizeMap = ({ navigation, route }) => {
   const templateId = route.params.templateId;

@@ -203,6 +203,45 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 100, // Adjust this value as needed
   },
+  dropdownItem: {
+    padding: 10,
+    color: '#fff',
+  },
+  dropdownContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 50,
+    backgroundColor: 'rgba(0,0,0, 0.7)',
+    borderRadius: 5,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  button2: {
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0, 0.7)',
+    padding: 10,
+    borderRadius: 5,
+    top: Platform.OS === 'android' ? '14%' : '18%',
+    right: 10,
+  },
+  layerIconContainer: {
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0, 0.7)',
+    padding: 10,
+    borderRadius: 5,
+    right: 10,
+    top: Platform.OS === 'android' ? '10%' : '27%',
+    transform: [{ translateY: -12 }], // Adjust translateY to vertically center the icon
+    zIndex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });
 
 export default styles;

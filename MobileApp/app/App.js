@@ -50,10 +50,10 @@ const App = () => {
         <Stack.Screen name='Login' component={LoginScreen} />
         <Stack.Screen name='Forgot' component={ForgotPassword} />
         <Stack.Screen name='Otp' component={Otp} />
-        <Stack.Screen name='NewPassword' component={CreateNewPassword} />
+        <Stack.Screen name='NewPassword' component={CreateNewPassword} /> */}
 
         <Stack.Screen name='Home' component={Home} />
-        <Stack.Screen name='WalkaroundLand' component={WalkaroundLand} />
+        {/* <Stack.Screen name='WalkaroundLand' component={WalkaroundLand} />
         <Stack.Screen name='Fence' component={Fence} />
         <Stack.Screen name='FenceDetails' component={FenceDetails} /> */}
         {/* Template Screens */}
@@ -62,7 +62,7 @@ const App = () => {
           component={SavedTemplatesScreen}
         />
         <Stack.Screen name='SaveScreen' component={SaveScreen} />
-        <Stack.Screen name='ResizeMap' component={ResizeMap} />
+        {/* <Stack.Screen name='ResizeMap' component={ResizeMap} /> */}
         <Stack.Screen name='TemplateView' component={TemplateView} />
         <Stack.Screen name='EditTemplate' component={EditTemplate} />
 
