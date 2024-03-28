@@ -25,16 +25,16 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { useNavigation } from "@react-navigation/native";
 
-import ButtonForWeed from "../components/ButtonForWeed";
-import DropdownPlants from "../components/DropdownPlants";
+import ButtonForWeed from "../../components/ButtonForWeed";
+import DropdownPlants from "../../components/DropdownPlants";
 // import LaborInputField from "../components/LaborInputField";
 // import WorkHourInput from "../components/WorkHourInput";
 // import PlantInput from "../components/PlantInput";
-import DropdownStones from "../components/DropdownStones";
+import DropdownStones from "../../components/DropdownStones";
 // import AddButton from "../components/AddButton";
 // import MachineInput from "../components/MachineInput";
-import Headersection from "../components/Headersection";
-import CustomButton from "../components/CustomButton";
+import Headersection from "../../components/Headersection";
+import CustomButton from "../../components/CustomButton";
 
 export default function ClearLand() {
   const [text, setText] = React.useState("");
@@ -226,7 +226,7 @@ export default function ClearLand() {
             >
               <Image
                 style={{ marginRight: 5 }}
-                source={require("../../assets/Stones.png")}
+                source={require("../../../assets/Stones.png")}
               />
               <Text style={{}} variant="titleLarge">
                 Stones

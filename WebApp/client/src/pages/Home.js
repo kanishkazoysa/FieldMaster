@@ -1,6 +1,7 @@
 import React, { useRef, useState, useCallback } from "react";
 import { GoogleMap, LoadScript, StandaloneSearchBox, Marker } from "@react-google-maps/api";
-import SideNavbar from "../components/SideNavbar/sideNavbar1";
+import SideNavbar from "../components/SideNavbar/sideNavbar";
+import { MdLocationOn } from "react-icons/md";
 
 export default function Home() {
   const mapRef = useRef(null);
@@ -8,16 +9,23 @@ export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   const handlePlacesChanged = useCallback(() => {
+    if (!searchBoxRef.current) return;
+  
     const places = searchBoxRef.current.getPlaces();
+    console.log(places); // log the places
     if (places.length === 0) return;
-
+  
     const selectedPlace = places[0];
+    console.log(selectedPlace.geometry); // log the selected place's geometry
     const location = selectedPlace.geometry.location.toJSON();
     setSelectedLocation(location);
-
+  
     const bounds = new window.google.maps.LatLngBounds();
     bounds.extend(location);
-    mapRef.current.fitBounds(bounds);
+    if (mapRef.current && mapRef.current.state.map) {
+      mapRef.current.state.map.fitBounds(bounds);
+      mapRef.current.state.map.setZoom(15); // Set the zoom level to 15
+    }
   }, []);
 
   const handleMarkerClick = () => {
@@ -31,10 +39,13 @@ export default function Home() {
       input.blur();
     }
   };
-
   const onLoad = useCallback((map) => {
-  mapRef.current = map;
-}, []);
+    mapRef.current = map;
+  }, []);
+  
+  const onSearchBoxLoad = useCallback((ref) => {
+    searchBoxRef.current = ref;
+  }, []);
 
   return (
     <div style={styles.container}>
@@ -67,17 +78,22 @@ export default function Home() {
               onClick={handleMarkerClick}
             />
           )}
+          <MdLocationOn fontSize={27} style={{ marginLeft: '10px', marginTop: '10px' }} color="#fff" />
+
           <StandaloneSearchBox
-            onLoad={onLoad}
-            onPlacesChanged={handlePlacesChanged}
-          >
-            <input
-              type="text"
-              placeholder="Search location"
-              style={styles.searchBox}
-              onKeyDown={handleKeyDown}
-            />
-          </StandaloneSearchBox>
+          onLoad={onSearchBoxLoad}
+          onPlacesChanged={handlePlacesChanged}
+        >
+
+          <input
+          
+            type="text"
+            placeholder="Search location"
+            style={styles.searchBox}
+            onKeyDown={handleKeyDown}
+          />
+        </StandaloneSearchBox>
+
         </GoogleMap>
       </LoadScript>
     </div>
@@ -94,8 +110,8 @@ const styles = {
   searchBox: {
     boxSizing: 'border-box',
     border: '1px solid transparent',
-    width: '240px',
-    height: '32px',
+    width: '280px',
+    height: '35px',
     padding: '0 12px',
     borderRadius: '11px',
     boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
@@ -103,7 +119,7 @@ const styles = {
     outline: 'none',
     textOverflow: 'ellipsis',
     position: 'absolute',
-    left: '75%',
+    right:'15%',
     top: '2%',
   },
 };

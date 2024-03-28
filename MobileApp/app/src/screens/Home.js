@@ -79,7 +79,7 @@ export default function Home() {
     { name: "Hybrid", value: "hybrid" },
     { name: "Terrain", value: "terrain" },
   ];
-
+ 
   const toggleMapType = () => {
     setShowDropdown(!showDropdown);
   };

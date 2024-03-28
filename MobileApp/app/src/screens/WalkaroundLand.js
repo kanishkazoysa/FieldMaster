@@ -34,12 +34,12 @@ export default function Home() {
       console.error("Background location task error:", error);
       return;
     }
-  
+
     if (data) {
       const { locations } = data;
       console.log("Received background location update:", locations);
       if (trackingStarted) {
-        setPathCoordinates(prevCoordinates => {
+        setPathCoordinates((prevCoordinates) => {
           if (prevCoordinates.length > 0) {
             // Calculate the midpoint between the last point and the newly generated circle
             const lastCoordinate = prevCoordinates[prevCoordinates.length - 1];
@@ -50,29 +50,30 @@ export default function Home() {
 
             const midpoint = {
               latitude: (lastCoordinate.latitude + newCoordinate.latitude) / 2,
-              longitude: (lastCoordinate.longitude + newCoordinate.longitude) / 2,
+              longitude:
+                (lastCoordinate.longitude + newCoordinate.longitude) / 2,
             };
 
             // Update pathCoordinates to start from the midpoint
             return [...prevCoordinates, midpoint, newCoordinate];
           } else {
-            return [{
-              latitude: locations[0].coords.latitude,
-              longitude: locations[0].coords.longitude,
-            }];
+            return [
+              {
+                latitude: locations[0].coords.latitude,
+                longitude: locations[0].coords.longitude,
+              },
+            ];
           }
         });
+        focusOnCurrentLocation();
       }
     }
   });
 
   useEffect(() => {
-    focusOnCurrentLocation();
-  }, []);
-
-  useEffect(() => {
     if (trackingStarted) {
       startLocationUpdates();
+      focusOnCurrentLocation(); // Add this line
     } else {
       stopLocationUpdates();
     }
@@ -111,7 +112,9 @@ export default function Home() {
   const stopLocationUpdates = async () => {
     try {
       // Check if the task is running before trying to stop it
-      const isTaskRunning = await TaskManager.isTaskRegisteredAsync(BACKGROUND_LOCATION_TASK);
+      const isTaskRunning = await TaskManager.isTaskRegisteredAsync(
+        BACKGROUND_LOCATION_TASK
+      );
       if (isTaskRunning) {
         // Stop the background location task
         await Location.stopLocationUpdatesAsync(BACKGROUND_LOCATION_TASK);
@@ -131,20 +134,17 @@ export default function Home() {
     setShowDropdown(false);
   };
 
-  const focusOnCurrentLocation = async () => {
-    try {
-      const location = await Location.getCurrentPositionAsync({});
-      setCurrentLocation(location);
+  const focusOnCurrentLocation = () => {
+    if (pathCoordinates.length > 0) {
+      const location = pathCoordinates[0];
       if (mapRef.current && location) {
         mapRef.current.animateToRegion({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
+          latitude: location.latitude,
+          longitude: location.longitude,
           latitudeDelta: 0.001,
           longitudeDelta: 0.001,
         });
       }
-    } catch (error) {
-      console.error("Error getting current location:", error);
     }
   };
 
@@ -162,6 +162,7 @@ export default function Home() {
     { name: "Hybrid", value: "hybrid" },
     { name: "Terrain", value: "terrain" },
   ];
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
@@ -197,7 +198,7 @@ export default function Home() {
               latitude: currentLocation.coords.latitude,
               longitude: currentLocation.coords.longitude,
             }}
-            radius={2} // Adjust radius as needed
+            radius={1} // Adjust radius as needed
             strokeColor="#000"
             fillColor="#007BFF" // Semi-transparent red
           />
@@ -208,16 +209,9 @@ export default function Home() {
               latitude: pathCoordinates[pathCoordinates.length - 1].latitude,
               longitude: pathCoordinates[pathCoordinates.length - 1].longitude,
             }}
-            radius={2} // Adjust radius as needed
-            strokeColor="#000"
-            fillColor="rgba(255, 0, 0, 0.5)" // Semi-transparent red
-          />
-        )}
-        {pathCoordinates.length > 0 && (
-          <Polyline
-            coordinates={pathCoordinates}
-            strokeColor="#0000FF" // Blue color
-            strokeWidth={2}
+            radius={2} // radius in meters
+            strokeColor="rgba(0, 122, 255, 5)" // blue
+            fillColor="rgba(0, 122, 255, 0.3)"
           />
         )}
       </MapView>

@@ -34,21 +34,23 @@ export default function ForgotPassword({ route }) {
         Alert.alert("Error", "Passwords do not match");
         return;
       }
-      const response = await fetch('http://10.10.1.130:5000/api/users/change-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          newPassword: newPassword,
-        }
-        ),
-      });
+      // const response = await fetch('http://192.168.1.103:5000/api/users/change-password', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     email: email,
+      //     newPassword: newPassword,
+      //   }
+      //   ),
+      // });
 
-      const data = await response.json();
+      const response = await axios.post("http://10.10.29.38:5000/api/users/change-password",{ email, newPassword });
 
-      if (response.ok) {
+      
+
+      if (response.status === 200) {
         Alert.alert(
           "Password Changed Successfully",
           "Your password has been changed successfully.",
@@ -62,8 +64,6 @@ export default function ForgotPassword({ route }) {
           ],
           { cancelable: false }
         );
-      } else {
-        Alert.alert("Error", data.error || "Password change failed.");
       }
     } catch {
       Alert.alert("Error", "An error occurred while changing password");

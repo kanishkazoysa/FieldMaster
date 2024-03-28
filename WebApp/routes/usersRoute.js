@@ -7,6 +7,8 @@ const jwt = require("jsonwebtoken");
 
 // const bcrypt = require('bcrypt');
 const User = require("../models/user");
+const { PassThrough } = require("nodemailer/lib/xoauth2");
+const middleware = require("../middleware/middleware");
 
 let transporter = nodemailer.createTransport({
   service: "gmail",
@@ -24,6 +26,9 @@ transporter.verify((error, success) => {
 
 router.post("/register", async (req, res) => {
   const { email, password } = req.body;
+
+  console.log(email,password);
+
   const VerifyId = uuidv4();
 
   const mailOptions = {
@@ -36,7 +41,7 @@ router.post("/register", async (req, res) => {
         <h1>Welcome to FieldMaster</h1>
         <p>Click the link below to verify your FieldMaster account:</p>
         <a href="http://localhost:5000/api/users/emailVerification/${email}/${VerifyId}" style="background-color: #4CAF50; color: white; padding: 14px 20px; text-align: center; text-decoration: none; display: inline-block;">Verify</a>
-      </div>
+        </div>
     `,
   };
   const createdAt = new Date();
@@ -72,7 +77,13 @@ router.post("/register", async (req, res) => {
     });
     const newUser = new User({ email, password });
     await newUser.save();
-    res.send("User Registered Successfully");
+
+    res.status(200).send({
+      success:true,
+      message:"User Register Successfull",
+      newUser
+    })
+
   } catch (error) {
     return res.status(400).json({ error });
   }
@@ -158,6 +169,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
+
+
 router.post("/change-password", async (req, res) => {
   const { email, newPassword } = req.body;
 
@@ -175,7 +188,10 @@ router.post("/change-password", async (req, res) => {
     await user.save();
 
     // Password changed successfully
-    res.status(200).json({ message: "Password changed successfully" });
+    res.status(200).send({
+      success: true,
+    });
+  
   } catch (error) {
     console.error("Error changing password:", error);
     res.status(500).json({ error: "Internal server error" });

@@ -6,23 +6,24 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
-  TextInput,
   TouchableOpacity,
+  Button,
+  ScrollView,
 } from "react-native";
-
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 
-import Headersection from "../components/Headersection";
-import CustomButton from "../components/CustomButton";
-export default function FertilizationDetails({route}) {
 
-    
-  const { FertilizerType, NumberOfTime,FertilizerAmount, FertilizerAmountUnit,SelectedButton } = route.params;
+import Headersection from "../../components/Headersection";
+import CustomButton from "../../components/CustomButton";
 
+
+export default function FenceDetails({ route }) {
+
+  const { fenceType, fenceLength,postSpace, fenceAmount, PostSpaceUnit,data , totalstickamount} = route.params;
+  const nextInteger = Math.ceil(totalstickamount);
 
   const html = `
   <!DOCTYPE html>
@@ -98,13 +99,17 @@ export default function FertilizationDetails({route}) {
               <li>Area = 100 accres</li>
           </ul>
 
-          <h2>Fertilizing Details</h2>
+          <h2>Fence Details</h2>
 
           <ul>
-          <li> Total Amount Of Fertilizer= ${FertilizerAmount} ${FertilizerAmountUnit}</li>
+          <li>Fence Typpe = ${fenceType}</li>
           
-          <li> Fertilizer Application Frequency = ${NumberOfTime} Times ${SelectedButton} </li>
-          <li> Fertilizer Type = ${FertilizerType} </li>
+          <li> Total Stick Amount = ${nextInteger}</li>
+          <li> Post Space = ${postSpace} ${PostSpaceUnit}</li>
+          <!-- Loop through the 'data' array and generate list items -->
+          <li> Gate values  <ul>
+          ${data.map(value => `<li>${value}</li>`).join('')}
+          </ul></li>
           
           </ul>
 
@@ -112,16 +117,17 @@ export default function FertilizationDetails({route}) {
   </body>
   </html>
   
+  
+
 `;
 
+  const navigation = useNavigation();
+  const handlePlantation = () => {
+    navigation.navigate("Plantation");
+  };
 
-    const navigation = useNavigation();
-    const handleFertilizationDetails = () => {
-        navigation.navigate("Fence");
-      };
 
-
-      /*print*/
+  /*print*/
 
   const [selectedPrinter, setSelectedPrinter] = React.useState();
 
@@ -152,117 +158,116 @@ export default function FertilizationDetails({route}) {
       behavior={Platform.OS === "ios" ? "padding" : "margin"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
     >
-    {/* Static section at the top */}
-    <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+      {/* Static section at the top */}
+      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
       {/*Header section*/}  
-      <Headersection navigation={navigation} title="Fertilizing Details" />
+      <Headersection navigation={navigation} title="Fence Details" />
 
+
+      {/* Top section */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
 
-    <View style={styles.top}>
-        {/* Top section */}
-          <View style={styles.box1}>
-            <Text style={styles.titleText}>Total Amount of Fertilizing</Text>
-            <View style={styles.propertyBox}>
-              <View style={styles.property}>
-                <MaterialCommunityIcons
-                  name="flask-outline"
-                  size={40}
-                  color="#65676B"
-                />
-                <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyLabel}>Total Amount</Text>
-                  <Text style={styles.propertyValue}>{FertilizerAmount} {FertilizerAmountUnit}</Text>
-                </View>
+      <View style={styles.top}>
+        <View style={styles.box1}>
+          <Text style={styles.titleText}>Total posts / Sticks</Text>
+          <View style={styles.propertyBox}>
+            <View style={styles.property}>
+              <MaterialCommunityIcons name="format-align-justify" size={36} color="#65676B" rotation={270}/>
+              <View style={styles.propertyDetails}>
+                <Text style={styles.propertyLabel}>Total Amount</Text>
+                <Text style={styles.propertyValue}>{nextInteger} Stick</Text>
               </View>
-              <View style={styles.property}>
-                <MaterialCommunityIcons
-                  name="timer-sand"
-                  size={35}
-                  color="#65676B"
-                />
-                <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyLabel}>{SelectedButton}</Text>
-                  <Text style={styles.propertyValue}>{NumberOfTime + ' Times'} </Text>
-                </View>
+            </View>
+            <View style={styles.property}>
+              <MaterialCommunityIcons
+                name="format-line-spacing"
+                size={36}
+                color="#65676B"
+                rotation={270}
+              />
+              <View style={styles.propertyDetails}>
+                <Text style={styles.propertyLabel}>Post Gap</Text>
+                <Text style={styles.propertyValue}>{postSpace} {PostSpaceUnit} </Text>
               </View>
             </View>
           </View>
+        </View>
+      
 
-        {/* Second section */}
+      {/* Second section */}
 
-          <View style={styles.box2}>
-              <View style={styles.box2Property}>
-                <MaterialCommunityIcons
-                  name="vector-square"
-                  size={36}
-                  color="#65676B"
-                />
-                <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                  <Text style={styles.Box2PropertyValue}>1.5Km</Text>
-                </View>
-              </View>
-              <View style={styles.box2Property}>
-                <MaterialCommunityIcons
-                  name="texture-box"
-                  size={36}
-                  color="#65676B"
-                />
-                <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Area</Text>
-                  <Text style={styles.Box2PropertyValue}>100 acres</Text>
-                </View>
-              </View>
-          </View>
-
-        {/* Third section */}
-
-          <View style={styles.box3}>
-            <View style={styles.inner}>
-              <Text style={styles.innertopText}>Result based on</Text>
-
-              <View style={styles.center}>
-                <View style={styles.innercenter}>
-                  <View style={styles.innersquareleft}>
-                    <MaterialCommunityIcons
-                      name="sprout"
-                      size={30}
-                      color="#65676B"
-                    />
-                    <Text style={styles.LeftText}>Fertilizer Type:</Text>
-                  </View>
-                  <View style={styles.innersquareright}>
-                    <Text style={styles.RightText}>{FertilizerType}</Text>
-                  </View>
-                </View>
-
-                <View style={styles.innercenter}>
-                  <View style={styles.innersquareleft}>
-                    <MaterialCommunityIcons
-                      name="apps"
-                      size={30}
-                      color="#65676B"
-                    />
-                    <Text style={styles.LeftText}>How often      :</Text>
-                  </View>
-                  <View style={styles.innersquareright}>
-                    <Text style={styles.RightText}>{SelectedButton}</Text>
-                  </View>
-                </View>
+      
+        <View style={styles.box2}>
+         
+            <View style={styles.box2Property}>
+              <MaterialCommunityIcons
+                name="vector-square"
+                size={36}
+                color="#65676B"
+              />
+              <View style={styles.box2PropertyDetails}>
+                <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
+                <Text style={styles.Box2PropertyValue}>1.5Km</Text>
               </View>
             </View>
+            <View style={styles.box2Property}>
+              <MaterialCommunityIcons
+                name="texture-box"
+                size={36}
+                color="#65676B"
+              />
+              <View style={styles.box2PropertyDetails}>
+                <Text style={styles.Box2PropertyLabel}>Area</Text>
+                <Text style={styles.Box2PropertyValue}>100 acres</Text>
+              </View>
+          
           </View>
-          </View>
+        
+      </View>
 
-         {/* Bottom section */}
+      {/* Third section */}
 
-          <View style={styles.bottom}>
-            
-            <CustomButton
+    
+        <View style={styles.box3}>
+          
+            <Text style={styles.innertopText}>Result based on</Text>
+
+            <View style={styles.innercenter}>
+              <View style={styles.innersquareleft}>
+                <MaterialCommunityIcons name="gate" size={36} color="#65676B" />
+                <Text style={styles.perimeterText}>Fence Type :</Text>
+              </View>
+              <View style={styles.innersquareright}>
+                <Text style={styles.perimeterText}>{fenceType}</Text>
+              </View>
+            </View>
+
+            <View style={styles.innercenter}>
+              <View style={styles.innersquareleft}>
+                <MaterialCommunityIcons
+                  name="boom-gate"
+                  size={36}
+                  color="#65676B"
+                />
+                <Text style={styles.perimeterText}>Gates           :</Text>
+              </View>
+              <View style={styles.innersquareright1}>
+              {data.map((value, index) => (
+                <Text key={index}>{value}</Text>
+                   ))}
+              </View>
+            </View>
+            </View>
+      </View>
+
+      {/* Bottom section */}
+
+  
+        <View style={styles.bottom}>
+          <CustomButton
               onPress={print}
-              text="Save As PDF"
+              text="Save a PDF"
               iconName="content-save-outline" // Change the icon name as needed
               iconColor="white" // Change the color of the icon
               buttonColor="#E41E3F" // Change the background color of the button
@@ -270,51 +275,51 @@ export default function FertilizationDetails({route}) {
 
             <CustomButton
               onPress={printToFile}
-              text="Share PDF"
+              text="Share As PDF"
               iconName="share-variant" // Change the icon name as needed
               iconColor="white" // Change the color of the icon
               buttonColor="#007BFF" // Change the background color of the button
             />
-          </View>
-       </ScrollView>
 
-
-
+        </View>
+     </ScrollView>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  
+  container: {
+    flex: 1,
+  },
 
-    container: {
-        flex: 1,
-      },
-      
-      /*Top Section*/
+
+  /*Top Section*/
 
   scrollContent: {
     flexDirection: "column",
     justifyContent: "space-between",
     height: "100%",
+   
   },
 
   top: {
     alignItems: "center",
     width: "100%",
+
    },
 
   box1: {
-    flexDirection: "column",
     backgroundColor: "white",
     width: "87%",
     height: 123,
-    marginTop: 40,
+    marginTop: 50,
     alignItems: "center",
     borderRadius: 11,
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 3,
+    elevation: 8,
   },
 
   titleText: {
@@ -338,7 +343,6 @@ const styles = StyleSheet.create({
     justifyContent: "center", // or remove it for default behavior
     backgroundColor: "white",
     width: "46%",
-    height: 50,
     padding: 7,
   },
 
@@ -346,7 +350,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     marginLeft: 5,
     width: "70%",
-    height: 40,
     backgroundColor: "white",
   },
 
@@ -364,32 +367,32 @@ const styles = StyleSheet.create({
   box2: {
     width: "87%",
     height: 80,
-    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "row",
+    padding: 10,
     backgroundColor: "white",
     marginTop: 15,
     borderRadius: 11,
-    padding: 5,
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 3,
+    elevation: 8,
   },
 
+  
   box2Property: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "left",
     backgroundColor: "white",
     width: "46%",
-    height: 50,
   },
+
   box2PropertyDetails: {
     flexDirection: "column",
     marginLeft: 5,
     width: "50%",
-    height: 40,
     backgroundColor: "white",
   },
   Box2PropertyLabel: {
@@ -404,22 +407,16 @@ const styles = StyleSheet.create({
 
   box3: {
     width: "87%",
-    height: 160,
-    alignItems: "center",
-    justifyContent: "center",
+   // height: "max-content",
+    height: 220,
     backgroundColor: "white",
     marginTop: 15,
     borderRadius: 11,
+    padding: 30,
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 3,
-  },
-
-  inner: {
-    width: "80%",
-    height: "80%",
-    backgroundColor: "white",
+    elevation: 8,
   },
 
   innertopText: {
@@ -427,23 +424,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  center: {
-    marginTop: 15,
-  },
-
   innercenter: {
     flexDirection: "row",
     width: "100%",
-    height: 45,
-    alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "white",
-    marginVertical: 1,
+    marginVertical: 8,
   },
 
   innersquareleft: {
     width: "50%",
-    height: 40,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -452,26 +442,25 @@ const styles = StyleSheet.create({
 
   innersquareright: {
     width: "45%",
-    height: 40,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",
   },
 
-  RightText: {},
-
-  LeftText: {
+  innersquareright1: {
+    width: "45%",
+    height: 20,
+    marginTop: 10,
+    justifyContent: "flex-start",
     backgroundColor: "white",
-    width: "70%",
-    textAlign: "right",
+    flexDirection: "column",
   },
 
-   /* bottom section */
+  /* bottom section */
 
-   bottom: {
+  bottom: {
     alignItems: "center",
     bottom: 30,
   },
-
 
 });
