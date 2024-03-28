@@ -22,7 +22,7 @@ import {
 } from "react-native-paper";
 import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
+import RNPickerSelect from 'react-native-picker-select';
 import { useNavigation } from "@react-navigation/native";
 
 import ButtonForWeed from "../components/ButtonForWeed";
@@ -83,6 +83,36 @@ export default function ClearLand() {
       stonesCount: stonesCount,
     });
   };
+
+  const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
+
+  const placeholder1 = {
+    label: 'Select Type',
+    value: null,
+    color: 'red',
+    
+  };
+
+  const options1 = [
+    { label: 'Low', value: 'Low' },
+    { label: 'Medium', value: 'Medium' },
+    { label: 'High', value: 'High' },
+  ];
+
+  const [stoneTypeSelectedValue, setStoneTypeSelectedValue] = useState(null);
+
+  const placeholder = {
+    label: 'Select Type',
+    value: null,
+    color: 'red',
+    
+  };
+
+  const options = [
+    { label: 'Small', value: 'Small' },
+    { label: 'Medium', value: 'Medium' },
+    { label: 'High', value: 'High' },
+  ];
 
   /*display*/
 
@@ -203,7 +233,15 @@ export default function ClearLand() {
               <Text style={{ marginLeft: 5 }} variant="titleLarge">
                 Plants
               </Text>
-              <DropdownPlants />
+              <View style={styles.Dropdown1} >
+      <RNPickerSelect 
+        placeholder={placeholder1}
+        items={options1}
+        onValueChange={(value) => setPlantTypeSelectedValue(value)}
+        value={plantTypeSelectedValue}
+        style={{cursor: 'pointer', }}
+       />
+    </View>
               <Text style={{ marginTop: 30, marginLeft: 10, fontSize: 16 }}>
                 Count :{" "}
                 <View style={{ marginTop: -1 }}>
@@ -268,7 +306,14 @@ export default function ClearLand() {
               <Text style={{}} variant="titleLarge">
                 Stones
               </Text>
-              <DropdownStones />
+              <View style={styles.Dropdown1} >
+      <RNPickerSelect 
+        placeholder={placeholder}
+        items={options}
+        onValueChange={(value) => setStoneTypeSelectedValue(value)}
+        value={stoneTypeSelectedValue}
+      />
+    </View>
               <Text style={{ marginTop: 30, marginLeft: 10, fontSize: 16 }}>
                 Count :{" "}
                 <View style={{ marginTop: -1 }}>
@@ -615,5 +660,16 @@ const styles = StyleSheet.create({
   },
   pressedText: {
     color: '#0866FF', 
+  },
+  Dropdown1: {
+    backgroundColor: '#F0F2F5',
+    borderRadius: 10,
+    width: '40%',
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft:-60,
+    marginTop:30
+    
   },
 });
