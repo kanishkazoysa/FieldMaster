@@ -3,12 +3,12 @@ const router = express.Router();
 const clearLandModel = require("../models/clearLand");
 
 router.post("/clearLand", async (req, res) => {
-    const { Pressed, plantTypeSelectedValue, plantCount, stoneTypeSelectedValue, stonesCount,laborCount,workHours,searchItem,machineCount } = req.body;
+    const { pressed, plantTypeSelectedValue, plantCount, stoneTypeSelectedValue, stonesCount,laborCount,workHours,searchItem,machineCount } = req.body;
     
     try{
 
         const newclearLand = new clearLandModel({
-            WeedType: Pressed,
+            WeedType: pressed,
             PlantType: plantTypeSelectedValue,
             PlantCount: plantCount,
             StonesType: stoneTypeSelectedValue,

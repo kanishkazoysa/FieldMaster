@@ -46,16 +46,16 @@ export default function ClearLand() {
     }
   };
   try{
-    const response =axios.post("http://10.10.12.174:5000/api/clearLand/clearLand",{
-      pressed,
-      plantTypeSelectedValue,
-      plantCount,
-      stoneTypeSelectedValue,
-      stonesCount,
-      laborCount,
-      workHours,
-      searchItem,
-      machineCount
+    const response =axios.post("http://192.168.8.173:5000/api/clearLand/clearLand",{
+      WeedType: pressed,
+      PlantType: plantTypeSelectedValue,
+      PlantCount: plantCount,
+      StonesType: stoneTypeSelectedValue,
+      StonesCount: stonesCount,
+      LaborsCOunt: laborCount,
+      WorkHoursCount: workHours,
+      Machinetype: searchItem,
+      MachineCount: machineCount
     });
     console.log(response.data);
     } catch (error) {
