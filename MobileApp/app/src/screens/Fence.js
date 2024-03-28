@@ -31,7 +31,7 @@ export default function Fence() {
   const navigation = useNavigation();
 
   const [displayValues, setDisplayValues] = useState([]);
-  let inputValueFenceAmountRef = useRef(null); // Declare a ref for the second input field
+  let inputValueFenceAmountRef = useRef(null); 
 
   const handleInputPostspaceChange = (text) => {
     setinputValuePostspace(text);
@@ -86,7 +86,7 @@ export default function Fence() {
 
   const lengthUnitOptions = [
     { label: "m", value: "m" },
-    { label: "Foot", value: "Foot" },
+    { label: "cm", value: "cm" },
   ];
 
 const handleFenceDetails = async () => {
@@ -102,12 +102,13 @@ const handleFenceDetails = async () => {
   }
 
   try {
-    const response = await axios.post('http://192.168.196.237:5000/api/fence/fence', {
+    const response = await axios.post('http://10.10.0.248:5000/api/fence/fence', {
       FenceTypeselectedValue,
       inputValuePostspace,
       PostSpaceUnitselectedValue,
       inputValueFenceLength,
-      inputValueFenceAmount
+      inputValueFenceAmount,
+      displayValues
     });
 
     // Handle success response
@@ -126,6 +127,9 @@ const handleFenceDetails = async () => {
     console.error("Error:", error.response.data);
     Alert.alert("Error", "Failed to create fence. Please try again.");
   }
+
+
+  
 };
 
   /* for print pdf*/

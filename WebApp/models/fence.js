@@ -20,6 +20,9 @@ const fenceSchema = mongoose.Schema(
         NumberofSticks: {
             type: Number,
         },
+        GateDetails: [{
+            type: String,
+        }],
     }
 ); 
 

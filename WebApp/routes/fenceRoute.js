@@ -2,27 +2,38 @@ const express = require("express");
 const router = express.Router();
 const fenceModel = require("../models/fence");
 
-function calculateNumberOfSticks(perimeter, gapBetweenSticks, gateLength, numberOfGates) {
+function calculateNumberOfSticks(perimeter, gapBetweenSticks, gateLength, numberOfGates, gapUnit) {
+    const convertedGap = convertToCommonUnit(gapBetweenSticks, gapUnit);
     const remainingPerimeter = perimeter - (gateLength * numberOfGates);
-    let numberOfSticks = Math.ceil(remainingPerimeter / gapBetweenSticks);
+    let numberOfSticks = Math.ceil(remainingPerimeter / convertedGap);
     numberOfSticks -= numberOfGates;
     numberOfSticks += 2;
     return numberOfSticks;
 }
 
+function convertToCommonUnit(value, unit) {
+    if (unit === "cm") {
+        return value / 100; 
+    } else {
+        return value;
+    }
+}
+
 router.post("/fence", async (req, res) => {
     try {
-        const { FenceTypeselectedValue, inputValuePostspace, PostSpaceUnitselectedValue, inputValueFenceLength, inputValueFenceAmount } = req.body;
+        const { FenceTypeselectedValue, inputValuePostspace, PostSpaceUnitselectedValue, inputValueFenceLength, inputValueFenceAmount, displayValues } = req.body;
 
         const perimeter = 1500; 
 
         const gapBetweenSticks = inputValuePostspace;
 
+        const gapUnit = PostSpaceUnitselectedValue;
+
         const gateLength = inputValueFenceLength;
         
         const numberOfGates = inputValueFenceAmount;
 
-        const numberOfSticks = calculateNumberOfSticks(perimeter, gapBetweenSticks, gateLength, numberOfGates);
+        const numberOfSticks = calculateNumberOfSticks(perimeter, gapBetweenSticks, gateLength, numberOfGates, gapUnit);
 
         const newFence = new fenceModel({
             FenceType: FenceTypeselectedValue,
@@ -30,7 +41,8 @@ router.post("/fence", async (req, res) => {
             PostSpaceUnit: PostSpaceUnitselectedValue,
             Gatelength: inputValueFenceLength,
             NumberofGates: inputValueFenceAmount,
-            NumberofSticks: numberOfSticks 
+            NumberofSticks: numberOfSticks,
+            GateDetails: displayValues
         });
 
         await newFence.save();
@@ -53,10 +65,4 @@ router.get("/numberOfSticks", async (req, res) => {
         res.status(500).json({ status: "error", message: error.message });
     }
 });
-
-
-
-
-
-
 module.exports = router;
