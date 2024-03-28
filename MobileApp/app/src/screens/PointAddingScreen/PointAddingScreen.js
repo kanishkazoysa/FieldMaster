@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Polygon } from 'react-native-maps';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { SearchBar } from 'react-native-elements';
 import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
+import { TextInput } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { Polyline } from 'react-native-maps';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
   faLayerGroup,
   faLocationCrosshairs,
@@ -12,7 +15,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { styles } from './PointAddingScreenStyles';
 import MapView, { MAP_TYPES } from 'react-native-maps';
 import { Marker } from 'react-native-maps';
-1;
 import * as Location from 'expo-location';
 import axios from 'axios';
 import backendUrl from '../../../urlFile';
@@ -32,6 +34,9 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [searchedLocation, setSearchedLocation] = useState(null);
   const mapRef = React.useRef(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
+  const [search, setSearch] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
   /* buttons */
   /* cancel button Icon */
@@ -144,9 +149,85 @@ const PointAddingScreen = ({ navigation, route }) => {
   const toggleMapType = () => {
     setShowDropdown(!showDropdown);
   };
+  const onFocus = () => {
+    setIsFocused(true);
+  };
+  const onBlur = () => {
+    setIsFocused(false);
+  };
+
+  const searchLocation = async () => {
+    if (searchQuery) {
+      try {
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+            searchQuery
+          )}&key=AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U`
+        );
+        const data = await response.json();
+        if (data.results && data.results.length > 0) {
+          const { lat, lng } = data.results[0].geometry.location;
+          setShowCurrentLocation(false); // Hide current location
+          setSearchedLocation({ latitude: lat, longitude: lng });
+          if (mapRef.current) {
+            mapRef.current.animateToRegion({
+              latitude: lat,
+              longitude: lng,
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05,
+            });
+          }
+        } else {
+          console.error('Location not found');
+        }
+      } catch (error) {
+        console.error('Error searching for location:', error);
+      }
+    }
+  };
+  const clearSearchQuery = () => {
+    setSearchQuery('');
+  };
+  const ProfileManage = () => {
+    setProfileModalVisible(true);
+  };
 
   return (
     <>
+      <View style={styles.searchbar}>
+        <View style={styles.locationIconContainer}>
+          <MaterialIcons name='location-on' size={24} color='#007BFF' />
+        </View>
+        <TextInput
+          placeholder='Search Location'
+          placeholderTextColor='rgba(0, 0, 0, 0.5)'
+          onFocus={onFocus}
+          onBlur={onBlur}
+          style={[
+            styles.searchbarInput,
+            isFocused ? styles.searchbarInputFocused : null,
+          ]}
+          onChangeText={setSearchQuery}
+          value={searchQuery}
+          onSubmitEditing={searchLocation}
+        />
+        {searchQuery !== '' && (
+          <TouchableOpacity
+            onPress={clearSearchQuery}
+            style={styles.clearIconContainer}
+          >
+            <MaterialIcons name='cancel' size={24} color='#707070' />
+          </TouchableOpacity>
+        )}
+        <View style={{ marginLeft: 10 }}>
+          {/* <TouchableOpacity onPress={ProfileManage}>
+            <Avatar.Image
+              size={44}
+              source={require('../images/profilePhoto.png')}
+            />
+          </TouchableOpacity> */}
+        </View>
+      </View>
       <Modal
         animationType='slide'
         transparent={true}

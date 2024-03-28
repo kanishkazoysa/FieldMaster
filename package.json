@@ -23,6 +23,7 @@
     "expo-app-loading": "^2.1.1",
     "expo-location": "^16.5.5",
     "nodemailer": "^6.9.9",
+    "react-native-elements": "^3.4.3",
     "react-native-vector-icons": "^10.0.3"
   }
 }

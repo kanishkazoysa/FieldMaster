@@ -250,6 +250,13 @@ export const styles = StyleSheet.create({
     top: Platform.OS === 'android' ? '15%' : '18%',
     right: 10,
   },
+  clearIconContainer: {
+    position: 'absolute',
+    left: '75%',
+    top: '50%',
+    transform: [{ translateY: -12 }],
+    zIndex: 1,
+  },
   layerIconContainer: {
     position: 'absolute',
     backgroundColor: 'rgba(0,0,0, 0.7)',
@@ -261,6 +268,41 @@ export const styles = StyleSheet.create({
     zIndex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  searchbar: {
+    width: '90%',
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    /* top: Platform.OS === 'android' ? '4%' : '8%', */
+    top: 130,
+    paddingLeft: 10,
+    paddingRight: 0,
+    left: 20,
+    zIndex: 1,
+  },
+  locationIconContainer: {
+    position: 'absolute',
+    left: 20,
+    top: '50%',
+    transform: [{ translateY: -12 }],
+    zIndex: 1,
+  },
+  searchbarInput: {
+    borderRadius: 30,
+    paddingLeft: 40,
+    height: 50,
+    width: '80%',
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    color: '#000',
+    borderWidth: 1,
+    borderColor: '#CED0D4',
+  },
+  searchbarInputFocused: {
+    backgroundColor: '#fff',
+    borderColor: '#007BFF',
   },
 });
 
