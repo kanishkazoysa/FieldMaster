@@ -47,7 +47,7 @@ export default function ClearLand() {
   };
   try{
     const response =axios.post("http://10.10.12.174:5000/api/clearLand/clearLand",{
-      Pressed,
+      pressed,
       plantTypeSelectedValue,
       plantCount,
       stoneTypeSelectedValue,
@@ -68,6 +68,7 @@ export default function ClearLand() {
   const [machineCount, setMachineCount] = useState("");
   const [plantCount, setPlantCount] = useState("");
   const [stonesCount, setStonesCount] = useState("");
+  const [pressed, setPressed] = useState(null);
   const navigation = useNavigation();
   const handleEffortOutput = () => {
     navigation.navigate("EffortOutput");
@@ -165,7 +166,31 @@ export default function ClearLand() {
               <Text style={{ marginLeft: 5 }} variant="titleLarge">
                 Weeds
               </Text>
-              <ButtonForWeed></ButtonForWeed>
+              <PaperProvider>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 5, marginTop: 5 }}>
+        <Button
+          style={[styles.button, pressed === 'low' && styles.pressedButton]}
+          labelStyle={[styles.text, pressed === 'low' && styles.pressedText]}
+          mode="contained-tonal"
+          onPress={() => setPressed('low')}>
+          Low
+        </Button>
+        <Button
+          style={[styles.button, pressed === 'medium' && styles.pressedButton]}
+          labelStyle={[styles.text, pressed === 'medium' && styles.pressedText]}
+          mode="contained-tonal"
+          onPress={() => setPressed('medium')}>
+          Medium
+        </Button>
+        <Button
+          style={[styles.button, pressed === 'high' && styles.pressedButton]}
+          labelStyle={[styles.text, pressed === 'high' && styles.pressedText]}
+          mode="contained-tonal"
+          onPress={() => setPressed('high')}>
+          High
+        </Button>
+      </View>
+    </PaperProvider>
             </Card.Content>
           </Card>
 
@@ -566,5 +591,29 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: "white",
     fontSize: 14,
+  },
+  button: {
+    borderColor: '#CED0D4',
+    borderWidth: 1,
+    backgroundColor: '#fff',
+    borderRadius: 11,
+    width: 90,
+    height: 40,
+  
+    marginLeft: -70,
+    marginTop: 25,
+    padding: -10
+  },
+  pressedButton: {
+    borderColor: '#0866FF', 
+  },
+  text: {
+    marginLeft: 3,
+    marginRight: 3,
+    fontSize: 14,
+    color: '#CED0D4',
+  },
+  pressedText: {
+    color: '#0866FF', 
   },
 });
