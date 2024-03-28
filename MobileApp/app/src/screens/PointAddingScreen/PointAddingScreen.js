@@ -3,6 +3,7 @@ import { Polygon } from 'react-native-maps';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
 import { Appbar } from 'react-native-paper';
+import { Polyline } from 'react-native-maps';
 import {
   faLayerGroup,
   faLocationCrosshairs,
@@ -11,15 +12,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { styles } from './PointAddingScreenStyles';
 import MapView, { MAP_TYPES } from 'react-native-maps';
 import { Marker } from 'react-native-maps';
-import { Polyline } from 'react-native-maps';
 1;
 import * as Location from 'expo-location';
 import axios from 'axios';
 import backendUrl from '../../../urlFile';
-
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const PointAddingScreen = ({ navigation, route }) => {
+  const [isPolygonComplete, setIsPolygonComplete] = useState(false);
   const [region, setRegion] = useState(null);
   const [locationPoints, setLocationPoints] = useState([]);
   const [mapType, setMapType] = useState(MAP_TYPES.STANDARD);
@@ -83,13 +83,15 @@ const PointAddingScreen = ({ navigation, route }) => {
 
   const handleClearPoints = () => {
     setPoints([]);
+    setIsPolygonComplete(false);
   };
   const handleCompleteMap = () => {
-    if (points.length > 0) {
-      setPoints([...points, points[0]]);
+    if (points.length > 2) {
+      setIsPolygonComplete(true);
+    } else {
+      alert('You need at least 3 points to complete a polygon');
     }
   };
-
   const handleUndoLastPoint = () => {
     if (points.length > 0) {
       setPoints(points.slice(0, -1));
@@ -217,7 +219,14 @@ const PointAddingScreen = ({ navigation, route }) => {
             {points.map((point, index) => (
               <Marker key={index} coordinate={point} />
             ))}
-            {points.length > 0 && (
+            {!isPolygonComplete && points.length > 1 && (
+              <Polyline
+                coordinates={points}
+                strokeColor='#000'
+                strokeWidth={1}
+              />
+            )}
+            {isPolygonComplete && points.length > 2 && (
               <Polygon
                 coordinates={points}
                 strokeColor='#000'
