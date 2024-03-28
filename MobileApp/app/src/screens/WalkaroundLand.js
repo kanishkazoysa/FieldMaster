@@ -27,6 +27,8 @@ export default function Home() {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigation = useNavigation();
   const mapRef = useRef(null);
+  const [lastLocation, setLastLocation] = useState(null);
+
 
   // Handle background location updates
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
@@ -70,44 +72,53 @@ export default function Home() {
     }
   });
 
-  useEffect(() => {
-    if (trackingStarted) {
-      startLocationUpdates();
-      focusOnCurrentLocation(); // Add this line
-    } else {
-      stopLocationUpdates();
-    }
+  // useEffect(() => {
+  //   if (trackingStarted) {
+  //     startLocationUpdates();
+  //     focusOnCurrentLocation(); // Add this line
+  //   } else {
+  //     stopLocationUpdates();
+  //   }
 
+  //   return () => {
+  //     stopLocationUpdates();
+  //   };
+  // }, [trackingStarted]);
+
+  useEffect(() => {
+    const startTracking = async () => {
+      try {
+        // Request foreground and background location permissions
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          console.error("Foreground location permission not granted");
+          return;
+        }
+  
+        // Start the background location task
+        await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
+          accuracy: Location.Accuracy.BestForNavigation,
+          timeInterval: 1000, // Update every 1 second
+          distanceInterval: 0.5, // Update every 1 meter
+          foregroundService: {
+            notificationTitle: "Tracking location",
+            notificationBody: "Your location is being tracked in the background",
+          },
+        });
+  
+        console.log("Background location updates started");
+        setTrackingStarted(true);
+      } catch (error) {
+        console.error("Error starting background location updates:", error);
+      }
+    };
+  
+    startTracking();
+  
     return () => {
       stopLocationUpdates();
     };
-  }, [trackingStarted]);
-
-  const startLocationUpdates = async () => {
-    try {
-      // Request foreground and background location permissions
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.error("Foreground location permission not granted");
-        return;
-      }
-
-      // Start the background location task
-      await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
-        accuracy: Location.Accuracy.BestForNavigation,
-        timeInterval: 1000, // Update every 1 second
-        distanceInterval: 0.5, // Update every 1 meter
-        foregroundService: {
-          notificationTitle: "Tracking location",
-          notificationBody: "Your location is being tracked in the background",
-        },
-      });
-
-      console.log("Background location updates started");
-    } catch (error) {
-      console.error("Error starting background location updates:", error);
-    }
-  };
+  }, []);
 
   const stopLocationUpdates = async () => {
     try {
@@ -148,14 +159,14 @@ export default function Home() {
     }
   };
 
-  const toggleTracking = async () => {
-    if (trackingStarted) {
-      await stopLocationUpdates();
-      setTrackingStarted(false);
-    } else {
-      setTrackingStarted(true);
-    }
-  };
+  // const toggleTracking = async () => {
+  //   if (trackingStarted) {
+  //     await stopLocationUpdates();
+  //     setTrackingStarted(false);
+  //   } else {
+  //     setTrackingStarted(true);
+  //   }
+  // };
   const mapTypes = [
     { name: "Standard", value: "standard" },
     { name: "Satellite", value: "satellite" },
@@ -243,12 +254,12 @@ export default function Home() {
         <View style={styles.buttonWrapper}>
           <Button
             buttonColor="#007BFF"
-            icon={trackingStarted ? "stop" : "play-outline"}
+            icon="play-outline"
             mode="contained"
-            onPress={toggleTracking}
+           
             style={styles.button}
           >
-            {trackingStarted ? "Stop" : "Start"}
+            start
           </Button>
         </View>
         <View style={styles.buttonWrapper}>
