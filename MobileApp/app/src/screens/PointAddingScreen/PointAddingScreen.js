@@ -25,7 +25,6 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [isPolygonComplete, setIsPolygonComplete] = useState(false);
   const [region, setRegion] = useState(null);
   const [locationPoints, setLocationPoints] = useState([]);
-  const [mapType, setMapType] = useState(MAP_TYPES.STANDARD);
   const [modalVisible, setModalVisible] = useState(false);
   const [points, setPoints] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
