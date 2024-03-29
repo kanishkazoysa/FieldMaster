@@ -201,14 +201,7 @@ const PointAddingScreen = ({ navigation, route }) => {
             <MaterialIcons name='cancel' size={24} color='#707070' />
           </TouchableOpacity>
         )}
-        <View style={{ marginLeft: 10 }}>
-          {/* <TouchableOpacity onPress={ProfileManage}>
-            <Avatar.Image
-              size={44}
-              source={require('../images/profilePhoto.png')}
-            />
-          </TouchableOpacity> */}
-        </View>
+        <View style={{ marginLeft: 10 }}></View>
       </View>
       <Modal
         animationType='slide'
@@ -335,13 +328,6 @@ const PointAddingScreen = ({ navigation, route }) => {
             />
           </TouchableOpacity>
           <View>
-            {/* cancel icon */}
-            {/*  <TouchableOpacity
-              style={styles.sideIconStyle}
-              onPress={handleClearPoints}
-            >
-              {cancelIcon}
-            </TouchableOpacity> */}
             <View style={styles.sideIconWrap}>
               <TouchableWithoutFeedback
                 onPressIn={() => setIsButtonPressed(true)}
