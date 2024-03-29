@@ -40,7 +40,8 @@ export default function ClearLand() {
   const [workHours, setWorkHours] = useState("");
   const [searchItem, setSearchItem] = useState("");
   const [machineCount, setMachineCount] = useState("");
-  const [searchItems, setSearchItems] = useState([]);
+  const navigation = useNavigation();
+  // const [searchItems, setSearchItems] = useState([]);
   
   
   
@@ -76,7 +77,7 @@ export default function ClearLand() {
   
 
   
-  const navigation = useNavigation();
+  
   const handleEffortOutput = () => {
     navigation.navigate("EffortOutput");
   };
