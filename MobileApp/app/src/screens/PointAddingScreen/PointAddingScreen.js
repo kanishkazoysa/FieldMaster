@@ -31,7 +31,6 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [searchedLocation, setSearchedLocation] = useState(null);
   const mapRef = React.useRef(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
-  const [search, setSearch] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
