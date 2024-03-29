@@ -5,15 +5,13 @@ const clearLandSchema = mongoose.Schema(
         WeedType: {
             type: String,
         },
-        PlantDetails:{
+        
+        PlantType: {
             type: String,
         },
-        // PlantType: {
-        //     type: String,
-        // },
-        // PlantCount: {
-        //     type: String,
-        // },
+        PlantCount: {
+            type: String,
+        },
         StonesType: {
             type: String,
         },

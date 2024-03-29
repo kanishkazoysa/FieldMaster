@@ -31,14 +31,23 @@ import axios from "axios";
 export default function ClearLand() {
   const [text, setText] = React.useState("");
 
-  const [searchItem, setSearchItem] = useState("");
-  const [searchItems, setSearchItems] = useState([]);
+  const [pressed, setPressed] = useState(null);
+  const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
+  const [plantCount, setPlantCount] = useState("");
+  const [stoneTypeSelectedValue, setStoneTypeSelectedValue] = useState(null);
+  const [stonesCount, setStonesCount] = useState("");
   const [laborCount, setLaborCount] = useState("");
   const [workHours, setWorkHours] = useState("");
+  const [searchItem, setSearchItem] = useState("");
   const [machineCount, setMachineCount] = useState("");
-  const [plantCount, setPlantCount] = useState("");
-  const [stonesCount, setStonesCount] = useState("");
-  const [pressed, setPressed] = useState(null);
+  const [searchItems, setSearchItems] = useState([]);
+  
+  
+  
+  
+  
+  
+  
 
 //   const handleSearchItem = () => {
 //     if (searchItem.trim() !== "") {
@@ -64,54 +73,14 @@ export default function ClearLand() {
   const handleMachineCountChange= (text) => {
     setMachineCount(text);
   };
-  try{
-    const response =axios.post("http://192.168.8.173:5000/api/clearLand/clearLand",{
-      //data: displayValues,
-    //   WeedType: pressed,
-    //   PlantType: plantTypeSelectedValue,
-    //   PlantCount: plantCount,
-    //   StonesType: stoneTypeSelectedValue,
-    //   StonesCount: stonesCount,
-    //   LaborsCOunt: laborCount,
-    //   WorkHoursCount: workHours,
-    //   Machinetype: searchItem,
-    //   MachineCount: machineCount
-
-      pressed,
-      displayValues,
-    //   plantTypeSelectedValue,
-    //   plantCount,
-      stoneTypeSelectedValue,
-      stonesCount,
-      laborCount,
-      workHours,
-      searchItem,
-      machineCount
-
-    });
-    console.log(response.data);
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "Something went wrong");
-  }
+  
 
   
   const navigation = useNavigation();
   const handleEffortOutput = () => {
     navigation.navigate("EffortOutput");
   };
-
-  const handleClear = () => {
-    navigation.navigate("EffortOutput", {
-      laborCount: laborCount,
-      workHours: workHours,
-      machineCount: machineCount,
-      plantCount: plantCount,
-      stonesCount: stonesCount,
-    });
-  };
-
-  const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
+  
 
   const placeholder1 = {
     label: 'Select Type',
@@ -126,7 +95,7 @@ export default function ClearLand() {
     { label: 'High', value: 'High' },
   ];
 
-  const [stoneTypeSelectedValue, setStoneTypeSelectedValue] = useState(null);
+ 
 
   const placeholder = {
     label: 'Select Type',
@@ -198,6 +167,49 @@ export default function ClearLand() {
     newDisplayValues2.splice(index, 1);
     setDisplayValues2(newDisplayValues2);
   };
+  try{
+    const response = axios.post("http://192.168.8.173:5000/api/clearLand/clearLand",{
+      //data: displayValues,
+    //   WeedType: pressed,
+    //   PlantType: plantTypeSelectedValue,
+    //   PlantCount: plantCount,
+    //   StonesType: stoneTypeSelectedValue,
+    //   StonesCount: stonesCount,
+    //   LaborsCOunt: laborCount,
+    //   WorkHoursCount: workHours,
+    //   Machinetype: searchItem,
+    //   MachineCount: machineCount
+
+      pressed,
+      plantTypeSelectedValue,
+      plantCount,
+      stoneTypeSelectedValue,
+      stonesCount,
+      laborCount,
+      workHours,
+      searchItem,
+      machineCount
+
+    });
+    console.log(response.data);
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Something went wrong");
+  }
+
+  const handleClear = () => {
+    navigation.navigate("EffortOutput", {
+      weedType: pressed,
+      plantType: plantTypeSelectedValue,
+      plantCount: plantCount,
+      stoneType: stoneTypeSelectedValue,
+      stonesCount: stonesCount,
+      laborCount: laborCount,
+      workHours: workHours,
+      machineCount: machineCount,
+    });
+  };
+
 
   return (
     <PaperProvider>

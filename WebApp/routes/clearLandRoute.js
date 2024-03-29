@@ -9,9 +9,8 @@ router.post("/clearLand", async (req, res) => {
 
         const newclearLand = new clearLandModel({
             WeedType: pressed,
-            PlantDetails:displayValues,
-            // PlantType: plantTypeSelectedValue,
-            // PlantCount: plantCount,
+            PlantType: plantTypeSelectedValue,
+            PlantCount: plantCount,
             StonesType: stoneTypeSelectedValue,
             StonesCount: stonesCount,
             LaborsCOunt: laborCount,
