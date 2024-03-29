@@ -33,54 +33,29 @@ export default function ClearLand() {
 
   const [searchItem, setSearchItem] = useState("");
   const [searchItems, setSearchItems] = useState([]);
-  const [laborCount, setLaborCount] = useState("");
-  const [workHours, setWorkHours] = useState("");
-  const [machineCount, setMachineCount] = useState("");
-  const [plantCount, setPlantCount] = useState("");
-  const [stonesCount, setStonesCount] = useState("");
-  const [pressed, setPressed] = useState(null);
 
-//   const handleSearchItem = () => {
-//     if (searchItem.trim() !== "") {
-//       setSearchItems([...searchItems, { item: searchItem, machineCount }]);
-//       setSearchItem("");
-//       setMachineCount(""); // Reset machineCount after adding
-//     }
-//   };
-
-  const handlePlantCountChange= (text) => {
-    setPlantCount(text);
-  };
-
-  const handleStoneCountChange= (text) => {
-    setStonesCount(text);
-  };
-  const handleLaborCountChange= (text) => {
-    setLaborCount(text);
-  };
-  const handleWorkHourChange= (text) => {
-    setWorkHours(text);
-  };
-  const handleMachineCountChange= (text) => {
-    setMachineCount(text);
+  const handleSearchItem = () => {
+    if (searchItem.trim() !== "") {
+      setSearchItems([...searchItems, { item: searchItem, machineCount }]);
+      setSearchItem("");
+      setMachineCount(""); // Reset machineCount after adding
+    }
   };
   try{
     const response =axios.post("http://192.168.8.173:5000/api/clearLand/clearLand",{
-      //data: displayValues,
-    //   WeedType: pressed,
-    //   PlantType: plantTypeSelectedValue,
-    //   PlantCount: plantCount,
-    //   StonesType: stoneTypeSelectedValue,
-    //   StonesCount: stonesCount,
-    //   LaborsCOunt: laborCount,
-    //   WorkHoursCount: workHours,
-    //   Machinetype: searchItem,
-    //   MachineCount: machineCount
+      // WeedType: pressed,
+      // PlantType: plantTypeSelectedValue,
+      // PlantCount: plantCount,
+      // StonesType: stoneTypeSelectedValue,
+      // StonesCount: stonesCount,
+      // LaborsCOunt: laborCount,
+      // WorkHoursCount: workHours,
+      // Machinetype: searchItem,
+      // MachineCount: machineCount
 
       pressed,
-      displayValues,
-    //   plantTypeSelectedValue,
-    //   plantCount,
+      plantTypeSelectedValue,
+      plantCount,
       stoneTypeSelectedValue,
       stonesCount,
       laborCount,
@@ -95,7 +70,12 @@ export default function ClearLand() {
       Alert.alert("Error", "Something went wrong");
   }
 
-  
+  const [laborCount, setLaborCount] = useState("");
+  const [workHours, setWorkHours] = useState("");
+  const [machineCount, setMachineCount] = useState("");
+  const [plantCount, setPlantCount] = useState("");
+  const [stonesCount, setStonesCount] = useState("");
+  const [pressed, setPressed] = useState(null);
   const navigation = useNavigation();
   const handleEffortOutput = () => {
     navigation.navigate("EffortOutput");
@@ -148,13 +128,12 @@ export default function ClearLand() {
   const handleAdd = () => {
     //validation part Add button
 
-    const combinedValue = plantCount + " x " + plantTypeSelectedValue;
+    const combinedValue = plantCount + " x " + "low";
     const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
     setDisplayValues(newDisplayValues);
-    setPlantTypeSelectedValue("");
     setPlantCount("");
+    //setinputValueFenceAmount("");
   };
-  
 
   const handleRemoveValue = (index) => {
     const newDisplayValues = [...displayValues];
@@ -167,12 +146,13 @@ export default function ClearLand() {
   const handleAdd1 = () => {
     //validation part Add button
 
-    const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
-    const newDisplayValues1 = [...displayValues1, combinedValue1].filter(Boolean);
+    const combinedValue1 = plantCount + " x " + "low";
+    const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
+      Boolean
+    );
     setDisplayValues1(newDisplayValues1);
-    setStoneTypeSelectedValue("");
     setStonesCount("");
-    
+    //setinputValueFenceAmount("");
   };
 
   const handleRemoveValue1 = (index) => {
@@ -186,11 +166,13 @@ export default function ClearLand() {
   const handleAdd2 = () => {
     //validation part Add button
 
-    const combinedValue2 = searchItem + " x " + machineCount;
-    const newDisplayValues2 = [...displayValues2, combinedValue2].filter(Boolean);
+    const combinedValue2 = plantCount + " x " + "low";
+    const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
+      Boolean
+    );
     setDisplayValues2(newDisplayValues2);
-    setSearchItem("");
-    setMachineCount("");
+    setPlantCount("");
+    //setinputValueFenceAmount("");
   };
 
   const handleRemoveValue2 = (index) => {
@@ -228,7 +210,6 @@ export default function ClearLand() {
           labelStyle={[styles.text, pressed === 'low' && styles.pressedText]}
           mode="contained-tonal"
           onPress={() => setPressed('low')}>
-         
           Low
         </Button>
         <Button
@@ -236,7 +217,6 @@ export default function ClearLand() {
           labelStyle={[styles.text, pressed === 'medium' && styles.pressedText]}
           mode="contained-tonal"
           onPress={() => setPressed('medium')}>
-            
           Medium
         </Button>
         <Button
@@ -244,7 +224,6 @@ export default function ClearLand() {
           labelStyle={[styles.text, pressed === 'high' && styles.pressedText]}
           mode="contained-tonal"
           onPress={() => setPressed('high')}>
-            
           High
         </Button>
       </View>
@@ -285,7 +264,8 @@ export default function ClearLand() {
                     placeholderStyles={{ width: 40, paddingHorizontal: 3 }}
                     mode="flat"
                     value={plantCount}
-                    onChangeText={handlePlantCountChange}
+                    onChangeText={(count) => setPlantCount(count)}
+                    // onChangeText={handleInputPlantcountChange}
                     placeholderTextColor={"#838383"}
                     underlineStyle={{ width: 45, marginLeft: 5 }}
                   />
@@ -357,7 +337,7 @@ export default function ClearLand() {
                     placeholderStyles={{ width: 40, paddingHorizontal: 3 }}
                     mode="flat"
                     value={stonesCount}
-                    onChangeText={handleStoneCountChange}
+                    onChangeText={(count) => setStonesCount(count)}
                     placeholderTextColor={"#838383"}
                     underlineStyle={{ width: 45, marginLeft: 5 }}
                   />
@@ -416,9 +396,9 @@ export default function ClearLand() {
                   }}
                   keyboardType="numeric"
                   placeholder="Enter count of Labors"
-                  mode="flat"                  
-                  onChangeText={handleLaborCountChange}
+                  mode="flat"
                   value={laborCount}
+                  onChangeText={(count) => setLaborCount(count)}
                   placeholderTextColor={"#838383"}
                   underlineStyle={{ width: 157, marginLeft: 7 }}
                 />
@@ -448,9 +428,9 @@ export default function ClearLand() {
                   }}
                   keyboardType="numeric"
                   placeholder="Enter count of hours"
-                  mode="flat"                  
-                  onChangeText={handleWorkHourChange}
+                  mode="flat"
                   value={workHours}
+                  onChangeText={(count) => setWorkHours(count)}
                   placeholderTextColor={"#838383"}
                   underlineStyle={{ width: 155, marginLeft: 6 }}
                 />
@@ -483,9 +463,9 @@ export default function ClearLand() {
                   placeholder="Search for machines"
                   placeholderStyle={{ fontSize: 16, marginTop: -14 }}
                   inputStyle={{ fontSize: 16, marginTop: -14 }}
-                  style={styles.Searchbar}                 
-                  onChangeText={setSearchItem}
+                  style={styles.Searchbar}
                   value={searchItem}
+                  onChangeText={setSearchItem}
                 ></Searchbar>
                 <Text
                   style={{
@@ -509,9 +489,9 @@ export default function ClearLand() {
                     }}
                     keyboardType="numeric"
                     placeholder="Enter count of machines"
-                    mode="flat"                    
-                    onChangeText={handleMachineCountChange}
+                    mode="flat"
                     value={machineCount}
+                    onChangeText={(count) => setMachineCount(count)}
                     placeholderTextColor={"#838383"}
                     underlineStyle={{ width: 180, marginLeft: 7 }}
                   />
