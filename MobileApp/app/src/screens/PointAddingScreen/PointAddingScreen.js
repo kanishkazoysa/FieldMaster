@@ -39,12 +39,6 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
-  /* buttons */
-  /* cancel button Icon */
-  const cancelIcon = (
-    <MaterialCommunityIcons name='cancel' size={24} color='white' />
-  );
-
   const closeModal = () => {
     setModalVisible(false);
   };
