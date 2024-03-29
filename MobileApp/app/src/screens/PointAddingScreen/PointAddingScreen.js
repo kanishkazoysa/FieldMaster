@@ -7,6 +7,7 @@ import { TextInput } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { Polyline } from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { polygon, area, length } from '@turf/turf';
 import {
   faLayerGroup,
   faLocationCrosshairs,
@@ -103,21 +104,27 @@ const PointAddingScreen = ({ navigation, route }) => {
     }
   };
 
-  const handleSave = async () => {
-    try {
-      const mapTemplate = {
-        locationPoints,
-      };
-      await axios.put(
-        `${backendUrl}/api/mapTemplate/updateTemplate/${templateId}`,
-        mapTemplate
-      );
-      console.log('Map template updated successfully');
-      console.log(locationPoints);
-      navigation.navigate('SavedTemplatesScreen');
-    } catch (error) {
-      console.error('Error while updating map template:', error);
+  const handleSaveMap = async () => {
+    if (points.length < 3) {
+      alert('You need at least 3 points to calculate area and perimeter');
+      return;
     }
+    const formattedPoints = points.map((point) => [
+      point.longitude,
+      point.latitude,
+    ]);
+    formattedPoints.push(formattedPoints[0]);
+    const poly = polygon([formattedPoints]);
+    const areaMeters = area(poly);
+    const perimeterMeters = length(poly, { units: 'meters' });
+    const areaPerches = areaMeters / 25.29285264;
+    const perimeterKilometers = perimeterMeters / 1000;
+
+    alert(
+      `Area: ${areaPerches.toFixed(
+        2
+      )} perches, Perimeter: ${perimeterKilometers.toFixed(2)} kilometers`
+    );
   };
 
   const handleSwitchMapType = () => {
@@ -187,9 +194,6 @@ const PointAddingScreen = ({ navigation, route }) => {
   };
   const clearSearchQuery = () => {
     setSearchQuery('');
-  };
-  const ProfileManage = () => {
-    setProfileModalVisible(true);
   };
 
   return (
@@ -388,10 +392,7 @@ const PointAddingScreen = ({ navigation, route }) => {
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={handleCompleteMap}
-              style={styles.btnStyle}
-            >
+            <TouchableOpacity onPress={handleSaveMap} style={styles.btnStyle}>
               <Text style={styles.btmBtnStyle}>Save</Text>
             </TouchableOpacity>
             <TouchableOpacity
