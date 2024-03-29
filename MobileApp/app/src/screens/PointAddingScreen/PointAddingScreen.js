@@ -116,20 +116,9 @@ const PointAddingScreen = ({ navigation, route }) => {
     );
   };
 
-  const handleSwitchMapType = () => {
-    setModalVisible(true);
-  };
   const handleSetMapType = (type) => {
     setMapType(type);
     setModalVisible(false);
-  };
-
-  const handleAddPoint = () => {
-    setLocationPoints([
-      ...locationPoints,
-      { latitude: region.latitude, longitude: region.longitude },
-    ]);
-    console.log('Point added');
   };
 
   const handleCancel = () => {
