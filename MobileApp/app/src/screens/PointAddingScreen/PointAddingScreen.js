@@ -26,12 +26,9 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [points, setPoints] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
-  const [showCurrentLocation, setShowCurrentLocation] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
-  const [searchedLocation, setSearchedLocation] = useState(null);
   const mapRef = React.useRef(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
-  const [search, setSearch] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
