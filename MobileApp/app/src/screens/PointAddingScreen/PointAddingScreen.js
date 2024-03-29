@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Polygon } from 'react-native-maps';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { SearchBar } from 'react-native-elements';
 import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
 import { TextInput } from 'react-native';
 import { Appbar } from 'react-native-paper';
@@ -17,8 +16,6 @@ import { styles } from './PointAddingScreenStyles';
 import MapView, { MAP_TYPES } from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import axios from 'axios';
-import backendUrl from '../../../urlFile';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const PointAddingScreen = ({ navigation, route }) => {
