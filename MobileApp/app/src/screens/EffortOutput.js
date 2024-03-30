@@ -6,7 +6,7 @@ import {
     ScrollView,
     IconButton,
   } from "react-native";
-  import React, { useState } from "react";
+  import React, { useState, useEffect } from 'react';
   import {
     PaperProvider,
     Appbar,
@@ -23,13 +23,28 @@ import {
   import Headersection from "../components/Headersection";
   import AlertButton from "../components/AlertButton";
   import CustomButton from "../components/CustomButton";
+  import axios from "axios";
   
   export default function EffortOutput({ route }) {
     const { laborCount,workHours,machineCount,plantCount,stonesCount } = route.params;
    
     const [searchItems] = useState();
-    
-  
+    //get data
+    const [latestData, setLatestData] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get("http://192.168.8.173:5000/api/clearLand/latestClearLand");
+                setLatestData(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     const html = `
     <!DOCTYPE html>
     <html lang="en">
@@ -292,7 +307,12 @@ import {
                     Labors :
                   </Text>
                   <Text style={{ fontSize: 15, marginLeft: 5, marginTop: 30 }}>
-                    {laborCount}
+                    {/* get labourCount from db */}
+                    {latestData && (
+                <Text>
+                    {latestData.LaborsCOunt}
+                </Text>
+            )}
                   </Text>
                 </View>
   
@@ -316,11 +336,12 @@ import {
                     </Text>
   
                     <View style={{ marginTop: -19, marginLeft: 100 }}>
-                      
-                          <Text style={{ fontSize: 15 }}>
-                            {"Machine 1"} - {machineCount}
-                          </Text>
-                  
+                      {/* get Machine Details from db */}
+                    {latestData && (
+                    <Text>
+                    {latestData.MachineDetails.join("\n")} {"\n"}
+                </Text>
+                     )}
                     </View>
                   </View>
                 </View>

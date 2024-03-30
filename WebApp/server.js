@@ -21,6 +21,9 @@ app.use("/api/users", userRoute);
 app.use("/api/mail", mailRoute);
 app.use("/api/fence", fenceRoute);
 app.use("/api/clearLand",clearLandRoute);
+//get
+// app.use("/api/clearLand", clearLandRoute);
+
 
 const port = process.env.PORT || 5000;
 

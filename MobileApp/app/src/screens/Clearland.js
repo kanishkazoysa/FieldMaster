@@ -42,14 +42,6 @@ export default function ClearLand() {
   const [machineCount, setMachineCount] = useState("");
   const navigation = useNavigation();
   // const [searchItems, setSearchItems] = useState([]);
-  
-  
-  
-  
-  
-  
-  
-
 //   const handleSearchItem = () => {
 //     if (searchItem.trim() !== "") {
 //       setSearchItems([...searchItems, { item: searchItem, machineCount }]);
@@ -168,38 +160,69 @@ export default function ClearLand() {
     newDisplayValues2.splice(index, 1);
     setDisplayValues2(newDisplayValues2);
   };
-  try{
-    const response = axios.post("http://192.168.8.173:5000/api/clearLand/clearLand",{
-      //data: displayValues,
-    //   WeedType: pressed,
-    //   PlantType: plantTypeSelectedValue,
-    //   PlantCount: plantCount,
-    //   StonesType: stoneTypeSelectedValue,
-    //   StonesCount: stonesCount,
-    //   LaborsCOunt: laborCount,
-    //   WorkHoursCount: workHours,
-    //   Machinetype: searchItem,
-    //   MachineCount: machineCount
+  // try{
+  //   const response = await axios.post("http://192.168.8.173:5000/api/clearLand/clearLand",{
+  //     //data: displayValues,
+  //   //   WeedType: pressed,
+  //   //   PlantType: plantTypeSelectedValue,
+  //   //   PlantCount: plantCount,
+  //   //   StonesType: stoneTypeSelectedValue,
+  //   //   StonesCount: stonesCount,
+  //   //   LaborsCOunt: laborCount,
+  //   //   WorkHoursCount: workHours,
+  //   //   Machinetype: searchItem,
+  //   //   MachineCount: machineCount
 
+  //     pressed,
+  //     plantTypeSelectedValue,
+  //     plantCount,
+  //     stoneTypeSelectedValue,
+  //     stonesCount,
+  //     laborCount,
+  //     workHours,
+  //     searchItem,
+  //     machineCount
+
+  //   });
+  //   console.log(response.data);
+  //   } catch (error) {
+  //     console.error(error);
+  //     Alert.alert("Error", "Something went wrong");
+  // }
+  // Define an async function to use await
+const postData = async () => {
+  try {
+    const response = await axios.post("http://192.168.8.173:5000/api/clearLand/clearLand", {
       pressed,
       plantTypeSelectedValue,
       plantCount,
+      displayValues,
       stoneTypeSelectedValue,
       stonesCount,
+      displayValues1,
       laborCount,
       workHours,
       searchItem,
-      machineCount
-
+      machineCount,
+      displayValues2
     });
     console.log(response.data);
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "Something went wrong");
+  } catch (error) {
+    console.error(error);
+    Alert.alert("Error", "Something went wrong");
   }
+};
+
+// Call the async function
+
+
 
   const handleClear = () => {
+    postData();
     navigation.navigate("EffortOutput", {
+      data: displayValues,
+      data1: displayValues1,
+      data2: displayValues2,
       weedType: pressed,
       plantType: plantTypeSelectedValue,
       plantCount: plantCount,
@@ -209,6 +232,7 @@ export default function ClearLand() {
       workHours: workHours,
       machineCount: machineCount,
     });
+    
   };
 
 
