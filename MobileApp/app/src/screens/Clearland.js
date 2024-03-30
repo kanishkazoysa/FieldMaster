@@ -228,15 +228,15 @@ const postData = async () => {
   const handleClear = () => {
     if (
       !pressed||
-      !displayValues||
-      !displayValues1||
+      !(displayValues.length > 0)||
+      !(displayValues1.length>0)||
       !laborCount||
       // !plantTypeSelectedValue||
       // !plantCount||
       // !searchItem||
       // !machineCount||
       !workHours||
-      !displayValues2
+      !(displayValues2.length>0)
     ) {
       // Display error message
       Alert.alert("Error", "Please fill in all fields");
@@ -690,7 +690,7 @@ const styles = StyleSheet.create({
     height: 35,
     borderRadius: 11,
     marginTop: 27,
-    marginLeft: 25,
+    marginLeft: 15,
     justifyContent: "center",
     alignItems: "center",
   },
