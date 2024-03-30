@@ -190,6 +190,19 @@ export default function ClearLand() {
   //     Alert.alert("Error", "Something went wrong");
   // }
   // Define an async function to use await
+  // const handleClearLandDetails = async () => {
+  //   if (
+  //     !displayValues ||
+  //     !displayValues1||
+  //     !laborCount||
+  //     !workHours||
+  //     !displayValues2
+  //   ) {
+  //     // Display error message
+  //     Alert.alert("Error", "Please fill in all fields");
+  //     return;
+  //   }
+  // };
 const postData = async () => {
   try {
     const response = await axios.post("http://192.168.8.173:5000/api/clearLand/clearLand", {
@@ -212,12 +225,23 @@ const postData = async () => {
     Alert.alert("Error", "Something went wrong");
   }
 };
-
-// Call the async function
-
-
-
   const handleClear = () => {
+    if (
+      !pressed||
+      !displayValues||
+      !displayValues1||
+      !laborCount||
+      // !plantTypeSelectedValue||
+      // !plantCount||
+      // !searchItem||
+      // !machineCount||
+      !workHours||
+      !displayValues2
+    ) {
+      // Display error message
+      Alert.alert("Error", "Please fill in all fields");
+      return; // Stop execution if fields are empty
+    }
     postData();
     navigation.navigate("EffortOutput", {
       data: displayValues,
@@ -232,7 +256,13 @@ const postData = async () => {
       workHours: workHours,
       machineCount: machineCount,
     });
-    
+
+    setPressed(" ");
+    setLaborCount(" ");
+    setWorkHours(" ");
+    setDisplayValues([]);
+    setDisplayValues1([]);
+    setDisplayValues2([])
   };
 
 
