@@ -27,8 +27,8 @@ export default function Home() {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigation = useNavigation();
   const mapRef = useRef(null);
+  const [trackingPaused, setTrackingPaused] = useState(false);
   const [lastLocation, setLastLocation] = useState(null);
-
 
   // Handle background location updates
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
@@ -36,41 +36,49 @@ export default function Home() {
       console.error("Background location task error:", error);
       return;
     }
-
-    if (data) {
+  
+    if (data && !trackingPaused) {
       const { locations } = data;
       console.log("Received background location update:", locations);
       if (trackingStarted) {
         setPathCoordinates((prevCoordinates) => {
-          if (prevCoordinates.length > 0) {
-            // Calculate the midpoint between the last point and the newly generated circle
-            const lastCoordinate = prevCoordinates[prevCoordinates.length - 1];
-            const newCoordinate = {
-              latitude: locations[0].coords.latitude,
-              longitude: locations[0].coords.longitude,
-            };
-
-            const midpoint = {
-              latitude: (lastCoordinate.latitude + newCoordinate.latitude) / 2,
-              longitude:
-                (lastCoordinate.longitude + newCoordinate.longitude) / 2,
-            };
-
-            // Update pathCoordinates to start from the midpoint
-            return [...prevCoordinates, midpoint, newCoordinate];
-          } else {
+          if (prevCoordinates.length === 0) {
+            // If it's the first location update, add it directly to the array
             return [
               {
                 latitude: locations[0].coords.latitude,
                 longitude: locations[0].coords.longitude,
               },
             ];
+          } else {
+            // Calculate the midpoint between the last point and the newly generated circle
+            const lastCoordinate = prevCoordinates[prevCoordinates.length - 1];
+            const newCoordinate = {
+              latitude: locations[0].coords.latitude,
+              longitude: locations[0].coords.longitude,
+            };
+  
+            const midpoint = {
+              latitude: (lastCoordinate.latitude + newCoordinate.latitude) / 2,
+              longitude: (lastCoordinate.longitude + newCoordinate.longitude) / 2,
+            };
+  
+            // Update pathCoordinates to start from the midpoint
+            return [...prevCoordinates, midpoint, newCoordinate];
           }
+        });
+        setLastLocation({
+          latitude: locations[0].coords.latitude,
+          longitude: locations[0].coords.longitude,
         });
         focusOnCurrentLocation();
       }
     }
   });
+
+  const handleStartPress = () => {
+    setTrackingPaused(!trackingPaused);
+  };
 
   // useEffect(() => {
   //   if (trackingStarted) {
@@ -88,6 +96,8 @@ export default function Home() {
   useEffect(() => {
     const startTracking = async () => {
       try {
+        const { coords } = await Location.getCurrentPositionAsync({});
+
         // Request foreground and background location permissions
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
@@ -104,6 +114,17 @@ export default function Home() {
             notificationTitle: "Tracking location",
             notificationBody: "Your location is being tracked in the background",
           },
+        });
+
+        setPathCoordinates([
+          {
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+          },
+        ]);
+        setLastLocation({
+          latitude: coords.latitude,
+          longitude: coords.longitude,
         });
   
         console.log("Background location updates started");
@@ -203,28 +224,14 @@ export default function Home() {
           longitudeDelta: 0.0421,
         }}
       >
-        {currentLocation && (
-          <Circle
-            center={{
-              latitude: currentLocation.coords.latitude,
-              longitude: currentLocation.coords.longitude,
-            }}
-            radius={1} // Adjust radius as needed
-            strokeColor="#000"
-            fillColor="#007BFF" // Semi-transparent red
-          />
-        )}
-        {trackingStarted && pathCoordinates.length > 0 && (
-          <Circle
-            center={{
-              latitude: pathCoordinates[pathCoordinates.length - 1].latitude,
-              longitude: pathCoordinates[pathCoordinates.length - 1].longitude,
-            }}
-            radius={2} // radius in meters
-            strokeColor="rgba(0, 122, 255, 5)" // blue
-            fillColor="rgba(0, 122, 255, 0.3)"
-          />
-        )}
+      {trackingStarted && lastLocation && (
+        <Circle
+          center={lastLocation}
+          radius={2}
+          strokeColor="rgba(0, 122, 255, 5)"
+          fillColor="rgba(0, 122, 255, 0.3)"
+        />
+      )}
       </MapView>
 
       <TouchableOpacity
@@ -252,15 +259,15 @@ export default function Home() {
 
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
-          <Button
-            buttonColor="#007BFF"
-            icon="play-outline"
-            mode="contained"
-           
-            style={styles.button}
-          >
-            start
-          </Button>
+        <Button
+        buttonColor="#007BFF"
+        icon="play-outline"
+        mode="contained"
+        onPress={handleStartPress}
+        style={styles.button}
+      >
+        {trackingPaused ? "Start" : "Pause"}
+      </Button>
         </View>
         <View style={styles.buttonWrapper}>
           <Button
