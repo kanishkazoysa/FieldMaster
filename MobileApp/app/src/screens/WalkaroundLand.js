@@ -8,7 +8,7 @@ import {
   Text,
   FlatList,
 } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Polyline, Circle } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Circle ,Polyline } from "react-native-maps";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager"; // Import TaskManager
 import { useNavigation } from "@react-navigation/native";
@@ -21,6 +21,7 @@ const BACKGROUND_LOCATION_TASK = "background-location-task";
 
 export default function Home() {
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [initialLocation, setInitialLocation] = useState(null);
   const [pathCoordinates, setPathCoordinates] = useState([]);
   const [trackingStarted, setTrackingStarted] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
@@ -28,70 +29,49 @@ export default function Home() {
   const navigation = useNavigation();
   const mapRef = useRef(null);
   const [trackingPaused, setTrackingPaused] = useState(false);
-  const [lastLocation, setLastLocation] = useState(null);
+  const [drawPolyline, setDrawPolyline] = useState(false); // State variable for drawing polyline
 
-  // Handle background location updates
+
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
       console.error("Background location task error:", error);
       return;
     }
-  
-    if (data && !trackingPaused) {
+
+    if (data) {
       const { locations } = data;
       console.log("Received background location update:", locations);
       if (trackingStarted) {
-        setPathCoordinates((prevCoordinates) => {
-          if (prevCoordinates.length === 0) {
-            // If it's the first location update, add it directly to the array
-            return [
-              {
-                latitude: locations[0].coords.latitude,
-                longitude: locations[0].coords.longitude,
-              },
-            ];
-          } else {
-            // Calculate the midpoint between the last point and the newly generated circle
-            const lastCoordinate = prevCoordinates[prevCoordinates.length - 1];
-            const newCoordinate = {
-              latitude: locations[0].coords.latitude,
-              longitude: locations[0].coords.longitude,
-            };
-  
-            const midpoint = {
-              latitude: (lastCoordinate.latitude + newCoordinate.latitude) / 2,
-              longitude: (lastCoordinate.longitude + newCoordinate.longitude) / 2,
-            };
-  
-            // Update pathCoordinates to start from the midpoint
-            return [...prevCoordinates, midpoint, newCoordinate];
-          }
-        });
-        setLastLocation({
-          latitude: locations[0].coords.latitude,
-          longitude: locations[0].coords.longitude,
-        });
-        focusOnCurrentLocation();
+        const newCoordinates = locations.map(location => ({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        }));
+        setPathCoordinates(prevCoordinates => [...prevCoordinates, ...newCoordinates]);
+        if (!trackingPaused) {
+          setCurrentLocation({
+            latitude: locations[0].coords.latitude,
+            longitude: locations[0].coords.longitude,
+          });
+          focusOnCurrentLocation();
+        }
       }
+      setInitialLocation({
+        latitude: locations[0].coords.latitude,
+        longitude: locations[0].coords.longitude,
+      });
     }
   });
 
   const handleStartPress = () => {
     setTrackingPaused(!trackingPaused);
+    if (!trackingPaused) {
+      setDrawPolyline(true); // Start drawing polyline
+      setPathCoordinates([initialLocation]); // Initialize pathCoordinates with the initial location
+    } else {
+      stopLocationUpdates();
+      setDrawPolyline(false); // Stop drawing polyline
+    }
   };
-
-  // useEffect(() => {
-  //   if (trackingStarted) {
-  //     startLocationUpdates();
-  //     focusOnCurrentLocation(); // Add this line
-  //   } else {
-  //     stopLocationUpdates();
-  //   }
-
-  //   return () => {
-  //     stopLocationUpdates();
-  //   };
-  // }, [trackingStarted]);
 
   useEffect(() => {
     const startTracking = async () => {
@@ -104,7 +84,7 @@ export default function Home() {
           console.error("Foreground location permission not granted");
           return;
         }
-  
+
         // Start the background location task
         await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
           accuracy: Location.Accuracy.BestForNavigation,
@@ -116,26 +96,25 @@ export default function Home() {
           },
         });
 
-        setPathCoordinates([
-          {
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-          },
-        ]);
-        setLastLocation({
+        setInitialLocation({
           latitude: coords.latitude,
           longitude: coords.longitude,
         });
-  
+
+        setCurrentLocation({
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+        });
+
         console.log("Background location updates started");
         setTrackingStarted(true);
       } catch (error) {
         console.error("Error starting background location updates:", error);
       }
     };
-  
+
     startTracking();
-  
+
     return () => {
       stopLocationUpdates();
     };
@@ -167,34 +146,22 @@ export default function Home() {
   };
 
   const focusOnCurrentLocation = () => {
-    if (pathCoordinates.length > 0) {
-      const location = pathCoordinates[0];
-      if (mapRef.current && location) {
-        mapRef.current.animateToRegion({
-          latitude: location.latitude,
-          longitude: location.longitude,
-          latitudeDelta: 0.001,
-          longitudeDelta: 0.001,
-        });
-      }
+    if (mapRef.current && currentLocation) {
+      mapRef.current.animateToRegion({
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001,
+      });
     }
   };
 
-  // const toggleTracking = async () => {
-  //   if (trackingStarted) {
-  //     await stopLocationUpdates();
-  //     setTrackingStarted(false);
-  //   } else {
-  //     setTrackingStarted(true);
-  //   }
-  // };
   const mapTypes = [
     { name: "Standard", value: "standard" },
     { name: "Satellite", value: "satellite" },
     { name: "Hybrid", value: "hybrid" },
     { name: "Terrain", value: "terrain" },
   ];
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
@@ -213,26 +180,43 @@ export default function Home() {
         </TouchableOpacity>
       </Appbar.Header>
       <MapView
-        ref={mapRef}
-        style={styles.map}
-        mapType={mapTypes[mapTypeIndex].value}
-        provider={PROVIDER_GOOGLE}
-        initialRegion={{
-          latitude: 6.2427,
-          longitude: 80.0607,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      >
-      {trackingStarted && lastLocation && (
+      ref={mapRef}
+      style={styles.map}
+      mapType={mapTypes[mapTypeIndex].value}
+      provider={PROVIDER_GOOGLE}
+      initialRegion={{
+        latitude: 6.2427,
+        longitude: 80.0607,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      }}
+    >
+      {initialLocation && (
         <Circle
-          center={lastLocation}
+          center={initialLocation}
           radius={2}
           strokeColor="rgba(0, 122, 255, 5)"
           fillColor="rgba(0, 122, 255, 0.3)"
         />
       )}
-      </MapView>
+      {trackingStarted && currentLocation && (
+        <Circle
+          center={currentLocation}
+          radius={2}
+          strokeColor="rgba(0, 122, 255, 5)"
+          fillColor="rgba(0, 122, 255, 0.3)"
+        />
+      )}
+
+      {/* Render polyline if drawPolyline is true */}
+      {drawPolyline && pathCoordinates.length > 0 && (
+        <Polyline
+          coordinates={pathCoordinates} // Polyline with all collected path coordinates
+          strokeWidth={2}
+          strokeColor="red"
+        />
+      )}
+    </MapView>
 
       <TouchableOpacity
         style={styles.layerIconContainer}
@@ -259,15 +243,15 @@ export default function Home() {
 
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
-        <Button
-        buttonColor="#007BFF"
-        icon="play-outline"
-        mode="contained"
-        onPress={handleStartPress}
-        style={styles.button}
-      >
-        {trackingPaused ? "Start" : "Pause"}
-      </Button>
+          <Button
+            buttonColor="#007BFF"
+            icon="play-outline"
+            mode="contained"
+            onPress={handleStartPress}
+            style={styles.button}
+          >
+            {trackingPaused ? "Pause" : "Start"}
+          </Button>
         </View>
         <View style={styles.buttonWrapper}>
           <Button
