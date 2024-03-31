@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
+import AnimatedCircle from './AnimatedCircle';
 
 // Define the name of your background task
 const BACKGROUND_LOCATION_TASK = "background-location-task";
@@ -38,20 +39,25 @@ export default function Home() {
       console.error("Background location task error:", error);
       return;
     }
-
+  
     if (data) {
       const { locations } = data;
       console.log("Received background location update:", locations);
       if (trackingStarted) {
-        const newCoordinates = locations.map(location => ({
+        const newCoordinates = locations.map((location) => ({
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
+          accuracy: location.coords.accuracy, // Include accuracy data
         }));
-        setPathCoordinates(prevCoordinates => [...prevCoordinates, ...newCoordinates]);
+        setPathCoordinates((prevCoordinates) => [
+          ...prevCoordinates,
+          ...newCoordinates,
+        ]);
         if (!trackingPaused) {
           setCurrentLocation({
             latitude: locations[0].coords.latitude,
             longitude: locations[0].coords.longitude,
+            accuracy: locations[0].coords.accuracy, // Include accuracy data
           });
           focusOnCurrentLocation();
         }
@@ -59,6 +65,7 @@ export default function Home() {
       setInitialLocation({
         latitude: locations[0].coords.latitude,
         longitude: locations[0].coords.longitude,
+        accuracy: locations[0].coords.accuracy, // Include accuracy data
       });
     }
   });
@@ -69,7 +76,16 @@ export default function Home() {
       setDrawPolyline(true); // Start drawing polyline
       setPathCoordinates([initialLocation]); // Initialize pathCoordinates with the initial location
     } else {
-      stopLocationUpdates(); // Stop location updates only
+      // Stop location updates and draw a direct line from last location to initial location
+      setTrackingStarted(false); // Stop location updates
+      if (currentLocation) {
+        // Calculate coordinates for the direct line
+        const lineCoordinates = [currentLocation, initialLocation];
+        setPathCoordinates(prevCoordinates => [
+          ...prevCoordinates,
+          ...lineCoordinates,
+        ]);
+      }
     }
   };
   
@@ -87,9 +103,10 @@ export default function Home() {
 
         // Start the background location task
         await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
-          accuracy: Location.Accuracy.BestForNavigation,
-          timeInterval: 1000, // Update every 1 second
-          distanceInterval: 0.5, // Update every 1 meter
+          accuracy: Location.Accuracy.Highest, // Use the highest accuracy mode
+          timeInterval: 1000, // Update every 1 second (adjust as needed)
+          distanceInterval: 0, // Update for every meter (set to 0 for highest accuracy)
+          showsBackgroundLocationIndicator: true, // Show the background location indicator
           foregroundService: {
             notificationTitle: "Tracking location",
             notificationBody: "Your location is being tracked in the background",
@@ -151,14 +168,14 @@ export default function Home() {
         latitude: currentLocation.latitude,
         longitude: currentLocation.longitude,
         latitudeDelta: 0.001,
-        longitudeDelta: 0.001,
+        longitudeDelta: 0.00009,
       });
     }
   };
 
   const mapTypes = [
-    { name: "Standard", value: "standard" },
     { name: "Satellite", value: "satellite" },
+    { name: "Standard", value: "standard" },
     { name: "Hybrid", value: "hybrid" },
     { name: "Terrain", value: "terrain" },
   ];
@@ -202,17 +219,19 @@ export default function Home() {
         {initialLocation && (
           <Circle
             center={initialLocation}
-            radius={2}
-            strokeColor="rgba(0, 122, 255, 5)"
-            fillColor="rgba(0, 122, 255, 0.3)"
+            radius={1}
+            strokeWidth={10}
+            strokeColor="rgba(0, 122, 255, 0.3)"
+            fillColor="rgba(0, 122, 255, 5)"
           />
         )}
         {trackingStarted && currentLocation && (
           <Circle
             center={currentLocation}
-            radius={2}
-            strokeColor="rgba(0, 122, 255, 5)"
-            fillColor="rgba(0, 122, 255, 0.3)"
+            radius={1}
+            strokeWidth={10}
+            strokeColor="rgba(0, 122, 255, 0.3)"
+            fillColor="rgba(0, 122, 255, 5)"
           />
         )}
 
@@ -221,17 +240,19 @@ export default function Home() {
           <Polyline
             coordinates={pathCoordinates} // Polyline with all collected path coordinates
             strokeWidth={2}
-            strokeColor="red"
+            strokeColor="blue"
           />
         )}
 
         {/* Render markers for each point */}
         {points.map((point, index) => (
-          <Marker
+          <Circle
             key={index}
-            coordinate={point}
-            title={`Point ${index + 1}`}
-            pinColor="blue"
+            center={point}
+            radius={1}
+            strokeWidth={10}
+            strokeColor="rgba(255,0,0, 0.3)"
+            fillColor="rgba(255,0,0, 5)"
           />
         ))}
       </MapView>
