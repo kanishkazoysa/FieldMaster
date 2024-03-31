@@ -8,7 +8,7 @@ import {
   Text,
   FlatList,
 } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Circle ,Polyline } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Circle ,Polyline, Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager"; // Import TaskManager
 import { useNavigation } from "@react-navigation/native";
@@ -26,11 +26,12 @@ export default function Home() {
   const [trackingStarted, setTrackingStarted] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
-  const navigation = useNavigation();
-  const mapRef = useRef(null);
   const [trackingPaused, setTrackingPaused] = useState(false);
   const [drawPolyline, setDrawPolyline] = useState(false); // State variable for drawing polyline
+  const [points, setPoints] = useState([]); // State variable to store points
 
+  const navigation = useNavigation();
+  const mapRef = useRef(null);
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -68,11 +69,10 @@ export default function Home() {
       setDrawPolyline(true); // Start drawing polyline
       setPathCoordinates([initialLocation]); // Initialize pathCoordinates with the initial location
     } else {
-      stopLocationUpdates();
-      setDrawPolyline(false); // Stop drawing polyline
+      stopLocationUpdates(); // Stop location updates only
     }
   };
-
+  
   useEffect(() => {
     const startTracking = async () => {
       try {
@@ -162,6 +162,14 @@ export default function Home() {
     { name: "Hybrid", value: "hybrid" },
     { name: "Terrain", value: "terrain" },
   ];
+
+  const addPoint = () => {
+    if (pathCoordinates.length > 0) {
+      const latestLocation = pathCoordinates[pathCoordinates.length - 1];
+      setPoints(prevPoints => [...prevPoints, latestLocation]);
+    }
+  };
+  
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
@@ -180,43 +188,53 @@ export default function Home() {
         </TouchableOpacity>
       </Appbar.Header>
       <MapView
-      ref={mapRef}
-      style={styles.map}
-      mapType={mapTypes[mapTypeIndex].value}
-      provider={PROVIDER_GOOGLE}
-      initialRegion={{
-        latitude: 6.2427,
-        longitude: 80.0607,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      }}
-    >
-      {initialLocation && (
-        <Circle
-          center={initialLocation}
-          radius={2}
-          strokeColor="rgba(0, 122, 255, 5)"
-          fillColor="rgba(0, 122, 255, 0.3)"
-        />
-      )}
-      {trackingStarted && currentLocation && (
-        <Circle
-          center={currentLocation}
-          radius={2}
-          strokeColor="rgba(0, 122, 255, 5)"
-          fillColor="rgba(0, 122, 255, 0.3)"
-        />
-      )}
+        ref={mapRef}
+        style={styles.map}
+        mapType={mapTypes[mapTypeIndex].value}
+        provider={PROVIDER_GOOGLE}
+        initialRegion={{
+          latitude: 6.2427,
+          longitude: 80.0607,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+        {initialLocation && (
+          <Circle
+            center={initialLocation}
+            radius={2}
+            strokeColor="rgba(0, 122, 255, 5)"
+            fillColor="rgba(0, 122, 255, 0.3)"
+          />
+        )}
+        {trackingStarted && currentLocation && (
+          <Circle
+            center={currentLocation}
+            radius={2}
+            strokeColor="rgba(0, 122, 255, 5)"
+            fillColor="rgba(0, 122, 255, 0.3)"
+          />
+        )}
 
-      {/* Render polyline if drawPolyline is true */}
-      {drawPolyline && pathCoordinates.length > 0 && (
-        <Polyline
-          coordinates={pathCoordinates} // Polyline with all collected path coordinates
-          strokeWidth={2}
-          strokeColor="red"
-        />
-      )}
-    </MapView>
+        {/* Render polyline if drawPolyline is true */}
+        {drawPolyline && pathCoordinates.length > 0 && (
+          <Polyline
+            coordinates={pathCoordinates} // Polyline with all collected path coordinates
+            strokeWidth={2}
+            strokeColor="red"
+          />
+        )}
+
+        {/* Render markers for each point */}
+        {points.map((point, index) => (
+          <Marker
+            key={index}
+            coordinate={point}
+            title={`Point ${index + 1}`}
+            pinColor="blue"
+          />
+        ))}
+      </MapView>
 
       <TouchableOpacity
         style={styles.layerIconContainer}
@@ -258,7 +276,7 @@ export default function Home() {
             buttonColor="#007BFF"
             icon="content-save-all"
             mode="contained"
-            onPress={() => console.log("Right Button Pressed")}
+            onPress={addPoint}
             style={styles.button}
           >
             Add Points
