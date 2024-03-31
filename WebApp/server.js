@@ -5,8 +5,6 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-
-
 const dbconfig = require("./db");
 const userRoute = require("./routes/usersRoute.js");
 const mailRoute = require("./routes/mailRoute.js");
