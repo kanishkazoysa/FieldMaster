@@ -119,12 +119,12 @@ import {
                 <li>Area = 100 accres</li>
             </ul>
   
-            <h2>Fertilizing Details</h2>
+            <h2>Clear land Details</h2>
   
             <ul>
-            <li> Total Amount Of Fertilizer= </li>
+            <li> Total Effort Count= </li>
             
-            <li> Fertilizer Application Frequency = Times </li>
+            <li> Number of labours = </li>
             <li> Fertilizer Type =  </li>
             
             </ul>
