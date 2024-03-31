@@ -15,7 +15,6 @@ import { useNavigation } from "@react-navigation/native";
 import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
-import AnimatedCircle from './AnimatedCircle';
 
 // Define the name of your background task
 const BACKGROUND_LOCATION_TASK = "background-location-task";
