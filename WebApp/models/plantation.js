@@ -14,6 +14,10 @@ const plantationSchema = mongoose.Schema(
         NoOfPlants:
         {
             type: String,
+        },
+        PlantDensity:
+        {
+            type: String,
         }
        
     }
