@@ -29,12 +29,12 @@ import {
     const { textPlant, selectedValue, textplantspace, textRowspace,  } = route.params;
   
     const [numberOfPlants, setnumberOfPlants] = useState(null);
-    const [PlantDensity, setPlantDensity] = useState(null);
+    const [PlantationDensity, setPlantDensity] = useState(null);
 
     useEffect(() => {
       const fetchData = async () => {
           try {
-              const response = await axios.get("http://10.10.14.231:5000/api/plantation/numberOfPlants");
+              const response = await axios.get("http://172.20.10.3:5000/api/plantation/numberOfPlants");
               setnumberOfPlants(response.data.data); 
           } catch (error) {
               console.error(error);
@@ -47,7 +47,7 @@ import {
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await axios.get("http://10.10.14.231:5000/api/plantation/plantDensity");
+            const response = await axios.get("http://172.20.10.3:5000/api/plantation/plantDensity");
             setPlantDensity(response.data.data); 
         } catch (error) {
             console.error(error);
@@ -139,6 +139,8 @@ import {
             <li> plat type = ${textPlant}</li>
             <li> Plant Space = ${textplantspace} </li>
             <li> Row Space = ${textRowspace} </li>
+            <li> Plant count = ${numberOfPlants}</li>
+            <li> Plant Density = ${PlantationDensity}</li>
             <ul>
             
             </ul></li>
@@ -237,7 +239,7 @@ import {
                   />
                   <View style={styles.propertyDetails}>
                     <Text style={styles.propertyLabel}>Density</Text>
-                    <Text style={styles.propertyValue}>{PlantDensity}/m</Text>
+                    <Text style={styles.propertyValue}>{PlantationDensity}/m</Text>
                   </View>
                 </View>
               </View>

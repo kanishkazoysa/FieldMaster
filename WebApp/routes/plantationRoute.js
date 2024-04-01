@@ -16,13 +16,25 @@ function calculateNumberOfPlants  (area, plantSpacing, rowSpacing) {
     return numberOfPlants;
 };
 
-function calculatePlantDensity  (area,numberOfPlants) {
-    const areaInSquareMeters = area * 4046.86;  
-    const numplant = numberOfPlants; 
-    const plantDensity = Math.floor(numplant/areaInSquareMeters);
+function calculatePlantationDensity(area, plantSpacingInMeters, rowSpacingInMeters) {
+    // Convert area to square meters
+    const areaInSquareMeters = parseFloat(area) * 4046.86;
 
-    return plantDensity;
-};
+    // Convert spacing values to numbers
+    const plantSpacing = parseFloat(plantSpacingInMeters);
+    const rowSpacing = parseFloat(rowSpacingInMeters);
+
+    // Calculate the area required for each plant (product of plant spacing and row spacing)
+    const areaPerPlant = plantSpacing * rowSpacing;
+
+    // Calculate the number of plants that can be planted in the given area
+    const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
+
+    // Calculate the plantation density
+    const plantationDensity = numberOfPlants / areaInSquareMeters;
+
+    return plantationDensity;
+}
 
 
 function convertToCommonUnit(value,unit){
@@ -34,38 +46,38 @@ function convertToCommonUnit(value,unit){
 }
 
 router.post("/plantation", async (req, res) => {
-   
-    
-    try{
-        const { textplantspace,textRowspace,textPlant} = req.body;
+    try {
+        const { textplantspace, textRowspace, textPlant } = req.body;
         const area = 100; // Acres
-        const plantSpacing = textplantspace; // Meter
-        const rowSpacing = textRowspace; // Meter
-       
 
+        // Convert spacing values to meters if given in centimeters
+        const plantSpacing = convertToMeters(parseFloat(textplantspace), 'cm');
+        const rowSpacing = convertToMeters(parseFloat(textRowspace), 'cm');
+
+        // Calculate number of plants and plantation density
         const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
-        const calculatedPlantDensity = calculatePlantDensity(area,numberOfPlants);
-        
+        const calculatedPlantDensity = calculatePlantationDensity(area, plantSpacing, rowSpacing);
+
+        // Log and save data
         console.log("Number of plants:", numberOfPlants);
-        //rres.json({status:"ok" , data: "Counted the no of plants"});
+        console.log(`Plantation Density: ${calculatedPlantDensity} plants `);
 
         const newPlantation = new plantationModel({
-            PlantType : textPlant,
-            PlantSpace : textplantspace,
-            RowSpace :textRowspace ,
-            NoOfPlants : numberOfPlants,
-            PlantDensity : calculatedPlantDensity
-        })
-      
+            PlantType: textPlant,
+            PlantSpace: textplantspace,
+            RowSpace: textRowspace,
+            NoOfPlants: numberOfPlants,
+            PlantDensity: calculatedPlantDensity
+        });
+
         await newPlantation.save();
-        
-        res.json({status:"ok" , data: "Plantation Created"});
+
+        res.json({ status: "ok", data: "Plantation Created" });
+    } catch (error) {
+        res.status(500).json({ status: "error", data: error.message });
     }
-    catch(error){
-        res.status(500).json({status:"error" , data: error.message});
-    }
-    
-})
+});
+
 
 router.get("/numberOfPlants", async (req, res) => {
     try {
