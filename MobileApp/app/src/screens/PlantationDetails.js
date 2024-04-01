@@ -8,12 +8,15 @@ import {
     ScrollView,
     TouchableOpacity,
     Alert,
+    
   } from "react-native";
-  import React from "react";
+  import React ,{ useState, useEffect }from "react";
   import { MaterialCommunityIcons } from "@expo/vector-icons";
   import { useNavigation } from "@react-navigation/native";
   import * as Print from 'expo-print';
   import { shareAsync } from 'expo-sharing';
+  import axios from "axios";
+
   
   import Headersection from "../components/Headersection";
   import CustomButton from "../components/CustomButton";
@@ -23,9 +26,37 @@ import {
   
   
   
-    const { textPlant, selectedValue, textplantspace, textRowspace, selectedValue1 } = route.params;
+    const { textPlant, selectedValue, textplantspace, textRowspace,  } = route.params;
   
+    const [numberOfPlants, setnumberOfPlants] = useState(null);
+    const [PlantDensity, setPlantDensity] = useState(null);
+
+    useEffect(() => {
+      const fetchData = async () => {
+          try {
+              const response = await axios.get("http://10.10.14.231:5000/api/plantation/numberOfPlants");
+              setnumberOfPlants(response.data.data); 
+          } catch (error) {
+              console.error(error);
+          }
+      };
   
+      fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response = await axios.get("http://10.10.14.231:5000/api/plantation/plantDensity");
+            setPlantDensity(response.data.data); 
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    fetchData();
+}, []);
+   
     const html = `
     <!DOCTYPE html>
     <html lang="en">
@@ -194,8 +225,8 @@ import {
                     color="#65676B"
                   />
                   <View style={styles.propertyDetails}>
-                    <Text style={styles.propertyLabel}>Total Plants</Text>
-                    <Text style={styles.propertyValue}>200</Text>
+                    <Text style={styles.propertyLabel}>Plants count</Text>
+                    <Text style={styles.propertyValue}>{numberOfPlants}</Text>
                   </View>
                 </View>
                 <View style={styles.property}>
@@ -286,7 +317,7 @@ import {
                       <Text style={styles.LeftText}>Row Spaing    :</Text>
                     </View>
                     <View style={styles.innersquareright}>
-                      <Text style={styles.RightText}>{textRowspace} {selectedValue1}</Text>
+                      <Text style={styles.RightText}>{textRowspace} {selectedValue}</Text>
                     </View>
                   </View>
                 </View>
