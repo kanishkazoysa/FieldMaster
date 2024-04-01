@@ -81,6 +81,21 @@ router.get("/numberOfPlants", async (req, res) => {
     }
 });
 
+router.get("/plantDensity", async (req, res) => {
+    try {
+        const plant= await plantationModel.findOne().sort({ _id: -1 });
+
+        if (!plant) {
+            return res.status(404).json({ status: "error", message: "No recently updated data found" });
+        }
+
+        const plantationDensity = plant.plantDensity;
+
+        res.json({ status: "success", data: plantationDensity });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
+});
 
 
 module.exports = router;
