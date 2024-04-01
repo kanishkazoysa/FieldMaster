@@ -41,14 +41,7 @@ export default function ClearLand() {
   const [searchItem, setSearchItem] = useState("");
   const [machineCount, setMachineCount] = useState("");
   const navigation = useNavigation();
-  // const [searchItems, setSearchItems] = useState([]);
-//   const handleSearchItem = () => {
-//     if (searchItem.trim() !== "") {
-//       setSearchItems([...searchItems, { item: searchItem, machineCount }]);
-//       setSearchItem("");
-//       setMachineCount(""); // Reset machineCount after adding
-//     }
-//   };
+
 
   const handlePlantCountChange= (text) => {
     setPlantCount(text);
@@ -160,49 +153,7 @@ export default function ClearLand() {
     newDisplayValues2.splice(index, 1);
     setDisplayValues2(newDisplayValues2);
   };
-  // try{
-  //   const response = await axios.post("http://192.168.8.173:5000/api/clearLand/clearLand",{
-  //     //data: displayValues,
-  //   //   WeedType: pressed,
-  //   //   PlantType: plantTypeSelectedValue,
-  //   //   PlantCount: plantCount,
-  //   //   StonesType: stoneTypeSelectedValue,
-  //   //   StonesCount: stonesCount,
-  //   //   LaborsCOunt: laborCount,
-  //   //   WorkHoursCount: workHours,
-  //   //   Machinetype: searchItem,
-  //   //   MachineCount: machineCount
 
-  //     pressed,
-  //     plantTypeSelectedValue,
-  //     plantCount,
-  //     stoneTypeSelectedValue,
-  //     stonesCount,
-  //     laborCount,
-  //     workHours,
-  //     searchItem,
-  //     machineCount
-
-  //   });
-  //   console.log(response.data);
-  //   } catch (error) {
-  //     console.error(error);
-  //     Alert.alert("Error", "Something went wrong");
-  // }
-  // Define an async function to use await
-  // const handleClearLandDetails = async () => {
-  //   if (
-  //     !displayValues ||
-  //     !displayValues1||
-  //     !laborCount||
-  //     !workHours||
-  //     !displayValues2
-  //   ) {
-  //     // Display error message
-  //     Alert.alert("Error", "Please fill in all fields");
-  //     return;
-  //   }
-  // };
 const postData = async () => {
   try {
     const response = await axios.post("http://192.168.8.173:5000/api/clearLand/clearLand", {
@@ -231,10 +182,6 @@ const postData = async () => {
       !(displayValues.length > 0)||
       !(displayValues1.length>0)||
       !laborCount||
-      // !plantTypeSelectedValue||
-      // !plantCount||
-      // !searchItem||
-      // !machineCount||
       !workHours||
       !(displayValues2.length>0)
     ) {
@@ -553,7 +500,8 @@ const postData = async () => {
                   style={styles.Searchbar}                 
                   onChangeText={setSearchItem}
                   value={searchItem}
-                ></Searchbar>
+                > 
+                </Searchbar>
                 <Text
                   style={{
                     fontSize: 16,

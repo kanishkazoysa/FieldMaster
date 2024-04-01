@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const clearLandModel = require("../models/clearLand");
-
 router.post("/clearLand", async (req, res) => {
     const { pressed, plantTypeSelectedValue, plantCount, stoneTypeSelectedValue, stonesCount,laborCount,workHours,searchItem,machineCount,displayValues,displayValues1,displayValues2 } = req.body;
     
@@ -33,7 +32,6 @@ router.post("/clearLand", async (req, res) => {
     }
     
 })
-
 module.exports = router;
 //get data
 router.get("/latestClearLand", async (req, res) => {
@@ -44,3 +42,6 @@ router.get("/latestClearLand", async (req, res) => {
         res.status(500).json({ error: "Failed to get latest clear land data" });
     }
 });
+
+
+
