@@ -65,5 +65,22 @@ router.post("/plantation", async (req, res) => {
     
 })
 
+router.get("/numberOfPlants", async (req, res) => {
+    try {
+        const plant= await plantationModel.findOne().sort({ _id: -1 });
+
+        if (!plant) {
+            return res.status(404).json({ status: "error", message: "No recently updated data found" });
+        }
+
+        const numberOfPlants = plant.NoOfPlants;
+
+        res.json({ status: "success", data: numberOfPlants });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
+});
+
+
 
 module.exports = router;
