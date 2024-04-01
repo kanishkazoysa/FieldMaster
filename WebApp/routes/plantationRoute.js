@@ -16,6 +16,13 @@ function calculateNumberOfPlants  (area, plantSpacing, rowSpacing) {
     return numberOfPlants;
 };
 
+function calculatePlantDensity  (area,numberOfPlants) {
+    const areaInSquareMeters = area * 4046.86;   
+    const plantDensity = Math.floor(numberOfPlants/areaInSquareMeters);
+
+    return plantDensity;
+};
+
 
 function convertToCommonUnit(value,unit){
     if(unit==='cm'){
@@ -33,8 +40,10 @@ router.post("/plantation", async (req, res) => {
         const area = 100; // Acres
         const plantSpacing = textplantspace; // Meter
         const rowSpacing = textRowspace; // Meter
+       
 
         const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
+        const calculatedPlantDensity=(area,numberOfPlants);
         
         console.log("Number of plants:", numberOfPlants);
         res.json({status:"ok" , data: "Counted the no of plants"});
@@ -44,7 +53,6 @@ router.post("/plantation", async (req, res) => {
             PlantSpace : textplantspace,
             RowSpace :textRowspace ,
             NoOfPlants : numberOfPlants,
-            
         })
       
         await newPlantation.save();
