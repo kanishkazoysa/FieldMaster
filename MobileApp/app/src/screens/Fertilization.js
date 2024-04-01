@@ -18,7 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
-
+import axios from "axios";
 
 export default function Fertilization() {
   const navigation = useNavigation();
@@ -29,7 +29,25 @@ export default function Fertilization() {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
-    
+
+    // connecting to backend
+    try{
+
+      const selectedButton= buttonNames[selectedButton];
+      const response = axios.post("http://10.10.12.72:5000/api/fertilizer/fertilizer", {
+        textFertilizationType,
+        textFertilizationNUmberoftime,
+        textFertilizationAmount,
+        selectedButton
+      });
+
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Something went wrong");
+    }
+    // connection to backend
+
 
     navigation.navigate("FertilizationDetails",
     {
@@ -39,8 +57,6 @@ export default function Fertilization() {
     FertilizerAmount:textFertilizationAmount,
     FertilizerAmountUnit:FertilizerAmountUnitselectedValue,
     SelectedButton: selectedButton !== null ? buttonNames[selectedButton] : null,
-
-
     }
     );
 
@@ -61,7 +77,7 @@ export default function Fertilization() {
     return index === pressedIndex;
   };
 
-  const buttonNames = ["Daily", "Monthly", "Quarter", "Season", "Yearly"];
+  const buttonNames = ["Daily","Weekly", "Monthly", "Quarter", "Yearly"];
 
   /*text area */
   const [textFertilizationType, setTextFertilizationType] = useState("");
