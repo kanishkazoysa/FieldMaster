@@ -237,7 +237,7 @@ import {
                   />
                   <View style={styles.propertyDetails}>
                     <Text style={styles.propertyLabel}>Density</Text>
-                    <Text style={styles.propertyValue}>30 Plants/m</Text>
+                    <Text style={styles.propertyValue}>{PlantDensity}/m</Text>
                   </View>
                 </View>
               </View>
