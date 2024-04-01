@@ -70,7 +70,7 @@ export default function Plantation() {
       return;
     }
     try{
-      const response = axios.post("http://10.10.12.72:5000/api/plantation/plantation", {
+      const response = axios.post("http://10.10.14.231:5000/api/plantation/plantation", {
         textPlant,
         textplantspace,
         textRowspace,
