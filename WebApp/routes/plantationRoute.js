@@ -17,8 +17,9 @@ function calculateNumberOfPlants  (area, plantSpacing, rowSpacing) {
 };
 
 function calculatePlantDensity  (area,numberOfPlants) {
-    const areaInSquareMeters = area * 4046.86;   
-    const plantDensity = Math.floor(numberOfPlants/areaInSquareMeters);
+    const areaInSquareMeters = area * 4046.86;  
+    const numplant = numberOfPlants; 
+    const plantDensity = Math.floor(numplant/areaInSquareMeters);
 
     return plantDensity;
 };
@@ -43,16 +44,17 @@ router.post("/plantation", async (req, res) => {
        
 
         const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
-        const calculatedPlantDensity=(area,numberOfPlants);
+        const calculatedPlantDensity = calculatePlantDensity(area,numberOfPlants);
         
         console.log("Number of plants:", numberOfPlants);
-        res.json({status:"ok" , data: "Counted the no of plants"});
+        //rres.json({status:"ok" , data: "Counted the no of plants"});
 
         const newPlantation = new plantationModel({
             PlantType : textPlant,
             PlantSpace : textplantspace,
             RowSpace :textRowspace ,
             NoOfPlants : numberOfPlants,
+            PlantDensity : calculatedPlantDensity
         })
       
         await newPlantation.save();
