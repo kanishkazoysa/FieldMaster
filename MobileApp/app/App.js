@@ -38,7 +38,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName='PointAddingScreen'
+        initialRouteName='ResizeMap'
         screenOptions={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Slide-in/slide-out animation
@@ -52,18 +52,18 @@ const App = () => {
         <Stack.Screen name='Otp' component={Otp} />
         <Stack.Screen name='NewPassword' component={CreateNewPassword} /> */}
 
-        <Stack.Screen name='Home' component={Home} />
+        {/* <Stack.Screen name='Home' component={Home} /> */}
         {/* <Stack.Screen name='WalkaroundLand' component={WalkaroundLand} />
         <Stack.Screen name='Fence' component={Fence} />
         <Stack.Screen name='FenceDetails' component={FenceDetails} /> */}
         {/* Template Screens */}
-        <Stack.Screen
+        {/* <Stack.Screen
           name='SavedTemplatesScreen'
           component={SavedTemplatesScreen}
         />
-        <Stack.Screen name='SaveScreen' component={SaveScreen} />
-        {/* <Stack.Screen name='ResizeMap' component={ResizeMap} /> */}
-        <Stack.Screen name='TemplateView' component={TemplateView} />
+        <Stack.Screen name='SaveScreen' component={SaveScreen} /> */}
+        <Stack.Screen name='ResizeMap' component={ResizeMap} />
+        {/* <Stack.Screen name='TemplateView' component={TemplateView} />
         <Stack.Screen name='EditTemplate' component={EditTemplate} />
 
         <Stack.Screen name='Plantation' component={Plantation} />
@@ -72,7 +72,7 @@ const App = () => {
         <Stack.Screen
           name='FertilizationDetails'
           component={FertilizationDetails}
-        />
+      />*/}
 
         <Stack.Screen name='PointAddingScreen' component={PointAddingScreen} />
       </Stack.Navigator>
