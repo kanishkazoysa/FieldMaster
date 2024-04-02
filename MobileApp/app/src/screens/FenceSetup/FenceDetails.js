@@ -6,8 +6,6 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
-  Button,
   ScrollView,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -24,22 +22,23 @@ import CustomButton from "../../components/CustomButton";
 
 export default function FenceDetails({ route }) {
 
-  const { fenceType, fenceLength,postSpace, fenceAmount, PostSpaceUnit,data , totalstickamount} = route.params;
-  const nextInteger = Math.ceil(totalstickamount);
-
+  const navigation = useNavigation();
+  const { fenceType,postSpace,PostSpaceUnit,data } = route.params;
   const [numberOfSticks, setnumberOfSticks] = useState(null);
 
+
+
+  // get number of data from  database
 
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await axios.get("http://10.10.0.248:5000/api/fence/numberOfSticks");
-            setnumberOfSticks(response.data.data); // Assuming the API response structure has a 'data' field containing the number of sticks
+            const response = await axios.get("http://192.168.134.237:5000/api/fence/numberOfSticks");
+            setnumberOfSticks(response.data.data); 
         } catch (error) {
             console.error(error);
         }
     };
-
     fetchData();
 }, []);
 
@@ -139,10 +138,7 @@ export default function FenceDetails({ route }) {
 
 `;
 
-  const navigation = useNavigation();
-  const handlePlantation = () => {
-    navigation.navigate("Plantation");
-  };
+  
 
 
   /*print*/
