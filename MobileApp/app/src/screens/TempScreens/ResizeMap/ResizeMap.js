@@ -194,7 +194,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
       <View>
         <Appbar.Header style={{ backgroundColor: '#0866FF' }}>
           <Appbar.BackAction color='#ffffff' onPress={handleCancel} />
-          <Appbar.Content title='Create Map' color='#ffffff' />
+          <Appbar.Content title='Resize Map' color='#ffffff' />
         </Appbar.Header>
       </View>
       {/* including map view */}
