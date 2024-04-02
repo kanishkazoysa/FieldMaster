@@ -10,7 +10,7 @@ function calculateNumberOfSticks(perimeter, gapBetweenSticks, gateLength, number
     numberOfSticks += 2;
     return numberOfSticks;
 }
-
+  
 function convertToCommonUnit(value, unit) {
     if (unit === "cm") {
         return value / 100; 
@@ -54,15 +54,34 @@ router.post("/fence", async (req, res) => {
 });
 
 
+// router.get("/numberOfSticks", async (req, res) => {
+//     try {
+//         const fences = await fenceModel.find();
+
+//         const numberOfSticks = fences.map(fence => fence.NumberofSticks);
+
+//         res.json({ status: "success", data: numberOfSticks });
+//     } catch (error) {
+//         res.status(500).json({ status: "error", message: error.message });
+//     }
+// });
+
+
+
 router.get("/numberOfSticks", async (req, res) => {
     try {
-        const fences = await fenceModel.find();
+        const recentFence = await fenceModel.findOne().sort({ _id: -1 });
 
-        const numberOfSticks = fences.map(fence => fence.NumberofSticks);
+        if (!recentFence) {
+            return res.status(404).json({ status: "error", message: "No recently updated data found" });
+        }
+
+        const numberOfSticks = recentFence.NumberofSticks;
 
         res.json({ status: "success", data: numberOfSticks });
     } catch (error) {
         res.status(500).json({ status: "error", message: error.message });
     }
 });
+
 module.exports = router;

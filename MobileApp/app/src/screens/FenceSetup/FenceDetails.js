@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,6 +14,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
+import axios from 'axios';
+
 
 
 import Headersection from "../../components/Headersection";
@@ -24,6 +26,22 @@ export default function FenceDetails({ route }) {
 
   const { fenceType, fenceLength,postSpace, fenceAmount, PostSpaceUnit,data , totalstickamount} = route.params;
   const nextInteger = Math.ceil(totalstickamount);
+
+  const [numberOfSticks, setnumberOfSticks] = useState(null);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response = await axios.get("http://10.10.0.248:5000/api/fence/numberOfSticks");
+            setnumberOfSticks(response.data.data); // Assuming the API response structure has a 'data' field containing the number of sticks
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    fetchData();
+}, []);
 
   const html = `
   <!DOCTYPE html>
@@ -104,7 +122,7 @@ export default function FenceDetails({ route }) {
           <ul>
           <li>Fence Typpe = ${fenceType}</li>
           
-          <li> Total Stick Amount = ${nextInteger}</li>
+          <li> Total Stick Amount = ${numberOfSticks}</li>
           <li> Post Space = ${postSpace} ${PostSpaceUnit}</li>
           <!-- Loop through the 'data' array and generate list items -->
           <li> Gate values  <ul>
@@ -176,7 +194,7 @@ export default function FenceDetails({ route }) {
               <MaterialCommunityIcons name="format-align-justify" size={36} color="#65676B" rotation={270}/>
               <View style={styles.propertyDetails}>
                 <Text style={styles.propertyLabel}>Total Amount</Text>
-                <Text style={styles.propertyValue}>{nextInteger} Stick</Text>
+                <Text style={styles.propertyValue}>{numberOfSticks} Stick</Text>
               </View>
             </View>
             <View style={styles.property}>
