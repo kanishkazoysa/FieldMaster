@@ -20,28 +20,31 @@ import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
 import axios from "axios";
 
-export default function Fertilization() {
+export default function Fertilization({ route }) {
   const navigation = useNavigation();
+
+  const { numberOfPlants, PlantationDensity } = route.params;
   const handleFertilizationDetails = () => {
 
-  if (!textFertilizationType || !textFertilizationNUmberoftime || !textFertilizationAmount || !FertilizerAmountUnitselectedValue || selectedButton === null) {
+    if (!textFertilizationType || !textFertilizationNUmberoftime || !textFertilizationAmount || !FertilizerAmountUnitselectedValue || selectedButton === null) {
       // Display error message
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
-    // connecting to backend
-    try{
+    const selectedButtonLabel = buttonNames[selectedButton]
 
-      const selectedButton= buttonNames[selectedButton];
-      const response = axios.post("http://10.10.12.72:5000/api/fertilizer/fertilizer", {
+    // connecting to backend
+    try {
+      const selectedButton = buttonNames[selectedButton];
+      const response = axios.post("http://10.10.14.231:5000/api/fertilizer/fertilizer", {
         textFertilizationType,
         textFertilizationNUmberoftime,
         textFertilizationAmount,
-        selectedButton
+        selectedButton: selectedButtonLabel,
       });
 
-      console.log(response.data);
+      console.log("testing");
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Something went wrong");
@@ -50,14 +53,14 @@ export default function Fertilization() {
 
 
     navigation.navigate("FertilizationDetails",
-    {
-      
-    FertilizerType : textFertilizationType,
-    NumberOfTime: textFertilizationNUmberoftime,
-    FertilizerAmount:textFertilizationAmount,
-    FertilizerAmountUnit:FertilizerAmountUnitselectedValue,
-    SelectedButton: selectedButton !== null ? buttonNames[selectedButton] : null,
-    }
+      {
+
+        FertilizerType: textFertilizationType,
+        NumberOfTime: textFertilizationNUmberoftime,
+        FertilizerAmount: textFertilizationAmount,
+        FertilizerAmountUnit: FertilizerAmountUnitselectedValue,
+        SelectedButton: selectedButton !== null ? buttonNames[selectedButton] : null,
+      }
     );
 
   };
@@ -70,14 +73,13 @@ export default function Fertilization() {
   const handlePressButtonbar = (index) => {
     setPressedIndex(index === pressedIndex ? null : index);
     setSelectedButton(index === pressedIndex ? null : index);
-
   };
 
   const isPressed = (index) => {
     return index === pressedIndex;
   };
 
-  const buttonNames = ["Daily","Weekly", "Monthly", "Quarter", "Yearly"];
+  const buttonNames = ["Daily", "Weekly", "Monthly", "Quarter", "Yearly"];
 
   /*text area */
   const [textFertilizationType, setTextFertilizationType] = useState("");
@@ -106,14 +108,14 @@ export default function Fertilization() {
       {/* Static section at the top */}
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
-      {/*Header section*/}  
+      {/*Header section*/}
       <Headersection navigation={navigation} title="Fertilizing" />
 
       {/* Scrollable content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
 
-        <View  style={styles.top}>
-        {/* Top section */}
+        <View style={styles.top}>
+          {/* Top section */}
           <View style={styles.Box1}>
             <View style={styles.innerContainer}>
               <Text style={styles.titleText}>Plantation Info</Text>
@@ -154,7 +156,7 @@ export default function Fertilization() {
                     />
                     <View style={styles.propertyDetails}>
                       <Text style={styles.propertyLabel}>Density</Text>
-                      <Text style={styles.propertyValue}>32 plants/m</Text>
+                      <Text style={styles.propertyValue}>{PlantationDensity} plants/m</Text>
                     </View>
                   </View>
                   <View style={styles.property}>
@@ -165,7 +167,7 @@ export default function Fertilization() {
                     />
                     <View style={styles.propertyDetails}>
                       <Text style={styles.propertyLabel}>Total Plants</Text>
-                      <Text style={styles.propertyValue}>100</Text>
+                      <Text style={styles.propertyValue}>{numberOfPlants}</Text>
                     </View>
                   </View>
                 </View>
@@ -173,7 +175,7 @@ export default function Fertilization() {
             </View>
           </View>
 
-        {/* Second section */}
+          {/* Second section */}
 
           <View style={styles.Box2}>
 
@@ -187,87 +189,87 @@ export default function Fertilization() {
                 <Text style={styles.Box2titleText}>Time Period</Text>
               </View>
               <View style={styles.selectbuttonBox}>
-                
-                  {buttonNames.map((name, index) => (
-                    <Button
-                      labelStyle={{
-                        fontSize: 12,
-                        color: isPressed(index) ? "#007aff" : "#000",
-                        width: "100%",
-                      }}
-                      key={index}
-                      mode={isPressed(index) ? "contained-tonal" : "outlined"}
-                      color={isPressed(index) ? "#007aff" : "#000"}
-                      onPress={() => handlePressButtonbar(index)}
-                      style={[
-                        styles.button,
-                        { borderColor: isPressed(index) ? "#007aff" : "#000" },
-                      ]}
-                    >
-                      {name}
-                    </Button>
-                  ))}
-                
+
+                {buttonNames.map((name, index) => (
+                  <Button
+                    labelStyle={{
+                      fontSize: 12,
+                      color: isPressed(index) ? "#007aff" : "#000",
+                      width: "100%",
+                    }}
+                    key={index}
+                    mode={isPressed(index) ? "contained-tonal" : "outlined"}
+                    color={isPressed(index) ? "#007aff" : "#000"}
+                    onPress={() => handlePressButtonbar(index)}
+                    style={[
+                      styles.button,
+                      { borderColor: isPressed(index) ? "#007aff" : "#000" },
+                    ]}
+                  >
+                    {name}
+                  </Button>
+                ))}
+
               </View>
             </View>
 
           </View>
 
-        {/* Third section */}
+          {/* Third section */}
 
           <View style={styles.Box3}>
-              <View style={styles.Box3TopText}>
-                <MaterialCommunityIcons
-                  name="flask-outline"
-                  size={20}
-                  color="#65676B"
-                />
-                <Text style={styles.Box3titleText}>Fertilizer Type :</Text>
-              </View>
-              <TextInput
-                
-                style={styles.Box2input}
-                placeholder="Enter The name"
-                value={textFertilizationType}
-                onChangeText={setTextFertilizationType}
-                placeholderTextColor={"#838383"}
-                borderBottomColor="lightgray"
-                borderBottomWidth={1}
-                width={"36%"}
-                height={20}
-                marginbottom={10}
-                marginLeft={10}
+            <View style={styles.Box3TopText}>
+              <MaterialCommunityIcons
+                name="flask-outline"
+                size={20}
+                color="#65676B"
               />
+              <Text style={styles.Box3titleText}>Fertilizer Type :</Text>
             </View>
+            <TextInput
 
-        {/* Forth section */}
+              style={styles.Box2input}
+              placeholder="Enter The name"
+              value={textFertilizationType}
+              onChangeText={setTextFertilizationType}
+              placeholderTextColor={"#838383"}
+              borderBottomColor="lightgray"
+              borderBottomWidth={1}
+              width={"36%"}
+              height={20}
+              marginbottom={10}
+              marginLeft={10}
+            />
+          </View>
+
+          {/* Forth section */}
 
           <View style={styles.Box3}>
-              <View style={styles.Box3TopText}>
-                <MaterialCommunityIcons
-                  name="ticket-confirmation"
-                  size={20}
-                  color="#65676B"
-                />
-                <Text style={styles.Box3titleText}>Number of Times :</Text>
-              </View>
-              <TextInput
-                keyboardType="numeric"
-                style={styles.Box2input}
-                placeholder="00"
-                value={textFertilizationNUmberoftime}
-                onChangeText={setTextFertilizationNUmberoftime}
-                placeholderTextColor={"#838383"}
-                borderBottomColor="lightgray"
-                borderBottomWidth={1}
-                width={"30%"}
-                height={20}
-                marginbottom={10}
-                marginLeft={10}
+            <View style={styles.Box3TopText}>
+              <MaterialCommunityIcons
+                name="ticket-confirmation"
+                size={20}
+                color="#65676B"
               />
+              <Text style={styles.Box3titleText}>Number of Times :</Text>
             </View>
+            <TextInput
+              keyboardType="numeric"
+              style={styles.Box2input}
+              placeholder="00"
+              value={textFertilizationNUmberoftime}
+              onChangeText={setTextFertilizationNUmberoftime}
+              placeholderTextColor={"#838383"}
+              borderBottomColor="lightgray"
+              borderBottomWidth={1}
+              width={"30%"}
+              height={20}
+              marginbottom={10}
+              marginLeft={10}
+            />
+          </View>
 
-        {/* Fifth section */}
+          {/* Fifth section */}
 
           <View style={styles.Box5}>
             <View style={styles.Box2innerContainer}>
@@ -315,22 +317,22 @@ export default function Fertilization() {
               </Text>
             </View>
           </View>
-          </View>
+        </View>
 
         {/* Bottom section */}
 
-          <View style={styles.bottom}>
-            
-            <CustomButton
-              onPress={handleFertilizationDetails}
-              text=" Calculate Fertilizing"
-              iconName="calculator" // Change the icon name as needed
-              iconColor="white" // Change the color of the icon
-              buttonColor="#0866FF" // Change the background color of the button
-            />
+        <View style={styles.bottom}>
+
+          <CustomButton
+            onPress={handleFertilizationDetails}
+            text=" Calculate Fertilizing"
+            iconName="calculator" // Change the icon name as needed
+            iconColor="white" // Change the color of the icon
+            buttonColor="#0866FF" // Change the background color of the button
+          />
 
 
-          </View>
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -352,8 +354,7 @@ const styles = StyleSheet.create({
   top: {
     alignItems: "center",
     width: "100%",
-
-   },
+  },
 
   Box1: {
     width: "87%",
@@ -540,5 +541,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     bottom: 30,
   },
-  
+
 });

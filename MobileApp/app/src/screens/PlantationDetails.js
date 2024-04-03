@@ -23,9 +23,7 @@ import {
   import AlertButton from "../components/AlertButton";
   
   export default function PlantationDetails({ route }) {
-  
-  
-  
+
     const { textPlant, selectedValue, textplantspace, textRowspace,  } = route.params;
   
     const [numberOfPlants, setnumberOfPlants] = useState(null);
@@ -34,7 +32,7 @@ import {
     useEffect(() => {
       const fetchData = async () => {
           try {
-              const response = await axios.get("http://172.20.10.3:5000/api/plantation/numberOfPlants");
+              const response = await axios.get("http://10.10.14.231:5000/api/plantation/numberOfPlants");
               setnumberOfPlants(response.data.data); 
           } catch (error) {
               console.error(error);
@@ -47,7 +45,7 @@ import {
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await axios.get("http://172.20.10.3:5000/api/plantation/plantDensity");
+            const response = await axios.get("http://10.10.14.231:5000/api/plantation/plantDensity");
             setPlantDensity(response.data.data); 
         } catch (error) {
             console.error(error);
@@ -171,7 +169,10 @@ import {
   
     const navigation = useNavigation();
     const handleFertilization = () => {
-      navigation.navigate("Fertilization");
+      navigation.navigate("Fertilization",{
+        numberOfPlants: numberOfPlants,
+        PlantationDensity: PlantationDensity,
+      });
     };
   
   

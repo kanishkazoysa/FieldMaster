@@ -43,25 +43,25 @@ const calculateFertilizerAmountForYear = (frequency, NoOfTimes, AmountOfOneTime,
 router.post("/fertilizer", async (req, res) => {
     
     try{
-        const { textFertilizationType,textFertilizationNUmberoftime,textFertilizationAmount,FertilizerAmountUnitselectedValue,Frequency} = req.body;
+        const { textFertilizationType,textFertilizationNUmberoftime,textFertilizationAmount,FertilizerAmountUnitselectedValue,selectedButton} = req.body;
         const area = 100; // Acres
-
-        const HowOften=Frequency;
+        
         const NoOfTimes = textFertilizationNUmberoftime;
         const AmountOfOneTime = textFertilizationAmount;
         const unit = FertilizerAmountUnitselectedValue;
-        
+        const HowOften = selectedButton;
         const totalAmount = calculateFertilizerAmountForYear(HowOften, NoOfTimes, AmountOfOneTime, unit);
         
         console.log("Total amount:", totalAmount);
-        res.json({status:"ok" , data: "Counted the amount of fertilizer"});
+        //res.json({status:"ok" , data: "Counted the amount of fertilizer"});
 
         const newFertilizer = new fertilizerModel({
             AmountOfOneTime: textFertilizationAmount,
             NoOfTimes: textFertilizationNUmberoftime,
             FertilizerType: textFertilizationType,
             unit:FertilizerAmountUnitselectedValue,
-            FertilizerAmountNeeded:totalAmount
+            FertilizerAmountNeeded:totalAmount,
+            HowOften:selectedButton
         })
       
         await newFertilizer.save();

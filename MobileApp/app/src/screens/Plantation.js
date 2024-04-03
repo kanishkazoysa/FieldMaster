@@ -54,9 +54,6 @@ export default function Plantation() {
     { label: "m", value: "m" },
   ];
 
-
-  
-
   const handlePlantationDetails = () => {
     if (
       !textPlant ||
