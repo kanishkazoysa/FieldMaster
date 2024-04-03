@@ -21,7 +21,7 @@ import FenceDetails from "./src/screens/FenceDetails";
 /* Template screens importing */
 
 import SaveScreen from "./src/screens/TempScreens/SaveScreen/SaveScreen";
-import ResizeMap from "./src/screens/TempScreens/ResizeMap/ResizeMap";
+// import ResizeMap from "./src/screens/TempScreens/ResizeMap/ResizeMap";
 import TemplateView from "./src/screens/TempScreens/TemplateView/TemplateView";
 import EditTemplate from "./src/screens/TempScreens/EditTemplate/EditTemplate";
 import SavedTemplatesScreen from "./src/screens/TempScreens/SavedTemplatesScreen/SavedTemplatesScreen";
@@ -41,13 +41,13 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="ResizeMap"
+        initialRouteName="WelcomeScreen"
         screenOptions={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Slide-in/slide-out animation
         }}
       >
-        {/* <Stack.Screen name="splashScreen" component={SplashScreen} />
+        <Stack.Screen name="splashScreen" component={SplashScreen} />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
@@ -59,9 +59,9 @@ const App = () => {
         <Stack.Screen name="WalkaroundLand" component={WalkaroundLand} />
         <Stack.Screen name="Fence" component={Fence} />
         <Stack.Screen name="FenceDetails" component={FenceDetails} />
-        <Stack.Screen name="SaveScreen" component={SaveScreen} /> */}
-        <Stack.Screen name="ResizeMap" component={ResizeMap} />
-        {/* <Stack.Screen name="TemplateView" component={TemplateView} />
+        <Stack.Screen name="SaveScreen" component={SaveScreen} />
+        {/* <Stack.Screen name="ResizeMap" component={ResizeMap} /> */}
+        <Stack.Screen name="TemplateView" component={TemplateView} />
         <Stack.Screen name="EditTemplate" component={EditTemplate} />
         <Stack.Screen
           name="SavedTemplatesScreen"
@@ -79,7 +79,7 @@ const App = () => {
 
         <Stack.Screen name="EffortOutput" component={EffortOutput} />
 
-        <Stack.Screen name="testScreen" component={testScreen} /> */}
+        <Stack.Screen name="testScreen" component={testScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
