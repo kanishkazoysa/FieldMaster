@@ -13,7 +13,7 @@ for (let interfaceName in networkInterfaces) {
   }
 }
  */
-const ipAddress = '192.168.181.109';
+const ipAddress = '10.10.5.60';
 const backendUrl = `http://${ipAddress}:3000`;
 
 export default backendUrl;

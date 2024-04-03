@@ -19,6 +19,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 
 const ResizeMapScreen = ({ navigation, route }) => {
+  const { templateId } = route.params;
+
   const [isPolygonComplete, setIsPolygonComplete] = useState(true);
   const [region, setRegion] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -55,6 +57,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
+    console.log('Template ID:', templateId);
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -68,22 +71,22 @@ const ResizeMapScreen = ({ navigation, route }) => {
 
       try {
         const response = await axios.get(
-          'http://10.10.5.60:3000/api/mapTemplate/getMapPoints/660be212158d122644077c5d'
+          `http://10.10.5.60:3000/api/mapTemplate/getOneTemplate/${templateId}`
         );
-        setPoints(response.data.points);
-        console.log(response.data.points);
+        setPoints(response.data.locationPoints);
+        console.log(response.data.locationPoints);
 
         // Calculate the average latitude and longitude
         const avgLatitude =
-          response.data.points.reduce(
+          response.data.locationPoints.reduce(
             (total, point) => total + point.latitude,
             0
-          ) / response.data.points.length;
+          ) / response.data.locationPoints.length;
         const avgLongitude =
-          response.data.points.reduce(
+          response.data.locationPoints.reduce(
             (total, point) => total + point.longitude,
             0
-          ) / response.data.points.length;
+          ) / response.data.locationPoints.length;
 
         setRegion({
           latitude: avgLatitude,
