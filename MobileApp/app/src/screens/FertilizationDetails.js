@@ -130,10 +130,12 @@ export default function FertilizationDetails({ route }) {
           <h2>Fertilizing Details</h2>
 
           <ul>
-          <li> Total Amount Of Fertilizer= ${FertilizerAmount} ${FertilizerAmountUnit}</li>
+          <li> Total Amount Of Fertilizer= ${totalAmount} ${FertilizerAmountUnit}</li>
           
           <li> Fertilizer Application Frequency = ${NumberOfTime} Times ${SelectedButton} </li>
           <li> Fertilizer Type = ${FertilizerType} </li>
+          <li> Fertilizer Amount Per Application = ${FertilizerAmount}${FertilizerAmountUnit}</li>
+          <li> How Often = ${SelectedButton} </li>
           
           </ul>
 
@@ -230,7 +232,7 @@ export default function FertilizationDetails({ route }) {
               />
               <View style={styles.box2PropertyDetails}>
                 <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                <Text style={styles.Box2PropertyValue}>1.5Km</Text>
+                <Text style={styles.Box2PropertyValue}>665m</Text>
               </View>
             </View>
             <View style={styles.box2Property}>
@@ -241,7 +243,7 @@ export default function FertilizationDetails({ route }) {
               />
               <View style={styles.box2PropertyDetails}>
                 <Text style={styles.Box2PropertyLabel}>Area</Text>
-                <Text style={styles.Box2PropertyValue}>100 acres</Text>
+                <Text style={styles.Box2PropertyValue}>2 acres</Text>
               </View>
             </View>
           </View>
