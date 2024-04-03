@@ -272,9 +272,9 @@ export default function Plantation() {
           <CustomButton
             onPress={handlePlantationDetails}
             text="Calculate Plantation"
-            iconName="calculator" // Change the icon name as needed
-            iconColor="white" // Change the color of the icon
-            buttonColor="#0866FF" // Change the background color of the button
+            iconName="calculator" 
+            iconColor="white" 
+            buttonColor="#0866FF" 
           />
         </View>
       )}
