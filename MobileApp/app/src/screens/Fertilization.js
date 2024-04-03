@@ -22,11 +22,11 @@ import axios from "axios";
 
 export default function Fertilization({ route }) {
   const { params } = route;
-  const { numberOfPlants, plantationDensity } = params;
+  const { numberOfPlants, PlantationDensity,plantType } = params;
   const navigation = useNavigation();
 
   useEffect(() => {
-    console.log("receiving" + numberOfPlants + " " + plantationDensity);
+    console.log("receiving" + numberOfPlants + " " + PlantationDensity+" "+plantType);
   }, []);
 
   const handleFertilizationDetails = () => {
@@ -50,7 +50,7 @@ export default function Fertilization({ route }) {
     try {
 
       const selectedButton = buttonNames[selectedButton];
-      const response = axios.post("http://10.10.12.72:5000/api/fertilizer/fertilizer", {
+      const response = axios.post("http://172.20.10.3:5000/api/fertilizer/fertilizer", {
         textFertilizationType,
         textFertilizationNUmberoftime,
         textFertilizationAmount,
@@ -145,7 +145,7 @@ export default function Fertilization({ route }) {
                     />
                     <View style={styles.propertyDetails}>
                       <Text style={styles.propertyLabel}>Plant</Text>
-                      <Text style={styles.propertyValue}>Tea</Text>
+                      <Text style={styles.propertyValue}>{plantType}</Text>
                     </View>
                   </View>
                   <View style={styles.property}>
@@ -156,7 +156,7 @@ export default function Fertilization({ route }) {
                     />
                     <View style={styles.propertyDetails}>
                       <Text style={styles.propertyLabel}>Area</Text>
-                      <Text style={styles.propertyValue}>100 acres</Text>
+                      <Text style={styles.propertyValue}>2 acres</Text>
                     </View>
                   </View>
                 </View>
@@ -170,7 +170,7 @@ export default function Fertilization({ route }) {
                     />
                     <View style={styles.propertyDetails}>
                       <Text style={styles.propertyLabel}>Density</Text>
-                      <Text style={styles.propertyValue}>{plantationDensity}</Text>
+                      <Text style={styles.propertyValue}>{PlantationDensity}</Text>
                     </View>
                   </View>
                   <View style={styles.property}>
