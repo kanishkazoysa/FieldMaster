@@ -28,11 +28,12 @@ export default function PlantationDetails({ route }) {
 
   const [numberOfPlants, setnumberOfPlants] = useState(null);
   const [PlantationDensity, setPlantDensity] = useState(null);
+  const [PlantType, setplantType] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://10.10.14.231:5000/api/plantation/numberOfPlants");
+        const response = await axios.get("http://172.20.10.3:5000/api/plantation/numberOfPlants");
         setnumberOfPlants(response.data.data);
       } catch (error) {
         console.error(error);
@@ -45,8 +46,21 @@ export default function PlantationDetails({ route }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://10.10.14.231:5000/api/plantation/plantDensity");
+        const response = await axios.get("http://172.20.10.3:5000/api/plantation/plantDensity");
         setPlantDensity(response.data.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://172.20.10.3:5000/api/plantation/plantType");
+        setplantType(response.data.data);
       } catch (error) {
         console.error(error);
       }
@@ -172,8 +186,11 @@ export default function PlantationDetails({ route }) {
     navigation.navigate("Fertilization", {
       numberOfPlants: numberOfPlants,
       PlantationDensity: PlantationDensity,
+      plantType: textPlant
     });
-    console.log("sending" + numberOfPlants + " " + PlantationDensity);
+    console.log("sending" + numberOfPlants + " " + PlantationDensity+" "+textPlant);
+    
+ 
   };
 
 
@@ -259,7 +276,7 @@ export default function PlantationDetails({ route }) {
                 />
                 <View style={styles.box2PropertyDetails}>
                   <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                  <Text style={styles.Box2PropertyValue}>1.5Km</Text>
+                  <Text style={styles.Box2PropertyValue}>665m</Text>
                 </View>
               </View>
               <View style={styles.box2Property}>
@@ -270,7 +287,7 @@ export default function PlantationDetails({ route }) {
                 />
                 <View style={styles.box2PropertyDetails}>
                   <Text style={styles.Box2PropertyLabel}>Area</Text>
-                  <Text style={styles.Box2PropertyValue}>100 acres</Text>
+                  <Text style={styles.Box2PropertyValue}>2 acres</Text>
                 </View>
               </View>
             </View>
