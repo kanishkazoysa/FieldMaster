@@ -68,7 +68,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
 
       try {
         const response = await axios.get(
-          'http://10.10.5.60:3000/api/mapTemplate/getMapPoints/660be212158d122644077c5d'
+          'http:// 192.168.8.173:3000/api/mapTemplate/getMapPoints/660be212158d122644077c5d'
         );
         setPoints(response.data.points);
         console.log(response.data.points);
