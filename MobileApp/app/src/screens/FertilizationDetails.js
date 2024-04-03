@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -18,11 +18,40 @@ import { shareAsync } from 'expo-sharing';
 
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
-export default function FertilizationDetails({route}) {
+export default function FertilizationDetails({ route }) {
 
-    
-  const { FertilizerType, NumberOfTime,FertilizerAmount, FertilizerAmountUnit,SelectedButton } = route.params;
 
+  const { params } = route;
+  const { FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton } = params;
+  const [factor, setFactor] = useState(1);
+  const [totalAmount, setTotalAmount] = useState(0);
+  useEffect(() => {
+    console.log("in Fertilization details screen", FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton);
+    let factorValue = 1;
+
+    // Determine the factor based on the frequency
+    switch (SelectedButton) {
+      case "Daily":
+        factorValue = 365;
+        break;
+      case "Weekly":
+        factorValue = 4; // Weekly amount for one month
+        break;
+      case "Monthly":
+        factorValue = 12;
+        break;
+      case "Quarter":
+        factorValue = 4;
+        break;
+      case "Yearly":
+        factorValue = 1;
+        break;
+      default:
+        factorValue = 1;
+    }
+    setFactor(factorValue);
+    setTotalAmount(NumberOfTime * FertilizerAmount * factorValue);
+  }, []);
 
   const html = `
   <!DOCTYPE html>
@@ -115,13 +144,13 @@ export default function FertilizationDetails({route}) {
 `;
 
 
-    const navigation = useNavigation();
-    const handleFertilizationDetails = () => {
-        navigation.navigate("Fence");
-      };
+  const navigation = useNavigation();
+  const handleFertilizationDetails = () => {
+    navigation.navigate("Fence");
+  };
 
 
-      /*print*/
+  /*print*/
 
   const [selectedPrinter, setSelectedPrinter] = React.useState();
 
@@ -152,16 +181,16 @@ export default function FertilizationDetails({route}) {
       behavior={Platform.OS === "ios" ? "padding" : "margin"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
     >
-    {/* Static section at the top */}
-    <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+      {/* Static section at the top */}
+      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
-      {/*Header section*/}  
+      {/*Header section*/}
       <Headersection navigation={navigation} title="Fertilizing Details" />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
 
-    <View style={styles.top}>
-        {/* Top section */}
+        <View style={styles.top}>
+          {/* Top section */}
           <View style={styles.box1}>
             <Text style={styles.titleText}>Total Amount of Fertilizing</Text>
             <View style={styles.propertyBox}>
@@ -173,7 +202,7 @@ export default function FertilizationDetails({route}) {
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>Total Amount</Text>
-                  <Text style={styles.propertyValue}>{FertilizerAmount} {FertilizerAmountUnit}</Text>
+                  <Text style={styles.propertyValue}>{totalAmount} {FertilizerAmountUnit}</Text>
                 </View>
               </View>
               <View style={styles.property}>
@@ -190,34 +219,34 @@ export default function FertilizationDetails({route}) {
             </View>
           </View>
 
-        {/* Second section */}
+          {/* Second section */}
 
           <View style={styles.box2}>
-              <View style={styles.box2Property}>
-                <MaterialCommunityIcons
-                  name="vector-square"
-                  size={36}
-                  color="#65676B"
-                />
-                <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                  <Text style={styles.Box2PropertyValue}>1.5Km</Text>
-                </View>
+            <View style={styles.box2Property}>
+              <MaterialCommunityIcons
+                name="vector-square"
+                size={36}
+                color="#65676B"
+              />
+              <View style={styles.box2PropertyDetails}>
+                <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
+                <Text style={styles.Box2PropertyValue}>1.5Km</Text>
               </View>
-              <View style={styles.box2Property}>
-                <MaterialCommunityIcons
-                  name="texture-box"
-                  size={36}
-                  color="#65676B"
-                />
-                <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Area</Text>
-                  <Text style={styles.Box2PropertyValue}>100 acres</Text>
-                </View>
+            </View>
+            <View style={styles.box2Property}>
+              <MaterialCommunityIcons
+                name="texture-box"
+                size={36}
+                color="#65676B"
+              />
+              <View style={styles.box2PropertyDetails}>
+                <Text style={styles.Box2PropertyLabel}>Area</Text>
+                <Text style={styles.Box2PropertyValue}>100 acres</Text>
               </View>
+            </View>
           </View>
 
-        {/* Third section */}
+          {/* Third section */}
 
           <View style={styles.box3}>
             <View style={styles.inner}>
@@ -254,29 +283,29 @@ export default function FertilizationDetails({route}) {
               </View>
             </View>
           </View>
-          </View>
+        </View>
 
-         {/* Bottom section */}
+        {/* Bottom section */}
 
-          <View style={styles.bottom}>
-            
-            <CustomButton
-              onPress={print}
-              text="Save As PDF"
-              iconName="content-save-outline" // Change the icon name as needed
-              iconColor="white" // Change the color of the icon
-              buttonColor="#E41E3F" // Change the background color of the button
-            />
+        <View style={styles.bottom}>
 
-            <CustomButton
-              onPress={printToFile}
-              text="Share PDF"
-              iconName="share-variant" // Change the icon name as needed
-              iconColor="white" // Change the color of the icon
-              buttonColor="#007BFF" // Change the background color of the button
-            />
-          </View>
-       </ScrollView>
+          <CustomButton
+            onPress={print}
+            text="Save As PDF"
+            iconName="content-save-outline" // Change the icon name as needed
+            iconColor="white" // Change the color of the icon
+            buttonColor="#E41E3F" // Change the background color of the button
+          />
+
+          <CustomButton
+            onPress={printToFile}
+            text="Share PDF"
+            iconName="share-variant" // Change the icon name as needed
+            iconColor="white" // Change the color of the icon
+            buttonColor="#007BFF" // Change the background color of the button
+          />
+        </View>
+      </ScrollView>
 
 
 
@@ -286,11 +315,11 @@ export default function FertilizationDetails({route}) {
 
 const styles = StyleSheet.create({
 
-    container: {
-        flex: 1,
-      },
-      
-      /*Top Section*/
+  container: {
+    flex: 1,
+  },
+
+  /*Top Section*/
 
   scrollContent: {
     flexDirection: "column",
@@ -301,7 +330,7 @@ const styles = StyleSheet.create({
   top: {
     alignItems: "center",
     width: "100%",
-   },
+  },
 
   box1: {
     flexDirection: "column",
@@ -466,9 +495,9 @@ const styles = StyleSheet.create({
     textAlign: "right",
   },
 
-   /* bottom section */
+  /* bottom section */
 
-   bottom: {
+  bottom: {
     alignItems: "center",
     bottom: 30,
   },

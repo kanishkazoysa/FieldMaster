@@ -9,7 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-}from "react-native";
+} from "react-native";
 import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
@@ -17,6 +17,8 @@ import { useNavigation } from "@react-navigation/native";
 
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
+
+//Data submission to the backend API is implemented using axios
 import axios from "axios";
 
 export default function Plantation() {
@@ -40,7 +42,7 @@ export default function Plantation() {
   const PlantSpaceUnitOptions = [
     { label: "cm", value: "cm" },
     { label: "m", value: "m" },
-   
+
   ];
 
   const RowSpacingUnitplaceholder = {
@@ -54,19 +56,19 @@ export default function Plantation() {
     { label: "m", value: "m" },
   ];
 
+  //handles submission of plantation details and navigation to PlantationDetails
   const handlePlantationDetails = () => {
     if (
       !textPlant ||
       !textplantspace ||
       !textRowspace ||
       !PlantSpaceUnitselectedValue
- 
+
     ) {
-      // Display error message
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
-    try{
+    try {
       const response = axios.post("http://10.10.14.231:5000/api/plantation/plantation", {
         textPlant,
         textplantspace,
@@ -78,7 +80,7 @@ export default function Plantation() {
       console.error(error);
       Alert.alert("Error", "Something went wrong");
     }
-    
+
 
     navigation.navigate("PlantationDetails", {
       textPlant: textPlant,
@@ -107,148 +109,148 @@ export default function Plantation() {
 
           <View style={styles.Box1}>
 
-              <Text style={styles.titleText}>Land Info</Text>
-              <View style={styles.propertyBox}>
-                <View style={styles.property}>
-                  <MaterialCommunityIcons name="grid" size={36} color="gray" />
-                  <View style={styles.propertyDetails}>
-                    <Text style={styles.propertyLabel}>Type</Text>
-                    <Text style={styles.propertyValue}>Flat</Text>
-                  </View>
+            <Text style={styles.titleText}>Land Info</Text>
+            <View style={styles.propertyBox}>
+              <View style={styles.property}>
+                <MaterialCommunityIcons name="grid" size={36} color="gray" />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyLabel}>Type</Text>
+                  <Text style={styles.propertyValue}>Flat</Text>
                 </View>
-                <View style={styles.property}>
-                  <MaterialCommunityIcons
-                    name="texture-box"
-                    size={36}
-                    color="gray"
-                  />
-                  <View style={styles.propertyDetails}>
-                    <Text style={styles.propertyLabel}>Area</Text>
-                    <Text style={styles.propertyValue}>100 acres</Text>
-                  </View>
+              </View>
+              <View style={styles.property}>
+                <MaterialCommunityIcons
+                  name="texture-box"
+                  size={36}
+                  color="gray"
+                />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyLabel}>Area</Text>
+                  <Text style={styles.propertyValue}>100 acres</Text>
                 </View>
               </View>
             </View>
+          </View>
 
-       
 
-        {/* Second section */}
+
+          {/* Second section */}
 
           <View style={styles.Box2}>
-              <View style={styles.TopText}>
-                <MaterialCommunityIcons name="sprout" size={20} color="gray" />
-                <Text style={styles.Box2titleText}>Plant</Text>
-              </View>
+            <View style={styles.TopText}>
+              <MaterialCommunityIcons name="sprout" size={20} color="gray" />
+              <Text style={styles.Box2titleText}>Plant</Text>
+            </View>
+            <TextInput
+              keyboardType="default"
+              style={styles.Box2input}
+              placeholder="Enter Name of the plant"
+              value={textPlant}
+              onChangeText={setTextPlant}
+              placeholderTextColor={"#838383"}
+              borderBottomColor="lightgray"
+              borderBottomWidth={1}
+              width={"100%"}
+              marginTop={12}
+            />
+          </View>
+
+          {/* Third section */}
+
+          <View style={styles.Box2}>
+            <View style={styles.TopText}>
+              <MaterialCommunityIcons name="apps" size={20} color="gray" />
+              <Text style={styles.Box2titleText}>Column Spacing</Text>
+            </View>
+            <View style={styles.Box3propertyBox}>
               <TextInput
-                keyboardType="default"
+                keyboardType="numeric"
                 style={styles.Box2input}
-                placeholder="Enter Name of the plant"
-                value={textPlant}
-                onChangeText={setTextPlant}
+                placeholder="Enter Plant Space"
+                value={textplantspace}
+                onChangeText={setTextPlantSpace}
                 placeholderTextColor={"#838383"}
                 borderBottomColor="lightgray"
                 borderBottomWidth={1}
-                width={"100%"}
-                marginTop={12}
+                width={"60%"}
               />
+              <View style={styles.dropdownContainer}>
+                <RNPickerSelect
+                  placeholder={PlantSpaceUnitPlaceholder}
+                  items={PlantSpaceUnitOptions}
+                  onValueChange={(value) =>
+                    PlantSpaceUnitSetSelectedValue(value)
+                  }
+                  value={PlantSpaceUnitselectedValue}
+                  style={{
+                    inputIOS: {
+                      textAlign: "center",
+                    },
+                    inputAndroid: {
+                      textAlign: "center",
+                    },
+                  }}
+                />
+              </View>
+            </View>
           </View>
 
-        {/* Third section */}
+          {/* Forth section */}
 
           <View style={styles.Box2}>
-              <View style={styles.TopText}>
-                <MaterialCommunityIcons name="apps" size={20} color="gray" />
-                <Text style={styles.Box2titleText}>Column Spacing</Text>
-              </View>
-              <View style={styles.Box3propertyBox}>
-                <TextInput
-                  keyboardType="numeric"
-                  style={styles.Box2input}
-                  placeholder="Enter Plant Space"
-                  value={textplantspace}
-                  onChangeText={setTextPlantSpace}
-                  placeholderTextColor={"#838383"}
-                  borderBottomColor="lightgray"
-                  borderBottomWidth={1}
-                  width={"60%"}
+            <View style={styles.TopText}>
+              <MaterialCommunityIcons
+                name="format-line-spacing"
+                size={20}
+                color="gray"
+              />
+              <Text style={styles.Box2titleText}>Row Spacing</Text>
+            </View>
+            <View style={styles.Box3propertyBox}>
+              <TextInput
+                keyboardType="numeric"
+                style={styles.Box2input}
+                placeholder="Enter Row Space"
+                value={textRowspace}
+                onChangeText={setTextRowSpace}
+                placeholderTextColor={"#838383"}
+                borderBottomColor="lightgray"
+                borderBottomWidth={1}
+                width={"60%"}
+              />
+              <View style={styles.dropdownContainer}>
+                <RNPickerSelect
+                  placeholder={RowSpacingUnitplaceholder}
+                  items={RowSpacingUnitOptions}
+                  onValueChange={(value) =>
+                    PlantSpaceUnitSetSelectedValue(value)
+                  }
+                  value={PlantSpaceUnitselectedValue}
+                  style={{
+                    inputIOS: {
+                      textAlign: "center",
+                    },
+                    inputAndroid: {
+                      textAlign: "center",
+                    },
+                  }}
                 />
-                <View style={styles.dropdownContainer}>
-                  <RNPickerSelect
-                    placeholder={PlantSpaceUnitPlaceholder}
-                    items={PlantSpaceUnitOptions}
-                    onValueChange={(value) =>
-                      PlantSpaceUnitSetSelectedValue(value)
-                    }
-                    value={PlantSpaceUnitselectedValue}
-                    style={{
-                      inputIOS: {
-                        textAlign: "center",
-                      },
-                      inputAndroid: {
-                        textAlign: "center",
-                      },
-                    }}
-                  />
-                </View>
               </View>
             </View>
-
-        {/* Forth section */}
-
-          <View style={styles.Box2}>
-              <View style={styles.TopText}>
-                <MaterialCommunityIcons
-                  name="format-line-spacing"
-                  size={20}
-                  color="gray"
-                />
-                <Text style={styles.Box2titleText}>Row Spacing</Text>
-              </View>
-              <View style={styles.Box3propertyBox}>
-                <TextInput
-                  keyboardType="numeric"
-                  style={styles.Box2input}
-                  placeholder="Enter Row Space"
-                  value={textRowspace}
-                  onChangeText={setTextRowSpace}
-                  placeholderTextColor={"#838383"}
-                  borderBottomColor="lightgray"
-                  borderBottomWidth={1}
-                  width={"60%"}
-                />
-                <View style={styles.dropdownContainer}>
-                  <RNPickerSelect
-                    placeholder={RowSpacingUnitplaceholder}
-                    items={RowSpacingUnitOptions}
-                    onValueChange={(value) =>
-                      PlantSpaceUnitSetSelectedValue(value)
-                    }
-                    value={PlantSpaceUnitselectedValue}
-                    style={{
-                      inputIOS: {
-                        textAlign: "center",
-                      },
-                      inputAndroid: {
-                        textAlign: "center",
-                      },
-                    }}
-                  />
-                </View>
-              </View>
-            </View>
-            </View>
+          </View>
+        </View>
 
         {/* Bottom section */}
 
-          <View style={styles.bottom}>
-            <CustomButton
-              onPress={handlePlantationDetails}
-              text="Calculate Plantation"
-              iconName="calculator" // Change the icon name as needed
-              iconColor="white" // Change the color of the icon
-              buttonColor="#0866FF" // Change the background color of the button
-            />
-          </View>
+        <View style={styles.bottom}>
+          <CustomButton
+            onPress={handlePlantationDetails}
+            text="Calculate Plantation"
+            iconName="calculator" // Change the icon name as needed
+            iconColor="white" // Change the color of the icon
+            buttonColor="#0866FF" // Change the background color of the button
+          />
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -272,7 +274,7 @@ const styles = StyleSheet.create({
   top: {
     alignItems: "center",
     width: "100%",
-   },
+  },
 
   Box1: {
     width: "87%",
@@ -280,7 +282,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "white",
     marginTop: 30,
-    padding : 12,
+    padding: 12,
     marginBottom: 20,
     borderRadius: 11,
     shadowColor: "#000",
@@ -289,7 +291,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
 
- 
+
   titleText: {
     fontSize: 14,
     fontWeight: "bold",
@@ -362,7 +364,7 @@ const styles = StyleSheet.create({
 
   /*Third section*/
 
- 
+
 
   Box3propertyBox: {
     flexDirection: "row",

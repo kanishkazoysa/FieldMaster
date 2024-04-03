@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -21,9 +21,14 @@ import CustomButton from "../components/CustomButton";
 import axios from "axios";
 
 export default function Fertilization({ route }) {
+  const { params } = route;
+  const { numberOfPlants, plantationDensity } = params;
   const navigation = useNavigation();
 
-  const { numberOfPlants, PlantationDensity } = route.params;
+  useEffect(() => {
+    console.log("receiving" + numberOfPlants + " " + plantationDensity);
+  }, []);
+
   const handleFertilizationDetails = () => {
 
     if (!textFertilizationType || !textFertilizationNUmberoftime || !textFertilizationAmount || !FertilizerAmountUnitselectedValue || selectedButton === null) {
@@ -32,19 +37,27 @@ export default function Fertilization({ route }) {
       return;
     }
 
-    const selectedButtonLabel = buttonNames[selectedButton]
+    const dataObject = {
+      FertilizerType: textFertilizationType,
+      NumberOfTime: textFertilizationNUmberoftime,
+      FertilizerAmount: textFertilizationAmount,
+      FertilizerAmountUnit: FertilizerAmountUnitselectedValue,
+      SelectedButton: selectedButton !== null ? buttonNames[selectedButton] : null,
+    };
+    console.log(dataObject)
 
     // connecting to backend
     try {
+
       const selectedButton = buttonNames[selectedButton];
-      const response = axios.post("http://10.10.14.231:5000/api/fertilizer/fertilizer", {
+      const response = axios.post("http://10.10.12.72:5000/api/fertilizer/fertilizer", {
         textFertilizationType,
         textFertilizationNUmberoftime,
         textFertilizationAmount,
-        selectedButton: selectedButtonLabel,
+        selectedButton
       });
 
-      console.log("testing");
+      console.log(response.data);
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Something went wrong");
@@ -73,6 +86,7 @@ export default function Fertilization({ route }) {
   const handlePressButtonbar = (index) => {
     setPressedIndex(index === pressedIndex ? null : index);
     setSelectedButton(index === pressedIndex ? null : index);
+
   };
 
   const isPressed = (index) => {
@@ -156,7 +170,7 @@ export default function Fertilization({ route }) {
                     />
                     <View style={styles.propertyDetails}>
                       <Text style={styles.propertyLabel}>Density</Text>
-                      <Text style={styles.propertyValue}>{PlantationDensity} plants/m</Text>
+                      <Text style={styles.propertyValue}>{plantationDensity}</Text>
                     </View>
                   </View>
                   <View style={styles.property}>
@@ -354,6 +368,7 @@ const styles = StyleSheet.create({
   top: {
     alignItems: "center",
     width: "100%",
+
   },
 
   Box1: {
