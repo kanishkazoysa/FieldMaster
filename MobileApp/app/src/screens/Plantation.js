@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Keyboard} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
@@ -22,6 +23,30 @@ import CustomButton from "../components/CustomButton";
 import axios from "axios";
 
 export default function Plantation() {
+
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+
   const [textPlant, setTextPlant] = useState("");
   const [textplantspace, setTextPlantSpace] = useState("");
   const [textRowspace, setTextRowSpace] = useState("");
@@ -81,7 +106,7 @@ export default function Plantation() {
       Alert.alert("Error", "Something went wrong");
     }
 
-
+    //navigating to the "PlantationDetails" screen while passing some data as route parameters
     navigation.navigate("PlantationDetails", {
       textPlant: textPlant,
       selectedValue: PlantSpaceUnitselectedValue,
@@ -242,6 +267,7 @@ export default function Plantation() {
 
         {/* Bottom section */}
 
+        {!isKeyboardVisible && (
         <View style={styles.bottom}>
           <CustomButton
             onPress={handlePlantationDetails}
@@ -251,6 +277,7 @@ export default function Plantation() {
             buttonColor="#0866FF" // Change the background color of the button
           />
         </View>
+      )}
       </ScrollView>
     </KeyboardAvoidingView>
   );
