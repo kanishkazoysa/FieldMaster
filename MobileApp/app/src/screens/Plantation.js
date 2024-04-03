@@ -35,7 +35,7 @@ export default function Plantation() {
 
   const PlantSpaceUnitPlaceholder = {
     label: "M",
-    value: null,
+    value: "m",
     color: "blue",
   };
 
@@ -47,7 +47,7 @@ export default function Plantation() {
 
   const RowSpacingUnitplaceholder = {
     label: "M",
-    value: null,
+    value: "m",
     color: "blue",
   };
 
