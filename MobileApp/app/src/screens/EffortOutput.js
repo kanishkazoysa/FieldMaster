@@ -35,7 +35,7 @@ import {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://192.168.8.173:5000/api/clearLand/latestClearLand");
+                const response = await axios.get("http://10.10.0.153:5000/api/clearLand/latestClearLand");
                 setLatestData(response.data);
             } catch (error) {
                 console.error(error);
