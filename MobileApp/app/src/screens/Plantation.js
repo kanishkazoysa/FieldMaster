@@ -60,24 +60,24 @@ export default function Plantation() {
 
   const PlantSpaceUnitPlaceholder = {
     label: "M",
-    value: "m",
+    value: null,
     color: "blue",
   };
 
   const PlantSpaceUnitOptions = [
-    { label: "cm", value: "cm" },
+   // { label: "cm", value: "cm" },
     { label: "m", value: "m" },
 
   ];
 
   const RowSpacingUnitplaceholder = {
     label: "M",
-    value: "m",
+    value: null,
     color: "blue",
   };
 
   const RowSpacingUnitOptions = [
-    { label: "cm", value: "cm" },
+    //{ label: "cm", value: "cm" },
     { label: "m", value: "m" },
   ];
 
@@ -93,8 +93,10 @@ export default function Plantation() {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
+
+    
     try {
-      const response = axios.post("http://10.10.14.231:5000/api/plantation/plantation", {
+      const response = axios.post("http://172.20.10.3:5000/api/plantation/plantation", {
         textPlant,
         textplantspace,
         textRowspace,
@@ -151,7 +153,7 @@ export default function Plantation() {
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>Area</Text>
-                  <Text style={styles.propertyValue}>100 acres</Text>
+                  <Text style={styles.propertyValue}>2 acres</Text>
                 </View>
               </View>
             </View>
