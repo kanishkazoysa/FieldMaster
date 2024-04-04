@@ -21,6 +21,7 @@ import axios from "axios";
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
 import AlertButton from "../components/AlertButton";
+import AxiosInstance from "../AxiosInstance";
 
 export default function PlantationDetails({ route }) {
 
@@ -32,12 +33,30 @@ export default function PlantationDetails({ route }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await axios.get("http://10.10.14.231:5000/api/plantation/numberOfPlants");
-        setnumberOfPlants(response.data.data);
-      } catch (error) {
+        AxiosInstance.get("/api/plantation/numberOfPlants",{
+        })
+        .then(async(response)=>{
+          setnumberOfPlants(response.data.data);
+        })
+      .catch ((error)=>{
         console.error(error);
-      }
+      })
+    };
+  
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        AxiosInstance.get("/api/plantation/plantDensity",{
+        })
+        .then(async(response)=>{
+          setPlantDensity(response.data.data);
+        })
+      .catch ((error)=>{
+        console.error(error);
+      })
     };
 
     fetchData();
@@ -45,25 +64,14 @@ export default function PlantationDetails({ route }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await axios.get("http://10.10.14.231:5000/api/plantation/plantDensity");
-        setPlantDensity(response.data.data);
-      } catch (error) {
+        AxiosInstance.get("/api/plantation/plantType",{
+        })
+        .then(async(response)=>{
+          setplantType(response.data.data);
+        })
+      .catch ((error)=>{
         console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://10.10.14.231:5000/api/plantation/plantType");
-        setplantType(response.data.data);
-      } catch (error) {
-        console.error(error);
-      }
+      })
     };
 
     fetchData();
