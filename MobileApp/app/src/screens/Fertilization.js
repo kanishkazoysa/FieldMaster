@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
 import axios from "axios";
+import AxiosInstance from "../AxiosInstance";
 
 export default function Fertilization({ route }) {
   const { params } = route;
@@ -33,38 +34,37 @@ export default function Fertilization({ route }) {
       return;
     }
 
-    try {
-      const response = await axios.post("http://10.10.14.231:5000/api/fertilizer/fertilizer", {
+   
+      AxiosInstance.post("/api/fertilizer/fertilizer", {
         numberOfPlants,
         textFertilizationType,
         textFertilizationNUmberoftime,
         textFertilizationAmount,
         selectedButton,
         FertilizerAmountUnitselectedValue
-      });
-
-      if (response.data.status === "ok") {
-        const totalAmountForPlantation = response.data.data.totalAmountForPlantation;
-        const lmn=response.data.data.totalAmount
-
-
-        navigation.navigate("FertilizationDetails", {
-          plantcount: numberOfPlants,
-          count: lmn,
-          Total: totalAmountForPlantation,
-          FertilizerType: textFertilizationType,
-          NumberOfTime: textFertilizationNUmberoftime,
-          FertilizerAmount: textFertilizationAmount,
-          FertilizerAmountUnit: FertilizerAmountUnitselectedValue,
-          SelectedButton: selectedButton !== null ? buttonNames[selectedButton] : null,
-        });
-      } else {
-        console.error(response.data.data);
-      }
-    } catch (error) {
-      console.error(error);
+      })
+      .then(async(response)=>{
+        if (response.data.status === "ok") {
+          const totalAmountForPlantation = response.data.data.totalAmountForPlantation;
+          const lmn=response.data.data.totalAmount
+  
+          navigation.navigate("FertilizationDetails", {
+            plantcount: numberOfPlants,
+            count: lmn,
+            Total: totalAmountForPlantation,
+            FertilizerType: textFertilizationType,
+            NumberOfTime: textFertilizationNUmberoftime,
+            FertilizerAmount: textFertilizationAmount,
+            FertilizerAmountUnit: FertilizerAmountUnitselectedValue,
+            SelectedButton: selectedButton !== null ? buttonNames[selectedButton] : null,
+          });
+        } else {
+          console.error(response.data.data);
+        }
+      }).catch((err) =>{
+        console.error(error);
       Alert.alert("Error", "Something went wrong");
-    }
+      })
   };
 
   /*button bar */
