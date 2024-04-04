@@ -120,7 +120,11 @@ const PointAddingScreen = ({ navigation, route }) => {
       })
       .then((response) => {
         console.log(response.data);
-        navigation.navigate('SaveScreen', { id: response.data._id });
+        navigation.navigate('SaveScreen', {
+          id: response.data._id,
+          area: areaPerches,
+          perimeter: perimeterKilometers,
+        });
       })
       .catch((error) => {
         console.error(error.response.data);

@@ -26,9 +26,13 @@ const CustomAreaIcon = (props) => (
   />
 );
 
-export function SaveScreen({ navigation }) {
-  const [perimeter, setPerimeter] = React.useState(200);
-  const [area, setArea] = React.useState(100);
+export function SaveScreen({ navigation, route }) {
+  const { id, area: initialArea, perimeter: initialPerimeter } = route.params;
+  const [perimeter, setPerimeter] = React.useState(
+    parseFloat(initialPerimeter).toFixed(2)
+  );
+  const [area, setArea] = React.useState(parseFloat(initialArea).toFixed(2));
+  // rest of the code
   const [templateName, setTemplateName] = React.useState('demo template');
   const [measureName, setMeasureName] = React.useState('Tea');
   const [landType, setLandType] = React.useState('Slope');
@@ -48,7 +52,6 @@ export function SaveScreen({ navigation }) {
 
   const onSaveButtonPress = () => {
     console.log('pressed save');
-
     const dataItem = {
       perimeter: perimeter,
       area: area,
@@ -57,14 +60,12 @@ export function SaveScreen({ navigation }) {
       landType: landType,
       location: location,
       description: descriptionText,
-      /* locationPoints: locationPoints, */
     };
-
     console.log(dataItem);
     axios
-      .post(`${backendUrl}/api/mapTemplate/saveTemplate`, dataItem)
+      .put(`${backendUrl}/api/mapTemplate/updateTemplate/${id}`, dataItem)
       .then((response) => {
-        console.log('data saved');
+        console.log('data updated');
         console.log(response.data);
         navigation.navigate('SavedTemplatesScreen');
       })
@@ -72,7 +73,6 @@ export function SaveScreen({ navigation }) {
         console.error(errorUtils.getError(error));
       });
   };
-
   return (
     <View>
       <StatusBar barStyle={'light-content'} backgroundColor={'#0866FF'} />
@@ -109,7 +109,7 @@ export function SaveScreen({ navigation }) {
                   </View>
                   <View style={styles.area_col_styling}>
                     <Text style={styles.area_text_styling}>Perimeter</Text>
-                    <Text style={styles.bold_text}> 1.5km</Text>
+                    <Text style={styles.bold_text}> {perimeter}km</Text>
                   </View>
                 </View>
                 <View style={styles.row_02_col_02}>
@@ -118,7 +118,7 @@ export function SaveScreen({ navigation }) {
                   </View>
                   <View style={styles.area_col_styling}>
                     <Text style={styles.area_text_styling}>Area</Text>
-                    <Text style={styles.bold_text}> 100 acres</Text>
+                    <Text style={styles.bold_text}> {area} perches</Text>
                   </View>
                 </View>
               </View>
