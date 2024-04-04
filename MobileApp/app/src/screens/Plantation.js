@@ -7,7 +7,6 @@ import {
   Platform,
   ScrollView,
   TextInput,
-  TouchableOpacity,
   Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
@@ -96,7 +95,7 @@ export default function Plantation() {
 
     
     try {
-      const response = axios.post("http://172.20.10.3:5000/api/plantation/plantation", {
+      const response = axios.post("http://10.10.14.231:5000/api/plantation/plantation", {
         textPlant,
         textplantspace,
         textRowspace,

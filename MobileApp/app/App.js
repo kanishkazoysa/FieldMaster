@@ -44,7 +44,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="TemplatesScreen"
+        initialRouteName="splashScreen"
         screenOptions={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Slide-in/slide-out animation
@@ -78,16 +78,16 @@ const App = () => {
           component={FertilizationDetails}
         />
 
-<Stack.Screen
+        <Stack.Screen
           name="Clearland"
           component={Clearland}
-          
+
         />
 
-<Stack.Screen
+        <Stack.Screen
           name="EffortOutput"
           component={EffortOutput}
-          
+
         />
 
         <Stack.Screen name="testScreen" component={testScreen} />

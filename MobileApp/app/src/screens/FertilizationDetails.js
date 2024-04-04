@@ -7,8 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  TextInput,
-  TouchableOpacity,
 } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -22,20 +20,20 @@ export default function FertilizationDetails({ route }) {
 
 
   const { params } = route;
-  const { FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton } = params;
-  const [factor, setFactor] = useState(1);
+  const { FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton,count,plantcount} = params;
+  const [factorValue, setFactor] = useState(1);
   const [totalAmount, setTotalAmount] = useState(0);
-  useEffect(() => {
-    console.log("in Fertilization details screen", FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton);
-    let factorValue = 1;
+  const [Total,setTotal] = useState(0);
 
-    // Determine the factor based on the frequency
+  useEffect(() => {
+    console.log("in Fertilization details screen", FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton,plantcount);
+    let factorValue = 1;
     switch (SelectedButton) {
       case "Daily":
         factorValue = 365;
         break;
       case "Weekly":
-        factorValue = 4; // Weekly amount for one month
+        factorValue = 4; 
         break;
       case "Monthly":
         factorValue = 12;
@@ -51,7 +49,15 @@ export default function FertilizationDetails({ route }) {
     }
     setFactor(factorValue);
     setTotalAmount(NumberOfTime * FertilizerAmount * factorValue);
+
+    
   }, []);
+
+  useEffect(() =>{
+    setTotal((plantcount*totalAmount/1000));
+  })
+
+
 
   const html = `
   <!DOCTYPE html>
@@ -203,8 +209,8 @@ export default function FertilizationDetails({ route }) {
                   color="#65676B"
                 />
                 <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyLabel}>Total Amount</Text>
-                  <Text style={styles.propertyValue}>{totalAmount} {FertilizerAmountUnit}</Text>
+                  <Text style={styles.propertyLabel}>Per plant</Text>
+                  <Text style={styles.propertyValue}>{totalAmount} {FertilizerAmountUnit} </Text>
                 </View>
               </View>
               <View style={styles.property}>
@@ -214,8 +220,8 @@ export default function FertilizationDetails({ route }) {
                   color="#65676B"
                 />
                 <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyLabel}>{SelectedButton}</Text>
-                  <Text style={styles.propertyValue}>{NumberOfTime + ' Times'} </Text>
+                  <Text style={styles.propertyLabel}>For plantation</Text>
+                  <Text style={styles.propertyValue}>{Total} kg</Text>
                 </View>
               </View>
             </View>
@@ -269,6 +275,21 @@ export default function FertilizationDetails({ route }) {
                   </View>
                 </View>
 
+             
+                <View style={styles.innercenter}>
+                  <View style={styles.innersquareleft}>
+                  <MaterialCommunityIcons
+                  name="timer-sand"
+                  size={30}
+                  color="#65676B"
+                />
+                    <Text style={styles.LeftText}>No Of Times   :</Text>
+                  </View>
+                  <View style={styles.innersquareright}>
+                    <Text style={styles.RightText}>{NumberOfTime +" Times"}</Text>
+                  </View>
+                </View>
+
                 <View style={styles.innercenter}>
                   <View style={styles.innersquareleft}>
                     <MaterialCommunityIcons
@@ -294,17 +315,16 @@ export default function FertilizationDetails({ route }) {
           <CustomButton
             onPress={print}
             text="Save As PDF"
-            iconName="content-save-outline" // Change the icon name as needed
-            iconColor="white" // Change the color of the icon
-            buttonColor="#E41E3F" // Change the background color of the button
+            iconName="content-save-outline" 
+            iconColor="white" 
           />
 
           <CustomButton
             onPress={printToFile}
             text="Share PDF"
-            iconName="share-variant" // Change the icon name as needed
-            iconColor="white" // Change the color of the icon
-            buttonColor="#007BFF" // Change the background color of the button
+            iconName="share-variant" 
+            iconColor="white" 
+            buttonColor="#007BFF" 
           />
         </View>
       </ScrollView>
@@ -366,7 +386,7 @@ const styles = StyleSheet.create({
   property: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center", // or remove it for default behavior
+    justifyContent: "center", 
     backgroundColor: "white",
     width: "46%",
     height: 50,
@@ -435,7 +455,7 @@ const styles = StyleSheet.create({
 
   box3: {
     width: "87%",
-    height: 160,
+    height: 200,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",

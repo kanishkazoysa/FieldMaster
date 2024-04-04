@@ -8,74 +8,63 @@ import {
   Platform,
   ScrollView,
   TextInput,
-  TouchableOpacity,
   Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Button } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
-
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
 import axios from "axios";
 
 export default function Fertilization({ route }) {
   const { params } = route;
-  const { numberOfPlants, PlantationDensity,plantType } = params;
+  const { numberOfPlants, PlantationDensity, plantType } = params;
   const navigation = useNavigation();
 
-  useEffect(() => {
-    console.log("receiving" + numberOfPlants + " " + PlantationDensity+" "+plantType);
-  }, []);
+  // useEffect(() => {
+  //   console.log("receiving" + numberOfPlants + " " + PlantationDensity + " " + plantType + " " + numberOfPlants);
+  // }, []);
 
-  const handleFertilizationDetails = () => {
-
+  const handleFertilizationDetails = async () => {
     if (!textFertilizationType || !textFertilizationNUmberoftime || !textFertilizationAmount || !FertilizerAmountUnitselectedValue || selectedButton === null) {
-      // Display error message
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
-    const dataObject = {
-      FertilizerType: textFertilizationType,
-      NumberOfTime: textFertilizationNUmberoftime,
-      FertilizerAmount: textFertilizationAmount,
-      FertilizerAmountUnit: FertilizerAmountUnitselectedValue,
-      SelectedButton: selectedButton !== null ? buttonNames[selectedButton] : null,
-    };
-    console.log(dataObject)
-
-    // connecting to backend
     try {
-
-      const selectedButton = buttonNames[selectedButton];
-      const response = axios.post("http://172.20.10.3:5000/api/fertilizer/fertilizer", {
+      const response = await axios.post("http://10.10.14.231:5000/api/fertilizer/fertilizer", {
+        numberOfPlants,
         textFertilizationType,
         textFertilizationNUmberoftime,
         textFertilizationAmount,
-        selectedButton
+        selectedButton,
+        FertilizerAmountUnitselectedValue
       });
 
-      console.log(response.data);
+      if (response.data.status === "ok") {
+        const totalAmountForPlantation = response.data.data.totalAmountForPlantation;
+        const lmn=response.data.data.totalAmount
+
+
+        navigation.navigate("FertilizationDetails", {
+          plantcount: numberOfPlants,
+          count: lmn,
+          Total: totalAmountForPlantation,
+          FertilizerType: textFertilizationType,
+          NumberOfTime: textFertilizationNUmberoftime,
+          FertilizerAmount: textFertilizationAmount,
+          FertilizerAmountUnit: FertilizerAmountUnitselectedValue,
+          SelectedButton: selectedButton !== null ? buttonNames[selectedButton] : null,
+        });
+      } else {
+        console.error(response.data.data);
+      }
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Something went wrong");
     }
-    // connection to backend
-
-
-    navigation.navigate("FertilizationDetails",
-      {
-
-        FertilizerType: textFertilizationType,
-        NumberOfTime: textFertilizationNUmberoftime,
-        FertilizerAmount: textFertilizationAmount,
-        FertilizerAmountUnit: FertilizerAmountUnitselectedValue,
-        SelectedButton: selectedButton !== null ? buttonNames[selectedButton] : null,
-      }
-    );
-
   };
 
   /*button bar */
@@ -340,9 +329,9 @@ export default function Fertilization({ route }) {
           <CustomButton
             onPress={handleFertilizationDetails}
             text=" Calculate Fertilizing"
-            iconName="calculator" // Change the icon name as needed
-            iconColor="white" // Change the color of the icon
-            buttonColor="#0866FF" // Change the background color of the button
+            iconName="calculator"
+            iconColor="white"
+            buttonColor="#0866FF"
           />
 
 
