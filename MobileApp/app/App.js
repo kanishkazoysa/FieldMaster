@@ -38,23 +38,23 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName='SavedTemplatesScreen'
+        initialRouteName='Home'
         screenOptions={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Slide-in/slide-out animation
         }}
       >
-        {/* <Stack.Screen name='splashScreen' component={SplashScreen} />
+        <Stack.Screen name='splashScreen' component={SplashScreen} />
         <Stack.Screen name='Welcome' component={WelcomeScreen} />
         <Stack.Screen name='Register' component={RegisterScreen} />
         <Stack.Screen name='Login' component={LoginScreen} />
         <Stack.Screen name='Forgot' component={ForgotPassword} />
         <Stack.Screen name='Otp' component={Otp} />
-        <Stack.Screen name='NewPassword' component={CreateNewPassword} /> */}
-        {/* <Stack.Screen name='Home' component={Home} /> */}
-        {/* <Stack.Screen name='WalkaroundLand' component={WalkaroundLand} />
+        <Stack.Screen name='NewPassword' component={CreateNewPassword} />
+        <Stack.Screen name='Home' component={Home} />
+        <Stack.Screen name='WalkaroundLand' component={WalkaroundLand} />
         <Stack.Screen name='Fence' component={Fence} />
-        <Stack.Screen name='FenceDetails' component={FenceDetails} /> */}
+        <Stack.Screen name='FenceDetails' component={FenceDetails} />
         {/* Template Screens */}
         <Stack.Screen
           name='SavedTemplatesScreen'
@@ -64,15 +64,15 @@ const App = () => {
         <Stack.Screen name='ResizeMap' component={ResizeMap} />
         <Stack.Screen name='TemplateView' component={TemplateView} />
         <Stack.Screen name='EditTemplate' component={EditTemplate} />
-        {/* <Stack.Screen name='Plantation' component={Plantation} />
+        <Stack.Screen name='Plantation' component={Plantation} />
         <Stack.Screen name='PlantationDetails' component={PlantationDetails} />
         <Stack.Screen name='Fertilization' component={Fertilization} />
         <Stack.Screen
           name='FertilizationDetails'
           component={FertilizationDetails}
-      />
+        />
 
-        <Stack.Screen name='PointAddingScreen' component={PointAddingScreen} /> */}
+        <Stack.Screen name='PointAddingScreen' component={PointAddingScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

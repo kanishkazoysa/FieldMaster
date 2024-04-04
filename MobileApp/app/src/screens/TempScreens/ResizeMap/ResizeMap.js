@@ -17,6 +17,7 @@ import { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
+import backendUrl from '../../../../urlFile';
 
 const ResizeMapScreen = ({ navigation, route }) => {
   const { templateId } = route.params;
@@ -71,7 +72,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
 
       try {
         const response = await axios.get(
-          `http://10.10.5.60:3000/api/mapTemplate/getOneTemplate/${templateId}`
+          `${backendUrl}/api/mapTemplate/getOneTemplate/${templateId}`
         );
         setPoints(response.data.locationPoints);
         console.log(response.data.locationPoints);
