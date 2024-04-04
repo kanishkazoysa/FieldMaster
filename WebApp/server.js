@@ -18,7 +18,6 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 
 app.use("/api/auth/*", middleware);
-
 app.use("/api/users", userRoute);
 app.use("/api/mail", mailRoute);
 app.use("/api", fenceRoute);

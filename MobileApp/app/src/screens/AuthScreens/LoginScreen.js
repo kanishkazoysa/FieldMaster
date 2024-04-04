@@ -44,16 +44,17 @@ export default function LoginScreen() {
         Alert.alert("Error", data.error || "Something went wrong");
       });
   };
-
+//navigate to the ForgotPassword screen
   const handleForgotPassword = () => {
     console.log("Forgot Password");
     navigation.navigate("Forgot");
   };
-
+//navigate to the Register screen
   const handleSignUp = () => {
     navigation.navigate("Register");
   };
 
+  //clear the email and password fields when the screen is focused
   useFocusEffect(
     useCallback(() => {
       setEmail("");

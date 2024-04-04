@@ -32,9 +32,7 @@ export default function ForgotPassword() {
       .then(async (response) => {
         if (response.status == 200) {
           const data = await response.data.otp;
-
           Alert.alert("OTP sent successfully");
-
           navigation.navigate("Otp", { email, Otp: data });
         } else {
           Alert.alert("Error", data.error || "Something went wrong");

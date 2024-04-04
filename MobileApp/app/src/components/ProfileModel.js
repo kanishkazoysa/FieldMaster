@@ -11,8 +11,11 @@ import {
 import { IconButton, Avatar, Button, Icon } from "react-native-paper";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
-
-const SelectionModal = ({ profileModalVisible, setProfileModalVisible, email }) => {
+const SelectionModal = ({
+  profileModalVisible,
+  setProfileModalVisible,
+  email,
+}) => {
   const closeModal = () => {
     setProfileModalVisible(false);
   };
@@ -28,7 +31,7 @@ const SelectionModal = ({ profileModalVisible, setProfileModalVisible, email }) 
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.overlay}
-          activeOpacity={1} // Prevents clicks on the overlay from propagating to the modal
+          activeOpacity={1}
           onPress={closeModal}
         />
 
@@ -44,9 +47,10 @@ const SelectionModal = ({ profileModalVisible, setProfileModalVisible, email }) 
 
             <Text style={styles.headerText}>example@gmail.com</Text>
             <View>
-         
-            <Avatar.Image size={100} source={require("../images/profilePhoto.png")}   />
-             
+              <Avatar.Image
+                size={100}
+                source={require("../images/profilePhoto.png")}
+              />
             </View>
 
             <View style={styles.nameContainer}>
@@ -81,8 +85,8 @@ const SelectionModal = ({ profileModalVisible, setProfileModalVisible, email }) 
 
             <View style={styles.bottomContainer}>
               <Text style={styles.bottomText}>Privacy Policy</Text>
-         
-             <IconButton icon="circle" size={5} style={styles.dot} />
+
+              <IconButton icon="circle" size={5} style={styles.dot} />
               <Text style={styles.bottomText}>Terms of Service</Text>
             </View>
           </View>
@@ -95,10 +99,10 @@ const SelectionModal = ({ profileModalVisible, setProfileModalVisible, email }) 
 const styles = StyleSheet.create({
   bottomContainer: {
     flexDirection: "row",
-    marginTop:Platform.OS === "ios" ? "9%" : "10%",
+    marginTop: Platform.OS === "ios" ? "9%" : "10%",
   },
   dot: {
-   top:Platform.OS === "ios" ? -8 : -6,
+    top: Platform.OS === "ios" ? -8 : -6,
   },
   bottomText: {
     color: "#65676B",
@@ -138,7 +142,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7 )", // Semi-transparent overlay color
+    backgroundColor: "rgba(0, 0, 0, 0.7 )", 
   },
 
   centeredView: {

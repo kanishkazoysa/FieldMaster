@@ -20,8 +20,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import SelectionModal from "../components/SelectionModal";
 import ProfileModel from "../components/ProfileModel";
-import AxiosInstance from "../AxiosInstance";
 import axios from "axios";
+import Config from "react-native-config";
+
+const apiKey = Config.GOOGLE_MAPS_API_KEY;
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,17 +36,17 @@ export default function Home() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [profileModalVisible, setProfileModalVisible] = useState(false);
-
   const mapRef = React.useRef(null);
 
+  //get the current location
   useEffect(() => {
     (async () => {
+      // Request permission to access location
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.error("Permission to access location was denied");
         return;
       }
-
       let location = await Location.getCurrentPositionAsync({});
       setCurrentLocation(location);
     })();
@@ -57,6 +59,7 @@ export default function Home() {
     setProfileModalVisible(true);
   };
 
+  //options for the selection modal
   const options = [
     {
       icon: "walk",
@@ -75,6 +78,7 @@ export default function Home() {
     },
   ];
 
+  // Map types
   const mapTypes = [
     { name: "Satellite", value: "satellite" },
     { name: "Standard", value: "standard" },
@@ -102,6 +106,7 @@ export default function Home() {
   const focusOnCurrentLocation = () => {
     setShowCurrentLocation(!showCurrentLocation);
     setSearchedLocation(null); // Clear searched location
+    // Animate to current location
     if (!showCurrentLocation && currentLocation && mapRef.current) {
       mapRef.current.animateToRegion({
         latitude: currentLocation.coords.latitude,
@@ -118,7 +123,7 @@ export default function Home() {
         const response = await axios.get(
           `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
             searchQuery
-          )}&key=AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U`
+          )}&key=${apiKey}`
         );
         const data = response.data;
         if (data.results && data.results.length > 0) {
@@ -126,6 +131,7 @@ export default function Home() {
           setShowCurrentLocation(false); // Hide current location
           setSearchedLocation({ latitude: lat, longitude: lng });
           if (mapRef.current) {
+            // Animate to searched location
             mapRef.current.animateToRegion({
               latitude: lat,
               longitude: lng,
@@ -141,7 +147,7 @@ export default function Home() {
       }
     }
   };
-
+  //clear the search query
   const clearSearchQuery = () => {
     setSearchQuery("");
   };

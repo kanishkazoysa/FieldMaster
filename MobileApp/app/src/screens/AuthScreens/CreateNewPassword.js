@@ -16,7 +16,6 @@ import {
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 import { Appbar, Button, TextInput } from "react-native-paper";
-
 import AxiosInstance from "../../AxiosInstance";
 
 export default function ForgotPassword({ route }) {
@@ -157,7 +156,7 @@ const styles = StyleSheet.create({
   },
   staticSection: {
     height:
-      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
+      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10),
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },

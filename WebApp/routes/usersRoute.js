@@ -22,6 +22,7 @@ transporter.verify((error, success) => {
   } else console.log("Server is ready to take messages");
 });
 
+// register a new user
 router.post("/register", async (req, res) => {
   const { email, password } = req.body;
   const VerifyId = uuidv4();
@@ -153,6 +154,7 @@ router.post("/login", async (req, res) => {
       .json({ error: error.message || "An error occurred" });
   }
 });
+
 
 router.post("/change-password", async (req, res) => {
   const { email, newPassword } = req.body;
