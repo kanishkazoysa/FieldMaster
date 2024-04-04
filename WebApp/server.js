@@ -10,6 +10,7 @@ const userRoute = require("./routes/usersRoute.js");
 const mailRoute = require("./routes/mailRoute.js");
 const fenceRoute = require("./routes/fenceRoute.js");
 const clearLandRoute = require("./routes/clearLandRoute.js");
+const MapTemplateRoute = require("./routes/MapTemplateRoutes.js")
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -19,6 +20,8 @@ app.use("/api/users", userRoute);
 app.use("/api/mail", mailRoute);
 app.use("/api/fence", fenceRoute);
 app.use("/api/clearLand",clearLandRoute);
+app.use('/api/mapTemplate', MapTemplateRoute);
+
 //get
 // app.use("/api/clearLand", clearLandRoute);
 

@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { Polygon } from 'react-native-maps';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
-import { Appbar } from 'react-native-paper';
-import { Polyline } from 'react-native-maps';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { polygon, area, length } from '@turf/turf';
+import React, { useEffect, useState } from "react";
+import { Polygon } from "react-native-maps";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { View, Text, FlatList, TouchableOpacity, Modal } from "react-native";
+import { Appbar } from "react-native-paper";
+import { Polyline } from "react-native-maps";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { polygon, area, length } from "@turf/turf";
 import {
   faLayerGroup,
   faLocationCrosshairs,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { styles } from './ResizeMapStyles';
-import MapView, { MAP_TYPES } from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-import * as Location from 'expo-location';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import axios from 'axios';
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { styles } from "./ResizeMapStyles";
+import MapView, { MAP_TYPES } from "react-native-maps";
+import { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import axios from "axios";
 
 const ResizeMapScreen = ({ navigation, route }) => {
   const { templateId } = route.params;
@@ -57,11 +57,11 @@ const ResizeMapScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    console.log('Template ID:', templateId);
+    console.log("Template ID:", templateId);
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access location was denied');
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
         return;
       }
       let location = await Location.getCurrentPositionAsync({
@@ -69,10 +69,9 @@ const ResizeMapScreen = ({ navigation, route }) => {
       });
       setCurrentLocation(location);
 
-      
       try {
         const response = await axios.get(
-          `http://192.168.8.173:3000/api/mapTemplate/getOneTemplate/${templateId}`
+          `http://10.10.0.153:3000/api/mapTemplate/getOneTemplate/${templateId}`
         );
         setPoints(response.data.locationPoints);
         console.log(response.data.locationPoints);
@@ -114,7 +113,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
 
   const handleSaveMap = async () => {
     if (locationPoints.length < 3) {
-      alert('You need at least 3 points to calculate area and perimeter');
+      alert("You need at least 3 points to calculate area and perimeter");
       return;
     }
 
@@ -126,7 +125,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
     formattedPoints.push(formattedPoints[0]);
     const poly = polygon([formattedPoints]);
     const areaMeters = area(poly);
-    const perimeterMeters = length(poly, { units: 'meters' });
+    const perimeterMeters = length(poly, { units: "meters" });
     const areaPerches = areaMeters / 25.29285264;
     const perimeterKilometers = perimeterMeters / 1000;
 
@@ -143,13 +142,13 @@ const ResizeMapScreen = ({ navigation, route }) => {
   };
 
   const handleCancel = () => {
-    navigation.navigate('SavedTemplatesScreen');
+    navigation.navigate("SavedTemplatesScreen");
   };
   const mapTypes = [
-    { name: 'Satellite', value: 'satellite' },
-    { name: 'Standard', value: 'standard' },
-    { name: 'Hybrid', value: 'hybrid' },
-    { name: 'Terrain', value: 'terrain' },
+    { name: "Satellite", value: "satellite" },
+    { name: "Standard", value: "standard" },
+    { name: "Hybrid", value: "hybrid" },
+    { name: "Terrain", value: "terrain" },
   ];
 
   const toggleMapType = () => {
@@ -158,7 +157,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
   return (
     <>
       <Modal
-        animationType='slide'
+        animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}
@@ -166,9 +165,9 @@ const ResizeMapScreen = ({ navigation, route }) => {
         <View
           style={{
             flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
           }}
         >
           <View style={styles.centeredView}>
@@ -196,9 +195,9 @@ const ResizeMapScreen = ({ navigation, route }) => {
         </View>
       </Modal>
       <View>
-        <Appbar.Header style={{ backgroundColor: '#0866FF' }}>
-          <Appbar.BackAction color='#ffffff' onPress={handleCancel} />
-          <Appbar.Content title='Resize Map' color='#ffffff' />
+        <Appbar.Header style={{ backgroundColor: "#0866FF" }}>
+          <Appbar.BackAction color="#ffffff" onPress={handleCancel} />
+          <Appbar.Content title="Resize Map" color="#ffffff" />
         </Appbar.Header>
       </View>
       {/* including map view */}
@@ -223,15 +222,15 @@ const ResizeMapScreen = ({ navigation, route }) => {
             {!isPolygonComplete && points.length > 1 && (
               <Polyline
                 coordinates={points}
-                strokeColor='#000'
+                strokeColor="#000"
                 strokeWidth={1}
               />
             )}
             {isPolygonComplete && points.length > 2 && (
               <Polygon
                 coordinates={points}
-                strokeColor='#000'
-                fillColor='rgba(199, 192, 192, 0.5)'
+                strokeColor="#000"
+                fillColor="rgba(199, 192, 192, 0.5)"
                 strokeWidth={1}
               />
             )}
@@ -244,7 +243,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
               toggleMapType();
             }}
           >
-            <FontAwesomeIcon icon={faLayerGroup} size={25} color='#fff' />
+            <FontAwesomeIcon icon={faLayerGroup} size={25} color="#fff" />
             {showDropdown && (
               <View style={styles.dropdownContainer}>
                 <FlatList
@@ -254,7 +253,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
                       style={styles.dropdownItem}
                       onPress={() => selectMapType(index)}
                     >
-                      <Text style={{ color: '#fff' }}>{item.name}</Text>
+                      <Text style={{ color: "#fff" }}>{item.name}</Text>
                     </TouchableOpacity>
                   )}
                   keyExtractor={(item) => item.value}
@@ -269,7 +268,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
             <FontAwesomeIcon
               icon={faLocationCrosshairs}
               size={25}
-              color='#fff'
+              color="#fff"
             />
           </TouchableOpacity>
           <View>
@@ -279,9 +278,9 @@ const ResizeMapScreen = ({ navigation, route }) => {
                 onPressOut={() => setIsButtonPressed(false)}
               >
                 <MaterialCommunityIcons
-                  name='arrow-u-left-top'
+                  name="arrow-u-left-top"
                   size={24}
-                  color='white'
+                  color="white"
                   style={styles.sideIconStyle}
                   onPress={handleUndoLastPoint}
                 />
