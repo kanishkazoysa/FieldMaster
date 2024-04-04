@@ -352,17 +352,17 @@ export default function PlantationDetails({ route }) {
           <CustomButton
             onPress={handleFertilization}
             text="Fertilizing"
-            iconName="flask-outline" // Change the icon name as needed
-            iconColor="white" // Change the color of the icon
-            buttonColor="#15A49B" // Change the background color of the button
+            iconName="flask-outline" 
+            iconColor="white" 
+            buttonColor="#15A49B"
           />
 
           <CustomButton
             onPress={print}
             text="Save As PDF"
-            iconName="content-save-outline" // Change the icon name as needed
-            iconColor="white" // Change the color of the icon
-            buttonColor="#E41E3F" // Change the background color of the button
+            iconName="content-save-outline"
+            iconColor="white" 
+            buttonColor="#E41E3F"
           />
 
         </View>
