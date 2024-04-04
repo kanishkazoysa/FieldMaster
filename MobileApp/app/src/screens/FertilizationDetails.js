@@ -215,8 +215,8 @@ export default function FertilizationDetails({ route }) {
               </View>
               <View style={styles.property}>
                 <MaterialCommunityIcons
-                  name="timer-sand"
-                  size={35}
+                  name="pine-tree"
+                  size={40}
                   color="#65676B"
                 />
                 <View style={styles.propertyDetails}>
@@ -317,6 +317,7 @@ export default function FertilizationDetails({ route }) {
             text="Save As PDF"
             iconName="content-save-outline" 
             iconColor="white" 
+            buttonColor="#E41E3F"
           />
 
           <CustomButton
