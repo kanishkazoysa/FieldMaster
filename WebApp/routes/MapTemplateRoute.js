@@ -9,10 +9,14 @@ router.use(cors());
 
 router.post('/saveTemplate', async (req, res) => {
   try {
-    const { locationPoints } = req.body;
-    const mapTemplate = new MapTemplateModel({ locationPoints });
-    await mapTemplate.save();
-    res.send('Map saved successfully.');
+    const { locationPoints, area, perimeter } = req.body;
+    const mapTemplate = new MapTemplateModel({
+      locationPoints,
+      area,
+      perimeter,
+    });
+    const savedMapTemplate = await mapTemplate.save();
+    res.json(savedMapTemplate);
   } catch (error) {
     res.status(500).send(error);
   }

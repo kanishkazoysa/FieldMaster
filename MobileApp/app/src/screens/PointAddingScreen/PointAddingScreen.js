@@ -112,13 +112,19 @@ const PointAddingScreen = ({ navigation, route }) => {
     const perimeterKilometers = perimeterMeters / 1000;
 
     console.log(points);
-    /* axios
+    axios
       .post(`${backendUrl}/api/mapTemplate/saveTemplate`, {
         locationPoints: points,
+        area: areaPerches,
+        perimeter: perimeterKilometers,
+      })
+      .then((response) => {
+        console.log(response.data);
+        navigation.navigate('SaveScreen', { id: response.data._id });
       })
       .catch((error) => {
         console.error(error.response.data);
-      }); */
+      });
     alert(
       `Area: ${areaPerches.toFixed(
         2
@@ -132,7 +138,7 @@ const PointAddingScreen = ({ navigation, route }) => {
   };
 
   const handleCancel = () => {
-    navigation.navigate('SavedTemplatesScreen');
+    navigation.navigate('Home');
   };
   const mapTypes = [
     { name: 'Satellite', value: 'satellite' },

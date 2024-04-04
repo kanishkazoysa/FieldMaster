@@ -85,7 +85,7 @@ export function SaveScreen({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('SavedTemplatesScreen');
+              navigation.navigate('PointAddingScreen');
             }}
           >
             <View>
