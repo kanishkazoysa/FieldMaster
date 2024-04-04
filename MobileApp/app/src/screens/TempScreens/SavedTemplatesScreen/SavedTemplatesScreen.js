@@ -77,7 +77,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
           >
             <Appbar.BackAction
               onPress={() => {
-                navigation.navigate('SaveScreen');
+                navigation.navigate('Home');
               }}
             />
             <Appbar.Content title='Saved Templates' />

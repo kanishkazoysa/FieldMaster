@@ -18,6 +18,7 @@ import { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
+import backendUrl from '../../../urlFile';
 
 const PointAddingScreen = ({ navigation, route }) => {
   const [isPolygonComplete, setIsPolygonComplete] = useState(false);
@@ -111,13 +112,13 @@ const PointAddingScreen = ({ navigation, route }) => {
     const perimeterKilometers = perimeterMeters / 1000;
 
     console.log(points);
-    axios
-      .post('http://10.10.5.60:3000/api/mapTemplate/saveMapPoints', {
+    /* axios
+      .post(`${backendUrl}/api/mapTemplate/saveTemplate`, {
         locationPoints: points,
       })
       .catch((error) => {
         console.error(error.response.data);
-      });
+      }); */
     alert(
       `Area: ${areaPerches.toFixed(
         2
