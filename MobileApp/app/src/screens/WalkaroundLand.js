@@ -34,7 +34,7 @@ export default function Home() {
   const [trackingPaused, setTrackingPaused] = useState(false);
   const [drawPolyline, setDrawPolyline] = useState(false); // State variable for drawing polyline
   const [points, setPoints] = useState([]); // State variable to store points
-
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigation = useNavigation();
   const mapRef = useRef(null);
 
@@ -91,6 +91,9 @@ export default function Home() {
         ]);
       }
       stopLocationUpdates(); // Call the function to stop location updates
+    }
+    if (trackingPaused) {
+      setIsButtonDisabled(true); // Disable the button
     }
   };
 
@@ -267,15 +270,15 @@ export default function Home() {
 
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
-          <Button
-            buttonColor="#007BFF"
-            icon="play-outline"
-            mode="contained"
-            onPress={handleStartPress}
-            style={styles.button}
-          >
-            {trackingPaused ? "Pause" : "Start"}
-          </Button>
+        <Button
+  buttonColor={isButtonDisabled ? "#007BFFA" : "#007BFF"} // Use a faded blue color when the button is disabled
+  icon="play-outline"
+  mode="contained"
+  onPress={isButtonDisabled ? null : handleStartPress} // Prevent the button from being pressed when it's disabled
+  style={styles.button}
+>
+  {trackingPaused ? "Pause" : "Start"}
+</Button>
         </View>
         <View style={styles.buttonWrapper}>
           <Button
