@@ -8,7 +8,12 @@ import {
   Text,
   FlatList,
 } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Circle ,Polyline, Marker } from "react-native-maps";
+import MapView, {
+  PROVIDER_GOOGLE,
+  Circle,
+  Polyline,
+  Marker,
+} from "react-native-maps";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager"; // Import TaskManager
 import { useNavigation } from "@react-navigation/native";
@@ -38,7 +43,7 @@ export default function Home() {
       console.error("Background location task error:", error);
       return;
     }
-  
+
     if (data) {
       const { locations } = data;
       console.log("Received background location update:", locations);
@@ -80,14 +85,15 @@ export default function Home() {
       if (currentLocation) {
         // Calculate coordinates for the direct line
         const lineCoordinates = [currentLocation, initialLocation];
-        setPathCoordinates(prevCoordinates => [
+        setPathCoordinates((prevCoordinates) => [
           ...prevCoordinates,
           ...lineCoordinates,
         ]);
       }
+      stopLocationUpdates(); // Call the function to stop location updates
     }
   };
-  
+
   useEffect(() => {
     const startTracking = async () => {
       try {
@@ -108,7 +114,8 @@ export default function Home() {
           showsBackgroundLocationIndicator: true, // Show the background location indicator
           foregroundService: {
             notificationTitle: "Tracking location",
-            notificationBody: "Your location is being tracked in the background",
+            notificationBody:
+              "Your location is being tracked in the background",
           },
         });
 
@@ -182,10 +189,10 @@ export default function Home() {
   const addPoint = () => {
     if (pathCoordinates.length > 0) {
       const latestLocation = pathCoordinates[pathCoordinates.length - 1];
-      setPoints(prevPoints => [...prevPoints, latestLocation]);
+      setPoints((prevPoints) => [...prevPoints, latestLocation]);
     }
   };
-  
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
@@ -207,6 +214,7 @@ export default function Home() {
         ref={mapRef}
         style={styles.map}
         mapType={mapTypes[mapTypeIndex].value}
+        showsUserLocation={trackingStarted} // Conditionally show user's location based on trackingStarted
         provider={PROVIDER_GOOGLE}
         initialRegion={{
           latitude: 6.2427,
@@ -215,25 +223,6 @@ export default function Home() {
           longitudeDelta: 0.0421,
         }}
       >
-        {initialLocation && (
-          <Circle
-            center={initialLocation}
-            radius={1}
-            strokeWidth={10}
-            strokeColor="rgba(0, 122, 255, 0.3)"
-            fillColor="rgba(0, 122, 255, 5)"
-          />
-        )}
-        {trackingStarted && currentLocation && (
-          <Circle
-            center={currentLocation}
-            radius={1}
-            strokeWidth={10}
-            strokeColor="rgba(0, 122, 255, 0.3)"
-            fillColor="rgba(0, 122, 255, 5)"
-          />
-        )}
-
         {/* Render polyline if drawPolyline is true */}
         {drawPolyline && pathCoordinates.length > 0 && (
           <Polyline
@@ -245,13 +234,10 @@ export default function Home() {
 
         {/* Render markers for each point */}
         {points.map((point, index) => (
-          <Circle
+          <Marker
             key={index}
-            center={point}
-            radius={1}
-            strokeWidth={10}
-            strokeColor="rgba(255,0,0, 0.3)"
-            fillColor="rgba(255,0,0, 5)"
+            coordinate={point}
+            pinColor="red" // Customize the pin color if needed
           />
         ))}
       </MapView>
