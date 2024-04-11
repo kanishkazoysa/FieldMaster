@@ -20,6 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 // Define the name of your background task
 const BACKGROUND_LOCATION_TASK = "background-location-task";
@@ -196,6 +197,16 @@ export default function Home() {
     }
   };
 
+  const saveMapData = async () => {
+    try {
+      const response = await axios.post('http://192.168.1.102:5000/api/polyline/save', { coordinates: pathCoordinates });
+      console.log(response.data); // Log success message
+    } catch (error) {
+      console.error('Error saving polyline data:', error);
+    }
+  };
+  
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
@@ -207,7 +218,7 @@ export default function Home() {
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate("SaveScreen")}
+          onPress={saveMapData}
           style={[styles.appbarButton, { marginLeft: "auto" }]}
         >
           <Text style={styles.buttonText}>Save</Text>
