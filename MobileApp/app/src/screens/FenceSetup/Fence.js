@@ -18,11 +18,11 @@ import { useNavigation } from "@react-navigation/native";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import axios from "axios";
+import AxiosInstance from "../../AxiosInstance";
 
 export default function Fence() {
   const [FenceTypeselectedValue, setFenceTypeSelectedValue] = useState(null);
-  const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] =
-    useState(null);
+  const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] =useState(null);
   const [inputValueFenceLength, setinputValueFenceLength] = useState("");
   const [inputValueFenceAmount, setinputValueFenceAmount] = useState("");
   const [inputValuePostspace, setinputValuePostspace] = useState("");
@@ -63,15 +63,14 @@ export default function Fence() {
     setFenceAmountsArray([...fenceAmountsArray, amount]);
 
     // Combine values from arrays
-    const combinedValue = length + " x " + amount;
+    const combinedValue = length + "m" + " x " + amount;
     const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
     setDisplayValues(newDisplayValues);
-
-    // Clear input fields
     setinputValueFenceLength("");
     setinputValueFenceAmount("");
   };
 
+  //remove Added values 
   const handleRemoveValue = (index) => {
     const newDisplayValues = [...displayValues];
     newDisplayValues.splice(index, 1);
@@ -109,44 +108,42 @@ export default function Fence() {
     { label: "cm", value: "cm" },
   ];
 
+  //calculate button click
   const handleFenceDetails = async () => {
-    if (
-      !PostSpaceUnitselectedValue ||
-      !FenceTypeselectedValue ||
-      !inputValuePostspace
-    ) {
-      // Display error message
-      Alert.alert("Error", "Please fill in all fields");
-      return;
-    }
-    navigation.navigate("FenceDetails", {
-      data: displayValues,
-      fenceType: FenceTypeselectedValue,
-      PostSpaceUnit: PostSpaceUnitselectedValue,
-      postSpace: inputValuePostspace,
-    });
-
+    
     // send data to back end
-    try {
-      const response = await axios.post(
-        "http://192.168.134.237:5000/api/fence/fence",
-        {
-          FenceTypeselectedValue,
-          inputValuePostspace,
-          PostSpaceUnitselectedValue,
-          displayValues,
-          fenceAmountsArray,
-          fenceLengthsArray,
+    AxiosInstance.post("/api/fence/fence", {
+      FenceTypeselectedValue,
+      inputValuePostspace,
+      PostSpaceUnitselectedValue,
+      displayValues,
+      fenceAmountsArray,
+      fenceLengthsArray,
+    })
+      .then((response) => {
+        if (
+          !PostSpaceUnitselectedValue ||
+          !FenceTypeselectedValue ||
+          !inputValuePostspace
+        ) {
+          // Display error message
+          Alert.alert("Error", "Please fill in all fields");
+          return;
         }
-      );
+        navigation.navigate("Fence", {
+          data: displayValues,
+          fenceType: FenceTypeselectedValue,
+          PostSpaceUnit: PostSpaceUnitselectedValue,
+          postSpace: inputValuePostspace,
+        });
+        //console.log(response.data);
+      })
 
-      // Handle success response
-      console.log(response.data);
-    } catch (error) {
-      // Handle error response
-      console.error("Error:", error.response.data);
-      Alert.alert("Error", "Failed to create fence. Please try again.");
-    }
+
+      .catch((error) => {
+        console.error("Error:", error.response.data);
+        Alert.alert("Error", "Failed to create fence. Please try again.");
+      });
   };
 
   return (
@@ -164,7 +161,6 @@ export default function Fence() {
       {/* Scrollable content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Top section */}
-
         <View style={styles.top}>
           <View style={styles.Box1}>
             <View>

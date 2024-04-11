@@ -2,13 +2,7 @@ const express = require("express");
 const router = express.Router();
 const fenceModel = require("../models/fence");
 
-function calculateNumberOfSticks(
-  perimeter,
-  gapBetweenSticks,
-  gapUnit,
-  totalGateLengths,
-  gateCount
-) {
+function calculateNumberOfSticks (perimeter,gapBetweenSticks,gapUnit,totalGateLengths,gateCount) {
   const convertedGap = convertToCommonUnit(gapBetweenSticks, gapUnit);
   const remainingPerimeter = perimeter - totalGateLengths;
   let numberOfSticks = Math.ceil(remainingPerimeter / convertedGap);
@@ -53,27 +47,14 @@ router.post("/fence", async (req, res) => {
     } = req.body;
 
     const perimeter = 1500;
-
     const gapBetweenSticks = inputValuePostspace;
-
     const gapUnit = PostSpaceUnitselectedValue;
-
     const gateLength = fenceLengthsArray;
-
     const numberOfGates = fenceAmountsArray;
     const gateCount = calculateSum(numberOfGates);
 
-    const totalGateLengths = calculateTotalGateLengths(
-      numberOfGates,
-      gateLength
-    );
-    const numberOfSticks = calculateNumberOfSticks(
-      perimeter,
-      gapBetweenSticks,
-      gapUnit,
-      totalGateLengths,
-      gateCount
-    );
+    const totalGateLengths = calculateTotalGateLengths(numberOfGates,gateLength);
+    const numberOfSticks = calculateNumberOfSticks(perimeter,gapBetweenSticks,gapUnit,totalGateLengths,gateCount);
 
     const newFence = new fenceModel({
       FenceType: FenceTypeselectedValue,
@@ -99,31 +80,16 @@ router.post("/fence", async (req, res) => {
   }
 });
 
-// router.get("/numberOfSticks", async (req, res) => {
-//     try {
-//         const fences = await fenceModel.find();
-
-//         const numberOfSticks = fences.map(fence => fence.NumberofSticks);
-
-//         res.json({ status: "success", data: numberOfSticks });
-//     } catch (error) {
-//         res.status(500).json({ status: "error", message: error.message });
-//     }
-// });
-
 router.get("/numberOfSticks", async (req, res) => {
   try {
     const recentFence = await fenceModel.findOne().sort({ _id: -1 });
 
     if (!recentFence) {
-      return res
-        .status(404)
-        .json({ status: "error", message: "No recently updated data found" });
+      return res.status(404).json({ status: "error", message: "No recently updated data found" });
     }
-
     const numberOfSticks = recentFence.NumberofSticks;
-
     res.json({ status: "success", data: numberOfSticks });
+    
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
   }
