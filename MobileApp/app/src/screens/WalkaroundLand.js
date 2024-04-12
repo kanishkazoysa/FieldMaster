@@ -21,6 +21,7 @@ import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import area from '@turf/area';
 
 // Define the name of your background task
 const BACKGROUND_LOCATION_TASK = "background-location-task";
@@ -38,6 +39,7 @@ export default function Home() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigation = useNavigation();
   const mapRef = useRef(null);
+  const [area, setArea] = useState(0);
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -147,6 +149,8 @@ export default function Home() {
     };
   }, []);
 
+
+
   const stopLocationUpdates = async () => {
     try {
       // Check if the task is running before trying to stop it
@@ -198,6 +202,8 @@ export default function Home() {
   };
 
   const saveMapData = async () => {
+    const polygonArea = area(polygon);
+ setArea(polygonArea);
     try {
       const response = await axios.post('http://192.168.1.102:5000/api/polyline/save', { coordinates: pathCoordinates });
       console.log(response.data); // Log success message
@@ -205,6 +211,13 @@ export default function Home() {
       console.error('Error saving polyline data:', error);
     }
   };
+
+  const polygon = {
+    type: 'Polygon',
+    coordinates: [pathCoordinates.map(coord => [coord.longitude, coord.latitude])]
+  };
+
+  
   
 
   return (
@@ -301,6 +314,9 @@ export default function Home() {
           >
             Add Points
           </Button>
+        </View>
+        <View>
+        <Text>Area: {area} square meters</Text>
         </View>
       </View>
     </View>
