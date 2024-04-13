@@ -94,13 +94,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
               return (
                 <View key={index} style={styles.template_style}>
                   <View style={styles.col_01}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate('ResizeMap', {
-                          templateId: item._id,
-                        });
-                      }}
-                    >
+                    <TouchableOpacity>
                       <Image
                         style={styles.image_style}
                         source={{
