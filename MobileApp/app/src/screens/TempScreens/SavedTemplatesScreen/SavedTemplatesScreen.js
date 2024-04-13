@@ -4,7 +4,6 @@ import { TouchableOpacity, View, Text, Image, ScrollView } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { styles } from './SavedTemplatesScreenStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 import backendUrl from '../../../../urlFile';

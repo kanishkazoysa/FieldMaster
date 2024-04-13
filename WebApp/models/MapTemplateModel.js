@@ -5,6 +5,7 @@ const PointSchema = new mongoose.Schema({
   latitude: Number,
 });
 
+/* this schema is used to save map template */
 const MapTemplateSchema = new mongoose.Schema({
   perimeter: {
     type: Number,

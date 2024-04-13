@@ -39,19 +39,11 @@ export function SaveScreen({ navigation, route }) {
   const [location, setLocation] = React.useState('Kandy');
   const [descriptionText, setDescriptionText] =
     React.useState('demo description');
-  /* const [locationPoints, setLocationPoints] = React.useState([
-    {
-      latitude: 40.7128,
-      longitude: -74.006,
-    },
-    {
-      latitude: 48.8566,
-      longitude: 2.3522,
-    },
-  ]); */
 
+  /* this function is used to save the data */
   const onSaveButtonPress = () => {
     console.log('pressed save');
+    /* this object is used to store the data item */
     const dataItem = {
       perimeter: perimeter,
       area: area,
@@ -62,6 +54,8 @@ export function SaveScreen({ navigation, route }) {
       description: descriptionText,
     };
     console.log(dataItem);
+
+    /* this is the axios request to update the data */
     axios
       .put(`${backendUrl}/api/mapTemplate/updateTemplate/${id}`, dataItem)
       .then((response) => {

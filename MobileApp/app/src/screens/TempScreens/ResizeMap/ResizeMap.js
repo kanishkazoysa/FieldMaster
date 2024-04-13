@@ -296,7 +296,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
               onPress={handleClearPoints}
               style={styles.cancelBtnStyle}
             >
-              <Text style={styles.btmBtnStyle}>Cancel</Text>
+              <Text style={styles.btmBtnStyle}>Exit</Text>
             </TouchableOpacity>
           </View>
         </View>
