@@ -85,7 +85,9 @@ const EditTemplate = ({ route, navigation }) => {
               style={styles.editIconStyle}
               color='#65676B'
               onPress={() => {
-                navigation.navigate('EditTemplate', { item: item });
+                navigation.navigate('ResizeMap', {
+                  templateId: item._id,
+                });
               }}
             />
             <View style={styles.imageView}>

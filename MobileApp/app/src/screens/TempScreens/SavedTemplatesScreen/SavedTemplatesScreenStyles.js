@@ -1,6 +1,4 @@
 import { StyleSheet } from 'react-native';
-/* import AppLoading from 'expo-app-loading'; */
-/* import { useFonts } from 'expo-font'; */
 
 export const styles = StyleSheet.create({
   top_Bar: {
@@ -23,7 +21,6 @@ export const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 10,
     flexDirection: 'row',
-    /* padding: 10, */
     paddingVertical: 12,
   },
   image_style: {
@@ -56,6 +53,6 @@ export const styles = StyleSheet.create({
   },
   scrollViewOuterStyle: {
     flex: 1,
-    marginBottom: 100,
+    marginBottom: 70,
   },
 });
