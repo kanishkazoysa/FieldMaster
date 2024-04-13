@@ -65,6 +65,11 @@ const SavedTemplatesScreen = ({ navigation }) => {
       });
   };
 
+  const handleTemplatePress = (item) => {
+    console.log('template pressed');
+    navigation.navigate('TemplateView', { item: item });
+  };
+
   return (
     <>
       <View>
@@ -92,47 +97,48 @@ const SavedTemplatesScreen = ({ navigation }) => {
           >
             {templates.map((item, index) => {
               return (
-                <View key={index} style={styles.template_style}>
-                  <View style={styles.col_01}>
-                    <TouchableOpacity>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleTemplatePress(item)}
+                >
+                  <View style={styles.template_style}>
+                    <View style={styles.col_01}>
                       <Image
                         style={styles.image_style}
                         source={{
                           uri: 'https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png',
                         }}
                       />
-                    </TouchableOpacity>
-                  </View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('TemplateView', { item: item });
-                    }}
-                  >
-                    <View style={styles.col_02}>
-                      <Text style={styles.bold_text}>{item.templateName}</Text>
-                      <Text style={styles.sub_text_style}>
-                        Location: {item.location}
-                      </Text>
-                      <Text style={styles.sub_text_style}>
-                        Date: {item.date}{' '}
-                      </Text>
-                      <Text style={styles.sub_text_style}>
-                        Time: {item.time}
-                      </Text>
                     </View>
-                  </TouchableOpacity>
-                  <View style={styles.col_03}>
-                    <MaterialCommunityIcons
-                      name='square-edit-outline'
-                      size={25}
-                      color='#65676B'
-                      onPress={() => {
-                        navigation.navigate('EditTemplate', { item: item });
-                      }}
-                    />
-                    <CustomDeleteIcon onPress={() => handleDelete(item)} />
+                    <TouchableOpacity onPress={() => handleTemplatePress(item)}>
+                      <View style={styles.col_02}>
+                        <Text style={styles.bold_text}>
+                          {item.templateName}
+                        </Text>
+                        <Text style={styles.sub_text_style}>
+                          Location: {item.location}
+                        </Text>
+                        <Text style={styles.sub_text_style}>
+                          Date: {item.date}{' '}
+                        </Text>
+                        <Text style={styles.sub_text_style}>
+                          Time: {item.time}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                    <View style={styles.col_03}>
+                      <MaterialCommunityIcons
+                        name='square-edit-outline'
+                        size={25}
+                        color='#65676B'
+                        onPress={() => {
+                          navigation.navigate('EditTemplate', { item: item });
+                        }}
+                      />
+                      <CustomDeleteIcon onPress={() => handleDelete(item)} />
+                    </View>
                   </View>
-                </View>
+                </TouchableOpacity>
               );
             })}
           </ScrollView>
