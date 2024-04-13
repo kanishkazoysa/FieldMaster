@@ -7,11 +7,12 @@ const PolylineData = require('../models/mapData');
 // Route to save polyline data to the database
 router.post('/save', async (req, res) => {
   try {
-    const { coordinates } = req.body; // Extract polyline coordinates from request body
+    const { coordinates ,area } = req.body; // Extract polyline coordinates from request body
 
     // Create a new PolylineData document
     const newPolylineData = new PolylineData({
       coordinates,
+      area,
     });
 
     // Save the document to the database

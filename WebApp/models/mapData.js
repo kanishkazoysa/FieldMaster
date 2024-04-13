@@ -6,6 +6,10 @@ const polylineDataSchema = new mongoose.Schema({
     type: Array, // Store polyline coordinates as an array of objects
     required: true,
   },
+  area : {
+    type: String,
+    required: true,
+  }
 });
 
 const PolylineData = mongoose.model('PolylineData', polylineDataSchema);

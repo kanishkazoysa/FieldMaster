@@ -10,20 +10,18 @@ import {
 } from "react-native";
 import MapView, {
   PROVIDER_GOOGLE,
-  Circle,
   Polyline,
   Marker,
 } from "react-native-maps";
 import * as Location from "expo-location";
-import * as TaskManager from "expo-task-manager"; // Import TaskManager
+import * as TaskManager from "expo-task-manager";
 import { useNavigation } from "@react-navigation/native";
 import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import area from '@turf/area';
+import area from "@turf/area";
 
-// Define the name of your background task
 const BACKGROUND_LOCATION_TASK = "background-location-task";
 
 export default function Home() {
@@ -34,12 +32,12 @@ export default function Home() {
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
   const [trackingPaused, setTrackingPaused] = useState(false);
-  const [drawPolyline, setDrawPolyline] = useState(false); // State variable for drawing polyline
-  const [points, setPoints] = useState([]); // State variable to store points
+  const [drawPolyline, setDrawPolyline] = useState(false);
+  const [points, setPoints] = useState([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigation = useNavigation();
   const mapRef = useRef(null);
-  const [area, setArea] = useState(0);
+  const [polygonArea, setPolygonArea] = useState(0); // Renamed state variable
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -54,7 +52,7 @@ export default function Home() {
         const newCoordinates = locations.map((location) => ({
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
-          accuracy: location.coords.accuracy, // Include accuracy data
+          accuracy: location.coords.accuracy,
         }));
         setPathCoordinates((prevCoordinates) => [
           ...prevCoordinates,
@@ -64,7 +62,7 @@ export default function Home() {
           setCurrentLocation({
             latitude: locations[0].coords.latitude,
             longitude: locations[0].coords.longitude,
-            accuracy: locations[0].coords.accuracy, // Include accuracy data
+            accuracy: locations[0].coords.accuracy,
           });
           focusOnCurrentLocation();
         }
@@ -72,7 +70,7 @@ export default function Home() {
       setInitialLocation({
         latitude: locations[0].coords.latitude,
         longitude: locations[0].coords.longitude,
-        accuracy: locations[0].coords.accuracy, // Include accuracy data
+        accuracy: locations[0].coords.accuracy,
       });
     }
   });
@@ -80,23 +78,21 @@ export default function Home() {
   const handleStartPress = () => {
     setTrackingPaused(!trackingPaused);
     if (!trackingPaused) {
-      setDrawPolyline(true); // Start drawing polyline
-      setPathCoordinates([initialLocation]); // Initialize pathCoordinates with the initial location
+      setDrawPolyline(true);
+      setPathCoordinates([initialLocation]);
     } else {
-      // Stop location updates and draw a direct line from last location to initial location
-      setTrackingStarted(false); // Stop location updates
+      setTrackingStarted(false);
       if (currentLocation) {
-        // Calculate coordinates for the direct line
         const lineCoordinates = [currentLocation, initialLocation];
         setPathCoordinates((prevCoordinates) => [
           ...prevCoordinates,
           ...lineCoordinates,
         ]);
       }
-      stopLocationUpdates(); // Call the function to stop location updates
+      stopLocationUpdates();
     }
     if (trackingPaused) {
-      setIsButtonDisabled(true); // Disable the button
+      setIsButtonDisabled(true);
     }
   };
 
@@ -105,19 +101,17 @@ export default function Home() {
       try {
         const { coords } = await Location.getCurrentPositionAsync({});
 
-        // Request foreground and background location permissions
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
           console.error("Foreground location permission not granted");
           return;
         }
 
-        // Start the background location task
         await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
-          accuracy: Location.Accuracy.Highest, // Use the highest accuracy mode
-          timeInterval: 1000, // Update every 1 second (adjust as needed)
-          distanceInterval: 0, // Update for every meter (set to 0 for highest accuracy)
-          showsBackgroundLocationIndicator: true, // Show the background location indicator
+          accuracy: Location.Accuracy.Highest,
+          timeInterval: 1000,
+          distanceInterval: 0,
+          showsBackgroundLocationIndicator: true,
           foregroundService: {
             notificationTitle: "Tracking location",
             notificationBody:
@@ -149,16 +143,12 @@ export default function Home() {
     };
   }, []);
 
-
-
   const stopLocationUpdates = async () => {
     try {
-      // Check if the task is running before trying to stop it
       const isTaskRunning = await TaskManager.isTaskRegisteredAsync(
         BACKGROUND_LOCATION_TASK
       );
       if (isTaskRunning) {
-        // Stop the background location task
         await Location.stopLocationUpdatesAsync(BACKGROUND_LOCATION_TASK);
         console.log("Background location updates stopped");
       }
@@ -202,23 +192,29 @@ export default function Home() {
   };
 
   const saveMapData = async () => {
-    const polygonArea = area(polygon);
- setArea(polygonArea);
+    const polygon = {
+      type: "Polygon",
+      coordinates: [pathCoordinates.map((coord) => [coord.longitude, coord.latitude])],
+    };
+    const polygonArea = calculatePolygonArea(polygon);
+    setPolygonArea(polygonArea);
     try {
-      const response = await axios.post('http://192.168.1.102:5000/api/polyline/save', { coordinates: pathCoordinates });
-      console.log(response.data); // Log success message
+      const response = await axios.post(
+        "http://192.168.1.104:5000/api/polyline/save",
+        { coordinates: pathCoordinates,
+          area: polygonArea
+        }
+      );
+      console.log(response.data);
+      navigation.navigate("SaveScreen");
     } catch (error) {
-      console.error('Error saving polyline data:', error);
+      console.error("Error saving polyline data:", error);
     }
   };
 
-  const polygon = {
-    type: 'Polygon',
-    coordinates: [pathCoordinates.map(coord => [coord.longitude, coord.latitude])]
+  const calculatePolygonArea = (polygon) => {
+    return area(polygon);
   };
-
-  
-  
 
   return (
     <View style={styles.container}>
@@ -241,7 +237,7 @@ export default function Home() {
         ref={mapRef}
         style={styles.map}
         mapType={mapTypes[mapTypeIndex].value}
-        showsUserLocation={trackingStarted} // Conditionally show user's location based on trackingStarted
+        showsUserLocation={trackingStarted}
         provider={PROVIDER_GOOGLE}
         initialRegion={{
           latitude: 6.2427,
@@ -250,22 +246,15 @@ export default function Home() {
           longitudeDelta: 0.0421,
         }}
       >
-        {/* Render polyline if drawPolyline is true */}
         {drawPolyline && pathCoordinates.length > 0 && (
           <Polyline
-            coordinates={pathCoordinates} // Polyline with all collected path coordinates
+            coordinates={pathCoordinates}
             strokeWidth={2}
             strokeColor="blue"
           />
         )}
-
-        {/* Render markers for each point */}
         {points.map((point, index) => (
-          <Marker
-            key={index}
-            coordinate={point}
-            pinColor="red" // Customize the pin color if needed
-          />
+          <Marker key={index} coordinate={point} pinColor="red" />
         ))}
       </MapView>
 
@@ -294,15 +283,15 @@ export default function Home() {
 
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
-        <Button
-  buttonColor={isButtonDisabled ? "#007BFFA" : "#007BFF"} // Use a faded blue color when the button is disabled
-  icon="play-outline"
-  mode="contained"
-  onPress={isButtonDisabled ? null : handleStartPress} // Prevent the button from being pressed when it's disabled
-  style={styles.button}
->
-  {trackingPaused ? "Pause" : "Start"}
-</Button>
+          <Button
+            buttonColor={isButtonDisabled ? "#007BFFA" : "#007BFF"}
+            icon="play-outline"
+            mode="contained"
+            onPress={isButtonDisabled ? null : handleStartPress}
+            style={styles.button}
+          >
+            {trackingPaused ? "Pause" : "Start"}
+          </Button>
         </View>
         <View style={styles.buttonWrapper}>
           <Button
@@ -314,9 +303,6 @@ export default function Home() {
           >
             Add Points
           </Button>
-        </View>
-        <View>
-        <Text>Area: {area} square meters</Text>
         </View>
       </View>
     </View>
@@ -331,7 +317,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     right: 10,
     top: Platform.OS === "android" ? "15%" : "18%",
-    transform: [{ translateY: -12 }], // Adjust translateY to vertically center the icon
+    transform: [{ translateY: -12 }],
     zIndex: 1,
     flexDirection: "row",
     alignItems: "center",
