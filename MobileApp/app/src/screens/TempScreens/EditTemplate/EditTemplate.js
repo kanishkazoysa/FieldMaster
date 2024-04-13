@@ -79,6 +79,15 @@ const EditTemplate = ({ route, navigation }) => {
         </View>
         <ScrollView>
           <View style={styles.low_outer}>
+            <MaterialCommunityIcons
+              name='square-edit-outline'
+              size={25}
+              style={styles.editIconStyle}
+              color='#65676B'
+              onPress={() => {
+                navigation.navigate('EditTemplate', { item: item });
+              }}
+            />
             <View style={styles.imageView}>
               <Image
                 source={{ uri: 'https://i.ibb.co/9TQd2Bb/map-image.jpg' }}

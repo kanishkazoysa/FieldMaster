@@ -140,4 +140,8 @@ export const styles = StyleSheet.create({
   descriptionInput: {
     backgroundColor: 'white',
   },
+  editIconStyle: {
+    marginLeft: 330,
+    marginTop: 10,
+  },
 });
