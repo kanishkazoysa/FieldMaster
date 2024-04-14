@@ -1,4 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const screenWidth = Dimensions.get('window').width;
+const marginLeft = screenWidth * 0.8;
 
 export const styles = StyleSheet.create({
   testingText: {
@@ -141,7 +144,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   editIconStyle: {
-    marginLeft: 330,
+    marginLeft: marginLeft,
     marginTop: 10,
   },
 });

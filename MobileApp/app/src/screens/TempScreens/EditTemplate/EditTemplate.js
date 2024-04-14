@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, Text, ScrollView } from 'react-native';
+import { View, Image, Text, ScrollView, Dimensions } from 'react-native';
 import { Appbar, ThemeProvider, TextInput } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './EditTemplateStyle';

@@ -101,11 +101,6 @@ const ResizeMapScreen = ({ navigation, route }) => {
     })();
   }, []);
 
-  const handleClearPoints = () => {
-    setPoints([]);
-    setIsPolygonComplete(false);
-  };
-
   const handleUndoLastPoint = () => {
     if (points.length > 0) {
       setPoints(points.slice(0, -1));
