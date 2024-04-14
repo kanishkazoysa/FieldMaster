@@ -56,7 +56,7 @@ const CustomEditIcon = ({ navigation }) => (
     name='square-edit-outline'
     size={25}
     color={'white'}
-    style={{ marginLeft: 10 }}
+    style={{ marginRight: 10 }}
     onPress={() => {
       navigation.navigate('EditTemplate');
     }}
