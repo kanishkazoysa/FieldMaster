@@ -53,6 +53,6 @@ export const styles = StyleSheet.create({
   },
   scrollViewOuterStyle: {
     flex: 1,
-    marginBottom: 70,
+    paddingBottom: 100,
   },
 });
