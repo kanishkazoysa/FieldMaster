@@ -4,8 +4,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { Polyline } from 'react-native-maps';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { polygon, area, length } from '@turf/turf';
+
 import {
   faLayerGroup,
   faLocationCrosshairs,
@@ -33,6 +32,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
   const [searchedLocation, setSearchedLocation] = useState(null);
   const mapRef = React.useRef(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
+  const [isMarkerMoved, setIsMarkerMoved] = useState(false);
 
   const closeModal = () => {
     setModalVisible(false);
@@ -111,30 +111,38 @@ const ResizeMapScreen = ({ navigation, route }) => {
       setPoints(points.slice(0, -1));
     }
   };
-
   const handleSaveMap = async () => {
-    if (points.length < 3) {
-      alert('You need at least 3 points to calculate area and perimeter');
-      return;
+    if (isMarkerMoved) {
+      try {
+        const locationPoints = points.map((point) => ({
+          latitude: point.latitude,
+          longitude: point.longitude,
+        }));
+        const response = await axios.put(
+          `${backendUrl}/api/mapTemplate/updateTemplate/${templateId}`,
+          {
+            locationPoints,
+          }
+        );
+
+        if (response.status === 200) {
+          console.log('Location updated successfully');
+          setIsMarkerMoved(false);
+          navigation.navigate('SavedTemplatesScreen');
+        } else {
+          console.log('Failed to update location');
+        }
+      } catch (error) {
+        console.error('An error occurred while updating the location:', error);
+      }
     }
+  };
 
-    console.log(points);
-    const formattedPoints = points.map((point) => [
-      point.longitude,
-      point.latitude,
-    ]);
-    formattedPoints.push(formattedPoints[0]);
-    const poly = polygon([formattedPoints]);
-    const areaMeters = area(poly);
-    const perimeterMeters = length(poly, { units: 'meters' });
-    const areaPerches = areaMeters / 25.29285264;
-    const perimeterKilometers = perimeterMeters / 1000;
-
-    alert(
-      `Area: ${areaPerches.toFixed(
-        2
-      )} perches, Perimeter: ${perimeterKilometers.toFixed(2)} kilometers`
-    );
+  const handleMarkerDragEnd = (event, index) => {
+    const newPoints = [...points];
+    newPoints[index] = event.nativeEvent.coordinate;
+    setPoints(newPoints);
+    setIsMarkerMoved(true);
   };
 
   const handleSetMapType = (type) => {
@@ -218,7 +226,12 @@ const ResizeMapScreen = ({ navigation, route }) => {
             mapPadding={{ top: 0, right: -100, bottom: 0, left: 0 }}
           >
             {points.map((point, index) => (
-              <Marker key={index} coordinate={point} />
+              <Marker
+                key={index}
+                coordinate={point}
+                draggable
+                onDragEnd={(e) => handleMarkerDragEnd(e, index)}
+              />
             ))}
             {!isPolygonComplete && points.length > 1 && (
               <Polyline
@@ -296,7 +309,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
               onPress={handleClearPoints}
               style={styles.cancelBtnStyle}
             >
-              <Text style={styles.btmBtnStyle}>Exit</Text>
+              <Text style={styles.btmBtnStyle}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
