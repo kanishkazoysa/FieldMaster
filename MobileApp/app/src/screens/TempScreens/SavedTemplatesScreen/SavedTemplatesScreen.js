@@ -127,14 +127,18 @@ const SavedTemplatesScreen = ({ navigation }) => {
                       </View>
                     </TouchableOpacity>
                     <View style={styles.col_03}>
-                      <MaterialCommunityIcons
-                        name='square-edit-outline'
-                        size={25}
-                        color='#65676B'
+                      <TouchableOpacity
                         onPress={() => {
                           navigation.navigate('EditTemplate', { item: item });
                         }}
-                      />
+                      >
+                        <MaterialCommunityIcons
+                          name='square-edit-outline'
+                          size={25}
+                          color='#65676B'
+                        />
+                      </TouchableOpacity>
+
                       <CustomDeleteIcon onPress={() => handleDelete(item)} />
                     </View>
                   </View>
