@@ -1,45 +1,35 @@
 // SideNavbar.js
-import React from "react";
-import { useState } from "react";
-import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
-import { FaBars } from "react-icons/fa";
-import logo from "../../images/logo.png";
-import Select from "react-select";import { FaSquare } from "react-icons/fa";
-import { FaBorderAll } from "react-icons/fa";
-import { FaMapSigns } from "react-icons/fa";
-import { FaDoorOpen } from "react-icons/fa";
-import { MdArrowBack } from "react-icons/md";
+import React, { useState, useRef } from "react";
+import { FaBars, FaSquare, FaRegSquare } from "react-icons/fa";
+import { MdArrowBack, MdFence } from "react-icons/md";
+import { GiGate } from "react-icons/gi";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+import Select from "react-select";
 
-
-export default function Fence() {
-  const [collapsed, setCollapsed] = useState(true);
-  const [hoveredMenuItem, setHoveredMenuItem] = useState(null);
+export default function Fence({ onBackToSidebar }) {
+  const [perimeter, setPerimeter] = useState("1.5");
+  const [area, setArea] = useState("100");
   const [selectedFenceType, setSelectedFenceType] = useState(null);
-  const [inputValue1, setInputValue1] = useState("");
   const [selectedPostSpaceUnit, setSelectedPostSpaceUnit] = useState("");
+  const [inputValuePostspace, setInputValuePostspace] = useState("");
   const [inputValueFenceLength, setInputValueFenceLength] = useState("");
-  //const inputValueFenceAmountRef = useRef(null);
+  const [inputValueFenceAmount, setInputValueFenceAmount] = useState("");
+  const [fenceLengthsArray, setFenceLengthsArray] = useState([]);
+  const [fenceAmountsArray, setFenceAmountsArray] = useState([]);
+  const [displayValues, setDisplayValues] = useState([]);
+  const inputValueFenceAmountRef = useRef(null);
 
   const handleFenceLengthChange = (event) => {
     setInputValueFenceLength(event.target.value);
   };
 
-  
+  const handleFenceAmountChange = (event) => {
+    setInputValueFenceAmount(event.target.value);
+  };
 
-  const fenceTypeOptions = [
-    { value: "option1", label: "wood" },
-    { value: "option2", label: "Metal" },
-    { value: "option3", label: "fiber" },
-  ];
-
-  const lengthUnitOptions = [
-    { value: "option1", label: "m" },
-    { value: "option2", label: "cm" },
-    { value: "option3", label: "foot" },
-    // Add more options as needed
-  ];
-
-  const [inputValue, setInputValue] = useState("");
+  const handleInputChange = (event) => {
+    setInputValuePostspace(event.target.value);
+  };
 
   const handleFenceTypeChange = (selectedOption) => {
     setSelectedFenceType(selectedOption);
@@ -49,260 +39,212 @@ export default function Fence() {
     setSelectedPostSpaceUnit(selectedOption);
   };
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
+  const handleAdd = () => {
+    const length = parseFloat(inputValueFenceLength);
+    const amount = parseInt(inputValueFenceAmount);
+    setFenceLengthsArray([...fenceLengthsArray, length]);
+    setFenceAmountsArray([...fenceAmountsArray, amount]);
+    const combinedValue = `${length}m x ${amount}`;
+    const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
+    setDisplayValues(newDisplayValues);
+    setInputValueFenceLength("");
+    setInputValueFenceAmount("");
+    inputValueFenceAmountRef.current.focus();
   };
 
-  const handleMouseEnter = (item) => {
-    setHoveredMenuItem(item);
-  };
+  const handleRemoveValue = (index) => {
+    const newDisplayValues = [...displayValues];
+    newDisplayValues.splice(index, 1);
+    setDisplayValues(newDisplayValues);
 
-  const handleMouseLeave = () => {
-    setHoveredMenuItem(null);
-  };
+    const newFenceLengthsArray = [...fenceLengthsArray];
+    newFenceLengthsArray.splice(index, 1);
+    setFenceLengthsArray(newFenceLengthsArray);
 
-  const handleToggleSidebar = () => {
-    setCollapsed(!collapsed);
+    const newFenceAmountsArray = [...fenceAmountsArray];
+    newFenceAmountsArray.splice(index, 1);
+    setFenceAmountsArray(newFenceAmountsArray);
   };
 
   return (
-    
-   
-      <div style={styles.content}>
-        <div style={styles.header}>
-         <MdArrowBack
-          //onClick={onBackToSidebar}
+    <div style={styles.content}>
+      <div style={styles.header}>
+        <MdArrowBack
+          onClick={onBackToSidebar}
           style={styles.backButton}
           fontSize={20}
-         /> 
-         <p style={styles.titleText1}>Fence</p>
-        </div>
+        />
+        <p style={styles.titleText1}>Fence</p>
+      </div>
 
-        {/* first box */}
-        <div style={styles.Box1}>
-          <p style={styles.titleText}>Land Info</p>
-
-          <div style={styles.propertyBox}>
-            <div style={styles.property}>
-              <FaBorderAll color="#65676b" size={40} />
-              <div style={styles.propertyDetails}>
-                <p style={styles.propertyLabel}>Perimeter</p>
-                <p style={styles.propertyValue}>1.5Km</p>
-              </div>
-            </div>
-            <div className="property" style={styles.property}>
-              <FaSquare color="#65676b" size={40} />
-              <div style={styles.propertyDetails}>
-                <p style={styles.propertyLabel}>Area</p>
-                <p style={styles.propertyValue}>100 m<sup>2</sup></p>
-              </div>
+      <div style={styles.Box1}>
+        <p style={styles.titleText}>Land Info</p>
+        <div style={styles.propertyBox}>
+          <div style={styles.property}>
+            <FaRegSquare color="gray" size={40} />
+            <div style={styles.propertyDetails}>
+              <p style={styles.propertyLabel}>Perimeter</p>
+              <p style={styles.propertyValue}>{perimeter}Km</p>
             </div>
           </div>
-        </div>
-
-        {/* second box */}
-
-        <div style={styles.box2}>
-          <div style={styles.box2Property}>
-            <FaMapSigns
-              name="gate"
-              size={40}
-              color="gray"
-              rotation={270}
-              style={styles.squareIcon}
-            />
-            <div style={styles.box2PropertyDetails}>
-              <p style={styles.Box2PropertyLabel}>Fence Type</p>
+          <div style={styles.property}>
+            <FaSquare color="gray" size={40} />
+            <div style={styles.propertyDetails}>
+              <p style={styles.propertyLabel}>Area</p>
+              <p style={styles.propertyValue}>{area} m<sup>2</sup></p>
             </div>
           </div>
-          <div style={styles.box2Property}>
-            <div style={styles.Box2DropdownContainer}>
-
-              <Select
-                placeholder="Type"
-                options={fenceTypeOptions}
-                value={selectedFenceType}
-                onChange={handleFenceTypeChange}
-                styles={{
-                  control: (provided) => ({
-                    ...provided,
-                    textAlign: "center",
-                  }),
-                }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* third box */}
-
-        <div style={styles.box3}>
-          <div style={styles.box3Property}>
-            <FaBars
-              name="format-line-spacing"
-              size={40}
-              color="gray"
-              rotation={270}
-            />
-            <div style={styles.box3PropertyDetails}>
-              <p style={styles.Box3PropertyLabel}>Post Space</p>
-            </div>
-          </div>
-          <div style={styles.box3Property}>
-            <div style={styles.box3inputContainer}>
-          
-              <input
-                type="text"
-                style={styles.box3input}
-                placeholder="00"
-                value={inputValue}
-                onChange={handleInputChange}
-              />
-
-              <Select
-                placeholder="m"
-                options={lengthUnitOptions}
-                value={selectedPostSpaceUnit}
-                onChange={handlePostSpaceUnitChange}
-                styles={{
-                  control: (provided) => ({
-                    ...provided,
-                    textAlign: "center",
-                  }),
-                }}
-              />
-
-            </div>
-          </div>
-        </div>
-
-        {/* Forth section */}
-
-        <div style={styles.box4}>
-          <div style={styles.box4innertop}>
-            <FaDoorOpen name="boom-gate" size={40} color="gray" />
-            <p style={styles.Box4TopText}>Gates</p>
-          </div>
-          <div style={styles.box4InnerCenter}>
-            <div style={styles.line}>
-              <p style={styles.linetext}>Length :</p>
-             
-              <input
-                type="text"
-                style={{
-                  ...styles.linetextinput,
-                  marginLeft: "10px",
-                  borderBottomWidth: "1px",
-                  borderBottomColor: "lightgray",
-                  borderBottom: "1px solid gray", 
-                  borderLeft: "none", 
-                  borderRight: "none", 
-                  borderTop: "none",
-                }}
-                placeholder="Length of Gate"
-                value={inputValueFenceLength}
-                onChange={handleFenceLengthChange}
-                onKeyDown={(e) => {
-                  
-                }}
-              />
-            </div>
-            <div style={styles.line}>
-              <p style={styles.linetext}>Count :</p>
-            
-              <input
-                type="text"
-                style={{
-                  ...styles.linetextinput,
-                  marginLeft: "10px",
-                  borderBottomWidth: "1px",
-                  borderBottomColor: "lightgray",
-                  borderBottom: "1px solid gray", 
-                  borderLeft: "none", 
-                  borderRight: "none", 
-                  borderTop: "none",
-                }}
-                placeholder="Number of Gate"
-                value={inputValueFenceLength}
-                onChange={handleFenceLengthChange}
-                onKeyDown={(e) => {
-                  
-                }}
-              />
-            </div>
-          </div>
-          <div style={styles.Box4InnerBottom}>
-            <button style={styles.Box4Button}>
-              <p style={styles.Box4ButtonText}>Add</p>
-            </button>
-          </div>
-
-          {/* <div style={styles.displayValuesContainer}>
-            {displayValues.map((value, index) => (
-              <div key={index} style={styles.displayValueContainer}>
-                <Text style={styles.displayValueText}>{value}</Text>
-                <TouchableOpacity
-                  onPress={() => handleRemoveValue(index)}
-                  style={styles.closeButton}
-                >
-                  <MaterialCommunityIcons
-                    name="close-circle-outline"
-                    size={20}
-                    color="#007BFF"
-                  />
-                </TouchableOpacity>
-              </div>
-            ))}
-          </div> */}
-        </div>
-
-        <div style={styles.bottom}>
-          <button style={styles.Button1}>
-            <p style={styles.Box4ButtonText}>Calculate</p>
-          </button>
         </div>
       </div>
+
+      <div style={styles.box2}>
+        <div style={styles.box2Property}>
+          <MdFence
+            name="gate"
+            size={40}
+            color="gray"
+            rotation={270}
+            style={styles.squareIcon}
+          />
+          <div style={styles.box2PropertyDetails}>
+            <p style={styles.Box2PropertyLabel}>Fence Type</p>
+          </div>
+        </div>
+        <div style={styles.box2Property}>
+          <div style={styles.Box2DropdownContainer}>
+            <Select
+              placeholder="Type"
+              options={[
+                { value: "option1", label: "Wood" },
+                { value: "option2", label: "Metal" },
+                { value: "option3", label: "Fiber" }
+              ]}
+              value={selectedFenceType}
+              onChange={handleFenceTypeChange}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  textAlign: "center"
+                })
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div style={styles.box3}>
+        <div style={styles.box3Property}>
+          <div style={{ transform: "rotate(90deg)" }}>
+            <FaBars name="format-line-spacing" size={30} color="gray" />
+          </div>
+          <div style={styles.box3PropertyDetails}>
+            <p style={styles.Box3PropertyLabel}>Post Space</p>
+          </div>
+        </div>
+        <div style={styles.box3Property}>
+          <div style={styles.box3inputContainer}>
+            <input
+              type="text"
+              style={styles.box3input}
+              placeholder="00"
+              value={inputValuePostspace}
+              onChange={handleInputChange}
+            />
+            <Select
+              placeholder="m"
+              options={[
+                { value: "option1", label: "m" },
+                { value: "option2", label: "cm" }
+              ]}
+              value={selectedPostSpaceUnit}
+              onChange={handlePostSpaceUnitChange}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  textAlign: "center"
+                })
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div style={styles.box4}>
+        <div style={styles.box4innertop}>
+          <GiGate name="boom-gate" size={32} color="gray" />
+          <p style={styles.Box4TopText}>Gates</p>
+        </div>
+        <div style={styles.box4InnerCenter}>
+          <div style={styles.line}>
+            <p style={styles.linetext}>Length :</p>
+            <input
+              type="text"
+              style={styles.linetextinput}
+              placeholder="Length of Gate"
+              value={inputValueFenceLength}
+              onChange={handleFenceLengthChange}
+            />
+          </div>
+          <div style={styles.line}>
+            <p style={styles.linetext}>Count :</p>
+            <input
+              type="text"
+              style={styles.linetextinput}
+              placeholder="Number of Gate"
+              value={inputValueFenceAmount}
+              onChange={handleFenceAmountChange}
+              ref={inputValueFenceAmountRef}
+              onSubmitEditing={handleAdd}
+            />
+          </div>
+        </div>
+        <div style={styles.Box4InnerBottom}>
+          <button style={styles.Box4Button} onClick={handleAdd}>
+            <p style={styles.Box4ButtonText}>Add</p>
+          </button>
+        </div>
+        
+        <div style={styles.displayValuesContainer}>
+          {displayValues.map((value, index) => (
+         <div key={index} style={styles.displayValueContainer }>
+         <div style={styles.displayValueText}>{value}</div>
+      <button
+        onClick={() => handleRemoveValue(index)}
+        style={styles.closeButton}
+      >
+        <IoIosCloseCircleOutline
+          name="close-circle-outline"
+          size={20}
+          color="#007BFF"
+        />
+      </button>
+    </div>
+  ))}
+</div>
+
+      </div>
+
+      <div style={styles.bottom}>
+        <button style={styles.Button1}>
+          <p style={styles.Box4ButtonText}>Calculate</p>
+        </button>
+      </div>
+    </div>
   );
 }
 
 
-
 const styles = {
-
   backButton: {
     marginLeft: "10px",
     cursor: "pointer",
     color: "white",
-
-  },
-  head: {
-    backgroundColor: "#fff",
-    display: "flex",
-    flexDirection: "row",
-    height: "60px",
-    borderBottom: "1px solid #CED0D4",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "0 20px",
-  },
-  logo: {
-    height: "40px",
-    width: "100px",
-    marginBottom: "5px",
-  },
-  logoContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-  },
-
-  hoveredMenuItem: {
-    backgroundColor: "#0866FF",
-    color: "white",
   },
 
   content: {
+    paddingLeft: "20px",
+    paddingRight: "20px",
+    width: "100%",
     marginTop: "0px",
     display: "flex",
     flexDirection: "column",
@@ -318,10 +260,11 @@ const styles = {
 
   header: {
     display: "flex",
-    width: "100%",
+    width: "105%",
     height: "40px",
     backgroundColor: "#007BFF",
     alignItems: "center",
+    borderRadius: "5px",
   },
 
   titleText1: {
@@ -329,20 +272,20 @@ const styles = {
     fontWeight: "bold",
     marginBottom: 0,
     color: "white",
-    marginLeft: "125px",
+    marginLeft: "140px",
   },
 
   Box1: {
     width: "90%",
-    height: "101px", 
+    height: "101px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     backgroundColor: "white",
-    marginTop: "10px", 
-    borderRadius: "11px", 
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", 
-    padding: "10px", 
+    marginTop: "10px",
+    borderRadius: "11px",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    padding: "10px",
   },
 
   titleText: {
@@ -499,10 +442,11 @@ const styles = {
     borderBottomColor: "lightgray",
     justifyContent: "center",
     alignItems: "center",
-    borderBottom: "1px solid gray", 
+    borderBottom: "1px solid gray",
     borderLeft: "none",
-    borderRight: "none", 
+    borderRight: "none",
     borderTop: "none",
+    outline: "none",
   },
 
   dropdownContainer: {
@@ -579,6 +523,14 @@ const styles = {
 
   linetextinput: {
     width: 140,
+    marginLeft: "10px",
+    borderBottomWidth: "1px",
+    borderBottomColor: "lightgray",
+    borderBottom: "1px solid gray",
+    borderLeft: "none",
+    borderRight: "none",
+    borderTop: "none",
+    outline: "none"
   },
 
   Box4InnerBottom: {
@@ -605,14 +557,59 @@ const styles = {
     marginBottom: 0,
   },
 
+
+  displayValuesContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 5,
+    alignItems: "center",
+    backgroundColor: "white",
+    height: "max-content",
+    borderRadius: 11,
+    width: "100%",
+  },
+  displayValueContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    backgroundColor: "white",
+    marginRight: 5,
+    marginLeft: 5,
+    marginBottom: 10,
+    borderRadius: 8,
+    padding: 2,
+    width: "21%",
+    border: '1px solid lightblue',
+
+  },
+  displayValueText: {
+    fontSize: 11,
+    marginRight: 5,
+    color: "#007BFF",
+  },
+  closeButton: {
+  backgroundColor: "transparent",
+  border: "none",
+  cursor: "pointer",
+  padding: 0,
+
+  },
+  closeButtonText: {
+    color: "white",
+    fontSize: 14,
+  },
+
   bottom: {
+    width: "92%",
     alignItems: "center",
     marginTop: 20,
   },
 
   Button1: {
     display: "flex",
-    width: 350,
+    width: "100%",
     height: 38,
     backgroundColor: "#0866FF",
     alignItems: "center",
