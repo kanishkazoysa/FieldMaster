@@ -130,7 +130,7 @@ export default function Fence() {
           Alert.alert("Error", "Please fill in all fields");
           return;
         }
-        navigation.navigate("Fence", {
+        navigation.navigate("FenceDetails", {
           data: displayValues,
           fenceType: FenceTypeselectedValue,
           PostSpaceUnit: PostSpaceUnitselectedValue,
@@ -138,7 +138,6 @@ export default function Fence() {
         });
         //console.log(response.data);
       })
-
 
       .catch((error) => {
         console.error("Error:", error.response.data);
