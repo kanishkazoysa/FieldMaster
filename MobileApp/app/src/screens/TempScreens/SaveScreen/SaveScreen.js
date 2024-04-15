@@ -176,8 +176,8 @@ export function SaveScreen({ navigation, route }) {
               />
             </View>
           </View>
+          </View>
         </ScrollView>
-      </KeyboardAvoidingView>
     </View>
   );
 }
