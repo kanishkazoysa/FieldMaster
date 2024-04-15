@@ -1,22 +1,32 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import EmailVerified from './pages/EmailVerified';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import Navbar from './components/HomeComponents/navbar/Navbar';
+import Hero from './components/HomeComponents/Hero/Hero';
+import About from './components/HomeComponents/About';
+import Footer from './components/HomeComponents/Footer';
+import Pricing from './components/HomeComponents/Pricing';
+import Setup from './components/HomeComponents/SetupCard';
+import ContactForm from './components/HomeComponents/contact/contact';
+import './index.css';
 export default function App() {
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route index element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/emailVerification" element={<EmailVerified />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+
+    <>
+      <Navbar />
+      <div className='container'>
+        <Hero />
+        <About />
+        <Setup />
+        <Pricing />
+      </div>
+      <div className='ContactContainer'>
+        <ContactForm />
+      </div>
+      
+    </>
+
   );
 }

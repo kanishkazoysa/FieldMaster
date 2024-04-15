@@ -17,9 +17,13 @@
     "@babel/plugin-transform-optional-chaining": "^7.23.4",
     "@expo-google-fonts/pt-sans": "^0.2.3",
     "@mdi/react": "^1.6.1",
+    "@react-native-community/geolocation": "^3.2.0",
     "@uiw/react-native": "^4.1.1",
+    "axios": "^1.6.7",
     "expo-app-loading": "^2.1.1",
+    "expo-location": "^16.5.5",
     "nodemailer": "^6.9.9",
+    "react-native-elements": "^3.4.3",
     "react-native-vector-icons": "^10.0.3"
   }
 }
