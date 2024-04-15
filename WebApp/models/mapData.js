@@ -9,7 +9,11 @@ const polylineDataSchema = new mongoose.Schema({
   area : {
     type: String,
     required: true,
-  }
+  },
+  userId: {
+    type: String,
+    required: true,
+  },
 });
 
 const PolylineData = mongoose.model('PolylineData', polylineDataSchema);

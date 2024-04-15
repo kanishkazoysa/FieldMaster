@@ -21,6 +21,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import area from "@turf/area";
+import AxiosInstance from "../AxiosInstance";
 
 const BACKGROUND_LOCATION_TASK = "background-location-task";
 
@@ -198,18 +199,22 @@ export default function Home() {
     };
     const polygonArea = calculatePolygonArea(polygon);
     setPolygonArea(polygonArea);
-    try {
-      const response = await axios.post(
-        "http://192.168.1.104:5000/api/polyline/save",
+   
+      AxiosInstance.post(
+        "/api/auth/polyline/save",
         { coordinates: pathCoordinates,
           area: polygonArea
         }
-      );
-      console.log(response.data);
-      navigation.navigate("SaveScreen");
-    } catch (error) {
-      console.error("Error saving polyline data:", error);
-    }
+      )
+          .then((response) => {
+            console.log(response.data._id);
+            navigation.navigate('SaveScreen', {
+              id: response.data._id,
+            });
+          })
+          .catch((error) => {
+            console.error(error.response.data);
+          });
   };
 
   const calculatePolygonArea = (polygon) => {

@@ -16,7 +16,6 @@ const SelectionModal = ({ modalVisible, setModalVisible, options  }) => {
       navigation.navigate('WalkaroundLand');
     } else if (index === 1) {
       navigation.navigate('PointAddingScreen');
-      navigation.navigate("WalkaroundLand");
     }
     else { 
         setCalculatorModalVisible(true);
@@ -32,7 +31,6 @@ const SelectionModal = ({ modalVisible, setModalVisible, options  }) => {
       visible={modalVisible}
       onRequestClose={closeModal}
     >
-      <View style={styles.container}>
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.overlay}

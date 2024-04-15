@@ -3,14 +3,7 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require('body-parser');
 const middleware = require("./middleware/middleware");
-
 const app = express();
-
-
-
-const dbconfig = require("./db");
-const userRoute = require("./routes/usersRoute.js");
-const mailRoute = require("./routes/mailRoute.js");
 const fenceRoute = require("./routes/fenceRoute.js");
 const polylineRoute = require("./routes/map.js");
 const dbconfig = require('./db');
@@ -26,7 +19,7 @@ app.use("/api/auth/*", middleware);
 app.use("/api/users", userRoute);
 app.use("/api/mail", mailRoute);
 app.use("/api", fenceRoute);
-app.use("/api/polyline",polylineRoute);
+app.use("/api/auth/polyline",polylineRoute);
 app.use('/api/mapTemplate', MapTemplateRoute);
 
 const port = process.env.PORT || 5000;
