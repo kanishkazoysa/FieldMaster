@@ -1,9 +1,12 @@
-import React from 'react';
-import { View, Image, Text, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, Text, ScrollView, Dimensions } from 'react-native';
 import { Appbar, ThemeProvider, TextInput } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './EditTemplateStyle';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import axios from 'axios';
+import backendUrl from '../../../../urlFile';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const theme = {
   ...DefaultTheme,
@@ -14,26 +17,6 @@ const theme = {
   },
 };
 
-const ClearLandIcon = (props) => (
-  <MaterialCommunityIcons {...props} name='palm-tree' size={25} color='white' />
-);
-
-const PlantationIcon = (props) => (
-  <MaterialCommunityIcons {...props} name='leaf' size={25} color='white' />
-);
-
-const FenceSetupIcon = (props) => (
-  <MaterialCommunityIcons {...props} name='fence' size={25} color='white' />
-);
-
-const TypeIcon = (props) => (
-  <MaterialCommunityIcons
-    {...props}
-    name='power-socket-eu'
-    size={25}
-    color='grey'
-  />
-);
 const PerimeterIcon = (props) => (
   <MaterialCommunityIcons {...props} name='crop' size={25} color='grey' />
 );
@@ -47,7 +30,36 @@ const AreaIcon = (props) => (
   />
 );
 
-const EditTemplate = ({ navigation }) => {
+const EditTemplate = ({ route, navigation }) => {
+  const { item } = route.params;
+
+  const [measureName, setMeasureName] = useState(item.measureName);
+  const [landType, setLandType] = useState(item.landType);
+  const [description, setDescription] = useState(item.description);
+
+  const handleSave = () => {
+    if (
+      measureName !== item.measureName ||
+      landType !== item.landType ||
+      description !== item.description
+    ) {
+      axios
+        .put(`${backendUrl}/api/mapTemplate/updateTemplate/${item._id}`, {
+          measureName: measureName,
+          landType: landType,
+          description: description,
+        })
+        .then((response) => {
+          alert('Template updated');
+          navigation.navigate('SavedTemplatesScreen');
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      navigation.navigate('SavedTemplatesScreen');
+    }
+  };
   return (
     <PaperProvider theme={theme}>
       <ThemeProvider>
@@ -59,28 +71,33 @@ const EditTemplate = ({ navigation }) => {
             mode='center-aligned'
           >
             <View style={styles.appBarContent}>
-             
-              <Text
-                style={styles.appBarTextStyle}
+              <TouchableOpacity onPress={handleSave}>
+                <Text style={styles.appBarTextStyle}>Save</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('SavedTemplatesScreen');
                 }}
               >
-                Cancel
-              </Text>
-              <Text
-                style={styles.appBarTextStyle}
-                onPress={() => {
-                  navigation.navigate('SavedTemplatesScreen');
-                }}
-              >
-                Save
-              </Text>
+                <Text style={styles.appBarTextStyle}>Cancel</Text>
+              </TouchableOpacity>
             </View>
           </Appbar.Header>
         </View>
         <ScrollView>
           <View style={styles.low_outer}>
+            <MaterialCommunityIcons
+              name='square-edit-outline'
+              size={25}
+              style={styles.editIconStyle}
+              color='#65676B'
+              onPress={() => {
+                navigation.navigate('ResizeMap', {
+                  templateId: item._id,
+                });
+              }}
+            />
             <View style={styles.imageView}>
               <Image
                 source={{ uri: 'https://i.ibb.co/9TQd2Bb/map-image.jpg' }}
@@ -96,7 +113,9 @@ const EditTemplate = ({ navigation }) => {
                     <PerimeterIcon />
                     <View style={styles.textView}>
                       <Text style={styles.text01Styling}>Perimeter</Text>
-                      <Text style={styles.text02Styling}>13km</Text>
+                      <Text style={styles.text02Styling}>
+                        {item.perimeter} km
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -105,7 +124,9 @@ const EditTemplate = ({ navigation }) => {
                     <AreaIcon />
                     <View style={styles.textView}>
                       <Text style={styles.text01Styling}>Area</Text>
-                      <Text style={styles.text02Styling}>100 Acres</Text>
+                      <Text style={styles.text02Styling}>
+                        {item.area} acres
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -115,8 +136,8 @@ const EditTemplate = ({ navigation }) => {
             <View style={styles.inputBlock}>
               <Text stye={styles.text02Styling}>Measure Name :</Text>
               <TextInput
-                value={'Rubber estate'}
-                onChangeText={(text) => setText(text)}
+                value={measureName}
+                onChangeText={setMeasureName}
                 backgroundColor='white'
                 style={styles.textInput}
                 activeUnderlineColor='black'
@@ -125,8 +146,8 @@ const EditTemplate = ({ navigation }) => {
             <View style={styles.inputBlock}>
               <Text stye={styles.text02Styling}>Land Type :</Text>
               <TextInput
-                value={'Flat'}
-                onChangeText={(text) => setText(text)}
+                value={landType}
+                onChangeText={setLandType}
                 backgroundColor='white'
                 activeUnderlineColor='black'
                 style={styles.textInput02}
@@ -135,13 +156,18 @@ const EditTemplate = ({ navigation }) => {
             <View></View>
             {/* Description block */}
             <View style={styles.descriptionBlock}>
-              <Text style={styles.text02Styling}>Description</Text>
+              <Text style={styles.text01Styling}>Description</Text>
               <View style={styles.subTextOuter}>
-                <Text style={styles.subTextStyle}>
-                  Nestled amidst the beaches of Balapitiya lies a parcel of land
-                  that captivates with its vastness and natural splendor.
-                  Spanning an impressive 100 acres. alike.
-                </Text>
+                <TextInput
+                  value={description}
+                  onChangeText={setDescription}
+                  style={styles.descriptionInput}
+                  multiline={true}
+                  numberOfLines={4}
+                  outlineColor='black'
+                  activeUnderlineColor='black'
+                  theme={{ colors: { primary: 'black' } }}
+                />
               </View>
             </View>
           </View>
