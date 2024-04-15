@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,39 +10,37 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import * as Print from 'expo-print';
-import { shareAsync } from 'expo-sharing';
-import axios from 'axios';
-
-
+import * as Print from "expo-print";
+import { shareAsync } from "expo-sharing";
+import axios from "axios";
 
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
-
+import AxiosInstance from "../../AxiosInstance";
 
 export default function FenceDetails({ route }) {
-
   const navigation = useNavigation();
-  const { fenceType,postSpace,PostSpaceUnit,data } = route.params;
+  const { fenceType, postSpace, PostSpaceUnit, data } = route.params;
   const [numberOfSticks, setnumberOfSticks] = useState(null);
 
-
-
-  // get number of data from  database
-
+  // get number of Sticks from  database
   useEffect(() => {
     const fetchData = async () => {
-        try {
-            const response = await axios.get("http://192.168.134.237:5000/api/fence/numberOfSticks");
-            setnumberOfSticks(response.data.data); 
-        } catch (error) {
-            console.error(error);
-        }
+      
+        AxiosInstance.get("/api/fence/numberOfSticks")
+        .then((response) => {
+          setnumberOfSticks(response.data.data);
+        })
+        
+      .catch((error) => {
+        console.error(error);
+      })
     };
     fetchData();
-}, []);
+  }, []);
 
-  const html = `
+// html file to be printed
+const html = `
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -125,7 +123,7 @@ export default function FenceDetails({ route }) {
           <li> Post Space = ${postSpace} ${PostSpaceUnit}</li>
           <!-- Loop through the 'data' array and generate list items -->
           <li> Gate values  <ul>
-          ${data.map(value => `<li>${value}</li>`).join('')}
+          ${data.map((value) => `<li>${value}</li>`).join("")}
           </ul></li>
           
           </ul>
@@ -138,15 +136,10 @@ export default function FenceDetails({ route }) {
 
 `;
 
-  
-
-
   /*print*/
-
   const [selectedPrinter, setSelectedPrinter] = React.useState();
 
   const print = async () => {
-    // On iOS/android prints the given html. On web prints the HTML from the current page.
     await Print.printAsync({
       html,
       printerUrl: selectedPrinter?.url, // iOS only
@@ -154,17 +147,15 @@ export default function FenceDetails({ route }) {
   };
 
   const printToFile = async () => {
-    // On iOS/android prints the given html. On web prints the HTML from the current page.
     const { uri } = await Print.printToFileAsync({ html });
-    console.log('File has been saved to:', uri);
-    await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+    console.log("File has been saved to:", uri);
+    await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
   };
 
   const selectPrinter = async () => {
     const printer = await Print.selectPrinterAsync(); // iOS only
     setSelectedPrinter(printer);
   };
-
 
   return (
     <KeyboardAvoidingView
@@ -175,45 +166,49 @@ export default function FenceDetails({ route }) {
       {/* Static section at the top */}
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
-      {/*Header section*/}  
+      {/*Header section*/}
       <Headersection navigation={navigation} title="Fence Details" />
-
 
       {/* Top section */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
-
-      <View style={styles.top}>
-        <View style={styles.box1}>
-          <Text style={styles.titleText}>Total posts / Sticks</Text>
-          <View style={styles.propertyBox}>
-            <View style={styles.property}>
-              <MaterialCommunityIcons name="format-align-justify" size={36} color="#65676B" rotation={270}/>
-              <View style={styles.propertyDetails}>
-                <Text style={styles.propertyLabel}>Total Amount</Text>
-                <Text style={styles.propertyValue}>{numberOfSticks} Stick</Text>
+        <View style={styles.top}>
+          <View style={styles.box1}>
+            <Text style={styles.titleText}>Total posts / Sticks</Text>
+            <View style={styles.propertyBox}>
+              <View style={styles.property}>
+                <MaterialCommunityIcons
+                  name="format-align-justify"
+                  size={36}
+                  color="#65676B"
+                  rotation={270}
+                />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyLabel}>Total Amount</Text>
+                  <Text style={styles.propertyValue}>
+                    {numberOfSticks} Stick
+                  </Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.property}>
-              <MaterialCommunityIcons
-                name="format-line-spacing"
-                size={36}
-                color="#65676B"
-                rotation={270}
-              />
-              <View style={styles.propertyDetails}>
-                <Text style={styles.propertyLabel}>Post Gap</Text>
-                <Text style={styles.propertyValue}>{postSpace} {PostSpaceUnit} </Text>
+              <View style={styles.property}>
+                <MaterialCommunityIcons
+                  name="format-line-spacing"
+                  size={36}
+                  color="#65676B"
+                  rotation={270}
+                />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyLabel}>Post Gap</Text>
+                  <Text style={styles.propertyValue}>
+                    {postSpace} {PostSpaceUnit}{" "}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
-        </View>
-      
 
-      {/* Second section */}
+          {/* Second section */}
 
-      
-        <View style={styles.box2}>
-         
+          <View style={styles.box2}>
             <View style={styles.box2Property}>
               <MaterialCommunityIcons
                 name="vector-square"
@@ -235,16 +230,12 @@ export default function FenceDetails({ route }) {
                 <Text style={styles.Box2PropertyLabel}>Area</Text>
                 <Text style={styles.Box2PropertyValue}>100 acres</Text>
               </View>
-          
+            </View>
           </View>
-        
-      </View>
 
-      {/* Third section */}
+          {/* Third section */}
 
-    
-        <View style={styles.box3}>
-          
+          <View style={styles.box3}>
             <Text style={styles.innertopText}>Result based on</Text>
 
             <View style={styles.innercenter}>
@@ -267,46 +258,42 @@ export default function FenceDetails({ route }) {
                 <Text style={styles.perimeterText}>Gates           :</Text>
               </View>
               <View style={styles.innersquareright1}>
-              {data.map((value, index) => (
-                <Text key={index}>{value}</Text>
-                   ))}
+                {data.map((value, index) => (
+                  <Text key={index}>{value}</Text>
+                ))}
               </View>
             </View>
-            </View>
-      </View>
+          </View>
+        </View>
 
-      {/* Bottom section */}
+        {/* Bottom section */}
 
-  
         <View style={styles.bottom}>
           <CustomButton
-              onPress={print}
-              text="Save a PDF"
-              iconName="content-save-outline" // Change the icon name as needed
-              iconColor="white" // Change the color of the icon
-              buttonColor="#E41E3F" // Change the background color of the button
-            />
+            onPress={print}
+            text="Save a PDF"
+            iconName="content-save-outline"
+            iconColor="white" 
+            buttonColor="#E41E3F"
+          />
 
-            <CustomButton
-              onPress={printToFile}
-              text="Share As PDF"
-              iconName="share-variant" // Change the icon name as needed
-              iconColor="white" // Change the color of the icon
-              buttonColor="#007BFF" // Change the background color of the button
-            />
-
+          <CustomButton
+            onPress={printToFile}
+            text="Share As PDF"
+            iconName="share-variant"
+            iconColor="white" 
+            buttonColor="#007BFF" 
+          />
         </View>
-     </ScrollView>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  
   container: {
     flex: 1,
   },
-
 
   /*Top Section*/
 
@@ -314,14 +301,12 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     height: "100%",
-   
   },
 
   top: {
     alignItems: "center",
     width: "100%",
-
-   },
+  },
 
   box1: {
     backgroundColor: "white",
@@ -354,7 +339,7 @@ const styles = StyleSheet.create({
   property: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center", // or remove it for default behavior
+    justifyContent: "center", 
     backgroundColor: "white",
     width: "46%",
     padding: 7,
@@ -394,7 +379,6 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
 
-  
   box2Property: {
     flexDirection: "row",
     alignItems: "center",
@@ -421,7 +405,7 @@ const styles = StyleSheet.create({
 
   box3: {
     width: "87%",
-   // height: "max-content",
+    // height: "max-content",
     height: 220,
     backgroundColor: "white",
     marginTop: 15,
@@ -476,5 +460,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
     bottom: 30,
   },
-
 });
