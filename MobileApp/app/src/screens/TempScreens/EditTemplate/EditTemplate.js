@@ -6,6 +6,7 @@ import { styles } from './EditTemplateStyle';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import axios from 'axios';
 import backendUrl from '../../../../urlFile';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const theme = {
   ...DefaultTheme,
@@ -37,21 +38,28 @@ const EditTemplate = ({ route, navigation }) => {
   const [description, setDescription] = useState(item.description);
 
   const handleSave = () => {
-    axios
-      .put(`${backendUrl}/api/mapTemplate/updateTemplate/${item._id}`, {
-        measureName: measureName,
-        landType: landType,
-        description: description,
-      })
-      .then((response) => {
-        alert('Template updated');
-        navigation.navigate('SavedTemplatesScreen');
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    if (
+      measureName !== item.measureName ||
+      landType !== item.landType ||
+      description !== item.description
+    ) {
+      axios
+        .put(`${backendUrl}/api/mapTemplate/updateTemplate/${item._id}`, {
+          measureName: measureName,
+          landType: landType,
+          description: description,
+        })
+        .then((response) => {
+          alert('Template updated');
+          navigation.navigate('SavedTemplatesScreen');
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      navigation.navigate('SavedTemplatesScreen');
+    }
   };
-
   return (
     <PaperProvider theme={theme}>
       <ThemeProvider>
@@ -63,17 +71,17 @@ const EditTemplate = ({ route, navigation }) => {
             mode='center-aligned'
           >
             <View style={styles.appBarContent}>
-              <Text style={styles.appBarTextStyle} onPress={handleSave}>
-                Save
-              </Text>
-              <Text
-                style={styles.appBarTextStyle}
+              <TouchableOpacity onPress={handleSave}>
+                <Text style={styles.appBarTextStyle}>Save</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('SavedTemplatesScreen');
                 }}
               >
-                Cancel
-              </Text>
+                <Text style={styles.appBarTextStyle}>Cancel</Text>
+              </TouchableOpacity>
             </View>
           </Appbar.Header>
         </View>

@@ -57,9 +57,6 @@ const CustomEditIcon = ({ navigation }) => (
     size={25}
     color={'white'}
     style={{ marginRight: 10 }}
-    onPress={() => {
-      navigation.navigate('EditTemplate');
-    }}
   />
 );
 
