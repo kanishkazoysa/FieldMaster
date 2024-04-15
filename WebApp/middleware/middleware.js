@@ -1,21 +1,29 @@
 const JWT = require("jsonwebtoken");
 module.exports = async (req, res, next) => {
   try {
-    const token = req.headers["authorization"].split(" ")[1];
+    console.log(req.headers,'auth')
+    if (!req.headers.authorization) {
+      return res.status(401).send({
+        success: false,
+        message: "Auth Failed",
+      });
+    }
+    const token = req.headers.authorization;
     JWT.verify(token, process.env.JWT_SECRET, (err, decode) => {
+      console.log("decode", decode);
       if (err) {
-        return res.status(400).send({
+        return res.status(401).send({ 
           success: false,
           message: "Auth Failed",
           err,
         });
       } else {
-        req.body.id = decode.id;
+        req.userId= decode.id;
         next();
       }
     });
   } catch (error) {
-    console.log(error);
+    console.log(error,'no token');
     return res.status(401).send({
       success: false,
       error,

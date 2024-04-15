@@ -13,12 +13,12 @@ import {
 } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Appbar, Button } from "react-native-paper";
-import axios from "axios";
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
+import AxiosInstance from "../../AxiosInstance";
 
 const Otp = ({ route }) => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -29,19 +29,20 @@ const Otp = ({ route }) => {
   const [endTime, setEndTime] = useState(null);
   const [remainingTime, setRemainingTime] = useState(null);
   const countdownInterval = useRef(null);
+  const [showResendText, setShowResendText] = useState(true);
 
   // Implement logic to handle OTP verification
   const handleContinue = async () => {
     const enteredOTP = otp.join("");
-    try {
-      const response = await axios.post(
-        "http://10.10.29.38:5000/api/mail/verify",
-        { email, enteredOTP }
-      );
+
+    
+      AxiosInstance.post("/api/mail/verify",{ email, enteredOTP })
+      .then((response) => {
       if (response.status === 200) {
         navigation.navigate("NewPassword", { email });
       }
-    } catch (error) {
+    })
+    .catch((error) => {
       if (error.response) {
         Alert.alert(
           "Error",
@@ -52,26 +53,24 @@ const Otp = ({ route }) => {
       } else {
         Alert.alert("Error", "Something went wrong");
       }
-    }
+    })
   };
 
   const handleTryAgain = async () => {
-    try {
-      const response = await axios.post(
-        "http://10.10.29.38:5000/api/mail/otp",
-        { email }
-      );
-
+    
+      AxiosInstance.post("/api/mail/otp",{ email })
+.then(async (response) => {
       if (response.status == 200) {
         const data = await response.data.otp;
         Alert.alert("OTP sent successfully");
       } else {
         Alert.alert("Error", data.error || "Something went wrong");
       }
-    } catch (error) {
+    }) .catch((error) => {
       Alert.alert("Error", "Internal Server Error");
-    }
-
+    })
+    setShowResendText(false);
+    setTimeout(() => setShowResendText(true), 60000);
     setEndTime(Date.now() + 60000);
   };
 
@@ -172,10 +171,12 @@ const Otp = ({ route }) => {
           </View>
 
           <View style={styles.resendBtn}>
-            
+          <View>
+          {showResendText && <Text style={{fontSize: responsiveFontSize(1.9),}}>Didn't receive the code? </Text>}
+          </View>
             <View>
-              {remainingTime === null ? (
-                <TouchableOpacity onPress={handleTryAgain}>
+            {remainingTime === null ? (
+              <TouchableOpacity onPress={handleTryAgain}>
                   <Text style={styles.text2}> Resend OTP</Text>
                 </TouchableOpacity>
               ) : (
@@ -260,6 +261,7 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   resendBtn: {
+    display : "flex",
     flexDirection: "row",
     marginTop: responsiveHeight(2),
     width: "90%",

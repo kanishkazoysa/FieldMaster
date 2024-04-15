@@ -7,14 +7,15 @@ import logo from "../../images/logo.png";
 import { IoBookmarks } from "react-icons/io5";
 import { RiWalkFill } from "react-icons/ri";
 import StartMeasurePage from '../MeasureOption/measureOption.js';
+import SavedTemplates from '../SavedTemplates/savedTemplates.js';
 
 
 export default function SideNavbar() {
   const [collapsed, setCollapsed] = useState(true);
   const [hoveredMenuItem, setHoveredMenuItem] = useState(null);
-  const [showStartMeasurePage, setShowStartMeasurePage] = useState(false);
-  const [animateStartMeasure, setAnimateStartMeasure] = useState(false);
- 
+  const [currentPage, setCurrentPage] = useState(null); 
+  const [animatePage, setAnimatePage] = useState(false); 
+
 
   const handleMouseEnter = (item) => {
     setHoveredMenuItem(item);
@@ -29,13 +30,19 @@ export default function SideNavbar() {
   };
 
   const handleStartMeasureClick = () => {
-    setShowStartMeasurePage(true);
-    setAnimateStartMeasure(true);
+    setCurrentPage('StartMeasure'); // Update this line
+    setAnimatePage(true);
   };
+
+  const handleSavedTemplatesClick = () => {
+    setCurrentPage('SavedTemplates'); // Update this line
+    setAnimatePage(true);
+  };
+
   const handleBackClick = () => {
-    setAnimateStartMeasure(false);
+    setAnimatePage(false);
     setTimeout(() => {
-      setShowStartMeasurePage(false);
+      setCurrentPage(null);
     }, 300);
   };
 
@@ -50,7 +57,7 @@ export default function SideNavbar() {
         </div>
       </div>
       <div style={styles.content}>
-        {!showStartMeasurePage && (
+        { !currentPage     && (
           <Menu>
             <MenuItem
               onClick={handleStartMeasureClick}
@@ -65,6 +72,7 @@ export default function SideNavbar() {
               {!collapsed && 'Start measure'}
             </MenuItem>
             <MenuItem
+              onClick={handleSavedTemplatesClick}
               onMouseEnter={() => handleMouseEnter("Templates")}
               onMouseLeave={handleMouseLeave}
               style={{
@@ -78,16 +86,17 @@ export default function SideNavbar() {
           </Menu>
         )}
         <div
-          style={{
-            ...styles.startMeasureContainer,
-            transform: animateStartMeasure ? 'translateX(0)' : 'translateX(-100%)',
-            transition: 'transform 0.3s ease-in-out',
-            height: showStartMeasurePage ? 'calc(100vh - 60px)' : '0', // Set height to remaining height after header
-            overflow: 'auto', // Add scrollbar if content exceeds container height
-          }}
-        >
-          {showStartMeasurePage && <StartMeasurePage onBackToSidebar={handleBackClick}  />}
-        </div>
+        style={{
+          ...styles.startMeasureContainer,
+          transform: animatePage ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 0.3s ease-in-out',
+          height: currentPage ? 'calc(100vh - 60px)' : '0', // Update this line
+          overflow: 'auto', // Add scrollbar if content exceeds container height
+        }}
+      >
+        {currentPage === 'StartMeasure' && <StartMeasurePage onBackToSidebar={handleBackClick} />}
+        {currentPage === 'SavedTemplates' && <SavedTemplates onBackToSidebar={handleBackClick} />}
+      </div>
       </div>
     </Sidebar>
   );

@@ -16,10 +16,9 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
-import { Appbar, TextInput,Button } from "react-native-paper";
-import axios from "axios";
-import AsyncStorage from '@react-native-async-storage/async-storage'; 
-
+import { Appbar, TextInput, Button } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import AxiosInstance from "../../AxiosInstance";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -27,50 +26,35 @@ export default function LoginScreen() {
   const navigation = useNavigation();
 
   const handleLogin = async () => {
-    try {
-      if (!email || !password) {
-        Alert.alert("Please fill in all fields");
-        return;
-      }
-  
-      const response = await axios.post("http://10.10.29.38:5000/api/users/login",{ email, password });
-  
-      if (response.status === 200) {
-        const token = response.data.token;
-  
-        // Store token in AsyncStorage
-        await AsyncStorage.setItem("token", token);
-
-        
-  
-        navigation.navigate("Home",{email:email});
-        // Display login success message
-        Alert.alert(
-          "Success",
-          "Login successfully",
-        );
-
-        
-      } else {
-        const data = await response.json();
-        Alert.alert("Error", data.error || "Something went wrong");
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-      Alert.alert("Error", "Something went wrong");
+    if (!email || !password) {
+      Alert.alert("Please fill in all fields");
+      return;
     }
+    AxiosInstance.post("/api/users/login", { email, password })
+      .then(async (response) => {
+        if (response.status === 200) {
+          const token = response.data.token;
+          await AsyncStorage.setItem("token", token);
+          navigation.navigate("Home", { email: email });
+          Alert.alert("Success", "Login successfully");
+        }
+      })
+      .catch((err) => {
+        const data = err.response.data;
+        Alert.alert("Error", data.error || "Something went wrong");
+      });
   };
-  
-
+//navigate to the ForgotPassword screen
   const handleForgotPassword = () => {
     console.log("Forgot Password");
     navigation.navigate("Forgot");
   };
-
+//navigate to the Register screen
   const handleSignUp = () => {
     navigation.navigate("Register");
   };
 
+  //clear the email and password fields when the screen is focused
   useFocusEffect(
     useCallback(() => {
       setEmail("");
@@ -99,33 +83,33 @@ export default function LoginScreen() {
         </View>
 
         <View style={styles.field}>
-          <View style={{marginBottom:responsiveHeight(2) }}>
-          <TextInput
-            label="email"
-            mode="outlined"
-            outlineColor="#d9d7d2"
-            activeOutlineColor="#007BFF"
-            width={responsiveWidth(85)}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
+          <View style={{ marginBottom: responsiveHeight(2) }}>
+            <TextInput
+              label="email"
+              mode="outlined"
+              outlineColor="#d9d7d2"
+              activeOutlineColor="#007BFF"
+              width={responsiveWidth(85)}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
           </View>
-          
+
           <View>
-          <TextInput
-            label="password"
-            mode="outlined"
-            outlineColor="#d9d7d2"
-            activeOutlineColor="#007BFF"
-            width={responsiveWidth(85)}
-            secureTextEntry         
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-          />
+            <TextInput
+              label="password"
+              mode="outlined"
+              outlineColor="#d9d7d2"
+              activeOutlineColor="#007BFF"
+              width={responsiveWidth(85)}
+              secureTextEntry
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+            />
           </View>
-          
+
           <Button mode="contained" onPress={handleLogin} style={styles.button}>
-          LOGIN
+            LOGIN
           </Button>
 
           <View>
@@ -158,11 +142,10 @@ const styles = StyleSheet.create({
     }),
   },
   button: {
- marginTop: responsiveHeight(5),
+    marginTop: responsiveHeight(5),
     backgroundColor: "#007BFF",
     width: 337,
     padding: 2,
-
   },
   welcomeText: {
     fontSize: responsiveFontSize(5),
@@ -179,13 +162,11 @@ const styles = StyleSheet.create({
   textSection: {
     marginLeft: responsiveWidth(5),
   },
- 
 
   field: {
     width: responsiveWidth(100),
     top: responsiveHeight(5),
-  alignItems: "center",
-   
+    alignItems: "center",
   },
   forgotPasswordText: {
     color: "#007BFF",
