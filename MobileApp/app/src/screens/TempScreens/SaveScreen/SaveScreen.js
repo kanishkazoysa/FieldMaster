@@ -57,7 +57,7 @@ export function SaveScreen({ navigation, route }) {
 
     /* this is the axios request to update the data */
     axios
-      .put(`${backendUrl}/api/mapTemplate/updateTemplate/${id}`, dataItem)
+      .put(`${backendUrl}/api/auth/mapTemplate/updateTemplate/${id}`, dataItem)
       .then((response) => {
         console.log('data updated');
         console.log(response.data);

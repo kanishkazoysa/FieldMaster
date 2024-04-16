@@ -40,6 +40,10 @@ const MapTemplateSchema = new mongoose.Schema({
     type: [PointSchema],
     default: [],
   },
+   userId: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('MapTemplate', MapTemplateSchema);

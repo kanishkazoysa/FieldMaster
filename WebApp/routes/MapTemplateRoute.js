@@ -17,6 +17,7 @@ router.post('/saveTemplate', async (req, res) => {
       locationPoints,
       area,
       perimeter,
+      userId: req.userId,
     });
     const savedMapTemplate = await mapTemplate.save();
     res.json(savedMapTemplate);
