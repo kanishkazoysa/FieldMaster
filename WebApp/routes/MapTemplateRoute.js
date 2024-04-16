@@ -10,7 +10,7 @@ router.use(cors());
 /* this route is used to save map template */
 router.post('/saveTemplate', async (req, res) => {
   try {
-    let { locationPoints, area, perimeter } = req.body;
+    let { locationPoints, area , perimeter} = req.body;
     area = parseFloat(area).toFixed(2);
     perimeter = parseFloat(perimeter).toFixed(2);
     const mapTemplate = new MapTemplateModel({

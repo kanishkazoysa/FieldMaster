@@ -201,9 +201,8 @@ export default function Home() {
     setPolygonArea(polygonArea);
    
       AxiosInstance.post(
-        "/api/mapTemplate/saveTemplate",
-        { 
-          locationPoints: pathCoordinates,
+        "/api/auth/polyline/save",
+        { coordinates: pathCoordinates,
           area: polygonArea
         }
       )
