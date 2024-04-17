@@ -16,36 +16,37 @@ import {
   responsiveWidth,
 } from "react-native-responsive-dimensions";
 import { Appbar, TextInput, Button } from "react-native-paper";
-import axios from "axios";
+import AxiosInstance from "../../AxiosInstance";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
 
   const handleForgotPassword = async () => {
-    try {
-      if (!email) {
-        Alert.alert("Please fill in all fields");
-        return;
-      }
-
-      const response = await axios.post(
-        "http://192.168.1.103:5000/api/mail/otp",
-        { email }
-      );
-
-      if (response.status == 200) {
-        const data = await response.data.otp;
-
-        Alert.alert("OTP sent successfully");
-
-        navigation.navigate("Otp", { email, Otp: data });
-      } else {
-        Alert.alert("Error", data.error || "Something went wrong");
-      }
-    } catch (error) {
-      Alert.alert("Error", "Internal Server Error");
+    if (!email) {
+      Alert.alert("Please fill in all fields");
+      return;
     }
+
+    AxiosInstance.post("/api/mail/otp", { email })
+      .then(async (response) => {
+        if (response.status == 200) {
+          const data = await response.data.otp;
+          Alert.alert("OTP sent successfully");
+          navigation.navigate("Otp", { email, Otp: data });
+        } else {
+          Alert.alert("Error", data.error || "Something went wrong");
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 400) {
+          Alert.alert("Error", err.response.data.error);
+          return;
+        }else{
+          Alert.alert("Error", "An error occurred while sending OTP");
+        }
+      
+      });
   };
 
   const dismissKeyboard = () => {
