@@ -16,7 +16,7 @@ import { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
-import backendUrl from '../../../../urlFile';
+import AxiosInstance from '../../../AxiosInstance';
 
 const ResizeMapScreen = ({ navigation, route }) => {
   const { templateId } = route.params;
@@ -70,34 +70,36 @@ const ResizeMapScreen = ({ navigation, route }) => {
       });
       setCurrentLocation(location);
 
-      try {
-        const response = await axios.get(
-          `${backendUrl}/api/mapTemplate/getOneTemplate/${templateId}`
-        );
-        setPoints(response.data.locationPoints);
-        console.log(response.data.locationPoints);
-
-        // Calculate the average latitude and longitude
-        const avgLatitude =
-          response.data.locationPoints.reduce(
-            (total, point) => total + point.latitude,
-            0
-          ) / response.data.locationPoints.length;
-        const avgLongitude =
-          response.data.locationPoints.reduce(
-            (total, point) => total + point.longitude,
-            0
-          ) / response.data.locationPoints.length;
-
-        setRegion({
-          latitude: avgLatitude,
-          longitude: avgLongitude,
-          latitudeDelta: 0.0005,
-          longitudeDelta: 0.0005,
-        });
-      } catch (error) {
-        console.error(error);
-      }
+     
+        AxiosInstance.get(
+          `/api/auth/mapTemplate/getOneTemplate/${templateId}`
+        )
+          .then((response) => {
+            setPoints(response.data.locationPoints);
+            console.log(response.data.locationPoints);
+    
+            // Calculate the average latitude and longitude
+            const avgLatitude =
+              response.data.locationPoints.reduce(
+                (total, point) => total + point.latitude,
+                0
+              ) / response.data.locationPoints.length;
+            const avgLongitude =
+              response.data.locationPoints.reduce(
+                (total, point) => total + point.longitude,
+                0
+              ) / response.data.locationPoints.length;
+    
+            setRegion({
+              latitude: avgLatitude,
+              longitude: avgLongitude,
+              latitudeDelta: 0.0005,
+              longitudeDelta: 0.0005,
+            });
+          })
+      .catch((error) => {
+        console.error('An error occurred while fetching the template:', error);
+      });
     })();
   }, []);
 

@@ -3,9 +3,8 @@ import { TouchableOpacity, View, Text, Image, ScrollView } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { styles } from './SavedTemplatesScreenStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
-import backendUrl from '../../../../urlFile';
+import AxiosInstance from '../../../AxiosInstance';
 
 const CustomEditIcon = (props) => {
   <MaterialCommunityIcons
@@ -29,8 +28,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
 
   const fetchData = () => {
     console.log('calling api to get all templates...');
-    axios
-      .get(`${backendUrl}/api/mapTemplate/getAllTemplates`)
+    AxiosInstance.get(`/api/auth/mapTemplate/getAllTemplates`)
       .then((response) => {
         setTemplates(response.data);
         console.log('fetching successful');
@@ -47,9 +45,8 @@ const SavedTemplatesScreen = ({ navigation }) => {
   );
 
   const handleDelete = (deletingTemplate) => {
-    axios
-      .delete(
-        `${backendUrl}/api/mapTemplate/deleteTemplate/${deletingTemplate._id}`
+    AxiosInstance.delete(
+        `/api/auth/mapTemplate/deleteTemplate/${deletingTemplate._id}`
       )
       .then((response) => {
         /* console.log(response); */

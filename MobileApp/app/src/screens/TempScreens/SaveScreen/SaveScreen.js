@@ -5,9 +5,8 @@ import { styles } from './SaveScreenStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import axios from 'axios';
-import backendUrl from '../../../../urlFile';
 import { errorUtils } from '../../../common.app';
+import AxiosInstance from '../../../AxiosInstance';
 
 const CustomPerimeterIcon = (props) => (
   <MaterialCommunityIcons
@@ -27,7 +26,7 @@ const CustomAreaIcon = (props) => (
 );
 
 export function SaveScreen({ navigation, route }) {
-  const { id, area: initialArea, perimeter: initialPerimeter } = route.params;
+  const { id, area: initialArea, perimeter: initialPerimeter,userId } = route.params;
   const [perimeter, setPerimeter] = React.useState(
     parseFloat(initialPerimeter).toFixed(2)
   );
@@ -42,6 +41,8 @@ export function SaveScreen({ navigation, route }) {
 
   /* this function is used to save the data */
   const onSaveButtonPress = () => {
+    console.log(id);
+    console.log(userId);
     console.log('pressed save');
     /* this object is used to store the data item */
     const dataItem = {
@@ -52,12 +53,13 @@ export function SaveScreen({ navigation, route }) {
       landType: landType,
       location: location,
       description: descriptionText,
+      id:userId
+
     };
     console.log(dataItem);
 
     /* this is the axios request to update the data */
-    axios
-      .put(`${backendUrl}/api/auth/mapTemplate/updateTemplate/${id}`, dataItem)
+    AxiosInstance.put(`/api/auth/mapTemplate/updateTemplate/${id}`, dataItem)
       .then((response) => {
         console.log('data updated');
         console.log(response.data);

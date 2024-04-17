@@ -20,7 +20,7 @@ router.post('/saveTemplate', async (req, res) => {
       userId: req.userId,
     });
     const savedMapTemplate = await mapTemplate.save();
-    res.json(savedMapTemplate);
+    res.json({ ...savedMapTemplate._doc, userId: req.userId });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -29,9 +29,10 @@ router.post('/saveTemplate', async (req, res) => {
 /* this route is used to get all map templates */
 router.get('/getAllTemplates', async (req, res) => {
   try {
-    const templates = await MapTemplateModel.find();
+    const templates = await MapTemplateModel.find({ userId: req.userId });
     res.json(templates);
-  } catch (error) {
+  } catch (error)
+  {
     res.status(500).send('Error while getting templates.');
   }
 });
@@ -56,7 +57,6 @@ const calculateArea = (locationPoints) => {
 
   const polygon = turf.polygon([coordinates]);
   const areaInSquareMeters = turf.area(polygon);
-
   const areaInPerches = parseFloat((areaInSquareMeters * 0.0395369).toFixed(4));
   return areaInPerches;
 };
@@ -90,6 +90,7 @@ router.post('/saveMapPoints', async (req, res) => {
   try {
     const { locationPoints } = req.body;
     if (!locationPoints) {
+      
       return res.status(400).send('Error: locationPoints are required.');
     }
     const map = new MapModel({ points: locationPoints });

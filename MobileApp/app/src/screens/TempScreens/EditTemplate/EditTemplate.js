@@ -4,9 +4,8 @@ import { Appbar, ThemeProvider, TextInput } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './EditTemplateStyle';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import axios from 'axios';
-import backendUrl from '../../../../urlFile';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import AxiosInstance from '../../../AxiosInstance';
 
 const theme = {
   ...DefaultTheme,
@@ -43,8 +42,8 @@ const EditTemplate = ({ route, navigation }) => {
       landType !== item.landType ||
       description !== item.description
     ) {
-      axios
-        .put(`${backendUrl}/api/mapTemplate/updateTemplate/${item._id}`, {
+      AxiosInstance
+        .put(`/api/auth/mapTemplate/updateTemplate/${item._id}`, {
           measureName: measureName,
           landType: landType,
           description: description,

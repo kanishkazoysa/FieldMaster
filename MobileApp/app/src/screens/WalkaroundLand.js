@@ -226,6 +226,7 @@ export default function Home() {
               id: response.data._id,
               area:polygonArea,
               perimeter: polygonPerimeter,
+              userId: response.data.userId,
             });
           })
           .catch((error) => {
