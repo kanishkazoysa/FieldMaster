@@ -4,8 +4,6 @@ const userEmailVerificationModel = require("../models/userEmailVerification");
 const nodemailer = require("nodemailer");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-
-// const bcrypt = require('bcrypt');
 const User = require("../models/user");
 const { PassThrough } = require("nodemailer/lib/xoauth2");
 const middleware = require("../middleware/middleware");
@@ -24,13 +22,10 @@ transporter.verify((error, success) => {
   } else console.log("Server is ready to take messages");
 });
 
+// register a new user
 router.post("/register", async (req, res) => {
   const { email, password } = req.body;
-
-  console.log(email,password);
-
   const VerifyId = uuidv4();
-
   const mailOptions = {
     from: "kanishkazoysa1234@gmail.com",
     to: email,
@@ -79,11 +74,10 @@ router.post("/register", async (req, res) => {
     await newUser.save();
 
     res.status(200).send({
-      success:true,
-      message:"User Register Successfull",
-      newUser
-    })
-
+      success: true,
+      message: "User Register Successfull",
+      newUser,
+    });
   } catch (error) {
     return res.status(400).json({ error });
   }
@@ -94,7 +88,6 @@ router.get("/emailVerification/:email/:VerifyId", async (req, res) => {
   try {
     const user = await userEmailVerificationModel.findOne({ email, VerifyId });
     if (!user) {
-      // return res.status(400).json({ error: "User does not exist" });
       return res.redirect(
         `http://localhost:3000/emailVerification?message=User does not exist&verified=false`
       );
@@ -117,8 +110,6 @@ router.get("/emailVerification/:email/:VerifyId", async (req, res) => {
     await User.findOneAndUpdate({ email }, { isVerified: true });
     // delte the user from the database
     await userEmailVerificationModel.findOneAndDelete({ email });
-
-    // res.status(200).json({ message: "OTP is valid" });
     res.redirect(
       `http://localhost:3000/emailVerification?message=Email verified&verified=true`
     );
@@ -136,7 +127,6 @@ router.post("/login", async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: "User does not exist" });
     }
-
     if (password !== user.password) {
       return res.status(400).json({ error: "Invalid credentials." });
     }
@@ -152,17 +142,13 @@ router.post("/login", async (req, res) => {
 
     // Update the user token
     await User.findOneAndUpdate({ email }, { token: token });
-
-    console.log("Token:", token);
-
-    res.status(200).send({ 
+    res.status(200).send({
       success: true,
       token: token,
       message: "User logged in successfully",
-     });
-
+    });
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    console.error(error);
     return res
       .status(400)
       .json({ error: error.message || "An error occurred" });
@@ -170,28 +156,19 @@ router.post("/login", async (req, res) => {
 });
 
 
-
 router.post("/change-password", async (req, res) => {
   const { email, newPassword } = req.body;
 
   try {
-    // Find the user by email
     const user = await User.findOne({ email });
-
-    // If user not found
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-
-    // Update user's password in the database
-    user.password = newPassword; // Save the new password as plain text
+    user.password = newPassword;
     await user.save();
-
-    // Password changed successfully
     res.status(200).send({
       success: true,
     });
-  
   } catch (error) {
     console.error("Error changing password:", error);
     res.status(500).json({ error: "Internal server error" });

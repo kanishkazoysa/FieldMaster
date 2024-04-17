@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function Fence() {
@@ -100,7 +101,9 @@ export default function Fence() {
       return;
     }
 
-    //const response = await axios.post("http://192.168.120.237:5000/api/users/register",{ FenceTypeselectedValue,PostSpaceUnitselectedValue,inputValueFenceLength,inputValueFenceAmount,inputValuePostspace});
+    const response = await axios.post("http://192.168.120.237:5000/api/auth/fence",{ FenceTypeselectedValue,PostSpaceUnitselectedValue,inputValueFenceLength,inputValueFenceAmount,inputValuePostspace},{
+      
+    });
 
     navigation.navigate("FenceDetails", {
       data: displayValues,

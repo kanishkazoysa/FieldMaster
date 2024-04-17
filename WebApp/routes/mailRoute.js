@@ -55,7 +55,7 @@ router.post("/otp", async (req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000);
     sendOtpEmail(email, otp);
     const createdAt = new Date();
-    const expiredAt = new Date(createdAt.getTime() + 1 * 60000);
+    const expiredAt = new Date(createdAt.getTime() + 5 * 60000);
     const newUser = new userVerificationSchema({
       email,
       otp,
