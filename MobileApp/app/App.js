@@ -21,7 +21,6 @@ import FenceDetails from "./src/screens/FenceSetup/FenceDetails";
 
 
 import SaveScreen from "./src/screens/TempScreens/SaveScreen/SaveScreen";
-import ResizeMap from "./src/screens/TempScreens/ResizeMap/ResizeMap";
 import TemplateView from "./src/screens/TempScreens/TemplateView/TemplateView";
 import EditTemplate from "./src/screens/TempScreens/EditTemplate/EditTemplate";
 import SavedTemplatesScreen from "./src/screens/TempScreens/SavedTemplatesScreen/SavedTemplatesScreen";
@@ -33,6 +32,10 @@ import FertilizationDetails from "./src/screens/Fertilizing/FertilizationDetails
 import Plantation from "./src/screens/Plantation/Plantation";
 import Clearland from './src/screens/ClearLand/Clearland';
 import EffortOutput from './src/screens/ClearLand/EffortOutput';
+import ResizeMap from './src/screens/TempScreens/ResizeMap/ResizeMap';
+
+import PointAddingScreen from './src/screens/PointAddingScreen/PointAddingScreen';
+
 
 
 const Stack = createStackNavigator();
@@ -89,6 +92,7 @@ const App = () => {
 
        
 
+        <Stack.Screen name='PointAddingScreen' component={PointAddingScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

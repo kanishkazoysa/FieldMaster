@@ -21,6 +21,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import area from "@turf/area";
+import AxiosInstance from "../AxiosInstance";
+import { distance } from '@turf/turf';
 
 const BACKGROUND_LOCATION_TASK = "background-location-task";
 
@@ -198,18 +200,38 @@ export default function Home() {
     };
     const polygonArea = calculatePolygonArea(polygon);
     setPolygonArea(polygonArea);
-    try {
-      const response = await axios.post(
-        "http://192.168.1.104:5000/api/polyline/save",
-        { coordinates: pathCoordinates,
-          area: polygonArea
-        }
-      );
-      console.log(response.data);
-      navigation.navigate("SaveScreen");
-    } catch (error) {
-      console.error("Error saving polyline data:", error);
+
+    let polygonPerimeter = 0;
+    for (let i = 0; i < pathCoordinates.length - 1; i++) {
+      const point1 = [pathCoordinates[i].longitude, pathCoordinates[i].latitude];
+      const point2 = [pathCoordinates[i + 1].longitude, pathCoordinates[i + 1].latitude];
+      polygonPerimeter += distance(point1, point2, {units: 'kilometers'});
     }
+    // Add the distance between the last point and the first point to close the polygon
+    const point1 = [pathCoordinates[0].longitude, pathCoordinates[0].latitude];
+    const point2 = [pathCoordinates[pathCoordinates.length - 1].longitude, pathCoordinates[pathCoordinates.length - 1].latitude];
+    polygonPerimeter += distance(point1, point2, {units: 'kilometers'});
+  
+      AxiosInstance.post(
+        "/api/auth/mapTemplate/saveTemplate",
+        { 
+          locationPoints: pathCoordinates,
+          area: polygonArea,
+          perimeter: polygonPerimeter 
+        }
+      )
+          .then((response) => {
+            console.log(response.data._id);
+            navigation.navigate('SaveScreen', {
+              id: response.data._id,
+              area:polygonArea,
+              perimeter: polygonPerimeter,
+              userId: response.data.userId,
+            });
+          })
+          .catch((error) => {
+            console.error(error.response.data);
+          });
   };
 
   const calculatePolygonArea = (polygon) => {

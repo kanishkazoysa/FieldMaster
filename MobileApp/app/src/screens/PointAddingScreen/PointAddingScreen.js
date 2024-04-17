@@ -2,27 +2,28 @@ import React, { useEffect, useState } from 'react';
 import { Polygon } from 'react-native-maps';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
+import { TextInput } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { Polyline } from 'react-native-maps';
-
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { polygon, area, length } from '@turf/turf';
 import {
   faLayerGroup,
   faLocationCrosshairs,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { styles } from './ResizeMapStyles';
+import { styles } from './PointAddingScreenStyles';
 import MapView, { MAP_TYPES } from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
-import AxiosInstance from '../../../AxiosInstance';
+import AxiosInstance from '../../AxiosInstance';
 
-const ResizeMapScreen = ({ navigation, route }) => {
-  const { templateId } = route.params;
-
-  const [isPolygonComplete, setIsPolygonComplete] = useState(true);
+const PointAddingScreen = ({ navigation, route }) => {
+  const [isPolygonComplete, setIsPolygonComplete] = useState(false);
   const [region, setRegion] = useState(null);
+  const [locationPoints, setLocationPoints] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [points, setPoints] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -32,15 +33,19 @@ const ResizeMapScreen = ({ navigation, route }) => {
   const [searchedLocation, setSearchedLocation] = useState(null);
   const mapRef = React.useRef(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
-  const [isMarkerMoved, setIsMarkerMoved] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
+  /* the closeModal function is used to close the modal */
   const closeModal = () => {
     setModalVisible(false);
   };
+  /* the selectMapType function is used to select the map type */
   const selectMapType = (index) => {
     setMapTypeIndex(index);
     setShowDropdown(false);
   };
+  /* the focusOnCurrentLocation function is used to focus on the current location of the user */
   const focusOnCurrentLocation = () => {
     setSearchedLocation(null);
     setShowCurrentLocation((prevShowCurrentLocation) => {
@@ -56,9 +61,8 @@ const ResizeMapScreen = ({ navigation, route }) => {
       return newShowCurrentLocation;
     });
   };
-
+  /* in this useEffect the current location of the user is fetched */
   useEffect(() => {
-    console.log('Template ID:', templateId);
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -68,87 +72,90 @@ const ResizeMapScreen = ({ navigation, route }) => {
       let location = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.High,
       });
-      setCurrentLocation(location);
-
-     
-        AxiosInstance.get(
-          `/api/auth/mapTemplate/getOneTemplate/${templateId}`
-        )
-          .then((response) => {
-            setPoints(response.data.locationPoints);
-            console.log(response.data.locationPoints);
-    
-            // Calculate the average latitude and longitude
-            const avgLatitude =
-              response.data.locationPoints.reduce(
-                (total, point) => total + point.latitude,
-                0
-              ) / response.data.locationPoints.length;
-            const avgLongitude =
-              response.data.locationPoints.reduce(
-                (total, point) => total + point.longitude,
-                0
-              ) / response.data.locationPoints.length;
-    
-            setRegion({
-              latitude: avgLatitude,
-              longitude: avgLongitude,
-              latitudeDelta: 0.0005,
-              longitudeDelta: 0.0005,
-            });
-          })
-      .catch((error) => {
-        console.error('An error occurred while fetching the template:', error);
+      /* the current location is set to the MapView */
+      setRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.0005,
+        longitudeDelta: 0.0005,
       });
+      setCurrentLocation(location);
     })();
   }, []);
 
+  /* the handleClearPoints function is used to clear the current locationPoints */
+  const handleClearPoints = () => {
+    setPoints([]);
+    setIsPolygonComplete(false);
+  };
+  /* the handleCompleteMap function is used to complete the map */
+  const handleCompleteMap = () => {
+    if (points.length > 2) {
+      setIsPolygonComplete(true);
+    } else {
+      alert('You need at least 3 points to complete a polygon');
+    }
+  };
+  /* the handleUndoLastPoint function is used to undo the last point */
   const handleUndoLastPoint = () => {
     if (points.length > 0) {
       setPoints(points.slice(0, -1));
     }
   };
+  /* the handleSaveMap function is used to save the map */
   const handleSaveMap = async () => {
-    if (isMarkerMoved) {
-      try {
-        const locationPoints = points.map((point) => ({
-          latitude: point.latitude,
-          longitude: point.longitude,
-        }));
-        const response = await axios.put(
-          `${backendUrl}/api/mapTemplate/updateTemplate/${templateId}`,
-          {
-            locationPoints,
-          }
-        );
-
-        if (response.status === 200) {
-          console.log('Location updated successfully');
-          setIsMarkerMoved(false);
-          navigation.navigate('SavedTemplatesScreen');
-        } else {
-          console.log('Failed to update location');
-        }
-      } catch (error) {
-        console.error('An error occurred while updating the location:', error);
-      }
+    if (points.length < 3) {
+      alert('You need at least 3 points to calculate area and perimeter');
+      return;
     }
+    /* the formattedPoints is used to store the formatted points */
+    const formattedPoints = points.map((point) => [
+      point.longitude,
+      point.latitude,
+    ]);
+    formattedPoints.push(formattedPoints[0]);
+
+    /* the poly is used to store the polygon */
+    const poly = polygon([formattedPoints]);
+    const areaMeters = area(poly);
+    const perimeterMeters = length(poly, { units: 'meters' });
+    const areaPerches = areaMeters / 25.29285264;
+    const perimeterKilometers = perimeterMeters / 1000;
+    console.log(points);
+    /* the axios request is used to save the template */
+    AxiosInstance.post("/api/auth/mapTemplate/saveTemplate", {
+        locationPoints: points,
+        area: areaPerches,
+        perimeter: perimeterKilometers,
+      })
+      .then((response) => {
+        console.log(response.data);
+        navigation.navigate('SaveScreen', {
+          id: response.data._id,
+          area: areaPerches,
+          perimeter: perimeterKilometers,
+          userId: response.data.userId,
+        });
+      })
+      .catch((error) => {
+        console.error(error.response.data);
+      });
+    alert(
+      `Area: ${areaPerches.toFixed(
+        2
+      )} perches, Perimeter: ${perimeterKilometers.toFixed(2)} kilometers`
+    );
   };
 
-  const handleMarkerDragEnd = (event, index) => {
-    const newPoints = [...points];
-    newPoints[index] = event.nativeEvent.coordinate;
-    setPoints(newPoints);
-    setIsMarkerMoved(true);
-  };
-
+  /* the handleSetMapType function is used to set the map type in the react native map*/
   const handleSetMapType = (type) => {
-    selectMapType(type);
+    setMapType(type);
     setModalVisible(false);
   };
 
+  /* the handleCancel function is used to navigate to the home screen */
   const handleCancel = () => {
-    navigation.navigate('SavedTemplatesScreen');
+    navigation.navigate('Home');
   };
   const mapTypes = [
     { name: 'Satellite', value: 'satellite' },
@@ -157,11 +164,82 @@ const ResizeMapScreen = ({ navigation, route }) => {
     { name: 'Terrain', value: 'terrain' },
   ];
 
+  /* the toggleMapType function is used to toggle the map type */
   const toggleMapType = () => {
     setShowDropdown(!showDropdown);
   };
+  const onFocus = () => {
+    setIsFocused(true);
+  };
+  const onBlur = () => {
+    setIsFocused(false);
+  };
+
+  /* the searchLocation function is used to search for a location */
+  const searchLocation = async () => {
+    if (searchQuery) {
+      try {
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+            searchQuery
+          )}&key=AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U`
+        );
+        const data = await response.json();
+        if (data.results && data.results.length > 0) {
+          const { lat, lng } = data.results[0].geometry.location;
+          setShowCurrentLocation(false); // Hide current location
+          setSearchedLocation({ latitude: lat, longitude: lng });
+          if (mapRef.current) {
+            mapRef.current.animateToRegion({
+              latitude: lat,
+              longitude: lng,
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05,
+            });
+          }
+        } else {
+          console.error('Location not found');
+        }
+      } catch (error) {
+        console.error('Error searching for location:', error);
+      }
+    }
+  };
+
+  /* the clearSearchQuery function is used to clear the search query */
+  const clearSearchQuery = () => {
+    setSearchQuery('');
+  };
+
   return (
     <>
+      <View style={styles.searchbar}>
+        <View style={styles.locationIconContainer}>
+          <MaterialIcons name='location-on' size={24} color='#007BFF' />
+        </View>
+        <TextInput
+          placeholder='Search Location'
+          placeholderTextColor='rgba(0, 0, 0, 0.5)'
+          onFocus={onFocus}
+          onBlur={onBlur}
+          style={[
+            styles.searchbarInput,
+            isFocused ? styles.searchbarInputFocused : null,
+          ]}
+          onChangeText={setSearchQuery}
+          value={searchQuery}
+          onSubmitEditing={searchLocation}
+        />
+        {searchQuery !== '' && (
+          <TouchableOpacity
+            onPress={clearSearchQuery}
+            style={styles.clearIconContainer}
+          >
+            <MaterialIcons name='cancel' size={24} color='#707070' />
+          </TouchableOpacity>
+        )}
+        <View style={{ marginLeft: 10 }}></View>
+      </View>
       <Modal
         animationType='slide'
         transparent={true}
@@ -203,7 +281,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
       <View>
         <Appbar.Header style={{ backgroundColor: '#0866FF' }}>
           <Appbar.BackAction color='#ffffff' onPress={handleCancel} />
-          <Appbar.Content title='Resize Map' color='#ffffff' />
+          <Appbar.Content title='Create Map' color='#ffffff' />
         </Appbar.Header>
       </View>
       {/* including map view */}
@@ -214,6 +292,15 @@ const ResizeMapScreen = ({ navigation, route }) => {
             style={{ flex: 1, paddingTop: 100 }}
             region={region}
             showsUserLocation={true}
+            onUserLocationChange={(event) => {
+              const { latitude, longitude } = event.nativeEvent.coordinate;
+              setRegion({
+                ...region,
+                latitude: event.nativeEvent.coordinate.latitude,
+                longitude: event.nativeEvent.coordinate.longitude,
+              });
+              setCurrentLocation({ coords: { latitude, longitude } });
+            }}
             mapType={mapTypes[mapTypeIndex].value}
             onPress={(event) => {
               if (!isButtonPressed) {
@@ -223,12 +310,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
             mapPadding={{ top: 0, right: -100, bottom: 0, left: 0 }}
           >
             {points.map((point, index) => (
-              <Marker
-                key={index}
-                coordinate={point}
-                draggable
-                onDragEnd={(e) => handleMarkerDragEnd(e, index)}
-              />
+              <Marker key={index} coordinate={point} />
             ))}
             {!isPolygonComplete && points.length > 1 && (
               <Polyline
@@ -296,6 +378,18 @@ const ResizeMapScreen = ({ navigation, route }) => {
                   onPress={handleUndoLastPoint}
                 />
               </TouchableWithoutFeedback>
+              <TouchableWithoutFeedback
+                onPressIn={() => setIsButtonPressed(true)}
+                onPressOut={() => setIsButtonPressed(false)}
+              >
+                <MaterialCommunityIcons
+                  name='shape-polygon-plus'
+                  size={24}
+                  color='white'
+                  style={styles.sideIconStyle}
+                  onPress={handleCompleteMap}
+                />
+              </TouchableWithoutFeedback>
             </View>
           </View>
           <View style={styles.buttonContainer}>
@@ -303,7 +397,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
               <Text style={styles.btmBtnStyle}>Save</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={handleCancel}
+              onPress={handleClearPoints}
               style={styles.cancelBtnStyle}
             >
               <Text style={styles.btmBtnStyle}>Cancel</Text>
@@ -315,4 +409,4 @@ const ResizeMapScreen = ({ navigation, route }) => {
   );
 };
 
-export default ResizeMapScreen;
+export default PointAddingScreen;
