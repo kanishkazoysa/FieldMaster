@@ -19,10 +19,14 @@ import { useNavigation } from "@react-navigation/native";
 import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import area from "@turf/area";
 import AxiosInstance from "../AxiosInstance";
 import { distance } from '@turf/turf';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
 
 const BACKGROUND_LOCATION_TASK = "background-location-task";
 
@@ -333,16 +337,15 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   layerIconContainer: {
-    position: "absolute",
-    backgroundColor: "rgba(0,0,0, 0.7)",
-    padding: 10,
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0, 0.7)',
+    padding: responsiveHeight(1.2),
     borderRadius: 5,
-    right: 10,
-    top: Platform.OS === "android" ? "15%" : "18%",
-    transform: [{ translateY: -12 }],
+    right: responsiveWidth(3),
+    top: responsiveHeight(20),
     zIndex: 1,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   dropdownContainer: {
     position: "absolute",
@@ -392,7 +395,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     flexDirection: "row",
     justifyContent: "space-between",
-    bottom: 36,
+    bottom: responsiveHeight(3),
     left: 16,
     right: 16,
   },
