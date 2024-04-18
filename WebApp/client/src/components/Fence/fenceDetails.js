@@ -5,6 +5,8 @@ import { FaSquare,FaRegSquare } from "react-icons/fa";
 import { HiMiniBars4 } from "react-icons/hi2";
 import { TbArrowBarBoth ,TbBarrierBlock,TbFence } from "react-icons/tb";
 import { MdArrowBack } from "react-icons/md";
+import { BsBoundingBoxCircles,BsBoundingBox  } from "react-icons/bs";
+import { PiSquareDuotone } from "react-icons/pi";
 
 
 
@@ -50,14 +52,14 @@ export default function FenceDetails({onBackToSidebar,inputValuePostspace,displa
       <div style={styles.Box2}>
         <div style={styles.propertyBox}>
           <div style={styles.property}>
-            <FaRegSquare color="gray" size={40} />
+            <BsBoundingBox color="gray" size={35} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
               <p style={styles.propertyValue}>1.5Km</p>
             </div>
           </div>
           <div className="property" style={styles.property}>
-            <FaSquare color="gray" size={40} />
+            <PiSquareDuotone color="gray" size={40} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
               <p style={styles.propertyValue}>100 acres</p>
@@ -129,11 +131,11 @@ const styles = {
 
   header: {
     display: "flex",
-    width: "105%",
+    width: "108%",
     height: "40px",
     backgroundColor: "#007BFF",
     alignItems: "center",
-    borderRadius: "5px",
+  
   },
 
   titleText1: {
@@ -160,7 +162,7 @@ const styles = {
   },
 
   titleText: {
-    fontSize: 15,
+    fontSize: 12,
     fontWeight: "bold",
     marginBottom: 0,
   },
@@ -189,7 +191,7 @@ const styles = {
 
   propertyDetails: {
     flexDirection: "column",
-    marginLeft: 5,
+    marginLeft: 8,
     width: "60%",
     //height: 40,
     backgroundColor: "white",
@@ -289,7 +291,7 @@ const styles = {
 
   bottom: {
     alignItems: "center",
-    marginTop: 120,
+    marginTop: 100,
     width: "92%",
     
   },

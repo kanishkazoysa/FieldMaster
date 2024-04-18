@@ -4,6 +4,10 @@ import { FaBars, FaSquare, FaRegSquare } from "react-icons/fa";
 import { MdArrowBack, MdFence } from "react-icons/md";
 import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import { BsBoundingBoxCircles,BsBoundingBox  } from "react-icons/bs";
+import { PiSquareDuotone } from "react-icons/pi";
+
+
 import Select from "react-select";
 import AxiosInstance from "../../AxiosInstance";
 import axios from "axios";
@@ -146,14 +150,14 @@ export default function Fence({ onBackToSidebar }) {
             <p style={styles.titleText}>Land Info</p>
             <div style={styles.propertyBox}>
               <div style={styles.property}>
-                <FaRegSquare color="gray" size={40} />
+                <BsBoundingBox  color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
                   <p style={styles.propertyValue}>{perimeter}Km</p>
                 </div>
               </div>
               <div style={styles.property}>
-                <FaSquare color="gray" size={40} />
+                <PiSquareDuotone color="gray" size={35} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
@@ -166,7 +170,7 @@ export default function Fence({ onBackToSidebar }) {
 
           <div style={styles.box2}>
             <div style={styles.box2Property}>
-              <MdFence name="gate" size={40} color="gray" />
+              <MdFence name="gate" size={35} color="gray" />
               <div style={styles.box2PropertyDetails}>
                 <p style={styles.Box2PropertyLabel}>Fence Type</p>
               </div>
@@ -174,7 +178,7 @@ export default function Fence({ onBackToSidebar }) {
             <div style={styles.box2Property}>
               <div style={styles.Box2DropdownContainer}>
                 <Select
-                  placeholder="Type"
+                  placeholder="Select Type"
                   options={[
                     { value: "Wood", label: "Wood" },
                     { value: "Metal", label: "Metal" },
@@ -185,7 +189,8 @@ export default function Fence({ onBackToSidebar }) {
                   styles={{
                     control: (provided) => ({
                       ...provided,
-                      textAlign: "center",
+                      textAlign: 'center',
+                      fontSize: '10px',
                     }),
                   }}
                 />
@@ -196,7 +201,7 @@ export default function Fence({ onBackToSidebar }) {
           <div style={styles.box3}>
             <div style={styles.box3Property}>
               <div style={{ transform: "rotate(90deg)" }}>
-                <FaBars name="format-line-spacing" size={30} color="gray" />
+                <FaBars name="format-line-spacing" size={25} color="gray" />
               </div>
               <div style={styles.box3PropertyDetails}>
                 <p style={styles.Box3PropertyLabel}>Post Space</p>
@@ -223,6 +228,9 @@ export default function Fence({ onBackToSidebar }) {
                     control: (provided) => ({
                       ...provided,
                       textAlign: "center",
+                      fontSize: "14px",
+                      width: "78px",
+                      
                     }),
                   }}
                 />
@@ -232,7 +240,7 @@ export default function Fence({ onBackToSidebar }) {
 
           <div style={styles.box4}>
             <div style={styles.box4innertop}>
-              <GiGate name="boom-gate" size={32} color="gray" />
+              <GiGate name="boom-gate" size={26} color="gray" />
               <p style={styles.Box4TopText}>Gates</p>
             </div>
             <div style={styles.box4InnerCenter}>
@@ -322,8 +330,8 @@ const styles = {
   },
 
   content: {
-    paddingLeft: "20px",
-    paddingRight: "20px",
+    paddingLeft: "1px",
+    paddingRight: "1px",
     width: "100%",
     marginTop: "0px",
     display: "flex",
@@ -334,36 +342,36 @@ const styles = {
   },
   header: {
     display: "flex",
-    width: "105%",
-    height: "40px",
+    width: "100%",
+    height: "45px",
     backgroundColor: "#007BFF",
     alignItems: "center",
-    borderRadius: "5px",
+    
   },
 
   titleText1: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "bold",
     marginBottom: 0,
     color: "white",
-    marginLeft: "140px",
+    marginLeft: "95px",
   },
 
   Box1: {
     width: "90%",
-    height: "101px",
+    height: "81px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     backgroundColor: "white",
-    marginTop: "10px",
+    marginTop: "15px",
     borderRadius: "11px",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    padding: "10px",
+    padding: "8px",
   },
 
   titleText: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: "bold",
     marginBottom: 0,
   },
@@ -391,19 +399,19 @@ const styles = {
 
   propertyDetails: {
     flexDirection: "column",
-    marginLeft: 15,
+    marginLeft: 10,
     width: "50%",
     //height: 40,
     backgroundColor: "white",
   },
 
   propertyLabel: {
-    fontSize: 14,
+    fontSize: 12,
     marginBottom: 0,
   },
 
   propertyValue: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: "bold",
     marginBottom: 0,
   },
@@ -411,12 +419,12 @@ const styles = {
   box2: {
     display: "flex",
     width: "92%",
-    height: 71,
+    height: 65,
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
     backgroundColor: "white",
-    marginTop: 25,
+    marginTop: 20,
     borderRadius: 11,
     padding: 0,
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -442,8 +450,8 @@ const styles = {
   },
 
   Box2PropertyLabel: {
-    fontSize: 16,
-    marginLeft: 7,
+    fontSize: 13,
+    marginLeft: 4,
     marginBottom: 0,
   },
 
@@ -463,7 +471,7 @@ const styles = {
   box3: {
     display: "flex",
     width: "92%",
-    height: 71,
+    height: 65,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FFFFFF",
@@ -490,7 +498,7 @@ const styles = {
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "space-between",
-    width: "90%",
+    width: "100%",
     height: "100%",
   },
 
@@ -504,14 +512,14 @@ const styles = {
   },
 
   Box3PropertyLabel: {
-    fontSize: 16,
+    fontSize: 13,
     marginLeft: 7,
     marginBottom: 0,
   },
   box3input: {
     display: "flex",
     backgroundColor: "white",
-    width: "35%",
+    width: "30%",
     borderBottomWidth: 1,
     borderBottomColor: "lightgray",
     justifyContent: "center",
@@ -527,7 +535,7 @@ const styles = {
     backgroundColor: "#F0F2F5",
     borderRadius: 10,
     borderColor: "black",
-    width: "70%",
+    width: "65%",
     height: 35,
     alignItems: "center",
     justifyContent: "center",
@@ -541,7 +549,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     width: "92%",
-    height: 225,
+    height: 200,
     backgroundColor: "white",
     marginTop: 10,
     borderRadius: 11,
@@ -563,9 +571,10 @@ const styles = {
   },
 
   Box4TopText: {
-    fontSize: 16,
-    marginLeft: 7,
+    fontSize: 14,
+    marginLeft: 10,
     marginBottom: 0,
+    marginTop: 5,
   },
 
   box4InnerCenter: {
@@ -575,11 +584,12 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 5,
   },
 
   line: {
     display: "flex",
-    width: "80%",
+    width: "60%",
     height: 30,
     backgroundColor: "white",
     flexDirection: "row",
@@ -589,14 +599,14 @@ const styles = {
   },
 
   linetext: {
-    fontSize: 14,
+    fontSize: 12,
     textAlign: "right",
     width: 80,
     marginBottom: 0,
   },
 
   linetextinput: {
-    width: 140,
+    width: 100,
     marginLeft: "10px",
     borderBottomWidth: "1px",
     borderBottomColor: "lightgray",
@@ -605,6 +615,8 @@ const styles = {
     borderRight: "none",
     borderTop: "none",
     outline: "none",
+    fontSize: 12,
+    height: 20,
   },
 
   Box4InnerBottom: {
@@ -615,19 +627,19 @@ const styles = {
 
   Box4Button: {
     display: "flex",
-    width: 119,
-    height: 33,
+    width: 80,
+    height: 25,
     backgroundColor: "#0866FF",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,
-    borderRadius: 11,
+    borderRadius: 7,
     borderWidth: 0,
   },
 
   Box4ButtonText: {
     color: "white",
-    fontSize: 16,
+    fontSize: 13,
     marginBottom: 0,
   },
 
@@ -635,7 +647,7 @@ const styles = {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    marginTop: 5,
+    marginTop: 8,
     alignItems: "center",
     backgroundColor: "white",
     height: "max-content",
@@ -648,16 +660,17 @@ const styles = {
     alignItems: "center",
     justifyContent: "space-around",
     backgroundColor: "white",
-    marginRight: 5,
-    marginLeft: 5,
+    marginRight: 10,
+    marginLeft: 10,
     marginBottom: 10,
     borderRadius: 8,
     padding: 2,
-    width: "21%",
+    width: "25%",
+    height: 30,
     border: "1px solid lightblue",
   },
   displayValueText: {
-    fontSize: 11,
+    fontSize: 10,
     marginRight: 5,
     color: "#007BFF",
   },
@@ -681,11 +694,11 @@ const styles = {
   Button1: {
     display: "flex",
     width: "100%",
-    height: 38,
+    height: 35,
     backgroundColor: "#0866FF",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
+    marginTop: 40,
     borderRadius: 11,
     borderWidth: 0,
   },

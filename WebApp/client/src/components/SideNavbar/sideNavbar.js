@@ -49,7 +49,7 @@ export default function SideNavbar() {
   };
 
   return (
-    <Sidebar collapsed={collapsed} style={{ height: "100vh", width: collapsed ? '50px' : '400px' }}>
+    <Sidebar collapsed={collapsed} style={{ height: "100vh", width: collapsed ? '50px' : '300px' }}>
       <div style={styles.head}>
         <div style={{cursor:"pointer"}} onClick={handleToggleSidebar}>
           <FaBars color="#65676b"/>
