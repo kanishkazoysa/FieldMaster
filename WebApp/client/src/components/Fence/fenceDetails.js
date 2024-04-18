@@ -30,15 +30,15 @@ export default function FenceDetails({onBackToSidebar,inputValuePostspace,displa
         <div style={styles.propertyBox}>
           <div style={styles.property}>
           <div style={{ transform: "rotate(90deg)" }}>
-            <HiMiniBars4 color="gray" size={40} />
+            <HiMiniBars4 color="gray" size={30} />
           </div>
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Total Amount</p>
-              <p style={styles.propertyValue}>100</p>
+              <p style={styles.propertyValue}>100 Sticks</p>
             </div>
           </div>
           <div className="property" style={styles.property}>
-            <TbArrowBarBoth color="gray" size={40} />
+            <TbArrowBarBoth color="gray" size={30} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>post Gap</p>
               <p style={styles.propertyValue}>{inputValuePostspace} {PostSpaceUnitselectedValue}</p>
@@ -52,7 +52,7 @@ export default function FenceDetails({onBackToSidebar,inputValuePostspace,displa
       <div style={styles.Box2}>
         <div style={styles.propertyBox}>
           <div style={styles.property}>
-            <BsBoundingBox color="gray" size={35} />
+            <BsBoundingBox color="gray" size={28} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
               <p style={styles.propertyValue}>1.5Km</p>
@@ -75,7 +75,7 @@ export default function FenceDetails({onBackToSidebar,inputValuePostspace,displa
 
         <div style={styles.innercenter}>
           <div style={styles.innersquareleft}>
-            <TbFence name="gate" size={40} color="gray" />
+            <TbFence name="gate" size={35} color="gray" />
             <p style={styles.propertyLabel1}>Fence Type &nbsp;&nbsp;:</p>
           </div>
           <div style={styles.innersquareright}>
@@ -85,12 +85,12 @@ export default function FenceDetails({onBackToSidebar,inputValuePostspace,displa
 
         <div style={styles.innercenter}>
           <div style={styles.innersquareleft}>
-            <TbBarrierBlock  name="boom-gate" size={40} color="gray" />
+            <TbBarrierBlock  name="boom-gate" size={35} color="gray" />
             <p style={styles.propertyLabel1}>Gates  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  :</p>
           </div>
           <div style={styles.innersquareright1}>
   {displayValues.length === 0 ? (
-    <div>No Gate</div>
+    <div >No Gate</div>
   ) : (
     displayValues.map((value, index) => (
       <div key={index}>{value}</div>
@@ -118,8 +118,8 @@ const styles = {
   },
 
   content: {
-    paddingLeft: "16px",
-    paddingRight: "16px",
+    paddingLeft: "1px",
+    paddingRight: "1px",
     width: "100%",
     marginTop: "0px",
     display: "flex",
@@ -131,26 +131,26 @@ const styles = {
 
   header: {
     display: "flex",
-    width: "108%",
-    height: "40px",
+    width: "100%",
+    height: "45px",
     backgroundColor: "#007BFF",
     alignItems: "center",
   
   },
 
   titleText1: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "bold",
     marginBottom: 0,
     color: "white",
-    marginLeft: "105px",
+    marginLeft: "70px",
   },
 
   /*first section*/
 
   Box1: {
     width: "90%",
-    height: "101px",
+    height: "91px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -158,11 +158,11 @@ const styles = {
     marginTop: "30px",
     borderRadius: "11px",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    padding: "10px",
+    padding: "6px",
   },
 
   titleText: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "bold",
     marginBottom: 0,
   },
@@ -175,7 +175,7 @@ const styles = {
     height: 50,
     width: "100%",
     backgroundColor: "white",
-    marginTop: "8px",
+    marginTop: "6px",
   },
 
   property: {
@@ -191,25 +191,25 @@ const styles = {
 
   propertyDetails: {
     flexDirection: "column",
-    marginLeft: 8,
-    width: "60%",
+    marginLeft: 5,
+    width: "70%",
     //height: 40,
     backgroundColor: "white",
   },
 
   propertyLabel: {
-    fontSize: 14,
+    fontSize: 12,
     marginBottom: 0,
   },
 
   propertyLabel1: {
-    fontSize: 14,
+    fontSize: 12,
     marginBottom: 0,
     marginLeft: 10,
   },
 
   propertyValue: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: "bold",
     marginBottom: 0,
   },
@@ -222,7 +222,7 @@ const styles = {
 
   Box2: {
     width: "90%",
-    height: "81px",
+    height: "68px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -238,7 +238,7 @@ const styles = {
   box3: {
     width: "90%",
     //height: "max-content",
-    height: 200,
+    height: 170,
     backgroundColor: "white",
     marginTop: 15,
     borderRadius: 11,
@@ -247,7 +247,7 @@ const styles = {
   },
 
   innertopText: {
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: "bold",
     marginBottom: 10,
   },
@@ -263,7 +263,7 @@ const styles = {
 
   innersquareleft: {
     display: "flex",
-    width: "50%",
+    width: "52%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -287,11 +287,12 @@ const styles = {
     justifyContent: "flex-start",
     backgroundColor: "white",
     flexDirection: "column",
+    fontSize: 12,
   },
 
   bottom: {
     alignItems: "center",
-    marginTop: 100,
+    marginTop: 150,
     width: "92%",
     
   },

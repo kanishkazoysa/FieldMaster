@@ -178,7 +178,7 @@ export default function Fence({ onBackToSidebar }) {
             <div style={styles.box2Property}>
               <div style={styles.Box2DropdownContainer}>
                 <Select
-                  placeholder="Select Type"
+                  placeholder="Type"
                   options={[
                     { value: "Wood", label: "Wood" },
                     { value: "Metal", label: "Metal" },
@@ -190,7 +190,7 @@ export default function Fence({ onBackToSidebar }) {
                     control: (provided) => ({
                       ...provided,
                       textAlign: 'center',
-                      fontSize: '10px',
+                      fontSize: '12px',
                     }),
                   }}
                 />
