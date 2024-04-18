@@ -15,6 +15,11 @@ import * as Location from 'expo-location';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
+import {
   faLocationCrosshairs,
   faLayerGroup,
 } from "@fortawesome/free-solid-svg-icons";
@@ -157,6 +162,7 @@ export default function Home() {
   };
 
   return (
+    
     <View style={styles.container}>
       <MapView
         ref={mapRef}
@@ -186,7 +192,7 @@ export default function Home() {
 
       <View style={styles.searchbar}>
         <View style={styles.locationIconContainer}>
-          <MaterialIcons name='location-on' size={24} color='#007BFF' />
+          <MaterialIcons name='location-on' size={responsiveFontSize(2.9)} color='#007BFF' />
         </View>
         <TextInput
           placeholder='Search Location'
@@ -206,13 +212,13 @@ export default function Home() {
             onPress={clearSearchQuery}
             style={styles.clearIconContainer}
           >
-            <MaterialIcons name='cancel' size={24} color='#707070' />
+            <MaterialIcons name='cancel' size={responsiveFontSize(2.9)} color='#707070' />
           </TouchableOpacity>
         )}
         <View style={{ marginLeft: 10 }}>
           <TouchableOpacity onPress={ProfileManage}>
             <Avatar.Image
-              size={44}
+              size={responsiveFontSize(5)}
               source={require("../images/profilePhoto.png")}
             />
           </TouchableOpacity>
@@ -223,7 +229,7 @@ export default function Home() {
         style={styles.layerIconContainer}
         onPress={toggleMapType}
       >
-        <FontAwesomeIcon icon={faLayerGroup} size={25} color='#fff' />
+        <FontAwesomeIcon icon={faLayerGroup} size={responsiveFontSize(2.7)} color='#fff' />
         {showDropdown && (
           <View style={styles.dropdownContainer}>
             <FlatList
@@ -243,7 +249,7 @@ export default function Home() {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.button2} onPress={focusOnCurrentLocation}>
-        <FontAwesomeIcon icon={faLocationCrosshairs} size={25} color='#fff' />
+        <FontAwesomeIcon icon={faLocationCrosshairs} size={responsiveFontSize(2.7)} color='#fff' />
       </TouchableOpacity>
 
       <SelectionModal
@@ -336,26 +342,23 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    bottom: 36,
+    bottom: responsiveHeight(4),
     left: 16,
     right: 16,
   },
   buttonWrapper: {
     flex: 1,
-    marginHorizontal: 15,
+    marginHorizontal:responsiveWidth(3),
   },
   button: {
     flex: 1,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: '#fff',
+    
   },
   container: {
     flex: 1,
   },
   searchbar: {
-    width: '100%',
+    width: '99%',
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
@@ -367,7 +370,7 @@ const styles = StyleSheet.create({
   searchbarInput: {
     borderRadius: 30,
     paddingLeft: 40,
-    height: 50,
+    height:responsiveHeight(6),
     width: '80%',
     backgroundColor: 'rgba(255, 255, 255, 0.6)',
     color: '#000',
@@ -384,9 +387,9 @@ const styles = StyleSheet.create({
   },
   clearIconContainer: {
     position: 'absolute',
-    left: '75%',
+    right: '20%',
     top: '50%',
-    transform: [{ translateY: -12 }],
+    transform: [{ translateY: responsiveHeight(-1.4) }], // Adjust translateY to vertically center the icon
     zIndex: 1,
   },
 });
