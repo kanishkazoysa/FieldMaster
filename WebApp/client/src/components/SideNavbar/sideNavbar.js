@@ -8,6 +8,8 @@ import { IoBookmarks } from "react-icons/io5";
 import { RiWalkFill } from "react-icons/ri";
 import StartMeasurePage from '../MeasureOption/measureOption.js';
 import SavedTemplates from '../SavedTemplates/savedTemplates.js';
+import Fence from "../Fence/fence";
+import FenceDetails from "../Fence/fenceDetails";
 
 
 export default function SideNavbar() {
@@ -35,7 +37,7 @@ export default function SideNavbar() {
   };
 
   const handleSavedTemplatesClick = () => {
-    setCurrentPage('SavedTemplates'); // Update this line
+    setCurrentPage('Fence'); // Update this line
     setAnimatePage(true);
   };
 
@@ -47,7 +49,7 @@ export default function SideNavbar() {
   };
 
   return (
-    <Sidebar collapsed={collapsed} style={{ height: "100vh", width: collapsed ? '50px' : '300px' }}>
+    <Sidebar collapsed={collapsed} style={{ height: "100vh", width: collapsed ? '50px' : '400px' }}>
       <div style={styles.head}>
         <div style={{cursor:"pointer"}} onClick={handleToggleSidebar}>
           <FaBars color="#65676b"/>
@@ -90,12 +92,13 @@ export default function SideNavbar() {
           ...styles.startMeasureContainer,
           transform: animatePage ? 'translateX(0)' : 'translateX(-100%)',
           transition: 'transform 0.3s ease-in-out',
+          backgroundColor: 'whitesmoke',
           height: currentPage ? 'calc(100vh - 60px)' : '0', // Update this line
           overflow: 'auto', // Add scrollbar if content exceeds container height
         }}
       >
         {currentPage === 'StartMeasure' && <StartMeasurePage onBackToSidebar={handleBackClick} />}
-        {currentPage === 'SavedTemplates' && <SavedTemplates onBackToSidebar={handleBackClick} />}
+        {currentPage === 'Fence' && <Fence onBackToSidebar={handleBackClick} />}
       </div>
       </div>
     </Sidebar>
@@ -108,7 +111,7 @@ const styles = {
     left: 0,
     width: '100%',
     backgroundColor: '#fff',
-    padding: '20px',
+    padding: '0px',
     boxSizing: 'border-box',
   },
   head: {

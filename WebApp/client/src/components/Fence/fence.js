@@ -5,12 +5,17 @@ import { MdArrowBack, MdFence } from "react-icons/md";
 import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import Select from "react-select";
+import AxiosInstance from "../../AxiosInstance";
+import axios from "axios";
+import FenceDetails from "./fenceDetails";
 
 export default function Fence({ onBackToSidebar }) {
   const [perimeter, setPerimeter] = useState("1.5");
   const [area, setArea] = useState("100");
-  const [selectedFenceType, setSelectedFenceType] = useState(null);
-  const [selectedPostSpaceUnit, setSelectedPostSpaceUnit] = useState("");
+  const [FenceTypeselectedValue, setFenceTypeselectedValue] = useState(null);
+  const [FenceTypeselectedValue1, setFenceTypeselectedValue1] = useState(null);
+  const [PostSpaceUnitselectedValue, setPostSpaceUnitselectedValue] = useState("");
+  const [PostSpaceUnitselectedValue1, setPostSpaceUnitselectedValue1] = useState("");
   const [inputValuePostspace, setInputValuePostspace] = useState("");
   const [inputValueFenceLength, setInputValueFenceLength] = useState("");
   const [inputValueFenceAmount, setInputValueFenceAmount] = useState("");
@@ -18,6 +23,8 @@ export default function Fence({ onBackToSidebar }) {
   const [fenceAmountsArray, setFenceAmountsArray] = useState([]);
   const [displayValues, setDisplayValues] = useState([]);
   const inputValueFenceAmountRef = useRef(null);
+  const [currentPage, setCurrentPage] = useState(null);
+  const [animatePage, setAnimatePage] = useState(false);
 
   const handleFenceLengthChange = (event) => {
     setInputValueFenceLength(event.target.value);
@@ -32,14 +39,20 @@ export default function Fence({ onBackToSidebar }) {
   };
 
   const handleFenceTypeChange = (selectedOption) => {
-    setSelectedFenceType(selectedOption);
+    setFenceTypeselectedValue1(selectedOption);
+    setFenceTypeselectedValue(selectedOption.value);
   };
 
   const handlePostSpaceUnitChange = (selectedOption) => {
-    setSelectedPostSpaceUnit(selectedOption);
+    setPostSpaceUnitselectedValue1(selectedOption);
+    setPostSpaceUnitselectedValue(selectedOption.value);
   };
 
   const handleAdd = () => {
+    if (!inputValueFenceLength.trim() || !inputValueFenceAmount.trim()) {
+      alert("Please fill both input fields");
+      return;
+    }
     const length = parseFloat(inputValueFenceLength);
     const amount = parseInt(inputValueFenceAmount);
     setFenceLengthsArray([...fenceLengthsArray, length]);
@@ -66,173 +79,240 @@ export default function Fence({ onBackToSidebar }) {
     setFenceAmountsArray(newFenceAmountsArray);
   };
 
+  const handleFenceDetails = async () => {
+    setCurrentPage("FenceDetails"); // Update this line
+    setAnimatePage(true);
+    try {
+      // Validate required fields
+      if (
+        !PostSpaceUnitselectedValue ||
+        !FenceTypeselectedValue ||
+        !inputValuePostspace
+      ) {
+        throw new Error("Please fill in all fields");
+      }
+
+      // Prepare data for the request
+      const requestData = {
+        FenceTypeselectedValue,
+        inputValuePostspace,
+        PostSpaceUnitselectedValue,
+        displayValues,
+        fenceAmountsArray,
+        fenceLengthsArray,
+      };
+
+      // Make POST request to the backend
+      const response = await axios.post(
+        "http://192.168.8.130:5000/api/fence/fence",
+        requestData
+      );
+
+      // Handle successful response
+      console.log("Response:", response.data);
+
+      // Optionally, you can navigate to another page or perform other actions based on the response
+      // setCurrentPage('SomeOtherPage');
+    } catch (error) {
+      // Handle errors
+      console.error("Error:", error.message);
+      alert("Error: " + error.message);
+    }
+  };
+
+  const handleBackClick = () => {
+    setAnimatePage(false);
+    setTimeout(() => {
+      setCurrentPage(null);
+    }, 300);
+  };
+
   return (
-    <div style={styles.content}>
-      <div style={styles.header}>
-        <MdArrowBack
-          onClick={onBackToSidebar}
-          style={styles.backButton}
-          fontSize={20}
-        />
-        <p style={styles.titleText1}>Fence</p>
-      </div>
+    <div>
+      {!currentPage && (
+        <div style={styles.content}>
+          <div style={styles.header}>
+            <MdArrowBack
+              onClick={onBackToSidebar}
+              style={styles.backButton}
+              fontSize={20}
+            />
+            <p style={styles.titleText1}>Fence</p>
+          </div>
 
-      <div style={styles.Box1}>
-        <p style={styles.titleText}>Land Info</p>
-        <div style={styles.propertyBox}>
-          <div style={styles.property}>
-            <FaRegSquare color="gray" size={40} />
-            <div style={styles.propertyDetails}>
-              <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>{perimeter}Km</p>
+          {/* first box */}
+
+          <div style={styles.Box1}>
+            <p style={styles.titleText}>Land Info</p>
+            <div style={styles.propertyBox}>
+              <div style={styles.property}>
+                <FaRegSquare color="gray" size={40} />
+                <div style={styles.propertyDetails}>
+                  <p style={styles.propertyLabel}>Perimeter</p>
+                  <p style={styles.propertyValue}>{perimeter}Km</p>
+                </div>
+              </div>
+              <div style={styles.property}>
+                <FaSquare color="gray" size={40} />
+                <div style={styles.propertyDetails}>
+                  <p style={styles.propertyLabel}>Area</p>
+                  <p style={styles.propertyValue}>
+                    {area} m<sup>2</sup>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-          <div style={styles.property}>
-            <FaSquare color="gray" size={40} />
-            <div style={styles.propertyDetails}>
-              <p style={styles.propertyLabel}>Area</p>
-              <p style={styles.propertyValue}>{area} m<sup>2</sup></p>
+
+          <div style={styles.box2}>
+            <div style={styles.box2Property}>
+              <MdFence name="gate" size={40} color="gray" />
+              <div style={styles.box2PropertyDetails}>
+                <p style={styles.Box2PropertyLabel}>Fence Type</p>
+              </div>
+            </div>
+            <div style={styles.box2Property}>
+              <div style={styles.Box2DropdownContainer}>
+                <Select
+                  placeholder="Type"
+                  options={[
+                    { value: "Wood", label: "Wood" },
+                    { value: "Metal", label: "Metal" },
+                    { value: "Fiber", label: "Fiber" },
+                  ]}
+                  value={FenceTypeselectedValue1}
+                  onChange={handleFenceTypeChange}
+                  styles={{
+                    control: (provided) => ({
+                      ...provided,
+                      textAlign: "center",
+                    }),
+                  }}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div style={styles.box2}>
-        <div style={styles.box2Property}>
-          <MdFence
-            name="gate"
-            size={40}
-            color="gray"
-            rotation={270}
-            style={styles.squareIcon}
-          />
-          <div style={styles.box2PropertyDetails}>
-            <p style={styles.Box2PropertyLabel}>Fence Type</p>
+          <div style={styles.box3}>
+            <div style={styles.box3Property}>
+              <div style={{ transform: "rotate(90deg)" }}>
+                <FaBars name="format-line-spacing" size={30} color="gray" />
+              </div>
+              <div style={styles.box3PropertyDetails}>
+                <p style={styles.Box3PropertyLabel}>Post Space</p>
+              </div>
+            </div>
+            <div style={styles.box3Property}>
+              <div style={styles.box3inputContainer}>
+                <input
+                  type="text"
+                  style={styles.box3input}
+                  placeholder="00"
+                  value={inputValuePostspace}
+                  onChange={handleInputChange}
+                />
+                <Select
+                  placeholder="m"
+                  options={[
+                    { value: "m", label: "m" },
+                    { value: "cm", label: "cm" },
+                  ]}
+                  value={PostSpaceUnitselectedValue1}
+                  onChange={handlePostSpaceUnitChange}
+                  styles={{
+                    control: (provided) => ({
+                      ...provided,
+                      textAlign: "center",
+                    }),
+                  }}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-        <div style={styles.box2Property}>
-          <div style={styles.Box2DropdownContainer}>
-            <Select
-              placeholder="Type"
-              options={[
-                { value: "option1", label: "Wood" },
-                { value: "option2", label: "Metal" },
-                { value: "option3", label: "Fiber" }
-              ]}
-              value={selectedFenceType}
-              onChange={handleFenceTypeChange}
-              styles={{
-                control: (provided) => ({
-                  ...provided,
-                  textAlign: "center"
-                })
-              }}
-            />
-          </div>
-        </div>
-      </div>
 
-      <div style={styles.box3}>
-        <div style={styles.box3Property}>
-          <div style={{ transform: "rotate(90deg)" }}>
-            <FaBars name="format-line-spacing" size={30} color="gray" />
-          </div>
-          <div style={styles.box3PropertyDetails}>
-            <p style={styles.Box3PropertyLabel}>Post Space</p>
-          </div>
-        </div>
-        <div style={styles.box3Property}>
-          <div style={styles.box3inputContainer}>
-            <input
-              type="text"
-              style={styles.box3input}
-              placeholder="00"
-              value={inputValuePostspace}
-              onChange={handleInputChange}
-            />
-            <Select
-              placeholder="m"
-              options={[
-                { value: "option1", label: "m" },
-                { value: "option2", label: "cm" }
-              ]}
-              value={selectedPostSpaceUnit}
-              onChange={handlePostSpaceUnitChange}
-              styles={{
-                control: (provided) => ({
-                  ...provided,
-                  textAlign: "center"
-                })
-              }}
-            />
-          </div>
-        </div>
-      </div>
+          <div style={styles.box4}>
+            <div style={styles.box4innertop}>
+              <GiGate name="boom-gate" size={32} color="gray" />
+              <p style={styles.Box4TopText}>Gates</p>
+            </div>
+            <div style={styles.box4InnerCenter}>
+              <div style={styles.line}>
+                <p style={styles.linetext}>Length :</p>
+                <input
+                  type="text"
+                  style={styles.linetextinput}
+                  placeholder="Length of Gate"
+                  value={inputValueFenceLength}
+                  onChange={handleFenceLengthChange}
+                />
+              </div>
+              <div style={styles.line}>
+                <p style={styles.linetext}>Count :</p>
+                <input
+                  type="text"
+                  style={styles.linetextinput}
+                  placeholder="Number of Gate"
+                  value={inputValueFenceAmount}
+                  onChange={handleFenceAmountChange}
+                  ref={inputValueFenceAmountRef}
+                  onSubmitEditing={handleAdd}
+                />
+              </div>
+            </div>
+            <div style={styles.Box4InnerBottom}>
+              <button style={styles.Box4Button} onClick={handleAdd}>
+                <p style={styles.Box4ButtonText}>Add</p>
+              </button>
+            </div>
 
-      <div style={styles.box4}>
-        <div style={styles.box4innertop}>
-          <GiGate name="boom-gate" size={32} color="gray" />
-          <p style={styles.Box4TopText}>Gates</p>
-        </div>
-        <div style={styles.box4InnerCenter}>
-          <div style={styles.line}>
-            <p style={styles.linetext}>Length :</p>
-            <input
-              type="text"
-              style={styles.linetextinput}
-              placeholder="Length of Gate"
-              value={inputValueFenceLength}
-              onChange={handleFenceLengthChange}
-            />
+            <div style={styles.displayValuesContainer}>
+              {displayValues.map((value, index) => (
+                <div key={index} style={styles.displayValueContainer}>
+                  <div style={styles.displayValueText}>{value}</div>
+                  <button
+                    onClick={() => handleRemoveValue(index)}
+                    style={styles.closeButton}
+                  >
+                    <IoIosCloseCircleOutline
+                      name="close-circle-outline"
+                      size={20}
+                      color="#007BFF"
+                    />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={styles.line}>
-            <p style={styles.linetext}>Count :</p>
-            <input
-              type="text"
-              style={styles.linetextinput}
-              placeholder="Number of Gate"
-              value={inputValueFenceAmount}
-              onChange={handleFenceAmountChange}
-              ref={inputValueFenceAmountRef}
-              onSubmitEditing={handleAdd}
-            />
+
+          <div style={styles.bottom}>
+            <button style={styles.Button1} onClick={handleFenceDetails}>
+              <p style={styles.Box4ButtonText}>Calculate</p>
+            </button>
           </div>
         </div>
-        <div style={styles.Box4InnerBottom}>
-          <button style={styles.Box4Button} onClick={handleAdd}>
-            <p style={styles.Box4ButtonText}>Add</p>
-          </button>
-        </div>
-        
-        <div style={styles.displayValuesContainer}>
-          {displayValues.map((value, index) => (
-         <div key={index} style={styles.displayValueContainer }>
-         <div style={styles.displayValueText}>{value}</div>
-      <button
-        onClick={() => handleRemoveValue(index)}
-        style={styles.closeButton}
+      )}
+
+      <div
+        style={{
+          transform: animatePage ? "translateX(0)" : "translateX(-100%)",
+          transition: "transform 0.3s ease-in-out",
+          backgroundColor: "whitesmoke",
+          overflow: "auto", // Add scrollbar if content exceeds container height
+        }}
       >
-        <IoIosCloseCircleOutline
-          name="close-circle-outline"
-          size={20}
-          color="#007BFF"
-        />
-      </button>
-    </div>
-  ))}
-</div>
-
-      </div>
-
-      <div style={styles.bottom}>
-        <button style={styles.Button1}>
-          <p style={styles.Box4ButtonText}>Calculate</p>
-        </button>
+        {currentPage === "FenceDetails" && (
+          <FenceDetails
+            onBackToSidebar={handleBackClick}
+            inputValuePostspace={inputValuePostspace}
+            displayValues={displayValues}
+            PostSpaceUnitselectedValue={PostSpaceUnitselectedValue}
+            FenceTypeselectedValue={FenceTypeselectedValue}
+          />
+        )}
       </div>
     </div>
   );
 }
-
 
 const styles = {
   backButton: {
@@ -252,12 +332,6 @@ const styles = {
     justifyContent: "center",
     backgroundColor: "whitesmoke",
   },
-  menuItem: {
-    marginTop: "0px",
-    borderBottom: "1px solid #CED0D4",
-    transition: "background-color 0.3s ease, color 0.3s ease",
-  },
-
   header: {
     display: "flex",
     width: "105%",
@@ -530,7 +604,7 @@ const styles = {
     borderLeft: "none",
     borderRight: "none",
     borderTop: "none",
-    outline: "none"
+    outline: "none",
   },
 
   Box4InnerBottom: {
@@ -557,7 +631,6 @@ const styles = {
     marginBottom: 0,
   },
 
-
   displayValuesContainer: {
     display: "flex",
     flexDirection: "row",
@@ -581,8 +654,7 @@ const styles = {
     borderRadius: 8,
     padding: 2,
     width: "21%",
-    border: '1px solid lightblue',
-
+    border: "1px solid lightblue",
   },
   displayValueText: {
     fontSize: 11,
@@ -590,11 +662,10 @@ const styles = {
     color: "#007BFF",
   },
   closeButton: {
-  backgroundColor: "transparent",
-  border: "none",
-  cursor: "pointer",
-  padding: 0,
-
+    backgroundColor: "transparent",
+    border: "none",
+    cursor: "pointer",
+    padding: 0,
   },
   closeButtonText: {
     color: "white",
