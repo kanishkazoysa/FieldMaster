@@ -9,7 +9,6 @@ import {
   TouchableWithoutFeedback,
   Platform,
   Keyboard,
-  SafeAreaView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Appbar, TextInput, Button } from "react-native-paper";
@@ -84,8 +83,8 @@ export default function RegisterScreen() {
   };
 
   return (
+  
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
-   
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
         <Appbar.Header style={styles.header}>
@@ -200,8 +199,8 @@ export default function RegisterScreen() {
         </View>
     
       </View>
-      
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+   
   );
 }
 

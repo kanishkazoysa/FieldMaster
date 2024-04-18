@@ -7,6 +7,9 @@ import {
   Platform,
   TextInput,
   FlatList,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -151,6 +154,7 @@ export default function Home() {
         console.error('Error searching for location:', error);
       }
     }
+
   };
   //clear the search query
   const clearSearchQuery = () => {
@@ -161,8 +165,17 @@ export default function Home() {
     navigation.navigate('SavedTemplatesScreen');
   };
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+    <KeyboardAvoidingView
+    style={{ flex: 1 }}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    keyboardVerticalOffset={Platform.select({ ios: 0, android: -responsiveHeight(10) })}
+  >
     <View style={styles.container}>
       <MapView
         ref={mapRef}
@@ -288,25 +301,27 @@ export default function Home() {
         </View>
       </View>
     </View>
+    </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
+    
   );
 }
 
 const styles = StyleSheet.create({
   locationIconContainer: {
     position: 'absolute',
-    left: 20,
+    left: responsiveWidth(5),
     top: '50%',
-    transform: [{ translateY: -12 }], // Adjust translateY to vertically center the icon
+    transform: [{ translateY:responsiveHeight(-1.4)  }], // Adjust translateY to vertically center the icon
     zIndex: 1,
   },
   layerIconContainer: {
     position: 'absolute',
     backgroundColor: 'rgba(0,0,0, 0.7)',
-    padding: 10,
+    padding: responsiveHeight(1.5),
     borderRadius: 5,
-    right: 10,
-    top: Platform.OS === 'android' ? '22%' : '27%',
-    transform: [{ translateY: -12 }], // Adjust translateY to vertically center the icon
+    right: responsiveWidth(3),
+    top: responsiveHeight(24),
     zIndex: 1,
     flexDirection: 'row',
     alignItems: 'center',
@@ -330,13 +345,14 @@ const styles = StyleSheet.create({
     padding: 10,
     color: '#fff',
   },
-  button2: {
+  button2: 
+  {
     position: 'absolute',
     backgroundColor: 'rgba(0,0,0, 0.7)',
-    padding: 10,
+    padding: responsiveHeight(1.5),
     borderRadius: 5,
-    top: Platform.OS === 'android' ? '13%' : '18%',
-    right: 10,
+    top: responsiveHeight(17),
+    right:  responsiveWidth(3),
   },
   buttonContainer: {
     position: 'absolute',
