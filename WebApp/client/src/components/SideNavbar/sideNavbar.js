@@ -8,8 +8,7 @@ import { IoBookmarks } from "react-icons/io5";
 import { RiWalkFill } from "react-icons/ri";
 import StartMeasurePage from '../MeasureOption/measureOption.js';
 import SavedTemplates from '../SavedTemplates/savedTemplates.js';
-import Fence from "../Fence/fence";
-import FenceDetails from "../Fence/fenceDetails";
+import Fence from "../Fence/Fence/fence";
 
 
 export default function SideNavbar() {
