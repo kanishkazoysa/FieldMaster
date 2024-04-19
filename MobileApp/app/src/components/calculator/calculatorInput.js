@@ -6,21 +6,26 @@ import {
   StyleSheet,
   TextInput,
   Modal,
+  KeyboardAvoidingView,
 } from "react-native";
 import { IconButton, Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
-import DropDownPicker from 'react-native-dropdown-picker';
-
 import CalculatorSelect from "./calculatorSelect";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
 
 const CalculatorSelectModel = ({
   calculatorModalVisible,
   setCalculatorModalVisible,
 }) => {
-  const [calculatorSelectModalVisible, setCalculatorSelectModalVisible] = useState(false);
+  const [calculatorSelectModalVisible, setCalculatorSelectModalVisible] =
+    useState(false);
   const [selectedValue, setSelectedValue] = useState("sqm");
 
   const closeModal = () => {
@@ -29,121 +34,133 @@ const CalculatorSelectModel = ({
 
   const handleCalculate = () => {
     setCalculatorSelectModalVisible(true);
+    setCalculatorModalVisible(false);
   };
 
   const navigation = useNavigation();
 
   return (
     <View>
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={calculatorModalVisible}
-      onRequestClose={closeModal}
-    >
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.overlay}
-          activeOpacity={1}
-          onPress={closeModal}
-        />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={calculatorModalVisible}
+        onRequestClose={closeModal}
+      >
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={styles.overlay}
+            activeOpacity={1}
+            onPress={closeModal}
+          />
 
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <IconButton
-              icon="close"
-              iconColor="#000"
-              size={30}
-              onPress={closeModal}
-              style={styles.cancelButton}
-            />
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <IconButton
+                icon="close"
+                iconColor="#000"
+                size={responsiveFontSize(3.2)}
+                onPress={closeModal}
+                style={styles.cancelButton}
+              />
 
-            <Text style={styles.headerText}>Manual Calculator</Text>
+              <Text style={styles.headerText}>Manual Calculator</Text>
 
-            <View style={styles.inputContainer}>
-              <View style={styles.iconContainer}>
-                <AntDesign name="piechart" size={24} color="#65676B" />
-                <Text style={{ fontSize: 16, marginLeft: 10 }}>Area</Text>
-              </View>
+              <View style={styles.inputContainer}>
+                <View style={styles.iconContainer}>
+                  <AntDesign name="piechart" size={responsiveFontSize(3)} color="#65676B" />
+                  <Text style={{ fontSize: responsiveFontSize(1.9), marginLeft: responsiveWidth(2) }}>Area</Text>
+                </View>
 
-              <View style={styles.iconContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder={"00.00"}
-                  keyboardType="numeric"
-                />
+                <View style={styles.iconContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder={"00.00"}
+                    keyboardType="numeric"
+                  />
 
-                <View style={styles.dropdown}>
-                  <Picker
-                    selectedValue={selectedValue}
-                    style={{ height: 40, width: 110,}}
-                    onValueChange={(itemValue, itemIndex) =>
-                      setSelectedValue(itemValue)
-                    }
-                  >
-                    <Picker.Item label="Square Meters" value="sqm" />
-                    <Picker.Item label="Square Feet" value="sqft" />
-                    <Picker.Item label="Acres" value="acres" />
-                    {/* Add more items as needed */}
-                  </Picker>
+                  <View style={styles.dropdown}>
+                    <Picker
+                      selectedValue={selectedValue}
+                      style={{ 
+                        width: responsiveWidth(30),
+                       
+                      }}
+                      onValueChange={(itemValue, itemIndex) =>
+                        setSelectedValue(itemValue)
+                      }
+                    >
+                      <Picker.Item label="Square Meters" value="sqm" />
+                      <Picker.Item label="Square Feet" value="sqft" />
+                      <Picker.Item label="Acres" value="acres" />
+                      {/* Add more items as needed */}
+                    </Picker>
+                  </View>
                 </View>
               </View>
-            </View>
 
+              <View style={styles.inputContainer}>
+                <View style={styles.iconContainer}>
+                  <MaterialCommunityIcons
+                    name="vector-rectangle"
+                    size={responsiveFontSize(3.4)}
+                    color="#65676B"
+                  />
+                  <Text style={{fontSize: responsiveFontSize(1.9), marginLeft: responsiveWidth(2)  }}>
+                    Perimeter
+                  </Text>
+                </View>
 
-            <View style={styles.inputContainer}>
-              <View style={styles.iconContainer}>
-              <MaterialCommunityIcons name="vector-rectangle" size={28} color="#65676B" />
-                <Text style={{ fontSize: 16, marginLeft: 10 }}>Perimeter</Text>
-              </View>
+                <View style={styles.iconContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder={"00.00"}
+                    keyboardType="numeric"
+                  />
 
-              <View style={styles.iconContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder={"00.00"}
-                  keyboardType="numeric"
-                />
+                  <View style={styles.dropdown}>
+                    <Picker
+                      selectedValue={selectedValue}
+                      style={{ 
+  
+                        width: responsiveWidth(30), 
+                      }}
+                      onValueChange={(itemValue, itemIndex) =>
+                        setSelectedValue(itemValue)
+                      }
+                    >
+                      <Picker.Item label="m" value="m" />
+                      <Picker.Item label="Km" value="km" />
 
-                <View style={styles.dropdown}>
-                  <Picker
-                    selectedValue={selectedValue}
-                    style={{ height: 40, width: 110,}}
-                    onValueChange={(itemValue, itemIndex) =>
-                      setSelectedValue(itemValue)
-                    }
-                  >
-                    <Picker.Item label="m" value="m" />
-                    <Picker.Item label="Km" value="km" />
-                    
-                    {/* Add more items as needed */}
-                  </Picker>
+                      {/* Add more items as needed */}
+                    </Picker>
+                  </View>
                 </View>
               </View>
-            </View>
 
-            <Button
-              mode="contained"
-              style={styles.calculateButton}
-              buttonColor="#007BFF"
-              onPress={handleCalculate}
-            >
-              Calculate
-            </Button>
+              <Button
+                mode="contained"
+                style={styles.calculateButton}
+                buttonColor="#007BFF"
+                onPress={handleCalculate}
+              >
+                Calculate
+              </Button>
+            </View>
           </View>
         </View>
-      </View>
-    </Modal>
-    <CalculatorSelect
-    calculatorSelectModalVisible={calculatorSelectModalVisible}
-    setCalculatorSelectModalVisible={setCalculatorSelectModalVisible}
-  />
+      </Modal>
+      <CalculatorSelect
+        calculatorSelectModalVisible={calculatorSelectModalVisible}
+        setCalculatorSelectModalVisible={setCalculatorSelectModalVisible}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   dropdown: {
-    marginLeft: 30,
+    right: responsiveWidth(-5),
     backgroundColor: "#F0F2F5",
     borderRadius: 11,
     borderWidth: 1.5,
@@ -152,31 +169,30 @@ const styles = StyleSheet.create({
   },
 
   iconContainer: {
+    marginTop: responsiveHeight(-0.7),
     flexDirection: "row",
-    
   },
   inputContainer: {
-    marginTop: 30,
-    width: "95%",
-    marginBottom: 10,
+    marginTop: responsiveHeight(4),
+    width: responsiveWidth(85),
+    marginBottom: responsiveHeight(2),
   },
   input: {
-    width: "60%",
+    width: responsiveWidth(50),
     marginLeft: 5,
-    height: 30,
+    height: responsiveHeight(4.5),
     borderBottomColor: "gray",
     borderBottomWidth: 1.5,
     paddingLeft: 10,
-    marginTop: 5,
+    marginTop:responsiveHeight(0.5),
   },
 
   headerText: {
-    fontSize: 16,
+    fontSize:responsiveFontSize(2),
   },
   calculateButton: {
-    position: "absolute",
-    bottom: "5%",
-    width: 200,
+    marginTop: responsiveHeight(25),
+    width:"85%"
   },
 
   container: {
@@ -187,9 +203,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalView: {
+    marginTop: responsiveHeight(30),
     alignSelf: "center",
-    position: "absolute",
-    bottom: 0,
     backgroundColor: "#fff",
     borderRadius: 25,
     borderBottomRightRadius: 0,
@@ -204,7 +219,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 4,
     width: "100%",
-    height: "45%",
+    height: responsiveHeight(100),
   },
 
   cancelButton: {
