@@ -14,8 +14,8 @@ import Otp from "./src/screens/AuthScreens/Otp";
 import CreateNewPassword from "./src/screens/AuthScreens/CreateNewPassword";
 import Home from "./src/screens/Home";
 import WalkaroundLand from "./src/screens/WalkaroundLand";
-import Fence from "./src/screens/FenceSetup/Fence";
-import FenceDetails from "./src/screens/FenceSetup/FenceDetails";
+import Fence from "./src/screens/FenceSetup/fence/Fence";
+import FenceDetails from "./src/screens/FenceSetup/fenceDetails/FenceDetails";
 
 /* Template screens importing */
 
