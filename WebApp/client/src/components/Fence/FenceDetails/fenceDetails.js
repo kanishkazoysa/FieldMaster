@@ -1,6 +1,6 @@
 // SideNavbar.js
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { HiMiniBars4 } from "react-icons/hi2";
 import { TbArrowBarBoth, TbBarrierBlock, TbFence } from "react-icons/tb";
 import { MdArrowBack } from "react-icons/md";
@@ -15,6 +15,25 @@ export default function FenceDetails({
   PostSpaceUnitselectedValue,
   FenceTypeselectedValue,
 }) {
+
+  const [numberOfSticks, setnumberOfSticks] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response = await fetch('http://192.168.52.237:3000/api/fence/numberOfSticks');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setnumberOfSticks(data.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div style={styles.content}>
       <div style={styles.header}>
@@ -37,7 +56,7 @@ export default function FenceDetails({
             </div>
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Total Amount</p>
-              <p style={styles.propertyValue}>100 Sticks</p>
+              <p style={styles.propertyValue}>{numberOfSticks} Sticks</p>
             </div>
           </div>
           <div className="property" style={styles.property}>

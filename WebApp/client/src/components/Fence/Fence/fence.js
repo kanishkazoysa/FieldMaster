@@ -111,15 +111,12 @@ export default function Fence({ onBackToSidebar }) {
 
       // Make POST request to the backend
       const response = await axios.post(
-        "http://192.168.1.100:3000/api/fence/fence",
+        "http://192.168.52.237:3000/api/fence/fence",
         requestData
       );
 
       // Handle successful response
       console.log("Response:", response.data);
-
-      // Optionally, you can navigate to another page or perform other actions based on the response
-      // setCurrentPage('SomeOtherPage');
     } catch (error) {
       // Handle errors
       console.error("Error:", error.message);
