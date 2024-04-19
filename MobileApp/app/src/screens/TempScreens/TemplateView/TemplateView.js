@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Image, Text, StyleSheet,TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Appbar, ThemeProvider } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './TemplateViewStyles';
@@ -62,18 +62,21 @@ const CustomEditIcon = ({ navigation }) => (
 
 const TemplateView = ({ route, navigation }) => {
   const { item } = route.params;
+  useEffect(() => {
+    console.log('template view screen ', item._id);
+  }, []);
   return (
     <>
-      <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
-          <Appbar.BackAction
-            onPress={() => {
-              navigation.navigate("SavedTemplatesScreen");
-            }}
-          />
-          <Appbar.Content title={item.templateName} />
-          {/* pencil/ pen icon  */}
-          <CustomEditIcon navigation={navigation} />
-        </Appbar.Header>
+      <Appbar.Header style={styles.top_Bar} dark={true} mode='center-aligned'>
+        <Appbar.BackAction
+          onPress={() => {
+            navigation.navigate('SavedTemplatesScreen');
+          }}
+        />
+        <Appbar.Content title={item.templateName} />
+        {/* pencil/ pen icon  */}
+        <CustomEditIcon navigation={navigation} />
+      </Appbar.Header>
       <View style={styles.low_outer}>
         <View style={styles.imageView}>
           <Image
@@ -83,38 +86,38 @@ const TemplateView = ({ route, navigation }) => {
         </View>
         {/* icons_block */}
         <View style={styles.iconBlockStyling}>
-  
-        <View style={styles.iconBlockInner}>
-          <TouchableOpacity onPress={() => navigation.navigate('Clearland')}>
-            <View style={styles.iconOuter_01}>
-              <ClearLandIcon />
-            </View>
+          <View style={styles.iconBlockInner}>
+            <TouchableOpacity onPress={() => navigation.navigate('Clearland')}>
+              <View style={styles.iconOuter_01}>
+                <ClearLandIcon />
+              </View>
             </TouchableOpacity>
             <Text>Clear land</Text>
           </View>
 
-
           <TouchableOpacity onPress={() => navigation.navigate('Plantation')}>
-
-
-          <View style={styles.iconBlockInner}>
-          <TouchableOpacity onPress={() => navigation.navigate('Plantation')}>
-            <View style={styles.iconOuter_02}>
-              <PlantationIcon />
+            <View style={styles.iconBlockInner}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Plantation')}
+              >
+                <View style={styles.iconOuter_02}>
+                  <PlantationIcon />
+                </View>
+              </TouchableOpacity>
+              <Text>Plantation</Text>
             </View>
-            </TouchableOpacity> 
-            <Text>Plantation</Text>
-          </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate('Fence')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Fence', { id: item._id })}
+          >
             <View style={styles.iconBlockInner}>
-            <View style={styles.iconOuter_03}>
-              <FenceSetupIcon />
+              <View style={styles.iconOuter_03}>
+                <FenceSetupIcon />
+              </View>
+              <Text>Fence setup</Text>
             </View>
-            <Text>Fence setup</Text>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
         </View>
         {/* info_block */}
         <View style={styles.infoBlock}>
