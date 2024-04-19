@@ -41,13 +41,13 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="WelcomeScreen"
+        initialRouteName="Clearland"
         screenOptions={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Slide-in/slide-out animation
         }}
       >
-        <Stack.Screen name="splashScreen" component={SplashScreen} />
+        {/* <Stack.Screen name="splashScreen" component={SplashScreen} />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
@@ -73,13 +73,13 @@ const App = () => {
         <Stack.Screen
           name="FertilizationDetails"
           component={FertilizationDetails}
-        />
+        /> */}
 
         <Stack.Screen name="Clearland" component={Clearland} />
 
         <Stack.Screen name="EffortOutput" component={EffortOutput} />
 
-        <Stack.Screen name="testScreen" component={testScreen} />
+        {/* <Stack.Screen name="testScreen" component={testScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -27,6 +27,7 @@ import { useNavigation } from "@react-navigation/native";
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
 import axios from "axios";
+import { responsiveFontSize, responsiveHeight, responsiveScreenFontSize, responsiveWidth } from "react-native-responsive-dimensions";
 
 export default function ClearLand() {
   const [text, setText] = React.useState("");
@@ -96,7 +97,7 @@ export default function ClearLand() {
     { label: 'High', value: 'High' },
   ];
 
-  /*display*/
+  /display/
 
   const [displayValues, setDisplayValues] = useState([]);
 
@@ -156,7 +157,7 @@ export default function ClearLand() {
 
 const postData = async () => {
   try {
-    const response = await axios.post("http://10.10.0.153:5000/api/clearLand/clearLand", {
+    const response = await axios.post("http://192.168.8.173:5000/api/clearLand/clearLand", {
       pressed,
       plantTypeSelectedValue,
       plantCount,
@@ -226,17 +227,17 @@ const postData = async () => {
 
           {/* Weeds box */}
           <Card style={styles.card1}>
-            <Card.Content style={{ display: "flex", flexDirection: "row" }}>
+            <Card.Content style={styles.cardContent}>
               <MaterialCommunityIcons
                 name="sprout-outline"
                 size={20}
                 color="#65676B"
               />
-              <Text style={{ marginLeft: 5 }} variant="titleLarge">
+              <Text style={styles.cardTopText} variant="titleLarge">
                 Weeds
               </Text>
               <PaperProvider>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 5, marginTop: 5 }}>
+      <View style={styles.weedButton}>
         <Button
           style={[styles.button, pressed === 'low' && styles.pressedButton]}
           labelStyle={[styles.text, pressed === 'low' && styles.pressedText]}
@@ -269,10 +270,10 @@ const postData = async () => {
           {/* Plants box */}
           <Card style={styles.card1}>
             <Card.Content
-              style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
+              style={styles.cardContent}
             >
               <MaterialCommunityIcons name="sprout" size={20} color="#65676B" />
-              <Text style={{ marginLeft: 5 }} variant="titleLarge">
+              <Text style={styles.cardTopText} variant="titleLarge">
                 Plants
               </Text>
               <View style={styles.Dropdown1} >
@@ -283,15 +284,16 @@ const postData = async () => {
         value={plantTypeSelectedValue}
         style={{cursor: 'pointer', }}
        />
-    </View>
-              <Text style={{ marginTop: 30, marginLeft: 10, fontSize: 16 }}>
+    </View> 
+    <View style={{ display: "flex", flexDirection: "row",marginTop: responsiveHeight(3.5) }}>
+    <Text style={styles.countText}>
                 Count : {" "}
                 <View style={{ marginTop: -1 }}>
                   <TextInput
                     style={{
                       backgroundColor: "transparent",
                       height: 20,
-                      paddingHorizontal: 3,
+                      paddingHorizontal: 0,
                       width: 40,
                     }}
                     keyboardType="numeric"
@@ -301,10 +303,12 @@ const postData = async () => {
                     value={plantCount}
                     onChangeText={handlePlantCountChange}
                     placeholderTextColor={"#838383"}
-                    underlineStyle={{ width: 45, marginLeft: 5 }}
+                    underlineStyle={{ width: 45, marginLeft: 3 }}
                   />
                 </View>
               </Text>
+    </View>
+              
               <Button
                 style={styles.addButton}
                 labelStyle={styles.addButtonText}
@@ -339,13 +343,12 @@ const postData = async () => {
           {/* Stones box */}
           <Card style={styles.card1}>
             <Card.Content
-              style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
+              style={styles.cardContent}
             >
               <Image
-                style={{ marginRight: 5 }}
                 source={require("../../assets/Stones.png")}
               />
-              <Text style={{}} variant="titleLarge">
+              <Text style={styles.cardTopText} variant="titleLarge">
                 Stones
               </Text>
               <View style={styles.Dropdown1} >
@@ -356,7 +359,8 @@ const postData = async () => {
         value={stoneTypeSelectedValue}
       />
     </View>
-              <Text style={{ marginTop: 30, marginLeft: 10, fontSize: 16 }}>
+    <View style={{ display: "flex", flexDirection: "row",marginTop: responsiveHeight(3.5) }}>
+    <Text style={styles.countText}>
                 Count :{" "}
                 <View style={{ marginTop: -1 }}>
                   <TextInput
@@ -377,11 +381,13 @@ const postData = async () => {
                   />
                 </View>
               </Text>
+    </View>
+              
               <Button
                 style={styles.addButton}
                 labelStyle={styles.addButtonText}
                 buttonColor="#007BFF"
-                mode="contained"
+                mode="contained-tonal"
                 onPress={handleAdd1}
               >
                 Add
@@ -416,7 +422,7 @@ const postData = async () => {
                 size={20}
                 color="#65676B"
               />
-              <Text style={{ marginLeft: 5 }} variant="titleLarge">
+              <Text style={styles.cardTopText} variant="titleLarge">
                 Labors :
               </Text>
               <View style={{ marginTop: -5 }}>
@@ -448,7 +454,7 @@ const postData = async () => {
                 size={20}
                 color="#65676B"
               />
-              <Text style={{ marginLeft: 5 }} variant="titleLarge">
+              <Text style={styles.cardTopText} variant="titleLarge">
                 Work Hours :
               </Text>
               <View style={{ marginTop: -5 }}>
@@ -475,14 +481,14 @@ const postData = async () => {
           {/* Machinery box */}
           <Card style={styles.card3}>
             <Card.Content
-              style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
+              style={styles.cardContent}
             >
               <MaterialCommunityIcons
                 name="excavator"
                 size={20}
                 color="#65676B"
               />
-              <Text style={{ marginLeft: 5 }} variant="titleLarge">
+              <Text style={styles.cardTopText} variant="titleLarge">
                 Machinery
               </Text>
               <View
@@ -532,14 +538,7 @@ const postData = async () => {
                   />
                 </View>
                 <Button
-                  style={{
-                    width: 119,
-                    height: 35,
-                    borderRadius: 11,
-                    marginTop: 10,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
+                  style={styles.machineAddButton}
                   labelStyle={styles.addButtonText}
                   buttonColor="#007BFF"
                   mode="contained-tonal"
@@ -547,7 +546,6 @@ const postData = async () => {
                 >
                   Add
                 </Button>
-                {/* <Text>{searchItem}*{machineCount}</Text> */}
               </View>
             </Card.Content>
 
@@ -576,9 +574,9 @@ const postData = async () => {
             <CustomButton
               onPress={handleClear}
               text="Calculate"
-              iconName="calculator" // Change the icon name as needed
-              iconColor="white" // Change the color of the icon
-              buttonColor="#007BFF" // Change the background color of the button
+              iconName="calculator" 
+              iconColor="white" 
+              buttonColor="#007BFF" 
             />
           </View>
         </View>
@@ -590,116 +588,135 @@ const postData = async () => {
 const styles = StyleSheet.create({
   container2: {
     alignItems: "center",
+    flex: 1,
   },
 
   card1: {
     height: "max-content",
     borderRadius: 11,
-    marginTop: 10,
-    paddingBottom: 5,
+    marginTop: responsiveHeight(1),
+    paddingBottom: responsiveHeight(0.3),
     width: "93%",
     backgroundColor: "#fff",
+  },
+
+  weedButton: {
+    alignItems: "center",
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    marginTop: responsiveHeight(1),
+    marginBottom: responsiveHeight(-1),
+    marginLeft: responsiveWidth(2.6),
   },
   card2: {
     height: "max-content",
     justifyContent: "center",
-    marginTop: 10,
+    marginTop: responsiveHeight(1),
     width: "93%",
     backgroundColor: "#fff",
     borderRadius: 11,
+  },
+  countText: {
+    marginLeft: responsiveWidth(3.5), 
+    fontSize: responsiveFontSize(2.2)
   },
   card3: {
     height: "max-content",
-    marginTop: 10,
-    paddingBottom: 10,
+    marginTop: responsiveHeight(1),
+    paddingBottom: responsiveHeight(0.3),
     width: "93%",
     borderRadius: 11,
     backgroundColor: "#fff",
   },
+  cardTopText: {
+    marginLeft: responsiveWidth(1),
+  },
+  cardContent: {
+    display: "flex", 
+    flexDirection: "row", 
+    marginTop: responsiveHeight(-1),
+  },
   calButtton: {
-    marginTop: 10,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  placeholder: {
-    fontSize: 1,
+    marginTop: responsiveHeight(3),
+    width: "80%",
+    alignItems: "center",
   },
   Searchbar: {
     backgroundColor: "#F0F2F5",
-    height: 29,
-    width: 253,
+    height: responsiveHeight(4.5),
+    width: responsiveWidth(65),
   },
   addButton: {
-    width: 20,
-    height: 35,
+    width: responsiveWidth(15),
+    height: responsiveHeight(3.5),
     borderRadius: 11,
-    marginTop: 27,
-    marginLeft: 15,
+    marginTop: responsiveHeight(3.5),
+    marginLeft: responsiveWidth(4.5),
     justifyContent: "center",
     alignItems: "center",
   },
   addButtonText: {
     color: "#fff",
-    width: "80%",
-    height: 20,
+    width: "45%",
+    height: responsiveFontSize(2.5),
+    marginTop: responsiveHeight(0.4), 
+    marginBottom: responsiveHeight(1),
   },
 
   displayValuesContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginTop: 5,
+    marginTop: responsiveHeight(1),
     alignItems: "center",
     backgroundColor: "white",
     height: "max-content",
     borderRadius: 11,
+    width: "100%"
   },
   displayValueContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
     backgroundColor: "whitesmoke",
-    marginRight: 15,
-    marginLeft: 15,
-    marginBottom: 10,
+    marginRight: responsiveWidth(1.2),
+    marginLeft: responsiveWidth(1.2),
+    marginBottom: responsiveHeight(1),
     borderRadius: 8,
-    padding: 2,
+    padding: responsiveWidth(0.6),
     width: "25%",
     borderWidth: 1,
     borderColor: "#007BFF",
   },
   displayValueText: {
-    fontSize: 14,
-    marginRight: 5,
+    fontSize: responsiveFontSize(1.4),
+    marginRight: responsiveWidth(1),
     color: "#007BFF",
   },
   closeButton: {},
   closeButtonText: {
     color: "white",
-    fontSize: 14,
   },
   button: {
     borderColor: '#CED0D4',
     borderWidth: 1,
     backgroundColor: '#fff',
     borderRadius: 11,
-    width: 90,
-    height: 40,
-  
-    marginLeft: -70,
-    marginTop: 25,
-    padding: -10
+    width: responsiveWidth(25),
+    height: responsiveHeight(4.5),
+    marginLeft: responsiveWidth(-20),
+    marginTop: responsiveHeight(3), 
   },
   pressedButton: {
     borderColor: '#0866FF', 
   },
   text: {
-    marginLeft: 3,
-    marginRight: 3,
-    fontSize: 14,
+    marginLeft: responsiveScreenFontSize(0.2),
+    marginRight: responsiveFontSize(1),
+    fontSize: responsiveFontSize(1.8),
+    paddingVertical: responsiveHeight(0), // Adjust the vertical padding
+    paddingHorizontal: responsiveWidth(0), // Adjust the horizontal padding
+    marginTop: responsiveHeight(0.4), // Adjust the margin from the top
+    marginBottom: responsiveHeight(1), // Adjust the margin from the bottom
     color: '#CED0D4',
   },
   pressedText: {
@@ -709,11 +726,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F2F5',
     borderRadius: 10,
     width: '40%',
-    height: 30,
+    height: responsiveHeight(4),
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft:-60,
-    marginTop:30
+    marginLeft:responsiveWidth(-17),
+    marginTop:responsiveHeight(3.5)
     
   },
+  machineAddButton: {
+    width: responsiveWidth(30),
+    height: responsiveHeight(3.5),
+    borderRadius: 11,
+    marginTop: responsiveHeight(2),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+ 
 });
