@@ -5,16 +5,16 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Modal,
-  Platform,
+  Modal
 } from "react-native";
-import { IconButton, Avatar, Button, Icon } from "react-native-paper";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { IconButton, Avatar, Button, } from "react-native-paper";
+import { useNavigation, } from "@react-navigation/native";
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SelectionModal = ({
   profileModalVisible,
@@ -25,6 +25,11 @@ const SelectionModal = ({
     setProfileModalVisible(false);
   };
   const navigation = useNavigation();
+
+  const  handleSignOut =  () => {
+    AsyncStorage.removeItem('token');
+    navigation.navigate("Login");
+  }
 
   return (
     <Modal
@@ -75,13 +80,10 @@ const SelectionModal = ({
               mode="contained"
               style={styles.signoutButton}
               buttonColor="#007BFF"
+              onPress={handleSignOut}
             >
               Sign Out
             </Button>
-
-          
-
-           
           </View>
         </View>
       </View>
