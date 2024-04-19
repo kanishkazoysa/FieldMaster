@@ -192,7 +192,7 @@ export const styles = StyleSheet.create({
       backgroundColor: "#F0F2F5",
       borderRadius: 10,
       borderColor: "black",
-      width: "70%",
+      width: responsiveWidth(27),
       height: responsiveHeight(4.5),
       alignItems: "center",
       justifyContent: "center",
@@ -268,7 +268,7 @@ export const styles = StyleSheet.create({
       backgroundColor: "#0866FF",
       alignItems: "center",
       justifyContent: "center",
-      marginTop: responsiveHeight(1),
+      marginTop: responsiveHeight(2.5),
       borderRadius: 11,
     },
   

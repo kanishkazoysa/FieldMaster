@@ -9,7 +9,7 @@ import { PiSquareDuotone } from "react-icons/pi";
 
 import { styles } from "./fenceStyles";
 import Select from "react-select";
-import AxiosInstance from "../../../AxiosInstance";
+// import AxiosInstance from "../../../AxiosInstance";
 import axios from "axios";
 import FenceDetails from "../FenceDetails/fenceDetails";
 
@@ -111,7 +111,7 @@ export default function Fence({ onBackToSidebar }) {
 
       // Make POST request to the backend
       const response = await axios.post(
-        "http://192.168.8.130:5000/api/fence/fence",
+        "http://192.168.1.100:3000/api/fence/fence",
         requestData
       );
 
