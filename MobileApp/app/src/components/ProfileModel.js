@@ -1,5 +1,5 @@
 // SelectionModal.js
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -21,14 +21,26 @@ const SelectionModal = ({
   setProfileModalVisible,
   email,
 }) => {
+  const [loading, setLoading] = useState(false);
   const closeModal = () => {
     setProfileModalVisible(false);
   };
   const navigation = useNavigation();
 
-  const  handleSignOut =  () => {
-    AsyncStorage.removeItem('token');
-    navigation.navigate("Login");
+  const  handleSignOut = async () => {
+    setLoading(true);
+    await  AsyncStorage.removeItem('token');
+   
+ 
+
+     // Wait for 2 seconds before navigating to the login page
+     setTimeout(() => {
+      setLoading(false);
+      setProfileModalVisible(false);
+      navigation.navigate("Login");
+    }, 2000);
+
+
   }
 
   return (
@@ -81,6 +93,7 @@ const SelectionModal = ({
               style={styles.signoutButton}
               buttonColor="#007BFF"
               onPress={handleSignOut}
+              loading={loading}
             >
               Sign Out
             </Button>
