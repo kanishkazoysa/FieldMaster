@@ -86,10 +86,10 @@ export default function Fence({ onBackToSidebar }) {
   };
 
   const handleFenceDetails = async (e) => {
-    setCurrentPage("FenceDetails"); // Update this line
-    setAnimatePage(true);
-    e.preventDefault();
+    
     try {
+
+      
       // Validate required fields
       if (
         !PostSpaceUnitselectedValue ||
@@ -98,6 +98,10 @@ export default function Fence({ onBackToSidebar }) {
       ) {
         throw new Error("Please fill in all fields");
       }
+
+      setCurrentPage("FenceDetails"); // Update this line
+      setAnimatePage(true);
+      e.preventDefault();
 
       // Prepare data for the request
       const requestData = {
