@@ -16,7 +16,6 @@ import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
-import axios from "axios";
 import AxiosInstance from "../AxiosInstance";
 
 export default function Fertilization({ route }) {
@@ -24,9 +23,9 @@ export default function Fertilization({ route }) {
   const { numberOfPlants, PlantationDensity, plantType } = params;
   const navigation = useNavigation();
 
-  // useEffect(() => {
-  //   console.log("receiving" + numberOfPlants + " " + PlantationDensity + " " + plantType + " " + numberOfPlants);
-  // }, []);
+  useEffect(() => {
+    console.log("receiving" + numberOfPlants + " " + PlantationDensity + " " + plantType + " " + numberOfPlants);
+  }, []);
 
   const handleFertilizationDetails = async () => {
     if (!textFertilizationType || !textFertilizationNUmberoftime || !textFertilizationAmount || !FertilizerAmountUnitselectedValue || selectedButton === null) {

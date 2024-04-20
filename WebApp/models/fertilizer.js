@@ -17,9 +17,7 @@ const fertilizerSchema = mongoose.Schema(
         unit:{
             type: String,
         },
-        FertilizerAmountNeeded:{
-            type: String,
-        }
+      
     }
 ); 
 
