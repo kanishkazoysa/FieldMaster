@@ -123,11 +123,11 @@ const PointAddingScreen = ({ navigation, route }) => {
     const perimeterKilometers = perimeterMeters / 1000;
     console.log(points);
     /* the axios request is used to save the template */
-    AxiosInstance.post("/api/auth/mapTemplate/saveTemplate", {
-        locationPoints: points,
-        area: areaPerches,
-        perimeter: perimeterKilometers,
-      })
+    AxiosInstance.post('/api/auth/mapTemplate/saveTemplate', {
+      locationPoints: points,
+      area: areaPerches,
+      perimeter: perimeterKilometers,
+    })
       .then((response) => {
         console.log(response.data);
         navigation.navigate('SaveScreen', {
@@ -291,7 +291,7 @@ const PointAddingScreen = ({ navigation, route }) => {
             ref={mapRef}
             style={{ flex: 1, paddingTop: 100 }}
             region={region}
-            showsUserLocation={true}
+            showsUserLocation={false}
             onUserLocationChange={(event) => {
               const { latitude, longitude } = event.nativeEvent.coordinate;
               setRegion({
@@ -397,7 +397,7 @@ const PointAddingScreen = ({ navigation, route }) => {
               <Text style={styles.btmBtnStyle}>Save</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={handleClearPoints}
+              onPress={handleCancel}
               style={styles.cancelBtnStyle}
             >
               <Text style={styles.btmBtnStyle}>Cancel</Text>
