@@ -8,112 +8,147 @@ import {
   Text,
   FlatList,
 } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Polyline, Circle } from "react-native-maps";
+import MapView, {
+  PROVIDER_GOOGLE,
+  Polyline,
+  Marker,
+} from "react-native-maps";
 import * as Location from "expo-location";
-import * as TaskManager from "expo-task-manager"; // Import TaskManager
+import * as TaskManager from "expo-task-manager";
 import { useNavigation } from "@react-navigation/native";
 import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import area from "@turf/area";
 
-// Define the name of your background task
 const BACKGROUND_LOCATION_TASK = "background-location-task";
 
 export default function Home() {
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [initialLocation, setInitialLocation] = useState(null);
   const [pathCoordinates, setPathCoordinates] = useState([]);
   const [trackingStarted, setTrackingStarted] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [trackingPaused, setTrackingPaused] = useState(false);
+  const [drawPolyline, setDrawPolyline] = useState(false);
+  const [points, setPoints] = useState([]);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigation = useNavigation();
   const mapRef = useRef(null);
+  const [polygonArea, setPolygonArea] = useState(0); // Renamed state variable
 
-  // Handle background location updates
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
       console.error("Background location task error:", error);
       return;
     }
-  
+
     if (data) {
       const { locations } = data;
       console.log("Received background location update:", locations);
       if (trackingStarted) {
-        setPathCoordinates(prevCoordinates => {
-          if (prevCoordinates.length > 0) {
-            // Calculate the midpoint between the last point and the newly generated circle
-            const lastCoordinate = prevCoordinates[prevCoordinates.length - 1];
-            const newCoordinate = {
-              latitude: locations[0].coords.latitude,
-              longitude: locations[0].coords.longitude,
-            };
-
-            const midpoint = {
-              latitude: (lastCoordinate.latitude + newCoordinate.latitude) / 2,
-              longitude: (lastCoordinate.longitude + newCoordinate.longitude) / 2,
-            };
-
-            // Update pathCoordinates to start from the midpoint
-            return [...prevCoordinates, midpoint, newCoordinate];
-          } else {
-            return [{
-              latitude: locations[0].coords.latitude,
-              longitude: locations[0].coords.longitude,
-            }];
-          }
-        });
+        const newCoordinates = locations.map((location) => ({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          accuracy: location.coords.accuracy,
+        }));
+        setPathCoordinates((prevCoordinates) => [
+          ...prevCoordinates,
+          ...newCoordinates,
+        ]);
+        if (!trackingPaused) {
+          setCurrentLocation({
+            latitude: locations[0].coords.latitude,
+            longitude: locations[0].coords.longitude,
+            accuracy: locations[0].coords.accuracy,
+          });
+          focusOnCurrentLocation();
+        }
       }
+      setInitialLocation({
+        latitude: locations[0].coords.latitude,
+        longitude: locations[0].coords.longitude,
+        accuracy: locations[0].coords.accuracy,
+      });
     }
   });
 
-  useEffect(() => {
-    focusOnCurrentLocation();
-  }, []);
-
-  useEffect(() => {
-    if (trackingStarted) {
-      startLocationUpdates();
+  const handleStartPress = () => {
+    setTrackingPaused(!trackingPaused);
+    if (!trackingPaused) {
+      setDrawPolyline(true);
+      setPathCoordinates([initialLocation]);
     } else {
+      setTrackingStarted(false);
+      if (currentLocation) {
+        const lineCoordinates = [currentLocation, initialLocation];
+        setPathCoordinates((prevCoordinates) => [
+          ...prevCoordinates,
+          ...lineCoordinates,
+        ]);
+      }
       stopLocationUpdates();
     }
+    if (trackingPaused) {
+      setIsButtonDisabled(true);
+    }
+  };
+
+  useEffect(() => {
+    const startTracking = async () => {
+      try {
+        const { coords } = await Location.getCurrentPositionAsync({});
+
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          console.error("Foreground location permission not granted");
+          return;
+        }
+
+        await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
+          accuracy: Location.Accuracy.Highest,
+          timeInterval: 1000,
+          distanceInterval: 0,
+          showsBackgroundLocationIndicator: true,
+          foregroundService: {
+            notificationTitle: "Tracking location",
+            notificationBody:
+              "Your location is being tracked in the background",
+          },
+        });
+
+        setInitialLocation({
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+        });
+
+        setCurrentLocation({
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+        });
+
+        console.log("Background location updates started");
+        setTrackingStarted(true);
+      } catch (error) {
+        console.error("Error starting background location updates:", error);
+      }
+    };
+
+    startTracking();
 
     return () => {
       stopLocationUpdates();
     };
-  }, [trackingStarted]);
-
-  const startLocationUpdates = async () => {
-    try {
-      // Request foreground and background location permissions
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.error("Foreground location permission not granted");
-        return;
-      }
-
-      // Start the background location task
-      await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
-        accuracy: Location.Accuracy.BestForNavigation,
-        timeInterval: 1000, // Update every 1 second
-        distanceInterval: 0.5, // Update every 1 meter
-        foregroundService: {
-          notificationTitle: "Tracking location",
-          notificationBody: "Your location is being tracked in the background",
-        },
-      });
-
-      console.log("Background location updates started");
-    } catch (error) {
-      console.error("Error starting background location updates:", error);
-    }
-  };
+  }, []);
 
   const stopLocationUpdates = async () => {
     try {
-      // Check if the task is running before trying to stop it
-      const isTaskRunning = await TaskManager.isTaskRegisteredAsync(BACKGROUND_LOCATION_TASK);
+      const isTaskRunning = await TaskManager.isTaskRegisteredAsync(
+        BACKGROUND_LOCATION_TASK
+      );
       if (isTaskRunning) {
-        // Stop the background location task
         await Location.stopLocationUpdatesAsync(BACKGROUND_LOCATION_TASK);
         console.log("Background location updates stopped");
       }
@@ -131,37 +166,56 @@ export default function Home() {
     setShowDropdown(false);
   };
 
-  const focusOnCurrentLocation = async () => {
-    try {
-      const location = await Location.getCurrentPositionAsync({});
-      setCurrentLocation(location);
-      if (mapRef.current && location) {
-        mapRef.current.animateToRegion({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          latitudeDelta: 0.001,
-          longitudeDelta: 0.001,
-        });
-      }
-    } catch (error) {
-      console.error("Error getting current location:", error);
+  const focusOnCurrentLocation = () => {
+    if (mapRef.current && currentLocation) {
+      mapRef.current.animateToRegion({
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.00009,
+      });
     }
   };
 
-  const toggleTracking = async () => {
-    if (trackingStarted) {
-      await stopLocationUpdates();
-      setTrackingStarted(false);
-    } else {
-      setTrackingStarted(true);
-    }
-  };
   const mapTypes = [
-    { name: "Standard", value: "standard" },
     { name: "Satellite", value: "satellite" },
+    { name: "Standard", value: "standard" },
     { name: "Hybrid", value: "hybrid" },
     { name: "Terrain", value: "terrain" },
   ];
+
+  const addPoint = () => {
+    if (pathCoordinates.length > 0) {
+      const latestLocation = pathCoordinates[pathCoordinates.length - 1];
+      setPoints((prevPoints) => [...prevPoints, latestLocation]);
+    }
+  };
+
+  const saveMapData = async () => {
+    const polygon = {
+      type: "Polygon",
+      coordinates: [pathCoordinates.map((coord) => [coord.longitude, coord.latitude])],
+    };
+    const polygonArea = calculatePolygonArea(polygon);
+    setPolygonArea(polygonArea);
+    try {
+      const response = await axios.post(
+        "http://192.168.1.104:5000/api/polyline/save",
+        { coordinates: pathCoordinates,
+          area: polygonArea
+        }
+      );
+      console.log(response.data);
+      navigation.navigate("SaveScreen");
+    } catch (error) {
+      console.error("Error saving polyline data:", error);
+    }
+  };
+
+  const calculatePolygonArea = (polygon) => {
+    return area(polygon);
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
@@ -173,7 +227,7 @@ export default function Home() {
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate("SaveScreen")}
+          onPress={saveMapData}
           style={[styles.appbarButton, { marginLeft: "auto" }]}
         >
           <Text style={styles.buttonText}>Save</Text>
@@ -183,6 +237,7 @@ export default function Home() {
         ref={mapRef}
         style={styles.map}
         mapType={mapTypes[mapTypeIndex].value}
+        showsUserLocation={trackingStarted}
         provider={PROVIDER_GOOGLE}
         initialRegion={{
           latitude: 6.2427,
@@ -191,35 +246,16 @@ export default function Home() {
           longitudeDelta: 0.0421,
         }}
       >
-        {currentLocation && (
-          <Circle
-            center={{
-              latitude: currentLocation.coords.latitude,
-              longitude: currentLocation.coords.longitude,
-            }}
-            radius={2} // Adjust radius as needed
-            strokeColor="#000"
-            fillColor="#007BFF" // Semi-transparent red
-          />
-        )}
-        {trackingStarted && pathCoordinates.length > 0 && (
-          <Circle
-            center={{
-              latitude: pathCoordinates[pathCoordinates.length - 1].latitude,
-              longitude: pathCoordinates[pathCoordinates.length - 1].longitude,
-            }}
-            radius={2} // Adjust radius as needed
-            strokeColor="#000"
-            fillColor="rgba(255, 0, 0, 0.5)" // Semi-transparent red
-          />
-        )}
-        {pathCoordinates.length > 0 && (
+        {drawPolyline && pathCoordinates.length > 0 && (
           <Polyline
             coordinates={pathCoordinates}
-            strokeColor="#0000FF" // Blue color
             strokeWidth={2}
+            strokeColor="blue"
           />
         )}
+        {points.map((point, index) => (
+          <Marker key={index} coordinate={point} pinColor="red" />
+        ))}
       </MapView>
 
       <TouchableOpacity
@@ -248,13 +284,13 @@ export default function Home() {
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
           <Button
-            buttonColor="#007BFF"
-            icon={trackingStarted ? "stop" : "play-outline"}
+            buttonColor={isButtonDisabled ? "#007BFFA" : "#007BFF"}
+            icon="play-outline"
             mode="contained"
-            onPress={toggleTracking}
+            onPress={isButtonDisabled ? null : handleStartPress}
             style={styles.button}
           >
-            {trackingStarted ? "Stop" : "Start"}
+            {trackingPaused ? "Pause" : "Start"}
           </Button>
         </View>
         <View style={styles.buttonWrapper}>
@@ -262,7 +298,7 @@ export default function Home() {
             buttonColor="#007BFF"
             icon="content-save-all"
             mode="contained"
-            onPress={() => console.log("Right Button Pressed")}
+            onPress={addPoint}
             style={styles.button}
           >
             Add Points
@@ -281,7 +317,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     right: 10,
     top: Platform.OS === "android" ? "15%" : "18%",
-    transform: [{ translateY: -12 }], // Adjust translateY to vertically center the icon
+    transform: [{ translateY: -12 }],
     zIndex: 1,
     flexDirection: "row",
     alignItems: "center",

@@ -16,7 +16,6 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.kanishkazoysa.fieldmaster",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "This app needs access to location when open.",
         "UIBackgroundModes": ["location"]
       }
     },
@@ -26,7 +25,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.kanishkazoysa.fieldmaster",
-      "permissions": ["ACCESS_FINE_LOCATION"]
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_BACKGROUND_LOCATION"]
     },
     "web": {
       "config": {

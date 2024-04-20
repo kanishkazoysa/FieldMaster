@@ -22,7 +22,7 @@ const SplashScreen = ({ navigation }) => {
     <View style={styles.container}>
     <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <Animatable.Image 
-        source={require("../images/logo.png")} 
+        source={require("../../images/logo.png")} 
         style={styles.image} 
         duration={2000}
         animation="zoomIn"

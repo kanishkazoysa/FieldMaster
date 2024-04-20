@@ -11,12 +11,18 @@ const fenceSchema = mongoose.Schema(
         PostSpaceUnit: {
             type: String,
         },
-        Gatelength: {
+        Gatelength: [{
             type: String,
-        },
-        NumberofGates: {
+        }],
+        NumberofGates: [{
             type: String,
+        }],
+        NumberofSticks: {
+            type: Number,
         },
+        GateDetails: [{
+            type: String,
+        }],
     }
 ); 
 

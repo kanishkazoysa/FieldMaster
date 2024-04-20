@@ -7,7 +7,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert, // Import Alert
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -15,39 +15,38 @@ import {
   responsiveFontSize,
   responsiveWidth,
 } from "react-native-responsive-dimensions";
-import { Appbar, TextInput,Button } from "react-native-paper";
-import axios from "axios";
+import { Appbar, TextInput, Button } from "react-native-paper";
+import AxiosInstance from "../../AxiosInstance";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
 
   const handleForgotPassword = async () => {
-    try {
-      if (!email) {
-        Alert.alert("Please fill in all fields");
-        return;
-      }
-
-      const response = await fetch("http://10.10.1.130:5000/api/mail/otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      if (response.status === 200) {
-        const data = await response.json();
-        Alert.alert("OTP sent successfully");
-        navigation.navigate("Otp", { email, Otp: data.otp});
-      } else {
-        const data = await response.json();
-        Alert.alert("Error", data.error || "Something went wrong");
-      }
-    } catch (error) {
-      Alert.alert("Error", "Internal Server Error");
+    if (!email) {
+      Alert.alert("Please fill in all fields");
+      return;
     }
+
+    AxiosInstance.post("/api/mail/otp", { email })
+      .then(async (response) => {
+        if (response.status == 200) {
+          const data = await response.data.otp;
+          Alert.alert("OTP sent successfully");
+          navigation.navigate("Otp", { email, Otp: data });
+        } else {
+          Alert.alert("Error", data.error || "Something went wrong");
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 400) {
+          Alert.alert("Error", err.response.data.error);
+          return;
+        }else{
+          Alert.alert("Error", "An error occurred while sending OTP");
+        }
+      
+      });
   };
 
   const dismissKeyboard = () => {
@@ -57,13 +56,13 @@ export default function ForgotPassword() {
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-      <Appbar.Header style={styles.header} >
-        <Appbar.BackAction
-          onPress={() => navigation.goBack()}
-          color="white"
-        />
-      </Appbar.Header>
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <Appbar.Header style={styles.header}>
+          <Appbar.BackAction
+            onPress={() => navigation.goBack()}
+            color="white"
+          />
+        </Appbar.Header>
 
         <View style={styles.Content}>
           <View style={styles.headerContainer}>
@@ -74,19 +73,23 @@ export default function ForgotPassword() {
           </View>
 
           <View style={styles.field}>
-          <TextInput
-          label="email"
-          mode="outlined"
-          outlineColor="#d9d7d2"
-          activeOutlineColor="#007BFF"
-          width={responsiveWidth(85)}
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
+            <TextInput
+              label="email"
+              mode="outlined"
+              outlineColor="#d9d7d2"
+              activeOutlineColor="#007BFF"
+              width={responsiveWidth(85)}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
           </View>
 
-          <Button mode="contained" onPress={handleForgotPassword} style={styles.button}>
-          Continue
+          <Button
+            mode="contained"
+            onPress={handleForgotPassword}
+            style={styles.button}
+          >
+            Continue
           </Button>
         </View>
       </View>
@@ -95,18 +98,17 @@ export default function ForgotPassword() {
 }
 
 const styles = StyleSheet.create({
-
   header: {
     height: 50,
     backgroundColor: "#007BFF",
-    
+
     ...Platform.select({
       android: {
         marginTop: StatusBar.currentHeight,
       },
     }),
   },
-  
+
   headerContainer: {
     width: "90%",
   },
@@ -138,8 +140,8 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: responsiveHeight(5),
-       backgroundColor: "#007BFF",
-       width: 337,
-       padding: 2,
+    backgroundColor: "#007BFF",
+    width: 337,
+    padding: 2,
   },
 });

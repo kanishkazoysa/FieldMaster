@@ -2,6 +2,7 @@ const dotenv = require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const bodyParser = require('body-parser');
+const middleware = require("./middleware/middleware");
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(express.json());
 
+app.use("/api/auth/*", middleware);
 app.use("/api/users", userRoute);
 app.use("/api/mail", mailRoute);
 app.use("/api/plantation", plantationRoute);
@@ -28,4 +30,4 @@ if (process.env.NODE_ENV == "production") {
   app.use(express.static("client/build"));
 }
 
-app.listen(port, () => console.log("Node Server Started using Nodemon!"));
+app.listen(port, () => console.log("Node Server Started using Nodemon!0 "));

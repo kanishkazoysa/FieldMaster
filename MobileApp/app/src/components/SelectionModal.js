@@ -11,16 +11,12 @@ const SelectionModal = ({ modalVisible, setModalVisible, options  }) => {
   const [calculatorModalVisible, setCalculatorModalVisible] = useState(false);
   const navigation = useNavigation();
 
- 
-
   const handleOptionClick = (option, index) => {
     if (index === 0) {
       navigation.navigate("WalkaroundLand");
     }
-    if (index === 2) {
-     
+    if (index === 2) { 
         setCalculatorModalVisible(true);
-      
     }
     closeModal();
   };

@@ -16,58 +16,52 @@ import {
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 import { Appbar, Button, TextInput } from "react-native-paper";
-import axios from "axios";
+import AxiosInstance from "../../AxiosInstance";
 
 export default function ForgotPassword({ route }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigation = useNavigation();
   const { email } = route.params;
+  const [passwordError, setPasswordError] = useState("");
 
   const handleChangePassword = async () => {
-    try {
-      if (!newPassword || !confirmPassword) {
-        Alert.alert("Error", "Please fill in all fields");
-        return;
-      }
-      if (!(newPassword === confirmPassword)) {
-        Alert.alert("Error", "Passwords do not match");
-        return;
-      }
-      const response = await fetch('http://10.10.1.130:5000/api/users/change-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          newPassword: newPassword,
-        }
-        ),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        Alert.alert(
-          "Password Changed Successfully",
-          "Your password has been changed successfully.",
-          [
-            {
-              text: "OK",
-              onPress: () => {
-                navigation.navigate("Login");
-              },
-            },
-          ],
-          { cancelable: false }
-        );
-      } else {
-        Alert.alert("Error", data.error || "Password change failed.");
-      }
-    } catch {
-      Alert.alert("Error", "An error occurred while changing password");
+    if (!newPassword || !confirmPassword) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
     }
+    if (!(newPassword === confirmPassword)) {
+      Alert.alert("Error", "Passwords do not match");
+      return;
+    }
+
+    if (newPassword.length < 8 && confirmPassword.length < 8) {
+      setPasswordError("Password must be at least 8 characters long");
+      return;
+    }
+
+    AxiosInstance.post("/api/users/change-password", { email, newPassword })
+      .then((response) => {
+        if (response.status === 200) {
+          Alert.alert(
+            "Password Changed Successfully",
+            "Your password has been changed successfully.",
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  navigation.navigate("Login");
+                },
+              },
+            ],
+            { cancelable: false }
+          );
+        }
+      })
+      .catch((err) => {
+        const data = err.response.data;
+        Alert.alert("Error", "An error occurred while changing password");
+      });
   };
 
   const dismissKeyboard = () => {
@@ -102,6 +96,9 @@ export default function ForgotPassword({ route }) {
                 value={newPassword}
                 onChangeText={(text) => setNewPassword(text)}
               />
+              {passwordError ? (
+                <Text style={styles.errorText}>{passwordError}</Text>
+              ) : null}
             </View>
 
             <TextInput
@@ -113,6 +110,9 @@ export default function ForgotPassword({ route }) {
               value={confirmPassword}
               onChangeText={(text) => setConfirmPassword(text)}
             />
+            {passwordError ? (
+              <Text style={styles.errorText}>{passwordError}</Text>
+            ) : null}
           </View>
 
           <Button
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   staticSection: {
     height:
-      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
+      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10),
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
@@ -173,5 +173,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#007BFF",
     width: 337,
     padding: 2,
+  },
+  errorText: {
+    color: "red",
+    marginLeft: 10,
   },
 });

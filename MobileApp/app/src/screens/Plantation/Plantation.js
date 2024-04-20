@@ -15,8 +15,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 
-import Headersection from "../components/Headersection";
-import CustomButton from "../components/CustomButton";
+import Headersection from "../../components/Headersection";
+import CustomButton from "../../components/CustomButton";
 
 //Data submission to the backend API is implemented using axios
 import axios from "axios";

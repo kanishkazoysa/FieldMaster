@@ -20,9 +20,9 @@ import {
   
   import * as Print from 'expo-print';
   import { shareAsync } from 'expo-sharing';
-  import Headersection from "../components/Headersection";
-  import AlertButton from "../components/AlertButton";
-  import CustomButton from "../components/CustomButton";
+  import Headersection from "../../components/Headersection";
+  import AlertButton from "../../components/AlertButton";
+  import CustomButton from "../../components/CustomButton";
   
   export default function EffortOutput({ route }) {
     const { laborCount,workHours,machineCount,plantCount,stonesCount } = route.params;
@@ -176,7 +176,7 @@ import {
                 <View style={{ display: "flex", flexDirection: "row" }}>
                   <Image
                     style={{ marginLeft: 20, marginTop: 30 }}
-                    source={require("../../assets/Clock.png")}
+                    source={require("../../../assets/Clock.png")}
                   ></Image>
                   <View style={{ display: "flex", flexDirection: "column" }}>
                     <Text style={{ marginTop: 25, fontSize: 15, marginLeft: 5 }}>
@@ -195,7 +195,7 @@ import {
                 >
                   <Image
                     style={{ marginLeft: 170, marginTop: -35 }}
-                    source={require("../../assets/Calendar.png")}
+                    source={require("../../../assets/Calendar.png")}
                   ></Image>
                   <View style={{ display: "flex", flexDirection: "column" }}>
                     <Text style={{ marginTop: -40, fontSize: 15, marginLeft: 5 }}>
@@ -222,7 +222,7 @@ import {
                 <View style={{ display: "flex", flexDirection: "row" }}>
                   <Image
                     style={{ marginLeft: 20, marginTop: 30 }}
-                    source={require("../../assets/Perimeter.png")}
+                    source={require("../../../assets/Perimeter.png")}
                   ></Image>
                   <View style={{ display: "flex", flexDirection: "column" }}>
                     <Text style={{ marginTop: 25, fontSize: 15, marginLeft: 5 }}>
@@ -241,7 +241,7 @@ import {
                 >
                   <Image
                     style={{ marginLeft: 170, marginTop: -35 }}
-                    source={require("../../assets/Calendar.png")}
+                    source={require("../../../assets/Calendar.png")}
                   ></Image>
                   <View style={{ display: "flex", flexDirection: "column" }}>
                     <Text style={{ marginTop: -40, fontSize: 15, marginLeft: 5 }}>
