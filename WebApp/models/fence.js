@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const fenceSchema = mongoose.Schema({
-  itemId: {
+  templateId: {
     type: String,
   },
   FenceType: {

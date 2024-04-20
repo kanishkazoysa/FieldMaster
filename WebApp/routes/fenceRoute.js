@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const fenceModel = require('../models/fence');
-
 router.post('/auth/fence', async (req, res) => {
   console.log('Fence Route', req.userId);
   const {
+    templateId,
     FenceTypeselectedValue,
     inputValuePostspace,
     PostSpaceUnitselectedValue,
@@ -14,6 +14,7 @@ router.post('/auth/fence', async (req, res) => {
 
   try {
     const newfence = new fenceModel({
+      templateId: templateId,
       FenceType: FenceTypeselectedValue,
       PostSpace: inputValuePostspace,
       PostSpaceUnit: PostSpaceUnitselectedValue,
