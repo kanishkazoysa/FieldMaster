@@ -8,11 +8,7 @@ import {
   Text,
   FlatList,
 } from "react-native";
-import MapView, {
-  PROVIDER_GOOGLE,
-  Polyline,
-  Marker,
-} from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import { useNavigation } from "@react-navigation/native";
@@ -21,7 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import area from "@turf/area";
 import AxiosInstance from "../AxiosInstance";
-import { distance } from '@turf/turf';
+import { distance } from "@turf/turf";
 import {
   responsiveHeight,
   responsiveWidth,
@@ -44,6 +40,8 @@ export default function Home() {
   const navigation = useNavigation();
   const mapRef = useRef(null);
   const [polygonArea, setPolygonArea] = useState(0); // Renamed state variable
+  const [calculatedArea, setCalculatedArea] = useState(0);
+  const [calculatedPerimeter, setCalculatedPerimeter] = useState(0);
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -88,6 +86,8 @@ export default function Home() {
       setPathCoordinates([initialLocation]);
     } else {
       setTrackingStarted(false);
+      calculateAreaAndPerimeter();
+
       if (currentLocation) {
         const lineCoordinates = [currentLocation, initialLocation];
         setPathCoordinates((prevCoordinates) => [
@@ -197,49 +197,57 @@ export default function Home() {
     }
   };
 
-  const saveMapData = async () => {
+  const calculateAreaAndPerimeter = () => {
     const polygon = {
       type: "Polygon",
-      coordinates: [pathCoordinates.map((coord) => [coord.longitude, coord.latitude])],
+      coordinates: [
+        pathCoordinates.map((coord) => [coord.longitude, coord.latitude]),
+      ],
     };
-    const polygonArea = calculatePolygonArea(polygon);
-    setPolygonArea(polygonArea);
+    const polygonArea = area(polygon);
+    setCalculatedArea(polygonArea);
 
     let polygonPerimeter = 0;
     for (let i = 0; i < pathCoordinates.length - 1; i++) {
-      const point1 = [pathCoordinates[i].longitude, pathCoordinates[i].latitude];
-      const point2 = [pathCoordinates[i + 1].longitude, pathCoordinates[i + 1].latitude];
-      polygonPerimeter += distance(point1, point2, {units: 'kilometers'});
+      const point1 = [
+        pathCoordinates[i].longitude,
+        pathCoordinates[i].latitude,
+      ];
+      const point2 = [
+        pathCoordinates[i + 1].longitude,
+        pathCoordinates[i + 1].latitude,
+      ];
+      polygonPerimeter += distance(point1, point2, { units: "kilometers" });
     }
     // Add the distance between the last point and the first point to close the polygon
     const point1 = [pathCoordinates[0].longitude, pathCoordinates[0].latitude];
-    const point2 = [pathCoordinates[pathCoordinates.length - 1].longitude, pathCoordinates[pathCoordinates.length - 1].latitude];
-    polygonPerimeter += distance(point1, point2, {units: 'kilometers'});
-  
-      AxiosInstance.post(
-        "/api/auth/mapTemplate/saveTemplate",
-        { 
-          locationPoints: pathCoordinates,
-          area: polygonArea,
-          perimeter: polygonPerimeter 
-        }
-      )
-          .then((response) => {
-            console.log(response.data._id);
-            navigation.navigate('SaveScreen', {
-              id: response.data._id,
-              area:polygonArea,
-              perimeter: polygonPerimeter,
-              userId: response.data.userId,
-            });
-          })
-          .catch((error) => {
-            console.error(error.response.data);
-          });
+    const point2 = [
+      pathCoordinates[pathCoordinates.length - 1].longitude,
+      pathCoordinates[pathCoordinates.length - 1].latitude,
+    ];
+    polygonPerimeter += distance(point1, point2, { units: "kilometers" });
+
+    setCalculatedPerimeter(polygonPerimeter);
   };
 
-  const calculatePolygonArea = (polygon) => {
-    return area(polygon);
+  const saveMapData = async () => {
+    AxiosInstance.post("/api/auth/mapTemplate/saveTemplate", {
+      locationPoints: pathCoordinates,
+      area: polygonArea,
+      perimeter: polygonPerimeter,
+    })
+      .then((response) => {
+        console.log(response.data._id);
+        navigation.navigate("SaveScreen", {
+          id: response.data._id,
+          area: polygonArea,
+          perimeter: polygonPerimeter,
+          userId: response.data.userId,
+        });
+      })
+      .catch((error) => {
+        console.error(error.response.data);
+      });
   };
 
   return (
@@ -259,6 +267,17 @@ export default function Home() {
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
       </Appbar.Header>
+
+      
+        <View style={styles.overlay}>
+          <Text style={styles.overlayText}>
+            Area: {calculatedArea.toFixed(2)} sq units
+          </Text>
+          <Text style={styles.overlayText}>
+            Perimeter: {calculatedPerimeter.toFixed(2)} km
+          </Text>
+        </View>
+     
       <MapView
         ref={mapRef}
         style={styles.map}
@@ -310,10 +329,9 @@ export default function Home() {
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
           <Button
-            buttonColor={isButtonDisabled ? "#007BFFA" : "#007BFF"}
-            icon="play-outline"
+            icon={trackingPaused ? "pause" : "play-outline"}
             mode="contained"
-            onPress={isButtonDisabled ? null : handleStartPress}
+            onPress={handleStartPress}
             style={styles.button}
           >
             {trackingPaused ? "Pause" : "Start"}
@@ -321,7 +339,6 @@ export default function Home() {
         </View>
         <View style={styles.buttonWrapper}>
           <Button
-            buttonColor="#007BFF"
             icon="content-save-all"
             mode="contained"
             onPress={addPoint}
@@ -337,20 +354,20 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   layerIconContainer: {
-    position: 'absolute',
-    backgroundColor: 'rgba(0,0,0, 0.7)',
+    position: "absolute",
+    backgroundColor: "rgba(0,0,0, 0.7)",
     padding: responsiveHeight(1.2),
     borderRadius: 5,
-    right: responsiveWidth(3),
-    top: responsiveHeight(20),
+    left: responsiveWidth(5),
+    top: responsiveHeight(78),
     zIndex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   dropdownContainer: {
     position: "absolute",
-    top: 0,
-    right: 50,
+    left: 50,
+    top: -120,
     backgroundColor: "rgba(0,0,0, 0.7)",
     borderRadius: 5,
     elevation: 3,
@@ -361,6 +378,19 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+  },
+  overlay: {
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "rgba(0,0,0, 0.7)",
+    justifyContent: "center", 
+    alignItems: "center",
+    padding: 5,
+  },
+  overlayText: {
+    color: "#fff",
+    fontSize: 16,
+    marginHorizontal: 20,
   },
   dropdownItem: {
     padding: 10,
@@ -404,6 +434,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   button: {
+    backgroundColor: "#007BFF",
     flex: 1,
   },
 });
