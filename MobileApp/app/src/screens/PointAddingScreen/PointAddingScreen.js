@@ -19,8 +19,9 @@ import * as Location from 'expo-location';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import AxiosInstance from '../../AxiosInstance';
-
+import { RFValue } from 'react-native-responsive-fontsize';
 const PointAddingScreen = ({ navigation, route }) => {
+  const [showUserLocation, setShowUserLocation] = useState(false);
   const [isPolygonComplete, setIsPolygonComplete] = useState(false);
   const [region, setRegion] = useState(null);
   const [locationPoints, setLocationPoints] = useState([]);
@@ -57,6 +58,7 @@ const PointAddingScreen = ({ navigation, route }) => {
           latitudeDelta: 0.0005,
           longitudeDelta: 0.0005,
         });
+        setShowUserLocation(true); // Set showUserLocation to true
       }
       return newShowCurrentLocation;
     });
@@ -278,12 +280,6 @@ const PointAddingScreen = ({ navigation, route }) => {
           </View>
         </View>
       </Modal>
-      <View>
-        <Appbar.Header style={{ backgroundColor: '#0866FF' }}>
-          <Appbar.BackAction color='#ffffff' onPress={handleCancel} />
-          <Appbar.Content title='Create Map' color='#ffffff' />
-        </Appbar.Header>
-      </View>
       {/* including map view */}
       {region && (
         <View style={{ flex: 1 }}>
@@ -291,7 +287,7 @@ const PointAddingScreen = ({ navigation, route }) => {
             ref={mapRef}
             style={{ flex: 1, paddingTop: 100 }}
             region={region}
-            showsUserLocation={false}
+            showsUserLocation={showUserLocation}
             onUserLocationChange={(event) => {
               const { latitude, longitude } = event.nativeEvent.coordinate;
               setRegion({
