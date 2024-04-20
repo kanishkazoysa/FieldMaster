@@ -14,15 +14,18 @@ import ContactForm from './components/HomeComponents/contact/contact';
 import './index.css';
 import { Carousel } from 'bootstrap';
 import plantation from './pages/plantation';
+import Home from "./pages/Home";
+import EmailVerified from "./pages/EmailVerified"
 export default function App() {
   return (
     <Router>
       <Routes>
         {/* Route for the main content */}
         <Route path='/' element={<MainContent />} />
-
+        <Route path="/Home" element={<Home />} />
+        <Route path="/emailVerification" element={<EmailVerified />} />
         {/* Route for the new page */}
-        {/*<Route path='/newpage' element={<plantation />} />*/}
+        {/* {/<Route path='/newpage' element={<plantation />} />/} */}
       </Routes>
     </Router>
   );
