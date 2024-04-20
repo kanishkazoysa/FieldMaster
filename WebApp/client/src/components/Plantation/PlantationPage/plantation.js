@@ -1,7 +1,8 @@
 // SideNavbar.js
 import React, { useState, useRef } from "react";
-import { FaBars} from "react-icons/fa";
-import { MdArrowBack, MdFence } from "react-icons/md";
+import { MdArrowBack, MdFormatLineSpacing } from "react-icons/md";
+import { RxRowSpacing } from "react-icons/rx";
+import { PiTreeEvergreenFill } from "react-icons/pi";
 import {  BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
 
@@ -138,7 +139,7 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
 {/* box 2 */}
           <div style={styles.box2}>
             <div style={styles.box2Property}>
-              <MdFence name="gate" size={35} color="gray" />
+              <PiTreeEvergreenFill name="plant" size={35} color="gray" />
               <div style={styles.box2PropertyDetails}>
                 <p style={styles.Box2PropertyLabel}>Plant</p>
               </div>
@@ -158,7 +159,7 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
           <div style={styles.box3}>
             <div style={styles.box3Property}>
               <div style={{ transform: "rotate(90deg)" }}>
-                <FaBars name="format-line-spacing" size={25} color="gray" />
+                <RxRowSpacing name="format-line-spacing" size={25} color="gray" />
               </div>
               <div style={styles.box3PropertyDetails}>
                 <p style={styles.Box3PropertyLabel}>Plant Spacing</p>
@@ -197,7 +198,7 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
           <div style={styles.box3}>
             <div style={styles.box3Property}>
               <div style={{ transform: "rotate(90deg)" }}>
-                <FaBars name="format-line-spacing" size={25} color="gray" />
+                <MdFormatLineSpacing name="format-row-spacing" size={25} color="gray" />
               </div>
               <div style={styles.box3PropertyDetails}>
                 <p style={styles.Box3PropertyLabel}>Row Spacing</p>
