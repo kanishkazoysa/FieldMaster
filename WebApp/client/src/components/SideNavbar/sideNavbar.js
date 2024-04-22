@@ -37,7 +37,7 @@ export default function SideNavbar() {
   };
 
   const handleSavedTemplatesClick = () => {
-    setCurrentPage('PlantationDetails'); 
+    setCurrentPage('Plantation'); 
     setAnimatePage(true);
   };
 
@@ -98,7 +98,7 @@ export default function SideNavbar() {
         }}
       >
         {currentPage === 'StartMeasure' && <StartMeasurePage onBackToSidebar={handleBackClick} />}
-        {currentPage === 'PlantationDetails' && <PlantationDetails onBackToSidebar={handleBackClick} />}
+        {currentPage === 'Plantation' && <Plantation onBackToSidebar={handleBackClick} />}
       </div>
       </div>
     </Sidebar>

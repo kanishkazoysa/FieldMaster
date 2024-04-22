@@ -49,8 +49,6 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
     setRowSpaceUnitselectedValue1(selectedOption);
     setRowSpaceUnitselectedValue(selectedOption.value);
   };
-
-
  
   const handlePlantationDetails = async (e) => {
     
@@ -252,7 +250,7 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === "PlantationDetails" && (
+        {currentPage === "plantationDetails" && (
           <plantationDetails
             onBackToSidebar={handleBackClick}
             inputValuePlantspace={inputValuePlantspace}

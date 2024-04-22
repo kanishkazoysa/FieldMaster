@@ -1,8 +1,6 @@
 // SideNavbar.js
 import React from "react";
 import { useState, useEffect } from "react";
-import { HiMiniBars4 } from "react-icons/hi2";
-import { TbArrowBarBoth, TbBarrierBlock, TbFence } from "react-icons/tb";
 import { MdArrowBack } from "react-icons/md";
 import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
@@ -62,7 +60,7 @@ export default function PlantationDetails({
             </div>
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Plant count</p>
-              <p style={styles.propertyValue}>{numberOfPlants} 100 Plants</p>
+              <p style={styles.propertyValue}>{numberOfPlants} Plants</p>
             </div>
           </div>
           <div className="property" style={styles.property}>
@@ -70,7 +68,7 @@ export default function PlantationDetails({
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Plant Density</p>
               <p style={styles.propertyValue}>
-                {inputValuePlantspace} {PlantSpaceUnitselectedValue} 2.5/sq m
+                {numberOfPlants} / m<sup>2</sup>
               </p>
             </div>
           </div>
@@ -110,7 +108,7 @@ export default function PlantationDetails({
             
           </div>
           <div style={styles.innersquareright}>
-            <p style={styles.propertyLabel}>{PlantTypeselectedValue}: Tea</p>
+            <p style={styles.propertyLabel}>: {PlantTypeselectedValue}</p>
           </div>
         </div>
 
@@ -123,7 +121,7 @@ export default function PlantationDetails({
             
           </div>
           <div style={styles.innersquareright}>
-            <p style={styles.propertyLabel}>{PlantTypeselectedValue}: Tea</p>
+            <p style={styles.propertyLabel}>: {inputValuePlantspace}{PlantSpaceUnitselectedValue}</p>
           </div>
         </div>
 
@@ -136,7 +134,7 @@ export default function PlantationDetails({
             
           </div>
           <div style={styles.innersquareright}>
-            <p style={styles.propertyLabel}>{PlantTypeselectedValue}: Tea</p>
+            <p style={styles.propertyLabel}>: {inputValueRowSpace}{RowSpaceUnitselectedValue}</p>
           </div>
         </div>
 
