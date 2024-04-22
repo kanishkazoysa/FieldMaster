@@ -66,7 +66,7 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
         throw new Error("Please fill in all fields");
       }
 
-      setCurrentPage("PlantationDetails"); // Update this line
+      setCurrentPage("plantationDetails"); 
       setAnimatePage(true);
       e.preventDefault();
 
@@ -244,7 +244,7 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
         </div>
       )}
 
-      {/* <div
+      <div
         style={{
           transform: animatePage ? "translateX(0)" : "translateX(-100%)",
           transition: "transform 0.3s ease-in-out",
@@ -252,16 +252,21 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === "FenceDetails" && (
-          <FenceDetails
+        {currentPage === "PlantationDetails" && (
+          <plantationDetails
             onBackToSidebar={handleBackClick}
-            inputValuePostspace={inputValuePostspace}
-            displayValues={displayValues}
-            PostSpaceUnitselectedValue={PostSpaceUnitselectedValue}
-            FenceTypeselectedValue={FenceTypeselectedValue}
+            inputValuePlantspace={inputValuePlantspace}
+            inputValueRowspace={inputValueRowspace}
+         
+            PlantSpaceUnitselectedValue={PlantSpaceUnitselectedValue}
+            RowSpaceUnitselectedValue={RowSpaceUnitselectedValue}
+            PlantSpaceUnitselectedValue1={PlantSpaceUnitselectedValue1}
+            RowSpaceUnitselectedValue1={RowSpaceUnitselectedValue1}
+            PlantTypeselectedValue={PlantTypeselectedValue}
+          
           />
         )}
-      </div> */}
+      </div>
     </div>
   );
 }

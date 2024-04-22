@@ -388,7 +388,7 @@ export const styles = {
       backgroundColor: "#0866FF",
       alignItems: "center",
       justifyContent: "center",
-      marginTop: 150,
+      marginTop: 130,
       borderRadius: 11,
       borderWidth: 0,
     },

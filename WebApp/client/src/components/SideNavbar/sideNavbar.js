@@ -8,9 +8,9 @@ import { IoBookmarks } from "react-icons/io5";
 import { RiWalkFill } from "react-icons/ri";
 import StartMeasurePage from '../MeasureOption/measureOption.js';
 import SavedTemplates from '../SavedTemplates/savedTemplates.js';
-import Fence from "../Fence/Fence/fence";
-import Plantation from "../Plantation/PlantationPage/plantation";
 
+import Plantation from "../Plantation/PlantationPage/plantation";
+import PlantationDetails from "../Plantation/PlantationDetails/plantationDetails.js";
 
 export default function SideNavbar() {
   const [collapsed, setCollapsed] = useState(true);
@@ -37,7 +37,7 @@ export default function SideNavbar() {
   };
 
   const handleSavedTemplatesClick = () => {
-    setCurrentPage('Plantation'); 
+    setCurrentPage('PlantationDetails'); 
     setAnimatePage(true);
   };
 
@@ -98,7 +98,7 @@ export default function SideNavbar() {
         }}
       >
         {currentPage === 'StartMeasure' && <StartMeasurePage onBackToSidebar={handleBackClick} />}
-        {currentPage === 'Plantation' && <Plantation onBackToSidebar={handleBackClick} />}
+        {currentPage === 'PlantationDetails' && <PlantationDetails onBackToSidebar={handleBackClick} />}
       </div>
       </div>
     </Sidebar>
