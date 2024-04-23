@@ -22,12 +22,17 @@ import {
 } from "react-native-paper";
 import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import RNPickerSelect from 'react-native-picker-select';
+import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 import Headersection from "../components/Headersection";
 import CustomButton from "../components/CustomButton";
 import axios from "axios";
-import { responsiveFontSize, responsiveHeight, responsiveScreenFontSize, responsiveWidth } from "react-native-responsive-dimensions";
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveScreenFontSize,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
 
 export default function ClearLand() {
   const [text, setText] = React.useState("");
@@ -43,61 +48,82 @@ export default function ClearLand() {
   const [machineCount, setMachineCount] = useState("");
   const navigation = useNavigation();
 
+  //new
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState([
+    "Bulldozers",
+    "Excavators",
+    "Backhoes",
+    "Skid-steer loaders",
+    "Chainsaws",
+    "Brush cutters",
+    "Tractors",
+    "Land clearing rakes",
+  ]);
 
-  const handlePlantCountChange= (text) => {
+  const handleSearch = (query) => {
+
+    if (query === "") {
+      setSearchSuggestions([]);
+      return;
+    }
+    const filteredSuggestions = suggestions.filter((item) =>
+      item.toLowerCase().includes(query.toLowerCase())
+    );
+    setSearchSuggestions(filteredSuggestions);
+  };
+
+  const handleSuggestionSelect = (item) => {
+    setSearchItem(item);
+    setSearchSuggestions([]);
+  };
+  //new end
+  const handlePlantCountChange = (text) => {
     setPlantCount(text);
   };
 
-  const handleStoneCountChange= (text) => {
+  const handleStoneCountChange = (text) => {
     setStonesCount(text);
   };
-  const handleLaborCountChange= (text) => {
+  const handleLaborCountChange = (text) => {
     setLaborCount(text);
   };
-  const handleWorkHourChange= (text) => {
+  const handleWorkHourChange = (text) => {
     setWorkHours(text);
   };
-  const handleMachineCountChange= (text) => {
+  const handleMachineCountChange = (text) => {
     setMachineCount(text);
   };
-  
 
-  
-  
   const handleEffortOutput = () => {
     navigation.navigate("EffortOutput");
   };
-  
 
   const placeholder1 = {
-    label: 'Select Type',
+    label: "Select Type",
     value: null,
-    color: 'red',
-    
+    color: "red",
   };
 
   const options1 = [
-    { label: 'Low', value: 'Low' },
-    { label: 'Medium', value: 'Medium' },
-    { label: 'High', value: 'High' },
+    { label: "Low", value: "Low" },
+    { label: "Medium", value: "Medium" },
+    { label: "High", value: "High" },
   ];
 
- 
-
   const placeholder = {
-    label: 'Select Type',
+    label: "Select Type",
     value: null,
-    color: 'red',
-    
+    color: "red",
   };
 
   const options = [
-    { label: 'Small', value: 'Small' },
-    { label: 'Medium', value: 'Medium' },
-    { label: 'High', value: 'High' },
+    { label: "Small", value: "Small" },
+    { label: "Medium", value: "Medium" },
+    { label: "High", value: "High" },
   ];
 
-  /display/
+  /display/;
 
   const [displayValues, setDisplayValues] = useState([]);
 
@@ -110,7 +136,6 @@ export default function ClearLand() {
     setPlantTypeSelectedValue("");
     setPlantCount("");
   };
-  
 
   const handleRemoveValue = (index) => {
     const newDisplayValues = [...displayValues];
@@ -124,11 +149,12 @@ export default function ClearLand() {
     //validation part Add button
 
     const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
-    const newDisplayValues1 = [...displayValues1, combinedValue1].filter(Boolean);
+    const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
+      Boolean
+    );
     setDisplayValues1(newDisplayValues1);
     setStoneTypeSelectedValue("");
     setStonesCount("");
-    
   };
 
   const handleRemoveValue1 = (index) => {
@@ -143,7 +169,9 @@ export default function ClearLand() {
     //validation part Add button
 
     const combinedValue2 = searchItem + " x " + machineCount;
-    const newDisplayValues2 = [...displayValues2, combinedValue2].filter(Boolean);
+    const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
+      Boolean
+    );
     setDisplayValues2(newDisplayValues2);
     setSearchItem("");
     setMachineCount("");
@@ -155,36 +183,39 @@ export default function ClearLand() {
     setDisplayValues2(newDisplayValues2);
   };
 
-const postData = async () => {
-  try {
-    const response = await axios.post("http://192.168.8.173:5000/api/clearLand/clearLand", {
-      pressed,
-      plantTypeSelectedValue,
-      plantCount,
-      displayValues,
-      stoneTypeSelectedValue,
-      stonesCount,
-      displayValues1,
-      laborCount,
-      workHours,
-      searchItem,
-      machineCount,
-      displayValues2
-    });
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-    Alert.alert("Error", "Something went wrong");
-  }
-};
+  const postData = async () => {
+    try {
+      const response = await axios.post(
+        "http://192.168.8.173:5000/api/clearLand/clearLand",
+        {
+          pressed,
+          plantTypeSelectedValue,
+          plantCount,
+          displayValues,
+          stoneTypeSelectedValue,
+          stonesCount,
+          displayValues1,
+          laborCount,
+          workHours,
+          searchItem,
+          machineCount,
+          displayValues2,
+        }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Something went wrong");
+    }
+  };
   const handleClear = () => {
     if (
-      !pressed||
-      !(displayValues.length > 0)||
-      !(displayValues1.length>0)||
-      !laborCount||
-      !workHours||
-      !(displayValues2.length>0)
+      !pressed ||
+      !(displayValues.length > 0) ||
+      !(displayValues1.length > 0) ||
+      !laborCount ||
+      !workHours ||
+      !(displayValues2.length > 0)
     ) {
       // Display error message
       Alert.alert("Error", "Please fill in all fields");
@@ -210,9 +241,8 @@ const postData = async () => {
     setWorkHours(" ");
     setDisplayValues([]);
     setDisplayValues1([]);
-    setDisplayValues2([])
+    setDisplayValues2([]);
   };
-
 
   return (
     <PaperProvider>
@@ -224,7 +254,6 @@ const postData = async () => {
       {/* ScrollView section */}
       <ScrollView>
         <View style={styles.container2}>
-
           {/* Weeds box */}
           <Card style={styles.card1}>
             <Card.Content style={styles.cardContent}>
@@ -237,78 +266,100 @@ const postData = async () => {
                 Weeds
               </Text>
               <PaperProvider>
-      <View style={styles.weedButton}>
-        <Button
-          style={[styles.button, pressed === 'low' && styles.pressedButton]}
-          labelStyle={[styles.text, pressed === 'low' && styles.pressedText]}
-          mode="contained-tonal"
-          onPress={() => setPressed('low')}>
-         
-          Low
-        </Button>
-        <Button
-          style={[styles.button, pressed === 'medium' && styles.pressedButton]}
-          labelStyle={[styles.text, pressed === 'medium' && styles.pressedText]}
-          mode="contained-tonal"
-          onPress={() => setPressed('medium')}>
-            
-          Medium
-        </Button>
-        <Button
-          style={[styles.button, pressed === 'high' && styles.pressedButton]}
-          labelStyle={[styles.text, pressed === 'high' && styles.pressedText]}
-          mode="contained-tonal"
-          onPress={() => setPressed('high')}>
-            
-          High
-        </Button>
-      </View>
-    </PaperProvider>
+                <View style={styles.weedButton}>
+                  <Button
+                    style={[
+                      styles.button,
+                      pressed === "low" && styles.pressedButton,
+                    ]}
+                    labelStyle={[
+                      styles.text,
+                      pressed === "low" && styles.pressedText,
+                    ]}
+                    mode="contained-tonal"
+                    onPress={() => setPressed("low")}
+                  >
+                    Low
+                  </Button>
+                  <Button
+                    style={[
+                      styles.button,
+                      pressed === "medium" && styles.pressedButton,
+                    ]}
+                    labelStyle={[
+                      styles.text,
+                      pressed === "medium" && styles.pressedText,
+                    ]}
+                    mode="contained-tonal"
+                    onPress={() => setPressed("medium")}
+                  >
+                    Medium
+                  </Button>
+                  <Button
+                    style={[
+                      styles.button,
+                      pressed === "high" && styles.pressedButton,
+                    ]}
+                    labelStyle={[
+                      styles.text,
+                      pressed === "high" && styles.pressedText,
+                    ]}
+                    mode="contained-tonal"
+                    onPress={() => setPressed("high")}
+                  >
+                    High
+                  </Button>
+                </View>
+              </PaperProvider>
             </Card.Content>
           </Card>
 
           {/* Plants box */}
           <Card style={styles.card1}>
-            <Card.Content
-              style={styles.cardContent}
-            >
+            <Card.Content style={styles.cardContent}>
               <MaterialCommunityIcons name="sprout" size={20} color="#65676B" />
               <Text style={styles.cardTopText} variant="titleLarge">
                 Plants
               </Text>
-              <View style={styles.Dropdown1} >
-      <RNPickerSelect 
-        placeholder={placeholder1}
-        items={options1}
-        onValueChange={(value) => setPlantTypeSelectedValue(value)}
-        value={plantTypeSelectedValue}
-        style={{cursor: 'pointer', }}
-       />
-    </View> 
-    <View style={{ display: "flex", flexDirection: "row",marginTop: responsiveHeight(3.5) }}>
-    <Text style={styles.countText}>
-                Count : {" "}
-                <View style={{ marginTop: -1 }}>
-                  <TextInput
-                    style={{
-                      backgroundColor: "transparent",
-                      height: 20,
-                      paddingHorizontal: 0,
-                      width: 40,
-                    }}
-                    keyboardType="numeric"
-                    placeholder="Count"
-                    placeholderStyles={{ width: 40, paddingHorizontal: 3 }}
-                    mode="flat"
-                    value={plantCount}
-                    onChangeText={handlePlantCountChange}
-                    placeholderTextColor={"#838383"}
-                    underlineStyle={{ width: 45, marginLeft: 3 }}
-                  />
-                </View>
-              </Text>
-    </View>
-              
+              <View style={styles.Dropdown1}>
+                <RNPickerSelect
+                  placeholder={placeholder1}
+                  items={options1}
+                  onValueChange={(value) => setPlantTypeSelectedValue(value)}
+                  value={plantTypeSelectedValue}
+                  style={{ cursor: "pointer" }}
+                />
+              </View>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: responsiveHeight(3.5),
+                }}
+              >
+                <Text style={styles.countText}>
+                  Count :{" "}
+                  <View style={{ marginTop: -1 }}>
+                    <TextInput
+                      style={{
+                        backgroundColor: "transparent",
+                        height: 20,
+                        paddingHorizontal: 0,
+                        width: 40,
+                      }}
+                      keyboardType="numeric"
+                      placeholder="Count"
+                      placeholderStyles={{ width: 40, paddingHorizontal: 3 }}
+                      mode="flat"
+                      value={plantCount}
+                      onChangeText={handlePlantCountChange}
+                      placeholderTextColor={"#838383"}
+                      underlineStyle={{ width: 45, marginLeft: 3 }}
+                    />
+                  </View>
+                </Text>
+              </View>
+
               <Button
                 style={styles.addButton}
                 labelStyle={styles.addButtonText}
@@ -342,47 +393,49 @@ const postData = async () => {
 
           {/* Stones box */}
           <Card style={styles.card1}>
-            <Card.Content
-              style={styles.cardContent}
-            >
-              <Image
-                source={require("../../assets/Stones.png")}
-              />
+            <Card.Content style={styles.cardContent}>
+              <Image source={require("../../assets/Stones.png")} />
               <Text style={styles.cardTopText} variant="titleLarge">
                 Stones
               </Text>
-              <View style={styles.Dropdown1} >
-      <RNPickerSelect 
-        placeholder={placeholder}
-        items={options}
-        onValueChange={(value) => setStoneTypeSelectedValue(value)}
-        value={stoneTypeSelectedValue}
-      />
-    </View>
-    <View style={{ display: "flex", flexDirection: "row",marginTop: responsiveHeight(3.5) }}>
-    <Text style={styles.countText}>
-                Count :{" "}
-                <View style={{ marginTop: -1 }}>
-                  <TextInput
-                    style={{
-                      backgroundColor: "transparent",
-                      height: 20,
-                      paddingHorizontal: 3,
-                      width: 40,
-                    }}
-                    keyboardType="numeric"
-                    placeholder="Count"
-                    placeholderStyles={{ width: 40, paddingHorizontal: 3 }}
-                    mode="flat"
-                    value={stonesCount}
-                    onChangeText={handleStoneCountChange}
-                    placeholderTextColor={"#838383"}
-                    underlineStyle={{ width: 45, marginLeft: 5 }}
-                  />
-                </View>
-              </Text>
-    </View>
-              
+              <View style={styles.Dropdown1}>
+                <RNPickerSelect
+                  placeholder={placeholder}
+                  items={options}
+                  onValueChange={(value) => setStoneTypeSelectedValue(value)}
+                  value={stoneTypeSelectedValue}
+                />
+              </View>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: responsiveHeight(3.5),
+                }}
+              >
+                <Text style={styles.countText}>
+                  Count :{" "}
+                  <View style={{ marginTop: -1 }}>
+                    <TextInput
+                      style={{
+                        backgroundColor: "transparent",
+                        height: 20,
+                        paddingHorizontal: 3,
+                        width: 40,
+                      }}
+                      keyboardType="numeric"
+                      placeholder="Count"
+                      placeholderStyles={{ width: 40, paddingHorizontal: 3 }}
+                      mode="flat"
+                      value={stonesCount}
+                      onChangeText={handleStoneCountChange}
+                      placeholderTextColor={"#838383"}
+                      underlineStyle={{ width: 45, marginLeft: 5 }}
+                    />
+                  </View>
+                </Text>
+              </View>
+
               <Button
                 style={styles.addButton}
                 labelStyle={styles.addButtonText}
@@ -436,7 +489,7 @@ const postData = async () => {
                   }}
                   keyboardType="numeric"
                   placeholder="Enter count of Labors"
-                  mode="flat"                  
+                  mode="flat"
                   onChangeText={handleLaborCountChange}
                   value={laborCount}
                   placeholderTextColor={"#838383"}
@@ -468,7 +521,7 @@ const postData = async () => {
                   }}
                   keyboardType="numeric"
                   placeholder="Enter count of hours"
-                  mode="flat"                  
+                  mode="flat"
                   onChangeText={handleWorkHourChange}
                   value={workHours}
                   placeholderTextColor={"#838383"}
@@ -480,9 +533,7 @@ const postData = async () => {
 
           {/* Machinery box */}
           <Card style={styles.card3}>
-            <Card.Content
-              style={styles.cardContent}
-            >
+            <Card.Content style={styles.cardContent}>
               <MaterialCommunityIcons
                 name="excavator"
                 size={20}
@@ -499,15 +550,28 @@ const postData = async () => {
                   alignItems: "center",
                 }}
               >
-                <Searchbar
-                  placeholder="Search for machines"
-                  placeholderStyle={{ fontSize: 16, marginTop: -14 }}
-                  inputStyle={{ fontSize: 16, marginTop: -14 }}
-                  style={styles.Searchbar}                 
-                  onChangeText={setSearchItem}
-                  value={searchItem}
-                > 
-                </Searchbar>
+                <View style={styles.SearchbarContainer}>
+                  <Searchbar
+                    placeholder="Search for machines"
+                    placeholderStyle={{ fontSize: 16, marginTop: -14 }}
+                    inputStyle={{ fontSize: 16, marginTop: -14 }}
+                    style={styles.Searchbar}
+                    onChangeText={(text) => {
+                      setSearchItem(text);
+                      handleSearch(text);
+                    }}
+                    value={searchItem}
+                  ></Searchbar>
+                  {searchSuggestions.map((item, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.suggestionItem}
+                      onPress={() => handleSuggestionSelect(item)}
+                    >
+                      <Text>{item}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
                 <Text
                   style={{
                     fontSize: 16,
@@ -530,7 +594,7 @@ const postData = async () => {
                     }}
                     keyboardType="numeric"
                     placeholder="Enter count of machines"
-                    mode="flat"                    
+                    mode="flat"
                     onChangeText={handleMachineCountChange}
                     value={machineCount}
                     placeholderTextColor={"#838383"}
@@ -574,9 +638,9 @@ const postData = async () => {
             <CustomButton
               onPress={handleClear}
               text="Calculate"
-              iconName="calculator" 
-              iconColor="white" 
-              buttonColor="#007BFF" 
+              iconName="calculator"
+              iconColor="white"
+              buttonColor="#007BFF"
             />
           </View>
         </View>
@@ -602,8 +666,8 @@ const styles = StyleSheet.create({
 
   weedButton: {
     alignItems: "center",
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: responsiveHeight(1),
     marginBottom: responsiveHeight(-1),
     marginLeft: responsiveWidth(2.6),
@@ -617,8 +681,8 @@ const styles = StyleSheet.create({
     borderRadius: 11,
   },
   countText: {
-    marginLeft: responsiveWidth(3.5), 
-    fontSize: responsiveFontSize(2.2)
+    marginLeft: responsiveWidth(3.5),
+    fontSize: responsiveFontSize(2.2),
   },
   card3: {
     height: "max-content",
@@ -632,8 +696,8 @@ const styles = StyleSheet.create({
     marginLeft: responsiveWidth(1),
   },
   cardContent: {
-    display: "flex", 
-    flexDirection: "row", 
+    display: "flex",
+    flexDirection: "row",
     marginTop: responsiveHeight(-1),
   },
   calButtton: {
@@ -659,7 +723,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     width: "45%",
     height: responsiveFontSize(2.5),
-    marginTop: responsiveHeight(0.4), 
+    marginTop: responsiveHeight(0.4),
     marginBottom: responsiveHeight(1),
   },
 
@@ -671,7 +735,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: "max-content",
     borderRadius: 11,
-    width: "100%"
+    width: "100%",
   },
   displayValueContainer: {
     flexDirection: "row",
@@ -683,7 +747,6 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(1),
     borderRadius: 8,
     padding: responsiveWidth(0.6),
-    width: "25%",
     borderWidth: 1,
     borderColor: "#007BFF",
   },
@@ -697,41 +760,40 @@ const styles = StyleSheet.create({
     color: "white",
   },
   button: {
-    borderColor: '#CED0D4',
+    borderColor: "#CED0D4",
     borderWidth: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 11,
     width: responsiveWidth(25),
     height: responsiveHeight(4.5),
     marginLeft: responsiveWidth(-20),
-    marginTop: responsiveHeight(3), 
+    marginTop: responsiveHeight(3),
   },
   pressedButton: {
-    borderColor: '#0866FF', 
+    borderColor: "#0866FF",
   },
   text: {
     marginLeft: responsiveScreenFontSize(0.2),
     marginRight: responsiveFontSize(1),
     fontSize: responsiveFontSize(1.8),
-    paddingVertical: responsiveHeight(0), // Adjust the vertical padding
-    paddingHorizontal: responsiveWidth(0), // Adjust the horizontal padding
-    marginTop: responsiveHeight(0.4), // Adjust the margin from the top
-    marginBottom: responsiveHeight(1), // Adjust the margin from the bottom
-    color: '#CED0D4',
+    paddingVertical: responsiveHeight(0),
+    paddingHorizontal: responsiveWidth(0),
+    marginTop: responsiveHeight(0.4),
+    marginBottom: responsiveHeight(1),
+    color: "#CED0D4",
   },
   pressedText: {
-    color: '#0866FF', 
+    color: "#0866FF",
   },
   Dropdown1: {
-    backgroundColor: '#F0F2F5',
+    backgroundColor: "#F0F2F5",
     borderRadius: 10,
-    width: '40%',
+    width: "40%",
     height: responsiveHeight(4),
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft:responsiveWidth(-17),
-    marginTop:responsiveHeight(3.5)
-    
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: responsiveWidth(-17),
+    marginTop: responsiveHeight(3.5),
   },
   machineAddButton: {
     width: responsiveWidth(30),
@@ -741,5 +803,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
- 
+  SearchbarContainer: {
+    marginBottom: responsiveHeight(0.2),
+  },
+  suggestionItem: {
+    borderWidth: responsiveWidth(0.1),
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: responsiveHeight(1),
+    marginTop: responsiveHeight(0.5),
+    backgroundColor: "#f9f9f9",
+  },
 });
