@@ -48,7 +48,6 @@ export default function ClearLand() {
   const [machineCount, setMachineCount] = useState("");
   const navigation = useNavigation();
 
-  //new
   const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [suggestions, setSuggestions] = useState([
     "Bulldozers",
@@ -77,7 +76,7 @@ export default function ClearLand() {
     setSearchItem(item);
     setSearchSuggestions([]);
   };
-  //new end
+  
   const handlePlantCountChange = (text) => {
     setPlantCount(text);
   };
@@ -128,8 +127,36 @@ export default function ClearLand() {
   const [displayValues, setDisplayValues] = useState([]);
 
   const handleAdd = () => {
-    //validation part Add button
+    //Validation plant count
+    let errorMessage = "";
+    let countInt = parseInt(plantCount, 10);
 
+  switch (plantTypeSelectedValue) {
+    case "Low":
+      if (!(countInt >=1  && countInt <= 3)) {
+        errorMessage = "Enter a number between 0 and 4";
+      }
+      break;
+    case "Medium":
+      if (!(countInt >3 && countInt <= 6)) {
+        errorMessage = "Enter a number between 3 and 7";
+      }
+      break;
+    case "High":
+      if (!(countInt > 6 && countInt <= 10)) {
+        errorMessage = "Enter a number between 6 and 11";
+      }
+      break;
+    default:
+      errorMessage = "Invalid plant type selection.";
+  }
+
+  if (errorMessage) {
+    alert(errorMessage);
+    return;
+  }
+
+    //validation part Add button
     const combinedValue = plantCount + " x " + plantTypeSelectedValue;
     const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
     setDisplayValues(newDisplayValues);
@@ -146,8 +173,36 @@ export default function ClearLand() {
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
-    //validation part Add button
+    //Validation for stone count
+    let errorMessage = "";
+    let countInt = parseInt(stonesCount, 10);
 
+  switch (stoneTypeSelectedValue) {
+    case "Small":
+      if (!(countInt >=1  && countInt <= 3)) {
+        errorMessage = "Enter a number between 0 and 4";
+      }
+      break;
+    case "Medium":
+      if (!(countInt >3 && countInt <= 6)) {
+        errorMessage = "Enter a number between 3 and 7";
+      }
+      break;
+    case "High":
+      if (!(countInt > 6 && countInt <= 10)) {
+        errorMessage = "Enter a number between 6 and 11";
+      }
+      break;
+    default:
+      errorMessage = "Invalid plant type selection.";
+  }
+
+  if (errorMessage) {
+    alert(errorMessage);
+    return;
+  }
+    
+    //validation part Add button
     const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
       Boolean
@@ -186,7 +241,7 @@ export default function ClearLand() {
   const postData = async () => {
     try {
       const response = await axios.post(
-        "http://192.168.8.173:5000/api/clearLand/clearLand",
+        "http://10.10.22.163:5000/api/clearLand/clearLand",
         {
           pressed,
           plantTypeSelectedValue,

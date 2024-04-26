@@ -36,7 +36,7 @@ import {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://192.168.8.173:5000/api/clearLand/latestClearLand");
+                const response = await axios.get("http://10.10.22.163:5000/api/clearLand/latestClearLand");
                 setLatestData(response.data);
             } catch (error) {
                 console.error(error);
@@ -385,7 +385,8 @@ import {
       fontWeight: "bold"
     },
     card1Text4: {
-      marginTop: responsiveHeight(-5.9), 
+      marginTop: responsiveHeight(-5.9
+      ), 
       fontSize: responsiveFontSize(2), 
       marginLeft: responsiveWidth(0)
     },

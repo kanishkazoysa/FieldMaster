@@ -9,7 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 
-const backendUrl = `http://192.168.8.173:3000`
+const backendUrl = `http://10.10.22.163:3000`
 
 /* icons from materialcommunity icons */
 const CustomEditIcon = (props) => {
