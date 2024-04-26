@@ -18,7 +18,7 @@ const CustomButton = ({ onPress, text, iconName, iconColor, buttonColor, textSty
 
 const styles = {
   button: {
-    width: responsiveWidth(95),
+    width: responsiveWidth(80),
     height: responsiveHeight(5),
     marginTop: responsiveHeight(1.5),
     borderRadius: 11,

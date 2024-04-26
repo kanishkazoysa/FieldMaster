@@ -314,7 +314,7 @@ export default function ClearLand() {
             <Card.Content style={styles.cardContent}>
               <MaterialCommunityIcons
                 name="sprout-outline"
-                size={20}
+                size={responsiveFontSize(3)}
                 color="#65676B"
               />
               <Text style={styles.cardTopText} variant="titleLarge">
@@ -372,7 +372,7 @@ export default function ClearLand() {
           {/* Plants box */}
           <Card style={styles.card1}>
             <Card.Content style={styles.cardContent}>
-              <MaterialCommunityIcons name="sprout" size={20} color="#65676B" />
+              <MaterialCommunityIcons name="sprout" size={responsiveFontSize(3)} color="#65676B" />
               <Text style={styles.cardTopText} variant="titleLarge">
                 Plants
               </Text>
@@ -437,7 +437,7 @@ export default function ClearLand() {
                   >
                     <MaterialCommunityIcons
                       name="close-circle-outline"
-                      size={20}
+                      size={responsiveFontSize(2.7)}
                       color="#007BFF"
                     />
                   </TouchableOpacity>
@@ -742,6 +742,7 @@ const styles = StyleSheet.create({
   card3: {
     height: "max-content",
     marginTop: responsiveHeight(1),
+    marginBottom: responsiveHeight(3),
     paddingBottom: responsiveHeight(0.3),
     width: "93%",
     borderRadius: 11,
@@ -756,8 +757,8 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(-1),
   },
   calButtton: {
-    marginTop: responsiveHeight(3),
-    width: "80%",
+    marginTop: responsiveHeight(4),
+    bottom:responsiveHeight(2),
     alignItems: "center",
   },
   Searchbar: {
@@ -766,7 +767,7 @@ const styles = StyleSheet.create({
     width: responsiveWidth(65),
   },
   addButton: {
-    width: responsiveWidth(15),
+    width: responsiveWidth(5),
     height: responsiveHeight(3.5),
     borderRadius: 11,
     marginTop: responsiveHeight(3.5),

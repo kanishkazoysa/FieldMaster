@@ -184,7 +184,7 @@ import {
   
                 <View style={styles.card1Left}>
                   <Image
-                    style={{marginLeft:responsiveWidth(2),marginTop:responsiveHeight(0.8) }}
+                    style={{marginLeft:responsiveWidth(1.6),marginTop:responsiveHeight(0.4) }}
                     source={require("../../assets/Clock.png")}
                   ></Image>
                   <View style={{ display: "flex", flexDirection: "column" }}>
@@ -478,7 +478,7 @@ import {
     customButtons: {
       display: "flex", 
       flexDirection: "column", 
-      marginTop: responsiveHeight(3),
+      marginTop: responsiveHeight(10),
       justifyContent:"space-between"
     },
   });
