@@ -20,6 +20,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import AxiosInstance from '../../AxiosInstance';
 import { RFValue } from 'react-native-responsive-fontsize';
+
 const PointAddingScreen = ({ navigation, route }) => {
   const [showUserLocation, setShowUserLocation] = useState(false);
   const [isPolygonComplete, setIsPolygonComplete] = useState(false);
@@ -240,7 +241,9 @@ const PointAddingScreen = ({ navigation, route }) => {
             <MaterialIcons name='cancel' size={24} color='#707070' />
           </TouchableOpacity>
         )}
-        <View style={{ marginLeft: 10 }}></View>
+        <View style={{ marginLeft: 10 }}>
+          <TouchableOpacity></TouchableOpacity>
+        </View>
       </View>
       <Modal
         animationType='slide'
@@ -351,7 +354,7 @@ const PointAddingScreen = ({ navigation, route }) => {
             )}
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.button2}
+            style={styles.locationFocusBtn}
             onPress={focusOnCurrentLocation}
           >
             <FontAwesomeIcon

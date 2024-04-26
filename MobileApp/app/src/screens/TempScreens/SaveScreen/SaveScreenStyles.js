@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-
   top_Text_Styling: {
     color: 'white',
     fontSize: 16,
@@ -21,25 +20,22 @@ export const styles = StyleSheet.create({
     height: 80,
   },
 
-  
   low_outer: {
     flex: 1,
     alignItems: 'center',
-
   },
 
+  /*box1*/
 
-   /*box1*/
-
-   Box1: {
-    width: "87%",
+  Box1: {
+    width: '87%',
     height: 101,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
     marginTop: 30,
     borderRadius: 11,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 4,
@@ -48,35 +44,35 @@ export const styles = StyleSheet.create({
 
   titleText: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginLeft: 16,
   },
 
   propertyBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     height: 50,
-    width: "100%",
-    backgroundColor: "white",
+    width: '100%',
+    backgroundColor: 'white',
     marginTop: 7,
   },
 
   property: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "left",
-    backgroundColor: "white",
-    width: "46%",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'left',
+    backgroundColor: 'white',
+    width: '46%',
     height: 50,
   },
 
   propertyDetails: {
-    flexDirection: "column",
+    flexDirection: 'column',
     marginLeft: 5,
-    width: "50%",
+    width: '50%',
     height: 40,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
 
   propertyLabel: {
@@ -85,23 +81,22 @@ export const styles = StyleSheet.create({
 
   propertyValue: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 
   input_view: {
-    width: '92%',	
-    height: 50,  
+    width: '92%',
+    height: 50,
     backgroundColor: 'white',
-    alignItems: "center",
+    alignItems: 'center',
     flexDirection: 'row',
     marginTop: 20,
     borderRadius: 11,
     paddingVertical: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 4,
-    
   },
 
   bold_text: {
@@ -113,7 +108,6 @@ export const styles = StyleSheet.create({
   bold_text1: {
     fontSize: 15,
     fontWeight: 'bold',
-    
   },
 
   input_text: {
@@ -122,13 +116,11 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     marginLeft: 5,
     fontSize: 14,
-    
   },
   inner_view_03: {
     width: '87%',
     marginHorizontal: 20,
     marginTop: 25,
-   
   },
   description_input: {
     marginVertical: 10,
@@ -136,13 +128,9 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 11,
     borderTopRightRadius: 11,
     backgroundColor: 'white',
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 4,
   },
-
- 
-
-
 });

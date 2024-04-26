@@ -1,4 +1,10 @@
 import { StyleSheet } from 'react-native';
+/* import responsive library of react nativ */
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 
 export const styles = StyleSheet.create({
   testingText: {
@@ -247,7 +253,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0, 0.7)',
     padding: 10,
     borderRadius: 5,
-    top: Platform.OS === 'android' ? '15%' : '18%',
+    top: Platform.OS === 'android' ? '20%' : '20%',
     right: 10,
   },
   clearIconContainer: {
@@ -262,30 +268,28 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0, 0.7)',
     padding: 10,
     borderRadius: 5,
-    right: 10,
-    top: Platform.OS === 'android' ? '10%' : '27%',
+    right: responsiveWidth(3),
+    top: Platform.OS === 'android' ? '15%' : '15%',
     transform: [{ translateY: -12 }],
     zIndex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
   searchbar: {
-    width: '90%',
+    width: '100%',
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    /* top: Platform.OS === 'android' ? '4%' : '8%', */
-    top: 130,
-    paddingLeft: 10,
-    paddingRight: 0,
-    left: 20,
+    top: Platform.OS === 'android' ? '4%' : '8%',
+    alignSelf: 'center',
+    left: responsiveWidth(1.5),
     zIndex: 1,
   },
   locationIconContainer: {
     position: 'absolute',
-    left: 20,
+    left: '10%',
     top: '50%',
     transform: [{ translateY: -12 }],
     zIndex: 1,
