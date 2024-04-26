@@ -42,10 +42,10 @@ export function SaveScreen({ navigation, route }) {
   );
   const [area, setArea] = React.useState(parseFloat(initialArea).toFixed(2));
   // rest of the code
-  const [templateName, setTemplateName] = React.useState('demo template');
-  const [measureName, setMeasureName] = React.useState('Tea');
-  const [landType, setLandType] = React.useState('Slope');
-  const [location, setLocation] = React.useState('Kandy');
+  const [templateName, setTemplateName] = React.useState('');
+  const [measureName, setMeasureName] = React.useState('');
+  const [landType, setLandType] = React.useState('');
+  const [location, setLocation] = React.useState('');
   const [descriptionText, setDescriptionText] =
     React.useState('demo description');
 
@@ -136,7 +136,6 @@ export function SaveScreen({ navigation, route }) {
                 <TextInput
                   style={styles.input_text}
                   value={templateName}
-                  placeholder='Template Name'
                   onChangeText={(text) => setTemplateName(text)}
                 />
               </View>
@@ -145,7 +144,6 @@ export function SaveScreen({ navigation, route }) {
                 <TextInput
                   style={styles.input_text}
                   value={measureName}
-                  placeholder='Measures Name'
                   onChangeText={(text) => setMeasureName(text)}
                 />
               </View>
@@ -154,7 +152,6 @@ export function SaveScreen({ navigation, route }) {
                 <TextInput
                   style={styles.input_text}
                   value={location}
-                  placeholder='Location'
                   onChangeText={(text) => setLocation(text)}
                   outlineColor='black'
                   underlineColor='black'
@@ -165,7 +162,6 @@ export function SaveScreen({ navigation, route }) {
                 <TextInput
                   style={styles.input_text}
                   value={landType}
-                  placeholder='Land Type'
                   onChangeText={(text) => setLandType(text)}
                   outlineColor='black'
                   underlineColor='black'
@@ -181,7 +177,7 @@ export function SaveScreen({ navigation, route }) {
                 value={descriptionText}
                 onChangeText={(text) => setDescriptionText(text)}
                 multiline={true}
-                numberOfLines={6} // Optional: Set the number of lines to display initially
+                numberOfLines={6}
                 style={styles.description_input}
                 underlineColor='transparent'
               />

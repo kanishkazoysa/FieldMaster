@@ -15,14 +15,14 @@ export const styles = StyleSheet.create({
   },
   top_Text_Styling: {
     color: 'white',
-    fontSize: 15,
+    fontSize: responsiveFontSize(2),
   },
   top_Bar_View: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    paddingHorizontal: 30,
-    marginTop: 10,
+    paddingHorizontal: responsiveWidth(5),
+    marginTop: responsiveHeight(2),
   },
   top_Bar_Whole: {
     backgroundColor: '#0866FF',
@@ -32,24 +32,27 @@ export const styles = StyleSheet.create({
     backgroundColor: '#ffffff8a',
   },
   inner_view_text_style: {
-    fontSize: 15,
+    fontSize: responsiveFontSize(2),
     fontWeight: 'bold',
   },
   inner_View_01: {
     justifyContent: 'center',
     alignItems: 'center',
-
-    height: 200,
+    height: responsiveHeight(20),
   },
   inner_View_01_inner: {
     borderRadius: 10,
-    marginVertical: 10,
     marginHorizontal: 10,
+    top: responsiveHeight(0.7),
     width: '90%',
     padding: 10,
     borderColor: 'black',
     backgroundColor: 'white',
     height: responsiveHeight(14),
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 6,
   },
   land_Info_Inner: {
     flexDirection: 'row',
@@ -67,7 +70,7 @@ export const styles = StyleSheet.create({
   row_02: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    marginTop: 10,
+    marginTop: responsiveHeight(1),
   },
   row_01: {
     /*  */
@@ -97,15 +100,21 @@ export const styles = StyleSheet.create({
   area_text_styling: {
     marginLeft: 4,
   },
-  inner_view_02_inner: {},
+  inner_view_02_inner: {
+    justifyContent: 'flex-start',
+  },
   input_view: {
     backgroundColor: 'white',
     flexDirection: 'row',
-    marginHorizontal: 20,
+    marginHorizontal: responsiveWidth(5),
     borderRadius: 10,
     justifyContent: 'space-around',
-    marginVertical: 30,
-    paddingVertical: 10,
+    marginVertical: responsiveHeight(1),
+    paddingVertical: 13,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 6,
   },
   input_text: {
     height: 23,
@@ -120,5 +129,9 @@ export const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 10,
     backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 6,
   },
 });
