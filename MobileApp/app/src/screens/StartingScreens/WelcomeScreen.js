@@ -4,8 +4,6 @@ import React, { useEffect, useRef } from 'react';
 import { Button } from 'react-native-paper';
 import * as Animatable from 'react-native-animatable';
 import {
-  responsiveHeight,
-  responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 

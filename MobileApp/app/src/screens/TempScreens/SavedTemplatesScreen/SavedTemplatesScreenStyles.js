@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
     fontSize: 20,
   },
   low_outer: {
+    marginTop: 10,
     height: '100%',
   },
   template_style: {

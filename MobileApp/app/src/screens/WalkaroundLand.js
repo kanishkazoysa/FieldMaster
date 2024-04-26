@@ -42,6 +42,7 @@ export default function Home() {
   const [polygonArea, setPolygonArea] = useState(0); // Renamed state variable
   const [calculatedArea, setCalculatedArea] = useState(0);
   const [calculatedPerimeter, setCalculatedPerimeter] = useState(0);
+  const [polygonPerimeter, setPolygonPerimeter] = useState(0);
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -206,8 +207,8 @@ export default function Home() {
     };
     const polygonArea = area(polygon);
     setCalculatedArea(polygonArea);
-
-    let polygonPerimeter = 0;
+  
+    let perimeter = 0;
     for (let i = 0; i < pathCoordinates.length - 1; i++) {
       const point1 = [
         pathCoordinates[i].longitude,
@@ -217,7 +218,7 @@ export default function Home() {
         pathCoordinates[i + 1].longitude,
         pathCoordinates[i + 1].latitude,
       ];
-      polygonPerimeter += distance(point1, point2, { units: "kilometers" });
+      perimeter += distance(point1, point2, { units: "kilometers" });
     }
     // Add the distance between the last point and the first point to close the polygon
     const point1 = [pathCoordinates[0].longitude, pathCoordinates[0].latitude];
@@ -225,9 +226,9 @@ export default function Home() {
       pathCoordinates[pathCoordinates.length - 1].longitude,
       pathCoordinates[pathCoordinates.length - 1].latitude,
     ];
-    polygonPerimeter += distance(point1, point2, { units: "kilometers" });
-
-    setCalculatedPerimeter(polygonPerimeter);
+    perimeter += distance(point1, point2, { units: "kilometers" });
+  
+    setPolygonPerimeter(perimeter);
   };
 
   const saveMapData = async () => {
