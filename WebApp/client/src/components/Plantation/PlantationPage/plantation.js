@@ -10,6 +10,7 @@ import { styles } from "./plantationStyles.js";
 import Select from "react-select";
 // import AxiosInstance from "../../../AxiosInstance";
 import axios from "axios";
+import PlantationDetails from "../PlantationDetails/plantationDetails";
 
 
 export default function Plantation({ onBackToSidebar }) {
@@ -40,6 +41,11 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
     setInputValueRowspace(event.target.value);
   };
 
+  const handleInputPlantType = (event) => {
+    setPlantTypeselectedValue(event.target.value);
+  };
+
+
   const handlePlantSpaceUnitChange = (selectedOption) => {
     setPlantSpaceUnitselectedValue1(selectedOption);
     setPlantSpaceUnitselectedValue(selectedOption.value);
@@ -55,6 +61,7 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
     try {
       // Validate required fields
       if (
+ 
         !PlantSpaceUnitselectedValue ||
         !RowSpaceUnitselectedValue ||
         !PlantTypeselectedValue ||
@@ -72,12 +79,14 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
       const requestData = {
         PlantTypeselectedValue,
         inputValuePlantspace,
-        inputValueRowspace
+        inputValueRowspace,
+        PlantSpaceUnitselectedValue,
+        RowSpaceUnitselectedValue
       };
 
       // Make POST request to the backend
       const response = await axios.post(
-        "http://192.168.1.4:3000/api/plantation/plantation",
+        "http://10.10.23.159:3000/api/plantation/plantation",
         requestData
       );
 
@@ -148,7 +157,7 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
                   style={styles.box2input}
                   placeholder="Tea"
                   value={PlantTypeselectedValue}
-                  //onChange={handleInputChange}
+                  onChange={handleInputPlantType}
                 />
               
             </div>
@@ -232,6 +241,7 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
             </div>
           </div>
 
+
           
 {/* calculate button */}
           <div style={styles.bottom}>
@@ -251,11 +261,10 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
         }}
       >
         {currentPage === "plantationDetails" && (
-          <plantationDetails
+          <PlantationDetails
             onBackToSidebar={handleBackClick}
             inputValuePlantspace={inputValuePlantspace}
-            inputValueRowspace={inputValueRowspace}
-         
+            inputValueRowspace={inputValueRowspace}            
             PlantSpaceUnitselectedValue={PlantSpaceUnitselectedValue}
             RowSpaceUnitselectedValue={RowSpaceUnitselectedValue}
             PlantSpaceUnitselectedValue1={PlantSpaceUnitselectedValue1}

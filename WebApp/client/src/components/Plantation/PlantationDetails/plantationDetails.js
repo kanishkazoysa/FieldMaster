@@ -13,7 +13,7 @@ import { RxRowSpacing } from "react-icons/rx";
 export default function PlantationDetails({
   onBackToSidebar,
   inputValuePlantspace,
-  inputValueRowSpace,
+  inputValueRowspace,
   PlantSpaceUnitselectedValue,
   RowSpaceUnitselectedValue,
   PlantTypeselectedValue,
@@ -24,7 +24,7 @@ export default function PlantationDetails({
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await fetch('http://192.168.1.4:3000/api/plantation/numberOfPlants');
+            const response = await fetch('http://10.10.23.159:3000/api/plantation/numberOfPlants');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -134,7 +134,7 @@ export default function PlantationDetails({
             
           </div>
           <div style={styles.innersquareright}>
-            <p style={styles.propertyLabel}>: {inputValueRowSpace}{RowSpaceUnitselectedValue}</p>
+            <p style={styles.propertyLabel}>: {inputValueRowspace}{RowSpaceUnitselectedValue}</p>
           </div>
         </div>
 
