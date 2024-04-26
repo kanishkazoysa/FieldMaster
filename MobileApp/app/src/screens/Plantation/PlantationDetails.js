@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 import axios from "axios";
+import {styles} from "./PlantationDetailsStyles";
 
 
 import Headersection from "../../components/Headersection";
