@@ -7,26 +7,36 @@ import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { errorUtils } from '../../../common.app';
 import AxiosInstance from '../../../AxiosInstance';
+import {
+  responsiveHeight,
+  responsiveFontSize,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 
 const CustomPerimeterIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="vector-square"
-    size={30}
-    color="grey"
+    name='vector-square'
+    size={responsiveFontSize(3.7)}
+    color='grey'
   />
 );
 const CustomAreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="texture-box"
-    size={30}
-    color="grey"
+    name='texture-box'
+    size={responsiveFontSize(3.7)}
+    color='grey'
   />
 );
 
 export function SaveScreen({ navigation, route }) {
-  const { id, area: initialArea, perimeter: initialPerimeter,userId } = route.params;
+  const {
+    id,
+    area: initialArea,
+    perimeter: initialPerimeter,
+    userId,
+  } = route.params;
   const [perimeter, setPerimeter] = React.useState(
     parseFloat(initialPerimeter).toFixed(2)
   );
@@ -53,8 +63,7 @@ export function SaveScreen({ navigation, route }) {
       landType: landType,
       location: location,
       description: descriptionText,
-      id:userId
-
+      id: userId,
     };
     console.log(dataItem);
 
@@ -168,18 +177,18 @@ export function SaveScreen({ navigation, route }) {
               <Text style={styles.bold_text1}>Description:</Text>
 
               <TextInput
-                placeholder="Type here..."
+                placeholder='Type here...'
                 value={descriptionText}
                 onChangeText={(text) => setDescriptionText(text)}
                 multiline={true}
                 numberOfLines={6} // Optional: Set the number of lines to display initially
                 style={styles.description_input}
-                underlineColor="transparent"
+                underlineColor='transparent'
               />
             </View>
           </View>
-          </View>
-        </ScrollView>
+        </View>
+      </ScrollView>
     </View>
   );
 }

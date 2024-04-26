@@ -1,136 +1,124 @@
 import { StyleSheet } from 'react-native';
+/* import responsive library */
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 
 export const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#ffffff8a',
+    padding: 20,
+    borderRadius: 10,
+    responsivWidth: responsiveWidth(100),
+  },
   top_Text_Styling: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 15,
   },
-
   top_Bar_View: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: 30,
-    marginTop: 20,
+    marginTop: 10,
   },
-
   top_Bar_Whole: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#0866FF',
     marginTop: 0,
-    height: 80,
   },
-
-  low_outer: {
-    flex: 1,
-    alignItems: 'center',
+  inner_View: {
+    backgroundColor: '#ffffff8a',
   },
-
-  /*box1*/
-
-  Box1: {
-    width: '87%',
-    height: 101,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    marginTop: 30,
-    borderRadius: 11,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 4,
-    padding: 0,
-  },
-
-  titleText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginLeft: 16,
-  },
-
-  propertyBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 50,
-    width: '100%',
-    backgroundColor: 'white',
-    marginTop: 7,
-  },
-
-  property: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'left',
-    backgroundColor: 'white',
-    width: '46%',
-    height: 50,
-  },
-
-  propertyDetails: {
-    flexDirection: 'column',
-    marginLeft: 5,
-    width: '50%',
-    height: 40,
-    backgroundColor: 'white',
-  },
-
-  propertyLabel: {
-    fontSize: 14,
-  },
-
-  propertyValue: {
-    fontSize: 16,
+  inner_view_text_style: {
+    fontSize: 15,
     fontWeight: 'bold',
   },
-
-  input_view: {
-    width: '92%',
-    height: 50,
-    backgroundColor: 'white',
+  inner_View_01: {
+    justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row',
-    marginTop: 20,
-    borderRadius: 11,
-    paddingVertical: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 4,
-  },
 
+    height: 200,
+  },
+  inner_View_01_inner: {
+    borderRadius: 10,
+    marginVertical: 10,
+    marginHorizontal: 10,
+    width: '90%',
+    padding: 10,
+    borderColor: 'black',
+    backgroundColor: 'white',
+    height: responsiveHeight(14),
+  },
+  land_Info_Inner: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  perimeter_col_01: {
+    borderWidth: 1,
+    borderColor: 'green',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   bold_text: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    marginLeft: 20,
-  },
-
-  bold_text1: {
-    fontSize: 15,
     fontWeight: 'bold',
   },
-
-  input_text: {
-    height: 20,
-    width: 150,
+  row_02: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginTop: 10,
+  },
+  row_01: {
+    /*  */
+  },
+  low_outer: {
+    flex: 0.5,
+    backgroundColor: 'lightgrey',
+  },
+  low_outer_02: {
+    flex: 1,
+    backgroundColor: '#ffffff8a',
+    height: 300,
+  },
+  row_02_col_01: {
+    flexDirection: 'row',
+  },
+  row_02_col_02: {
+    flexDirection: 'row',
+  },
+  col_02_col_01: {
+    /*  */
+  },
+  area_col_styling: {
+    justifyContent: 'space-evenly',
+    marginLeft: 10,
+  },
+  area_text_styling: {
+    marginLeft: 4,
+  },
+  inner_view_02_inner: {},
+  input_view: {
     backgroundColor: 'white',
-    marginLeft: 5,
-    fontSize: 14,
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    borderRadius: 10,
+    justifyContent: 'space-around',
+    marginVertical: 30,
+    paddingVertical: 10,
+  },
+  input_text: {
+    height: 23,
+    width: 200,
+    backgroundColor: 'white',
   },
   inner_view_03: {
-    width: '87%',
     marginHorizontal: 20,
-    marginTop: 25,
+    paddingVertical: 20,
   },
   description_input: {
     marginVertical: 10,
-    borderRadius: 11,
-    borderTopLeftRadius: 11,
-    borderTopRightRadius: 11,
+    borderRadius: 10,
     backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 4,
   },
 });
