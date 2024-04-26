@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Polygon } from 'react-native-maps';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
-import { TextInput } from 'react-native';
+import { TextInput, Alert } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { Polyline } from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -124,29 +124,41 @@ const PointAddingScreen = ({ navigation, route }) => {
     const perimeterMeters = length(poly, { units: 'meters' });
     const areaPerches = areaMeters / 25.29285264;
     const perimeterKilometers = perimeterMeters / 1000;
-    console.log(points);
-    /* the axios request is used to save the template */
-    AxiosInstance.post('/api/auth/mapTemplate/saveTemplate', {
-      locationPoints: points,
-      area: areaPerches,
-      perimeter: perimeterKilometers,
-    })
-      .then((response) => {
-        console.log(response.data);
-        navigation.navigate('SaveScreen', {
-          id: response.data._id,
-          area: areaPerches,
-          perimeter: perimeterKilometers,
-          userId: response.data.userId,
-        });
-      })
-      .catch((error) => {
-        console.error(error.response.data);
-      });
-    alert(
-      `Area: ${areaPerches.toFixed(
-        2
-      )} perches, Perimeter: ${perimeterKilometers.toFixed(2)} kilometers`
+
+    Alert.alert(
+      'Confirmation',
+      `Area: ${areaPerches.toFixed(2)} perches, Perimeter: ${perimeterKilometers.toFixed(2)} kilometers`,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => setPoints([]), // Clear the points when Cancel is pressed
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            /* the axios request is used to save the template */
+            AxiosInstance.post('/api/auth/mapTemplate/saveTemplate', {
+              locationPoints: points,
+              area: areaPerches,
+              perimeter: perimeterKilometers,
+            })
+              .then((response) => {
+                console.log(response.data);
+                navigation.navigate('SaveScreen', {
+                  id: response.data._id,
+                  area: areaPerches,
+                  perimeter: perimeterKilometers,
+                  userId: response.data.userId,
+                });
+              })
+              .catch((error) => {
+                console.error(error.response.data);
+              });
+          },
+        },
+      ],
+      { cancelable: false }
     );
   };
 

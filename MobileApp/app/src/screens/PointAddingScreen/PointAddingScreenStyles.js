@@ -248,7 +248,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
-  button2: {
+  locationFocusBtn: {
     position: 'absolute',
     backgroundColor: 'rgba(0,0,0, 0.7)',
     padding: 10,
