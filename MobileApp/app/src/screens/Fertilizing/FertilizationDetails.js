@@ -16,8 +16,8 @@ import { useNavigation } from "@react-navigation/native";
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 
-import Headersection from "../components/Headersection";
-import CustomButton from "../components/CustomButton";
+import Headersection from "../../components/Headersection";
+import CustomButton from "../../components/CustomButton";
 export default function FertilizationDetails({ route }) {
 
 

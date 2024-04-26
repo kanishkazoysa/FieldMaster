@@ -14,9 +14,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Button } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
-import Headersection from "../components/Headersection";
-import CustomButton from "../components/CustomButton";
-import AxiosInstance from "../AxiosInstance";
+import Headersection from "../../components/Headersection";
+import CustomButton from "../../components/CustomButton";
+import AxiosInstance from "../../AxiosInstance";
 
 export default function Fertilization({ route }) {
   const { params } = route;
