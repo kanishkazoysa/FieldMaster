@@ -39,9 +39,8 @@ router.post("/plantation", async (req, res) => {
         const { textplantspace, textRowspace, textPlant, PlantSpaceUnitselectedValue } = req.body;
         const area = 2;
 
-
-        const plantSpacing = convertToCommonUnit(parseFloat(textplantspace), { PlantSpaceUnitselectedValue });
-        const rowSpacing = convertToCommonUnit(parseFloat(textRowspace), { PlantSpaceUnitselectedValue });
+        const plantSpacing = convertToCommonUnit(textplantspace, PlantSpaceUnitselectedValue);
+        const rowSpacing = convertToCommonUnit(textRowspace,PlantSpaceUnitselectedValue );
         const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
         const calculatedPlantDensity = calculatePlantationDensity(area, plantSpacing, rowSpacing);
 
