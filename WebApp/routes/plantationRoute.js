@@ -26,23 +26,22 @@ function calculatePlantationDensity(area, plantSpacing, rowSpacing) {
 }
 
 
-function convertToCommonUnit(value,unit){
-    if(unit==='cm'){
-        return value/100;
-    }else{
+function convertToCommonUnit(value, unit) {
+    if (unit === 'cm') {
+        return value / 100;
+    } else {
         return value;
     }
 }
 
 router.post("/plantation", async (req, res) => {
     try {
-        const { textplantspace, textRowspace, textPlant } = req.body;
+        const { textplantspace, textRowspace, textPlant, PlantSpaceUnitselectedValue } = req.body;
         const area = 2;
 
-        const plantSpacing =textplantspace;
-        const rowSpacing = textRowspace;
-        // const plantSpacing = convertToCommonUnit(parseFloat(textplantspace), 'cm'); 
-        // const rowSpacing = convertToCommonUnit(parseFloat(textRowspace), 'cm'); 
+
+        const plantSpacing = convertToCommonUnit(parseFloat(textplantspace), { PlantSpaceUnitselectedValue });
+        const rowSpacing = convertToCommonUnit(parseFloat(textRowspace), { PlantSpaceUnitselectedValue });
         const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
         const calculatedPlantDensity = calculatePlantationDensity(area, plantSpacing, rowSpacing);
 
@@ -56,7 +55,8 @@ router.post("/plantation", async (req, res) => {
             PlantSpace: textplantspace,
             RowSpace: textRowspace,
             NoOfPlants: numberOfPlants,
-            PlantDensity: calculatedPlantDensity
+            PlantDensity: calculatedPlantDensity,
+            Unit: PlantSpaceUnitselectedValue,
         });
 
         await newPlantation.save();
@@ -71,7 +71,7 @@ router.post("/plantation", async (req, res) => {
 
 router.get("/numberOfPlants", async (req, res) => {
     try {
-        const plant= await plantationModel.findOne().sort({ _id: -1 });
+        const plant = await plantationModel.findOne().sort({ _id: -1 });
 
         if (!plant) {
             return res.status(404).json({ status: "error", message: "No recently updated data found" });
@@ -81,13 +81,13 @@ router.get("/numberOfPlants", async (req, res) => {
 
         res.json({ status: "success", data: numberOfPlants });
     } catch (error) {
-        res.status(500).json({ status: "error", message: error.message });
-    }
+        res.status(500).json({ status: "error", message: error.message });
+    }
 });
 
 router.get("/plantDensity", async (req, res) => {
     try {
-        const plant= await plantationModel.findOne().sort({ _id: -1 });
+        const plant = await plantationModel.findOne().sort({ _id: -1 });
 
         if (!plant) {
             return res.status(404).json({ status: "error", message: "No recently updated data found" });
@@ -97,13 +97,13 @@ router.get("/plantDensity", async (req, res) => {
 
         res.json({ status: "success", data: plantationDensity });
     } catch (error) {
-        res.status(500).json({ status: "error", message: error.message });
-    }
+        res.status(500).json({ status: "error", message: error.message });
+    }
 });
 
 router.get("/plantType", async (req, res) => {
     try {
-        const plant= await plantationModel.findOne().sort({ _id: -1 });
+        const plant = await plantationModel.findOne().sort({ _id: -1 });
 
         if (!plant) {
             return res.status(404).json({ status: "error", message: "No recently updated data found" });
@@ -113,9 +113,9 @@ router.get("/plantType", async (req, res) => {
 
         res.json({ status: "success", data: plantType });
     } catch (error) {
-        res.status(500).json({ status: "error", message: error.message });
+        res.status(500).json({ status: "error", message: error.message });
     }
-    });
+});
 
 
 module.exports = router;

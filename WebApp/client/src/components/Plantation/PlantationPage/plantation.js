@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 import { MdArrowBack, MdFormatLineSpacing } from "react-icons/md";
 import { RxRowSpacing } from "react-icons/rx";
 import { PiTreeEvergreenFill } from "react-icons/pi";
-import {  BsBoundingBox } from "react-icons/bs";
+import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
 
 import { styles } from "./plantationStyles.js";
@@ -12,37 +12,36 @@ import Select from "react-select";
 import axios from "axios";
 import PlantationDetails from "../PlantationDetails/plantationDetails";
 
-
 export default function Plantation({ onBackToSidebar }) {
   const [perimeter, setPerimeter] = useState("1.5");
   const [area, setArea] = useState("100");
-  const [PlantTypeselectedValue, setPlantTypeselectedValue] = useState(null);
+  const [textPlant, settextPlant] = useState(null);
   const [PlantSpaceUnitselectedValue, setPlantSpaceUnitselectedValue] =
     useState("");
-    const [RowSpaceUnitselectedValue, setRowSpaceUnitselectedValue] =
+  const [RowSpaceUnitselectedValue, setRowSpaceUnitselectedValue] =
     useState("");
   const [PlantSpaceUnitselectedValue1, setPlantSpaceUnitselectedValue1] =
     useState("");
-const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
+  const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
     useState("");
-    
-  const [inputValuePlantspace, setInputValuePlantspace] = useState("");
-  const [inputValueRowspace, setInputValueRowspace] = useState("");
+
+  const [textplantspace, settextplantspace] = useState("");
+  const [textRowspace, settextRowspace] = useState("");
 
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
 
 
   const handleInput1Change = (event) => {
-    setInputValuePlantspace(event.target.value);
+    settextplantspace(event.target.value);
   };
 
   const handleInput2Change = (event) => {
-    setInputValueRowspace(event.target.value);
+    settextRowspace(event.target.value);
   };
 
   const handleInputPlantType = (event) => {
-    setPlantTypeselectedValue(event.target.value);
+    settextPlant(event.target.value);
   };
 
 
@@ -50,38 +49,39 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
     setPlantSpaceUnitselectedValue1(selectedOption);
     setPlantSpaceUnitselectedValue(selectedOption.value);
   };
- 
+
   const handleRowSpaceUnitChange = (selectedOption) => {
     setRowSpaceUnitselectedValue1(selectedOption);
     setRowSpaceUnitselectedValue(selectedOption.value);
   };
- 
+
   const handlePlantationDetails = async (e) => {
-    
+
     try {
       // Validate required fields
       if (
- 
+
         !PlantSpaceUnitselectedValue ||
-        !RowSpaceUnitselectedValue ||
-        !PlantTypeselectedValue ||
-        !inputValuePlantspace ||
-        !inputValueRowspace
+        !RowSpaceUnitselectedValue||
+        !textPlant ||
+        !textplantspace ||
+        !textRowspace
       ) {
         throw new Error("Please fill in all fields");
       }
 
-      setCurrentPage("plantationDetails"); 
+      setCurrentPage("plantationDetails");
       setAnimatePage(true);
       e.preventDefault();
 
       // Prepare data for the request
       const requestData = {
-        PlantTypeselectedValue,
-        inputValuePlantspace,
-        inputValueRowspace,
+        textPlant,
+        textplantspace,
+        textRowspace,
         PlantSpaceUnitselectedValue,
         RowSpaceUnitselectedValue
+
       };
 
       // Make POST request to the backend
@@ -143,7 +143,7 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
             </div>
           </div>
 
-{/* box 2 */}
+          {/* box 2 */}
           <div style={styles.box2}>
             <div style={styles.box2Property}>
               <PiTreeEvergreenFill name="plant" size={35} color="gray" />
@@ -153,16 +153,16 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
             </div>
             <div style={styles.box2Property}>
               <input
-                  type="text"
-                  style={styles.box2input}
-                  placeholder="Tea"
-                  value={PlantTypeselectedValue}
-                  onChange={handleInputPlantType}
-                />
-              
+                type="text"
+                style={styles.box2input}
+                placeholder="Tea"
+                value={textPlant}
+                onChange={handleInputPlantType}
+              />
+
             </div>
           </div>
-{/* box 3 */}
+          {/* box 3 */}
           <div style={styles.box3}>
             <div style={styles.box3Property}>
               <div style={{ transform: "rotate(90deg)" }}>
@@ -178,7 +178,7 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
                   type="text"
                   style={styles.box3input}
                   placeholder="00"
-                  value={inputValuePlantspace}
+                  value={textplantspace}
                   onChange={handleInput1Change}
                 />
                 <Select
@@ -201,7 +201,7 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
               </div>
             </div>
           </div>
-{/* box 4 */}
+          {/* box 4 */}
           <div style={styles.box3}>
             <div style={styles.box3Property}>
               <div style={{ transform: "rotate(90deg)" }}>
@@ -217,7 +217,7 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
                   type="text"
                   style={styles.box3input}
                   placeholder="00"
-                  value={inputValueRowspace}
+                  value={textRowspace}
                   onChange={handleInput2Change}
                 />
                 <Select
@@ -242,8 +242,8 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
           </div>
 
 
-          
-{/* calculate button */}
+
+          {/* calculate button */}
           <div style={styles.bottom}>
             <button style={styles.Button1} onClick={handlePlantationDetails}>
               <p style={styles.Box4ButtonText}>Calculate Plantation</p>
@@ -263,14 +263,12 @@ const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
         {currentPage === "plantationDetails" && (
           <PlantationDetails
             onBackToSidebar={handleBackClick}
-            inputValuePlantspace={inputValuePlantspace}
-            inputValueRowspace={inputValueRowspace}            
+            textplantspace={textplantspace}
+            textRowspace={textRowspace}
             PlantSpaceUnitselectedValue={PlantSpaceUnitselectedValue}
             RowSpaceUnitselectedValue={RowSpaceUnitselectedValue}
-            PlantSpaceUnitselectedValue1={PlantSpaceUnitselectedValue1}
-            RowSpaceUnitselectedValue1={RowSpaceUnitselectedValue1}
-            PlantTypeselectedValue={PlantTypeselectedValue}
-          
+            textPlant={textPlant}
+
           />
         )}
       </div>

@@ -18,6 +18,9 @@ const plantationSchema = mongoose.Schema(
         PlantDensity:
         {
             type: String,
+        },
+        Unit:{
+            type: String,
         }
        
     }

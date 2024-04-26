@@ -12,14 +12,15 @@ import { RxRowSpacing } from "react-icons/rx";
 
 export default function PlantationDetails({
   onBackToSidebar,
-  inputValuePlantspace,
-  inputValueRowspace,
+  textplantspace,
+  textRowspace,
   PlantSpaceUnitselectedValue,
   RowSpaceUnitselectedValue,
-  PlantTypeselectedValue,
+  textPlant,
 }) {
 
   const [numberOfPlants, setnumberOfPlants] = useState(null);
+  const [PlantDensity, setPlantDensity] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,12 +31,49 @@ export default function PlantationDetails({
             }
             const data = await response.json();
             setnumberOfPlants(data.data);
+            
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response = await fetch('http://10.10.23.159:3000/api/plantation/numberOfPlants');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setnumberOfPlants(data.data);
+            
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+    fetchData();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response = await fetch('http://10.10.23.159:3000/api/plantation/plantDensity');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setPlantDensity(data.data);
+            
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+    fetchData();
+  }, []);
+
 
   return (
     <div style={styles.content}>
@@ -68,7 +106,7 @@ export default function PlantationDetails({
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Plant Density</p>
               <p style={styles.propertyValue}>
-                {numberOfPlants} / m<sup>2</sup>
+                {PlantDensity} / m<sup>2</sup>
               </p>
             </div>
           </div>
@@ -108,7 +146,7 @@ export default function PlantationDetails({
             
           </div>
           <div style={styles.innersquareright}>
-            <p style={styles.propertyLabel}>: {PlantTypeselectedValue}</p>
+            <p style={styles.propertyLabel}>: {textPlant}</p>
           </div>
         </div>
 
@@ -121,7 +159,7 @@ export default function PlantationDetails({
             
           </div>
           <div style={styles.innersquareright}>
-            <p style={styles.propertyLabel}>: {inputValuePlantspace}{PlantSpaceUnitselectedValue}</p>
+            <p style={styles.propertyLabel}>: {textplantspace}{PlantSpaceUnitselectedValue}</p>
           </div>
         </div>
 
@@ -134,7 +172,7 @@ export default function PlantationDetails({
             
           </div>
           <div style={styles.innersquareright}>
-            <p style={styles.propertyLabel}>: {inputValueRowspace}{RowSpaceUnitselectedValue}</p>
+            <p style={styles.propertyLabel}>: {textRowspace}{RowSpaceUnitselectedValue}</p>
           </div>
         </div>
 

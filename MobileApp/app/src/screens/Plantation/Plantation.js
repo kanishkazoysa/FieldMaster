@@ -97,6 +97,7 @@ export default function Plantation() {
       textPlant,
       textplantspace,
       textRowspace,
+      PlantSpaceUnitselectedValue
     })
       .then(async (response) => {
         console.log(response.data);
