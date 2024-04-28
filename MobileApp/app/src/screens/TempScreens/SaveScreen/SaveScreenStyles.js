@@ -82,7 +82,7 @@ export const styles = StyleSheet.create({
   low_outer_02: {
     flex: 1,
     backgroundColor: '#ffffff8a',
-    height: 300,
+    height: responsiveHeight(100),
   },
   row_02_col_01: {
     flexDirection: 'row',
@@ -95,7 +95,7 @@ export const styles = StyleSheet.create({
   },
   area_col_styling: {
     justifyContent: 'space-evenly',
-    marginLeft: 10,
+    marginLeft: responsiveWidth(3),
   },
   area_text_styling: {
     marginLeft: 4,
