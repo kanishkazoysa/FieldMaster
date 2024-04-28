@@ -24,8 +24,8 @@ import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
-import Headersection from "../components/Headersection";
-import CustomButton from "../components/CustomButton";
+import Headersection from "../../components/Headersection";
+import CustomButton from "../../components/CustomButton";
 import axios from "axios";
 import {
   responsiveFontSize,
@@ -449,7 +449,7 @@ export default function ClearLand() {
           {/* Stones box */}
           <Card style={styles.card1}>
             <Card.Content style={styles.cardContent}>
-              <Image source={require("../../assets/Stones.png")} />
+              <Image source={require("../../../assets/Stones.png")} />
               <Text style={styles.cardTopText} variant="titleLarge">
                 Stones
               </Text>

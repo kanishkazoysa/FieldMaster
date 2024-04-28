@@ -20,9 +20,9 @@ import {
   
   import * as Print from 'expo-print';
   import { shareAsync } from 'expo-sharing';
-  import Headersection from "../components/Headersection";
-  import AlertButton from "../components/AlertButton";
-  import CustomButton from "../components/CustomButton";
+  import Headersection from "../../components/Headersection";
+  import AlertButton from "../../components/AlertButton";
+  import CustomButton from "../../components/CustomButton";
   import { responsiveFontSize, responsiveHeight, responsiveScreenFontSize, responsiveWidth } from "react-native-responsive-dimensions";
   import axios from "axios";
   
@@ -185,7 +185,7 @@ import {
                 <View style={styles.card1Left}>
                   <Image
                     style={{marginLeft:responsiveWidth(1.6),marginTop:responsiveHeight(0.4) }}
-                    source={require("../../assets/Clock.png")}
+                    source={require("../../../assets/Clock.png")}
                   ></Image>
                   <View style={{ display: "flex", flexDirection: "column" }}>
                     <Text style={styles.card1Text2}>
@@ -204,7 +204,7 @@ import {
                 >
                   <Image
                     style={{ marginLeft: responsiveWidth(45), marginTop: responsiveHeight(-5) }}
-                    source={require("../../assets/Calendar.png")}
+                    source={require("../../../assets/Calendar.png")}
                   ></Image>
                   <View style={{ display: "flex", flexDirection: "column" }}>
                     <Text style={styles.card1Text4}>
@@ -232,7 +232,7 @@ import {
                 <View style={styles.card2Left}>
                   <Image
                     style={{ marginLeft: responsiveWidth(3), marginTop: responsiveHeight(4.5) }}
-                    source={require("../../assets/Perimeter.png")}
+                    source={require("../../../assets/Perimeter.png")}
                   ></Image>
                   <View style={{ display: "flex", flexDirection: "column" }}>
                     <Text style={styles.card2Text1}>
@@ -251,7 +251,7 @@ import {
                 >
                   <Image
                     style={{ marginLeft: responsiveWidth(50), marginTop: responsiveHeight(-5) }}
-                    source={require("../../assets/Calendar.png")}
+                    source={require("../../../assets/Calendar.png")}
                   ></Image>
                   <View style={{ display: "flex", flexDirection: "column" }}>
                     <Text style={styles.card2Text3}>
