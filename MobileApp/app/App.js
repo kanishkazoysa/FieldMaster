@@ -19,7 +19,6 @@ import FenceDetails from "./src/screens/FenceSetup/fenceDetails/FenceDetails";
 
 /* Template screens importing */
 
-
 import SaveScreen from "./src/screens/TempScreens/SaveScreen/SaveScreen";
 import TemplateView from "./src/screens/TempScreens/TemplateView/TemplateView";
 import EditTemplate from "./src/screens/TempScreens/EditTemplate/EditTemplate";
@@ -44,7 +43,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="TemplatesScreen"
+        initialRouteName="WelcomeScreen"
         screenOptions={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Slide-in/slide-out animation
@@ -78,17 +77,9 @@ const App = () => {
           component={FertilizationDetails}
         />
 
-<Stack.Screen
-          name="Clearland"
-          component={Clearland}
-          
-        />
+        <Stack.Screen name="Clearland" component={Clearland} />
 
-<Stack.Screen
-          name="EffortOutput"
-          component={EffortOutput}
-          
-        />
+        <Stack.Screen name="EffortOutput" component={EffortOutput} />
 
        
 
