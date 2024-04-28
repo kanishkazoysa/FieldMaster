@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
   top_Bar: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0866FF',
+    backgroundColor: '#007BFF',
     color: 'white',
   },
   title_text: {
@@ -54,6 +54,4 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: 100,
   },
-
-  
 });
