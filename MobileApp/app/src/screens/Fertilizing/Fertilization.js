@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
+import {
   StyleSheet,
   Text,
   View,
@@ -196,9 +201,14 @@ export default function Fertilization({ route }) {
                 {buttonNames.map((name, index) => (
                   <Button
                     labelStyle={{
-                      fontSize: 12,
+                      fontSize: responsiveFontSize(1.5),
+                      fontWeight: "400",
+                      marginTop: responsiveHeight(1),
                       color: isPressed(index) ? "#007aff" : "#000",
-                      width: "100%",
+                      width: "80%",
+                      height: "60%",
+                      margin: responsiveHeight(0.5),
+                      
                     }}
                     key={index}
                     mode={isPressed(index) ? "contained-tonal" : "outlined"}
