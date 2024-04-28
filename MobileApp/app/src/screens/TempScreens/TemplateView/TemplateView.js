@@ -3,6 +3,11 @@ import { View, Image, Text, StyleSheet,TouchableOpacity } from 'react-native';
 import { Appbar, ThemeProvider } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './TemplateViewStyles';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
 
 const ClearLandIcon = (props) => (
   <MaterialCommunityIcons {...props} name='island' size={25} color='white' />
@@ -20,7 +25,7 @@ const TypeIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name='format-list-bulleted-type'
-    size={25}
+    size={responsiveFontSize(3.7)}
     color='grey'
   />
 );
@@ -28,7 +33,7 @@ const PerimeterIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name='vector-square'
-    size={25}
+    size={responsiveFontSize(3.7)}
     color='grey'
   />
 );
@@ -37,7 +42,7 @@ const AreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name='texture-box'
-    size={25}
+    size={responsiveFontSize(3.7)}
     color='grey'
   />
 );
@@ -46,7 +51,7 @@ const CustomMapIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name='map-marker-radius'
-    size={25}
+    size={responsiveFontSize(3.7)}
     color='grey'
   />
 );
@@ -54,9 +59,9 @@ const CustomMapIcon = (props) => (
 const CustomEditIcon = ({ navigation }) => (
   <MaterialCommunityIcons
     name='square-edit-outline'
-    size={25}
+    size={responsiveFontSize(3)}
     color={'white'}
-    style={{ marginRight: 10 }}
+    style={{ marginRight: responsiveWidth(3) }}
   />
 );
 
@@ -112,7 +117,7 @@ const TemplateView = ({ route, navigation }) => {
             <View style={styles.iconOuter_03}>
               <FenceSetupIcon />
             </View>
-            <Text>Fence setup</Text>
+            <Text>Set fence</Text>
           </View>
         </TouchableOpacity>
         </View>

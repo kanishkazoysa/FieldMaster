@@ -17,7 +17,7 @@ app.use(express.json());
 app.use("/api/auth/*", middleware);
 app.use("/api/users", userRoute);
 app.use("/api/mail", mailRoute);
-app.use("/api", fenceRoute);
+app.use("/api/fence", fenceRoute);
 app.use('/api/auth/mapTemplate', MapTemplateRoute);
 
 const port = process.env.PORT || 5000;

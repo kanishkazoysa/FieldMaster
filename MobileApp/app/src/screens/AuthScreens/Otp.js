@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     marginTop: "3%",
   },
   text: {
-    fontSize: responsiveFontSize(2),
+    fontSize: responsiveFontSize(1.9),
     marginTop: "1%",
   },
   container: {
@@ -257,8 +257,8 @@ const styles = StyleSheet.create({
   button: {
     marginTop: responsiveHeight(3),
     backgroundColor: "#007BFF",
-    width: 337,
-    padding: 2,
+    width: responsiveWidth(80),
+    padding: responsiveHeight(0),
   },
   resendBtn: {
     display : "flex",
