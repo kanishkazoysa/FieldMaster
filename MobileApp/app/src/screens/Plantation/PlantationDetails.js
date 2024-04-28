@@ -306,7 +306,7 @@ export default function PlantationDetails({ route }) {
 
           <View style={styles.box3}>
             <View style={styles.inner}>
-              <Text style={styles.innertopText}>Result based on</Text>
+              <Text style={styles.innertopText}>Results based on</Text>
 
               <View style={styles.center}>
                 <View style={styles.innercenter}>

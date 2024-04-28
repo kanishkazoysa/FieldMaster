@@ -1,5 +1,12 @@
 
 import { StyleSheet } from "react-native";
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize,
+  } from "react-native-responsive-dimensions";
+
+
 export const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -23,9 +30,9 @@ export const styles = StyleSheet.create({
     box1: {
       flexDirection: "column",
       backgroundColor: "white",
-      width: "87%",
-      height: 123,
-      marginTop: 20,
+      width: responsiveWidth(86),
+      height: responsiveHeight(15),
+      marginTop: responsiveHeight(1),
       alignItems: "center",
       borderRadius: 11,
       shadowColor: "#000",
@@ -35,9 +42,9 @@ export const styles = StyleSheet.create({
     },
   
     titleText: {
-      fontSize: 15,
+      fontSize: responsiveFontSize(2),
       fontWeight: "bold",
-      marginTop: 10,
+      marginTop: responsiveHeight(1),
     },
   
     propertyBox: {
@@ -55,36 +62,37 @@ export const styles = StyleSheet.create({
       justifyContent: "center", // or remove it for default behavior
       backgroundColor: "white",
       width: "46%",
-      height: 50,
-      padding: 7,
+      height: responsiveHeight(8.5),
+      padding: responsiveWidth(2),
     },
   
     propertyDetails: {
       flexDirection: "column",
-      marginLeft: 5,
+      marginLeft: responsiveWidth(2),
       width: "70%",
       height: 40,
       backgroundColor: "white",
     },
   
     propertyLabel: {
-      fontSize: 15,
+        fontSize: responsiveFontSize(1.7),
+        
     },
   
     propertyValue: {
-      fontSize: 16,
-      fontWeight: "bold",
+        fontSize: responsiveFontSize(1.8),
+        fontWeight: "bold",
     },
   
     /*Second Section*/
   
     box2: {
       width: "87%",
-      height: 80,
+      height: responsiveHeight(9),
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "white",
-      marginTop: 15,
+      marginTop: responsiveHeight(1),
       borderRadius: 11,
       shadowColor: "#000",
       shadowOpacity: 0.1,
@@ -106,20 +114,21 @@ export const styles = StyleSheet.create({
       justifyContent: "left",
       backgroundColor: "white",
       width: "46%",
-      height: 50,
+      height: responsiveHeight(8.5),
     },
     box2PropertyDetails: {
       flexDirection: "column",
       marginLeft: 5,
       width: "50%",
-      height: 40,
+      height: responsiveHeight(8.5),
       backgroundColor: "white",
     },
     Box2PropertyLabel: {
-      fontSize: 14,
+      fontSize: responsiveFontSize(1.7),
+      paddingTop: responsiveWidth(3),
     },
     Box2PropertyValue: {
-      fontSize: 16,
+      fontSize: responsiveFontSize(1.8),
       fontWeight: "bold",
     },
   
@@ -127,11 +136,11 @@ export const styles = StyleSheet.create({
   
     box3: {
       width: "87%",
-      height: 230,
+      height: responsiveHeight(30),
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "white",
-      marginTop: 15,
+      marginTop: responsiveHeight(1),
       borderRadius: 11,
       shadowColor: "#000",
       shadowOpacity: 0.1,
@@ -141,32 +150,32 @@ export const styles = StyleSheet.create({
   
     inner: {
       width: "80%",
-      height: "80%",
+      height: "90%",
       backgroundColor: "white",
     },
   
     innertopText: {
-      fontSize: 15,
+      fontSize: responsiveFontSize(1.8),
       fontWeight: "bold",
     },
   
     center: {
-      marginTop: 15,
+      marginTop: responsiveHeight(2),
     },
   
     innercenter: {
       flexDirection: "row",
       width: "100%",
-      height: 45,
+      height: responsiveHeight(5.5),
       alignItems: "center",
       justifyContent: "space-between",
       backgroundColor: "white",
-      marginVertical: 2,
+      marginVertical: responsiveHeight(1),
     },
   
     innersquareleft: {
       width: "50%",
-      height: 40,
+      height: responsiveHeight(5.5),
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
@@ -175,18 +184,18 @@ export const styles = StyleSheet.create({
   
     innersquareright: {
       width: "45%",
-      height: 40,
+      height: responsiveHeight(2.7),
       flexDirection: "row",
       alignItems: "center",
       backgroundColor: "white",
     },
   
-    RightText: {},
+    RightText: {
+
+    },
   
     LeftText: {
-      backgroundColor: "white",
-      width: "70%",
-      textAlign: "right",
+      paddingLeft: responsiveWidth(2),
     },
   
     /* bottom section */

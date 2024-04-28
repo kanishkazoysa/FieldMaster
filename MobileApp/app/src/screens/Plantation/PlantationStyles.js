@@ -1,5 +1,9 @@
 import { StyleSheet } from "react-native";
-
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize,
+  } from "react-native-responsive-dimensions";
 export const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -21,12 +25,12 @@ export const styles = StyleSheet.create({
     },
   
     Box1: {
-      width: "87%",
-      height: 101,
+      width: responsiveWidth(86),
+      height: responsiveHeight(12),
       justifyContent: "center",
       backgroundColor: "white",
-      marginTop: 30,
-      padding: 12,
+      marginTop: responsiveHeight(3),
+      padding: 0,
       marginBottom: 20,
       borderRadius: 11,
       shadowColor: "#000",
@@ -37,19 +41,19 @@ export const styles = StyleSheet.create({
   
   
     titleText: {
-      fontSize: 14,
-      fontWeight: "bold",
-      marginLeft: 16,
+        fontSize: responsiveFontSize(1.9),
+        fontWeight: "bold",
+        marginLeft: responsiveWidth(4),
     },
   
     propertyBox: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      height: 50,
+      height: responsiveHeight(5.6),
       width: "100%",
       backgroundColor: "white",
-      marginTop: 7,
+      marginTop: responsiveHeight(1),
     },
   
     property: {
@@ -58,23 +62,23 @@ export const styles = StyleSheet.create({
       justifyContent: "left",
       backgroundColor: "white",
       width: "46%",
-      height: 50,
+      height: responsiveHeight(5.6),
     },
   
     propertyDetails: {
       flexDirection: "column",
-      marginLeft: 5,
+      marginLeft: responsiveWidth(2),
       width: "50%",
-      height: 40,
+      height: responsiveHeight(4.6),
       backgroundColor: "white",
     },
   
     propertyLabel: {
-      fontSize: 14,
+        fontSize: responsiveFontSize(1.6),
     },
   
     propertyValue: {
-      fontSize: 16,
+        fontSize: responsiveFontSize(1.8),
       fontWeight: "bold",
     },
   
@@ -82,10 +86,10 @@ export const styles = StyleSheet.create({
   
     Box2: {
       width: "93%",
-      height: 85,
+      height:responsiveHeight(12),
       justifyContent: "center",
       backgroundColor: "#FFFFFF",
-      marginTop: 10,
+      marginTop: responsiveHeight(1.5),
       borderRadius: 11,
       padding: 18,
       shadowColor: "#000",
@@ -99,9 +103,9 @@ export const styles = StyleSheet.create({
     },
   
     Box2titleText: {
-      fontSize: 14,
+      fontSize: responsiveFontSize(1.9),
       fontWeight: "bold",
-      marginLeft: 10,
+      marginLeft: responsiveHeight(2),
     },
   
     Box2input: {},
@@ -115,7 +119,7 @@ export const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: "Space-between",
       backgroundColor: "white",
-      marginTop: 10,
+      marginTop: responsiveHeight(1.5),
       width: "100%",
     },
   
@@ -124,7 +128,7 @@ export const styles = StyleSheet.create({
       borderRadius: 10,
       borderColor: "black",
       width: "36%",
-      height: 35,
+      height: responsiveHeight(4.5),
       alignItems: "center",
       justifyContent: "center",
       borderWidth: 1,
@@ -135,7 +139,7 @@ export const styles = StyleSheet.create({
   
     bottom: {
       alignItems: "center",
-      bottom: 30,
+      bottom: responsiveHeight(3),
     },
   });
   
