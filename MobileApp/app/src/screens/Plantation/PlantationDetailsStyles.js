@@ -70,7 +70,7 @@ export const styles = StyleSheet.create({
       flexDirection: "column",
       marginLeft: responsiveWidth(2),
       width: "70%",
-      height: 40,
+      height: responsiveHeight(6),
       backgroundColor: "white",
     },
   
@@ -191,18 +191,19 @@ export const styles = StyleSheet.create({
     },
   
     RightText: {
-
+      fontSize: responsiveFontSize(1.7),
     },
   
     LeftText: {
       paddingLeft: responsiveWidth(2),
+      fontSize: responsiveFontSize(1.7),
     },
   
     /* bottom section */
   
     bottom: {
       alignItems: "center",
-      bottom: 30,
+      bottom: responsiveHeight(3),
     },
   
   });
