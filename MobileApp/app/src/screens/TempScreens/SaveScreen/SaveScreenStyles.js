@@ -115,10 +115,12 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 6,
+    justifyContent: 'space-between',
+    paddingHorizontal: responsiveWidth(3),
   },
   input_text: {
-    height: 23,
-    width: 200,
+    height: responsiveHeight(2),
+    width: responsiveWidth(56),
     backgroundColor: 'white',
   },
   inner_view_03: {

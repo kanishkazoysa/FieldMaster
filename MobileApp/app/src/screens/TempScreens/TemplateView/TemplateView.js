@@ -3,24 +3,43 @@ import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Appbar, ThemeProvider } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './TemplateViewStyles';
+import {
+  responsiveFontSize,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 
 const ClearLandIcon = (props) => (
-  <MaterialCommunityIcons {...props} name='island' size={25} color='white' />
+  <MaterialCommunityIcons
+    {...props}
+    name='island'
+    size={responsiveFontSize(2.8)}
+    color='white'
+  />
 );
 
 const PlantationIcon = (props) => (
-  <MaterialCommunityIcons {...props} name='sprout' size={25} color='white' />
+  <MaterialCommunityIcons
+    {...props}
+    name='sprout'
+    size={responsiveFontSize(2.8)}
+    color='white'
+  />
 );
 
 const FenceSetupIcon = (props) => (
-  <MaterialCommunityIcons {...props} name='fence' size={25} color='white' />
+  <MaterialCommunityIcons
+    {...props}
+    name='fence'
+    size={responsiveFontSize(2.8)}
+    color='white'
+  />
 );
 
 const TypeIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name='format-list-bulleted-type'
-    size={25}
+    size={responsiveFontSize(2.8)}
     color='grey'
   />
 );
@@ -28,7 +47,7 @@ const PerimeterIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name='vector-square'
-    size={25}
+    size={responsiveFontSize(2.8)}
     color='grey'
   />
 );
@@ -37,7 +56,7 @@ const AreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name='texture-box'
-    size={25}
+    size={responsiveFontSize(2.8)}
     color='grey'
   />
 );
@@ -46,17 +65,17 @@ const CustomMapIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name='map-marker-radius'
-    size={25}
+    size={responsiveFontSize(2.8)}
     color='grey'
   />
 );
 
-const CustomEditIcon = ({ navigation }) => (
+const CustomEditIcon = ({ navigation, item }) => (
   <MaterialCommunityIcons
     name='square-edit-outline'
-    size={25}
+    size={responsiveFontSize(2.8)}
     color={'white'}
-    style={{ marginRight: 10 }}
+    style={{ marginRight: responsiveWidth(2) }}
   />
 );
 
@@ -65,6 +84,12 @@ const TemplateView = ({ route, navigation }) => {
   useEffect(() => {
     console.log('template view screen ', item._id);
   }, []);
+
+  const handleEdit = (item) => {
+    console.log(item);
+    navigation.navigate('ResizeMap', { templateId: item._id });
+  };
+
   return (
     <>
       <Appbar.Header style={styles.top_Bar} dark={true} mode='center-aligned'>
@@ -75,7 +100,9 @@ const TemplateView = ({ route, navigation }) => {
         />
         <Appbar.Content title={item.templateName} />
         {/* pencil/ pen icon  */}
-        <CustomEditIcon navigation={navigation} />
+        <TouchableOpacity onPress={() => handleEdit(item)}>
+          <CustomEditIcon />
+        </TouchableOpacity>
       </Appbar.Header>
       <View style={styles.low_outer}>
         <View style={styles.imageView}>

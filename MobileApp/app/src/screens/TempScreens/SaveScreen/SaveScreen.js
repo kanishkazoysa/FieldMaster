@@ -46,8 +46,7 @@ export function SaveScreen({ navigation, route }) {
   const [measureName, setMeasureName] = React.useState('');
   const [landType, setLandType] = React.useState('');
   const [location, setLocation] = React.useState('');
-  const [descriptionText, setDescriptionText] =
-    React.useState('demo description');
+  const [descriptionText, setDescriptionText] = React.useState('');
 
   /* this function is used to save the data */
   const onSaveButtonPress = () => {

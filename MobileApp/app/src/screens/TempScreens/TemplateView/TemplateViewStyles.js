@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
 
     ...Platform.select({
       android: {
-        marginTop: StatusBar.currentHeight,
+        marginTop: responsiveHeight(3),
       },
     }),
   },
@@ -59,17 +59,17 @@ export const styles = StyleSheet.create({
   iconOuter_01: {
     backgroundColor: '#655757',
     borderRadius: 1000,
-    padding: 10,
+    padding: responsiveWidth(2.5),
   },
   iconOuter_02: {
     backgroundColor: '#3AA859',
     borderRadius: 100,
-    padding: 10,
+    padding: responsiveWidth(2.5),
   },
   iconOuter_03: {
     backgroundColor: '#5452CC',
     borderRadius: 100,
-    padding: 10,
+    padding: responsiveWidth(2.5),
   },
   infoBlock: {
     backgroundColor: 'white',
