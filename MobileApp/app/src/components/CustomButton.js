@@ -1,7 +1,11 @@
 import React from "react";
 import { Button } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { responsiveFontSize, responsiveHeight, responsiveWidth } from "react-native-responsive-dimensions";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
 
 const CustomButton = ({ onPress, text, iconName, iconColor, buttonColor, textStyle }) => {
   return (
@@ -18,9 +22,9 @@ const CustomButton = ({ onPress, text, iconName, iconColor, buttonColor, textSty
 
 const styles = {
   button: {
-    width: responsiveWidth(80),
-    height: responsiveHeight(5),
-    marginTop: responsiveHeight(1.5),
+    width: responsiveWidth(86),
+    height: 40,
+    marginTop: 10,
     borderRadius: 11,
   },
   buttonText: {

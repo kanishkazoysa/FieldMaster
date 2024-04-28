@@ -1,6 +1,4 @@
 import { StyleSheet } from 'react-native';
-/* import AppLoading from 'expo-app-loading'; */
-/* import { useFonts } from 'expo-font'; */
 
 export const styles = StyleSheet.create({
   top_Bar: {
@@ -14,37 +12,37 @@ export const styles = StyleSheet.create({
     fontSize: 20,
   },
   low_outer: {
+    marginTop: 10,
     height: '100%',
   },
   template_style: {
     backgroundColor: 'white',
-    marginLeft: 20,
-    marginTop: 15,
+    marginVertical: 8,
+    marginHorizontal: 10,
     borderRadius: 10,
     flexDirection: 'row',
-    paddingVertical: 10,
-    width: '90%',
-    paddingHorizontal: 2,
+    paddingVertical: 12,
   },
   image_style: {
     width: 90,
     height: 90,
-    left: -23,
+    left: 5,
   },
   col_01: {
-    flex: 2,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    left: -8,
   },
   col_02: {
     flex: 3,
-    left: -45,
+    left: -10,
   },
   col_03: {
     flex: 1,
     justifyContent: 'space-between',
-    alignItems: 'center',
-    right: -16,
+    alignItems: 'flex-end',
+    paddingRight: 10,
   },
   bold_text: {
     fontWeight: 'bold',
@@ -55,7 +53,7 @@ export const styles = StyleSheet.create({
   },
   scrollViewOuterStyle: {
     flex: 1,
-    marginBottom: 70,
+    paddingBottom: 100,
   },
 
   

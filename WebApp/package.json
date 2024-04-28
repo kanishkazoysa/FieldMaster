@@ -16,6 +16,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@material-tailwind/react": "^2.1.9",
+    "@mui/icons-material": "^5.15.14",
     "@mui/joy": "^5.0.0-beta.28",
     "@mui/material": "^5.15.10",
     "@turf/turf": "^6.5.0",

@@ -6,133 +6,163 @@ import {
   StatusBar,
   TouchableOpacity,
   Text,
-  FlatList, 
+  FlatList,
 } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Polyline, Circle } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from "react-native-maps";
 import * as Location from "expo-location";
+import * as TaskManager from "expo-task-manager";
 import { useNavigation } from "@react-navigation/native";
 import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
+import area from "@turf/area";
+import AxiosInstance from "../AxiosInstance";
+import { distance } from "@turf/turf";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
 
-// function kalmanFilter(currentMeasurement, lastEstimation) {
-//   // Define constants for the Kalman filter
-//   const measurementNoise = 0.0001;
-//   const processNoise = 0.01;
-
-//   // Kalman gain calculation
-//   const kalmanGain = lastEstimation.errorEstimate / (lastEstimation.errorEstimate + measurementNoise);
-
-//   // State update estimation
-//   const updatedEstimation = {
-//     value: lastEstimation.value + kalmanGain * (currentMeasurement - lastEstimation.value),
-//     errorEstimate: (1 - kalmanGain) * lastEstimation.errorEstimate + processNoise
-//   };
-
-//   return updatedEstimation.value;
-// }
-// export default function Home() {
-//   const [currentLocation, setCurrentLocation] = useState(null);
-//   const [pathCoordinates, setPathCoordinates] = useState([]);
-//   const [trackingStarted, setTrackingStarted] = useState(false);
-//   const mapRef = useRef(null);
-//   const lastLocation = useRef(null); // Store last location for filtering
-
-//   useEffect(() => {
-//     let watchLocation;
-//     if (trackingStarted) {
-//       watchLocation = Location.watchPositionAsync(
-//         {
-//           accuracy: Location.Accuracy.BestForNavigation,
-//           timeInterval: 1000, // Update every 1 second
-//           distanceInterval: 1, // Update every 1 meter
-//         },
-//         (location) => {
-//           // Apply Kalman filter to smooth location data
-//           const smoothedLatitude = lastLocation.current ?
-//             kalmanFilter(location.coords.latitude, lastLocation.current.coords.latitude) :
-//             location.coords.latitude;
-//           const smoothedLongitude = lastLocation.current ?
-//             kalmanFilter(location.coords.longitude, lastLocation.current.coords.longitude) :
-//             location.coords.longitude;
-
-//           setCurrentLocation({
-//             coords: {
-//               latitude: smoothedLatitude,
-//               longitude: smoothedLongitude,
-//             }
-//           });
-
-//           setPathCoordinates(prevCoordinates => [
-//             ...prevCoordinates,
-//             {
-//               latitude: smoothedLatitude,
-//               longitude: smoothedLongitude,
-//             },
-//           ]);
-
-//           lastLocation.current = location;
-//         }
-//       );
-//     } else {
-//       // Clear path coordinates if tracking is stopped
-//       setPathCoordinates([]);
-//     }
-
-//     return () => {
-//       if (watchLocation && watchLocation.remove) {
-//         watchLocation.remove();
-//       }
-//     };
-//   }, [trackingStarted]);
+const BACKGROUND_LOCATION_TASK = "background-location-task";
 
 export default function Home() {
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [initialLocation, setInitialLocation] = useState(null);
   const [pathCoordinates, setPathCoordinates] = useState([]);
   const [trackingStarted, setTrackingStarted] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
-    const navigation = useNavigation(); 
+  const [trackingPaused, setTrackingPaused] = useState(false);
+  const [drawPolyline, setDrawPolyline] = useState(false);
+  const [points, setPoints] = useState([]);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const navigation = useNavigation();
   const mapRef = useRef(null);
+  const [polygonArea, setPolygonArea] = useState(0); // Renamed state variable
+  const [calculatedArea, setCalculatedArea] = useState(0);
+  const [calculatedPerimeter, setCalculatedPerimeter] = useState(0);
+  const [polygonPerimeter, setPolygonPerimeter] = useState(0);
 
-  useEffect(() => {
-    let watchLocation;
-    if (trackingStarted) {
-      watchLocation = Location.watchPositionAsync(
-        {
-          accuracy: Location.Accuracy.BestForNavigation,
-          timeInterval: 1000, // Update every 1 second
-          distanceInterval: 1, // Update every 1 meter
-        },
-        (location) => {
-          setCurrentLocation(location);
-          setPathCoordinates((prevCoordinates) => [
-            ...prevCoordinates,
-            {
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            },
-          ]);
-        }
-      );
-    } else {
-      // Clear path coordinates if tracking is stopped
-      setPathCoordinates([]);
+  TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
+    if (error) {
+      console.error("Background location task error:", error);
+      return;
     }
 
-    return () => {
-      if (watchLocation && watchLocation.remove) {
-        watchLocation.remove();
+    if (data) {
+      const { locations } = data;
+      console.log("Received background location update:", locations);
+      if (trackingStarted) {
+        const newCoordinates = locations.map((location) => ({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          accuracy: location.coords.accuracy,
+        }));
+        setPathCoordinates((prevCoordinates) => [
+          ...prevCoordinates,
+          ...newCoordinates,
+        ]);
+        if (!trackingPaused) {
+          setCurrentLocation({
+            latitude: locations[0].coords.latitude,
+            longitude: locations[0].coords.longitude,
+            accuracy: locations[0].coords.accuracy,
+          });
+          focusOnCurrentLocation();
+        }
+      }
+      setInitialLocation({
+        latitude: locations[0].coords.latitude,
+        longitude: locations[0].coords.longitude,
+        accuracy: locations[0].coords.accuracy,
+      });
+    }
+  });
+
+  const handleStartPress = () => {
+    setTrackingPaused(!trackingPaused);
+    if (!trackingPaused) {
+      setDrawPolyline(true);
+      setPathCoordinates([initialLocation]);
+    } else {
+      setTrackingStarted(false);
+      calculateAreaAndPerimeter();
+
+      if (currentLocation) {
+        const lineCoordinates = [currentLocation, initialLocation];
+        setPathCoordinates((prevCoordinates) => [
+          ...prevCoordinates,
+          ...lineCoordinates,
+        ]);
+      }
+      stopLocationUpdates();
+    }
+    if (trackingPaused) {
+      setIsButtonDisabled(true);
+    }
+  };
+
+  useEffect(() => {
+    const startTracking = async () => {
+      try {
+        const { coords } = await Location.getCurrentPositionAsync({});
+
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          console.error("Foreground location permission not granted");
+          return;
+        }
+
+        await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
+          accuracy: Location.Accuracy.Highest,
+          timeInterval: 1000,
+          distanceInterval: 0,
+          showsBackgroundLocationIndicator: true,
+          foregroundService: {
+            notificationTitle: "Tracking location",
+            notificationBody:
+              "Your location is being tracked in the background",
+          },
+        });
+
+        setInitialLocation({
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+        });
+
+        setCurrentLocation({
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+        });
+
+        console.log("Background location updates started");
+        setTrackingStarted(true);
+      } catch (error) {
+        console.error("Error starting background location updates:", error);
       }
     };
-  }, [trackingStarted]);
 
-  const mapTypes = [
-    { name: "Standard", value: "standard" },
-    { name: "Satellite", value: "satellite" },
-    { name: "Hybrid", value: "hybrid" },
-    { name: "Terrain", value: "terrain" },
-  ];
+    startTracking();
+
+    return () => {
+      stopLocationUpdates();
+    };
+  }, []);
+
+  const stopLocationUpdates = async () => {
+    try {
+      const isTaskRunning = await TaskManager.isTaskRegisteredAsync(
+        BACKGROUND_LOCATION_TASK
+      );
+      if (isTaskRunning) {
+        await Location.stopLocationUpdatesAsync(BACKGROUND_LOCATION_TASK);
+        console.log("Background location updates stopped");
+      }
+    } catch (error) {
+      console.error("Error stopping background location updates:", error);
+    }
+  };
 
   const toggleMapType = () => {
     setShowDropdown(!showDropdown);
@@ -144,27 +174,81 @@ export default function Home() {
   };
 
   const focusOnCurrentLocation = () => {
-    setTrackingStarted(!trackingStarted); // Toggle tracking started state
-
-    if (!trackingStarted) {
-      Location.getCurrentPositionAsync({}).then((location) => {
-        setCurrentLocation(location);
-        setPathCoordinates([
-          {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          },
-        ]);
-        if (mapRef.current && location) {
-          mapRef.current.animateToRegion({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: 0.001,
-            longitudeDelta: 0.001,
-          });
-        }
+    if (mapRef.current && currentLocation) {
+      mapRef.current.animateToRegion({
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.00009,
       });
     }
+  };
+
+  const mapTypes = [
+    { name: "Satellite", value: "satellite" },
+    { name: "Standard", value: "standard" },
+    { name: "Hybrid", value: "hybrid" },
+    { name: "Terrain", value: "terrain" },
+  ];
+
+  const addPoint = () => {
+    if (pathCoordinates.length > 0) {
+      const latestLocation = pathCoordinates[pathCoordinates.length - 1];
+      setPoints((prevPoints) => [...prevPoints, latestLocation]);
+    }
+  };
+
+  const calculateAreaAndPerimeter = () => {
+    const polygon = {
+      type: "Polygon",
+      coordinates: [
+        pathCoordinates.map((coord) => [coord.longitude, coord.latitude]),
+      ],
+    };
+    const polygonArea = area(polygon);
+    setCalculatedArea(polygonArea);
+  
+    let perimeter = 0;
+    for (let i = 0; i < pathCoordinates.length - 1; i++) {
+      const point1 = [
+        pathCoordinates[i].longitude,
+        pathCoordinates[i].latitude,
+      ];
+      const point2 = [
+        pathCoordinates[i + 1].longitude,
+        pathCoordinates[i + 1].latitude,
+      ];
+      perimeter += distance(point1, point2, { units: "kilometers" });
+    }
+    // Add the distance between the last point and the first point to close the polygon
+    const point1 = [pathCoordinates[0].longitude, pathCoordinates[0].latitude];
+    const point2 = [
+      pathCoordinates[pathCoordinates.length - 1].longitude,
+      pathCoordinates[pathCoordinates.length - 1].latitude,
+    ];
+    perimeter += distance(point1, point2, { units: "kilometers" });
+  
+    setPolygonPerimeter(perimeter);
+  };
+
+  const saveMapData = async () => {
+    AxiosInstance.post("/api/auth/mapTemplate/saveTemplate", {
+      locationPoints: pathCoordinates,
+      area: polygonArea,
+      perimeter: polygonPerimeter,
+    })
+      .then((response) => {
+        console.log(response.data._id);
+        navigation.navigate("SaveScreen", {
+          id: response.data._id,
+          area: polygonArea,
+          perimeter: polygonPerimeter,
+          userId: response.data.userId,
+        });
+      })
+      .catch((error) => {
+        console.error(error.response.data);
+      });
   };
 
   return (
@@ -178,16 +262,28 @@ export default function Home() {
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate("SaveScreen")}
+          onPress={saveMapData}
           style={[styles.appbarButton, { marginLeft: "auto" }]}
         >
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
       </Appbar.Header>
+
+      
+        <View style={styles.overlay}>
+          <Text style={styles.overlayText}>
+            Area: {calculatedArea.toFixed(2)} sq units
+          </Text>
+          <Text style={styles.overlayText}>
+            Perimeter: {calculatedPerimeter.toFixed(2)} km
+          </Text>
+        </View>
+     
       <MapView
         ref={mapRef}
         style={styles.map}
         mapType={mapTypes[mapTypeIndex].value}
+        showsUserLocation={trackingStarted}
         provider={PROVIDER_GOOGLE}
         initialRegion={{
           latitude: 6.2427,
@@ -196,24 +292,16 @@ export default function Home() {
           longitudeDelta: 0.0421,
         }}
       >
-        {trackingStarted && currentLocation && (
-          <Circle
-            center={{
-              latitude: currentLocation.coords.latitude,
-              longitude: currentLocation.coords.longitude,
-            }}
-            radius={5} // Adjust radius as needed
-            strokeColor="#000"
-            fillColor="rgba(255, 0, 0, 0.5)" // Semi-transparent red
-          />
-        )}
-        {trackingStarted && pathCoordinates.length > 1 && (
+        {drawPolyline && pathCoordinates.length > 0 && (
           <Polyline
             coordinates={pathCoordinates}
-            strokeColor="#0000FF" // Blue color
-            strokeWidth={5}
+            strokeWidth={2}
+            strokeColor="blue"
           />
         )}
+        {points.map((point, index) => (
+          <Marker key={index} coordinate={point} pinColor="red" />
+        ))}
       </MapView>
 
       <TouchableOpacity
@@ -242,21 +330,19 @@ export default function Home() {
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
           <Button
-            buttonColor="#007BFF"
-            icon="play-outline"
+            icon={trackingPaused ? "pause" : "play-outline"}
             mode="contained"
-            onPress={focusOnCurrentLocation}
+            onPress={handleStartPress}
             style={styles.button}
           >
-            {trackingStarted ? "Stop" : "Start"}
+            {trackingPaused ? "Pause" : "Start"}
           </Button>
         </View>
         <View style={styles.buttonWrapper}>
           <Button
-            buttonColor="#007BFF"
             icon="content-save-all"
             mode="contained"
-            onPress={() => console.log("Right Button Pressed")}
+            onPress={addPoint}
             style={styles.button}
           >
             Add Points
@@ -271,19 +357,18 @@ const styles = StyleSheet.create({
   layerIconContainer: {
     position: "absolute",
     backgroundColor: "rgba(0,0,0, 0.7)",
-    padding: 10,
+    padding: responsiveHeight(1.2),
     borderRadius: 5,
-    right: 10,
-    top: Platform.OS === "android" ? "15%" : "18%",
-    transform: [{ translateY: -12 }], // Adjust translateY to vertically center the icon
+    left: responsiveWidth(5),
+    top: responsiveHeight(78),
     zIndex: 1,
     flexDirection: "row",
     alignItems: "center",
   },
   dropdownContainer: {
     position: "absolute",
-    top: 0,
-    right: 50,
+    left: 50,
+    top: -120,
     backgroundColor: "rgba(0,0,0, 0.7)",
     borderRadius: 5,
     elevation: 3,
@@ -294,6 +379,19 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+  },
+  overlay: {
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "rgba(0,0,0, 0.7)",
+    justifyContent: "center", 
+    alignItems: "center",
+    padding: 5,
+  },
+  overlayText: {
+    color: "#fff",
+    fontSize: 16,
+    marginHorizontal: 20,
   },
   dropdownItem: {
     padding: 10,
@@ -324,23 +422,11 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  startButton: {
-    position: "absolute",
-    backgroundColor: "#007BFF",
-    padding: 10,
-    borderRadius: 5,
-    bottom: 16,
-    alignSelf: "center",
-  },
-  buttonText: {
-    color: "#FFF",
-    fontSize: 18,
-  },
   buttonContainer: {
     position: "absolute",
     flexDirection: "row",
     justifyContent: "space-between",
-    bottom: 36,
+    bottom: responsiveHeight(3),
     left: 16,
     right: 16,
   },
@@ -349,6 +435,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   button: {
+    backgroundColor: "#007BFF",
     flex: 1,
   },
 });

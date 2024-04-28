@@ -1,17 +1,13 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  TextInput,
-  Modal,
-} from "react-native";
-import { IconButton, Button } from "react-native-paper";
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
+import { IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { AntDesign } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Picker } from "@react-native-picker/picker";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
 
 const CalculatorModel = ({
   calculatorSelectModalVisible,
@@ -21,8 +17,6 @@ const CalculatorModel = ({
   const closeModal = () => {
     setCalculatorSelectModalVisible(false);
   };
-
-  const navigation = useNavigation();
 
   return (
     <Modal
@@ -51,71 +45,80 @@ const CalculatorModel = ({
             <Text style={styles.headerText}>Manual Calculator</Text>
 
             <View style={styles.buttonContainer}>
-
+              {/*clear land button */}
               <View style={styles.button}>
                 <TouchableOpacity
-                  style={styles.Googlebutton}
-                  onPress={() => promptAsync()}
+                  style={styles.selectButton}
                 >
-                <View style={{flexDirection:"row"}}>
-                  <View style={{ left: -20 }}>
+                  <View style={styles.icon}>
                     <MaterialCommunityIcons
-                      name="google"
-                      size={24}
-                      color="black"
+                      name="island"
+                      size={responsiveFontSize(3)}
+                      color="brown"
                     />
                   </View>
 
-                  <View>
-                    <Text style={{ marginTop: 8, left: -3 }}>
-                      SIGN WITH GOOGLE
-                    </Text>
-                  </View>
-                  </View>
-
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.button}>
-                <TouchableOpacity
-                  style={styles.Googlebutton}
-                  onPress={() => promptAsync()}
-                >
-                  <View style={{ left: -20 }}>
-                    <MaterialCommunityIcons
-                      name="google"
-                      size={24}
-                      color="black"
-                    />
-                  </View>
-                  <View>
-                    <Text style={{ marginTop: 8, left: -3 }}>
-                      SIGN WITH GOOGLE
-                    </Text>
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      marginLeft: responsiveWidth(-9),
+                    }}
+                  >
+                    <Text style={{ color: "#FFF",fontSize:responsiveFontSize(1.6)  }}>CLEAR LAND</Text>
                   </View>
                 </TouchableOpacity>
               </View>
 
+              {/*Plantation button */}
               <View style={styles.button}>
                 <TouchableOpacity
-                  style={styles.Googlebutton}
-                  onPress={() => promptAsync()}
+                  style={styles.selectButton}
                 >
-                  <View style={{ left: -20 }}>
+                  <View style={styles.icon}>
                     <MaterialCommunityIcons
-                      name="google"
-                      size={24}
-                      color="black"
+                      name="sprout"
+                      size={responsiveFontSize(3)}
+                      color="green"
                     />
                   </View>
-                  <View>
-                    <Text style={{ marginTop: 8, left: -3 }}>
-                      SIGN WITH GOOGLE
-                    </Text>
+
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      marginLeft: responsiveWidth(-9),
+                    }}
+                  >
+                    <Text style={{ color: "#FFF",fontSize:responsiveFontSize(1.6)  }}>PLANTATION</Text>
                   </View>
                 </TouchableOpacity>
               </View>
 
+              {/*fence button */}
+              <View style={styles.button}>
+                <TouchableOpacity
+                  style={styles.selectButton}
+                >
+                  <View
+                    style={{ ...styles.icon, left: responsiveWidth(-26.6) }}
+                  >
+                    <MaterialCommunityIcons
+                      style={{ marginBottom: responsiveHeight(0.7) }}
+                      name="fence"
+                      size={responsiveFontSize(3)}
+                      color="black"
+                    />
+                  </View>
+
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      marginLeft: responsiveWidth(-9),
+                    }}
+                  >
+                    <Text style={{ color: "#FFF", fontSize:responsiveFontSize(1.6) }}>FENCE SETUP</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
@@ -125,30 +128,40 @@ const CalculatorModel = ({
 };
 
 const styles = StyleSheet.create({
- 
-  Googlebutton: {
+  selectButton: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
     borderColor: "#007BFF",
     borderWidth: 1,
-    borderRadius: 24,
-    color: "#007BFF",
-    width: 330,
+    borderRadius: 30,
+    backgroundColor: "#007BFF",
+    width: responsiveWidth(80),
+    color: "#fff",
     padding: 5.9,
   },
   buttonContainer: {
     marginTop: "20%",
     flexDirection: "column",
-    width: 337,
+    height: responsiveHeight(40),
   },
   button: {
-    marginBottom: 20,
+    marginBottom: responsiveHeight(2),
+    flexDirection: "row",
     justifyContent: "center",
+  },
+  icon: {
+    left: responsiveWidth(-27.5),
+    borderRadius: 50,
+    backgroundColor: "white",
+    width: responsiveWidth(10.5),
+    height: responsiveHeight(5.1),
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   headerText: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(2),
   },
 
   container: {
@@ -166,7 +179,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderBottomRightRadius: 0,
     borderBottomLeftRadius: 0,
-    padding: 15,
+    padding: responsiveHeight(1),
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -176,7 +189,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 4,
     width: "100%",
-    height: "45%",
+    height: responsiveHeight(45),
   },
 
   cancelButton: {

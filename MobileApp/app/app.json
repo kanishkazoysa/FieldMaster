@@ -11,19 +11,21 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.kanishkazoysa.fieldmaster"
+      "bundleIdentifier": "com.kanishkazoysa.fieldmaster",
+      "infoPlist": {
+        "UIBackgroundModes": ["location"]
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.kanishkazoysa.fieldmaster"
+      "package": "com.kanishkazoysa.fieldmaster",
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_BACKGROUND_LOCATION"]
     },
     "web": {
       "config": {
@@ -32,6 +34,15 @@
         }
       }
     },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
+          "locationBackgroundPermission": "Allow $(PRODUCT_NAME) to use your location in the background."
+        }
+      ]
+    ],
     "scheme": "fieldmaster"
   }
 }

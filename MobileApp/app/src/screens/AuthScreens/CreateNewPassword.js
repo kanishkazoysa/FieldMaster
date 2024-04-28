@@ -16,54 +16,52 @@ import {
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 import { Appbar, Button, TextInput } from "react-native-paper";
-import axios from "axios";
+import AxiosInstance from "../../AxiosInstance";
 
 export default function ForgotPassword({ route }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigation = useNavigation();
   const { email } = route.params;
+  const [passwordError, setPasswordError] = useState("");
 
   const handleChangePassword = async () => {
-    try {
-      if (!newPassword || !confirmPassword) {
-        Alert.alert("Error", "Please fill in all fields");
-        return;
-      }
-      if (!(newPassword === confirmPassword)) {
-        Alert.alert("Error", "Passwords do not match");
-        return;
-      }
-      const response = await axios.post(
-        "http://10.10.20.85:5000/api/users/change-password",
-        {
-          email: email,
-          newPassword: newPassword,
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        Alert.alert(
-          "Password Changed Successfully",
-          "Your password has been changed successfully.",
-          [
-            {
-              text: "OK",
-              onPress: () => {
-                navigation.navigate("Login");
-              },
-            },
-          ],
-          { cancelable: false }
-        );
-      } else {
-        Alert.alert("Error", data.error || "Password change failed.");
-      }
-    } catch {
-      Alert.alert("Error", "An error occurred while changing password");
+    if (!newPassword || !confirmPassword) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
     }
+    if (!(newPassword === confirmPassword)) {
+      Alert.alert("Error", "Passwords do not match");
+      return;
+    }
+
+    if (newPassword.length < 8 && confirmPassword.length < 8) {
+      setPasswordError("Password must be at least 8 characters long");
+      return;
+    }
+
+    AxiosInstance.post("/api/users/change-password", { email, newPassword })
+      .then((response) => {
+        if (response.status === 200) {
+          Alert.alert(
+            "Password Changed Successfully",
+            "Your password has been changed successfully.",
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  navigation.navigate("Login");
+                },
+              },
+            ],
+            { cancelable: false }
+          );
+        }
+      })
+      .catch((err) => {
+        const data = err.response.data;
+        Alert.alert("Error", "An error occurred while changing password");
+      });
   };
 
   const dismissKeyboard = () => {
@@ -94,10 +92,17 @@ export default function ForgotPassword({ route }) {
                 mode="outlined"
                 outlineColor="#d9d7d2"
                 activeOutlineColor="#007BFF"
-                width={responsiveWidth(85)}
+                style={{
+                  width: responsiveWidth(87),
+                  height: responsiveHeight(6),
+                  fontSize: responsiveFontSize(1.9),
+                }}
                 value={newPassword}
                 onChangeText={(text) => setNewPassword(text)}
               />
+              {passwordError ? (
+                <Text style={styles.errorText}>{passwordError}</Text>
+              ) : null}
             </View>
 
             <TextInput
@@ -105,10 +110,17 @@ export default function ForgotPassword({ route }) {
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
-              width={responsiveWidth(85)}
+              style={{
+                width: responsiveWidth(87),
+                height: responsiveHeight(6),
+                fontSize: responsiveFontSize(1.9),
+              }}
               value={confirmPassword}
               onChangeText={(text) => setConfirmPassword(text)}
             />
+            {passwordError ? (
+              <Text style={styles.errorText}>{passwordError}</Text>
+            ) : null}
           </View>
 
           <Button
@@ -144,7 +156,7 @@ const styles = StyleSheet.create({
     marginTop: "3%",
   },
   text: {
-    fontSize: responsiveFontSize(2),
+    fontSize: responsiveFontSize(1.9),
     marginTop: "1%",
   },
   container: {
@@ -152,7 +164,7 @@ const styles = StyleSheet.create({
   },
   staticSection: {
     height:
-      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10), // Adjusted height based on screen height
+      Platform.OS === "android" ? responsiveHeight(8) : responsiveHeight(10),
     backgroundColor: "#007BFF",
     justifyContent: "center",
   },
@@ -165,9 +177,13 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(3),
   },
   button: {
-    marginTop: responsiveHeight(5),
+    marginTop: responsiveHeight(3),
     backgroundColor: "#007BFF",
-    width: 337,
-    padding: 2,
+    width: responsiveWidth(80),
+    padding: responsiveHeight(0),
+  },
+  errorText: {
+    color: "red",
+    marginLeft: 10,
   },
 });

@@ -3,6 +3,11 @@ import { View, Image, Text, StyleSheet,TouchableOpacity } from 'react-native';
 import { Appbar, ThemeProvider } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './TemplateViewStyles';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
 
 const ClearLandIcon = (props) => (
   <MaterialCommunityIcons {...props} name='island' size={25} color='white' />
@@ -20,7 +25,7 @@ const TypeIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name='format-list-bulleted-type'
-    size={25}
+    size={responsiveFontSize(3.7)}
     color='grey'
   />
 );
@@ -28,7 +33,7 @@ const PerimeterIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name='vector-square'
-    size={25}
+    size={responsiveFontSize(3.7)}
     color='grey'
   />
 );
@@ -37,7 +42,7 @@ const AreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name='texture-box'
-    size={25}
+    size={responsiveFontSize(3.7)}
     color='grey'
   />
 );
@@ -46,7 +51,7 @@ const CustomMapIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name='map-marker-radius'
-    size={25}
+    size={responsiveFontSize(3.7)}
     color='grey'
   />
 );
@@ -54,16 +59,14 @@ const CustomMapIcon = (props) => (
 const CustomEditIcon = ({ navigation }) => (
   <MaterialCommunityIcons
     name='square-edit-outline'
-    size={25}
+    size={responsiveFontSize(3)}
     color={'white'}
-    style={{ marginLeft: 35}}
-    onPress={() => {
-      navigation.navigate('EditTemplate');
-    }}
+    style={{ marginRight: responsiveWidth(3) }}
   />
 );
 
-const TemplateView = ({ navigation }) => {
+const TemplateView = ({ route, navigation }) => {
+  const { item } = route.params;
   return (
     <>
       <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
@@ -72,9 +75,7 @@ const TemplateView = ({ navigation }) => {
               navigation.navigate("SavedTemplatesScreen");
             }}
           />
-          <View style={{ marginTop: 40, left: 10, width: "67%" }}>
-            <Text style={styles.headerText}>Template View</Text>
-          </View>
+          <Appbar.Content title={item.templateName} />
           {/* pencil/ pen icon  */}
           <CustomEditIcon navigation={navigation} />
         </Appbar.Header>
@@ -87,7 +88,8 @@ const TemplateView = ({ navigation }) => {
         </View>
         {/* icons_block */}
         <View style={styles.iconBlockStyling}>
-          <View style={styles.iconBlockInner}>
+  
+        <View style={styles.iconBlockInner}>
           <TouchableOpacity onPress={() => navigation.navigate('Clearland')}>
             <View style={styles.iconOuter_01}>
               <ClearLandIcon />
@@ -115,7 +117,7 @@ const TemplateView = ({ navigation }) => {
             <View style={styles.iconOuter_03}>
               <FenceSetupIcon />
             </View>
-            <Text>Fence setup</Text>
+            <Text>Set fence</Text>
           </View>
         </TouchableOpacity>
         </View>
@@ -130,14 +132,14 @@ const TemplateView = ({ navigation }) => {
                 <TypeIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Type</Text>
-                  <Text style={styles.text02Styling}>Flat</Text>
+                  <Text style={styles.text02Styling}>{item.landType}</Text>
                 </View>
               </View>
               <View style={styles.blockView}>
                 <PerimeterIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Perimeter</Text>
-                  <Text style={styles.text02Styling}>13km</Text>
+                  <Text style={styles.text02Styling}>{item.perimeter} km</Text>
                 </View>
               </View>
             </View>
@@ -146,14 +148,14 @@ const TemplateView = ({ navigation }) => {
                 <AreaIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Area</Text>
-                  <Text style={styles.text02Styling}>100 Acres</Text>
+                  <Text style={styles.text02Styling}>{item.area} perches</Text>
                 </View>
               </View>
               <View style={styles.blockView}>
                 <CustomMapIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Location</Text>
-                  <Text style={styles.text02Styling}>Balapitiya</Text>
+                  <Text style={styles.text02Styling}>{item.location}</Text>
                 </View>
               </View>
             </View>
@@ -163,11 +165,7 @@ const TemplateView = ({ navigation }) => {
         <View style={styles.descriptionBlock}>
           <Text style={styles.text02Styling}>Description</Text>
           <View style={styles.subTextOuter}>
-            <Text style={styles.subTextStyle}>
-              Nestled amidst the beaches of Balapitiya lies a parcel of land
-              that captivates with its vastness and natural splendor. Spanning
-              an impressive 100 acres. alike.
-            </Text>
+            <Text style={styles.subTextStyle}>{item.description}</Text>
           </View>
         </View>
       </View>

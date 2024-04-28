@@ -1,22 +1,47 @@
 // SelectionModal.js
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Modal,
-  Platform,
+  Modal
 } from "react-native";
-import { IconButton, Avatar, Button, Icon } from "react-native-paper";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { IconButton, Avatar, Button, } from "react-native-paper";
+import { useNavigation, } from "@react-navigation/native";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-const SelectionModal = ({ profileModalVisible, setProfileModalVisible, email }) => {
+const SelectionModal = ({
+  profileModalVisible,
+  setProfileModalVisible,
+  email,
+}) => {
+  const [loading, setLoading] = useState(false);
   const closeModal = () => {
     setProfileModalVisible(false);
   };
   const navigation = useNavigation();
+
+  const  handleSignOut = async () => {
+    setLoading(true);
+    await  AsyncStorage.removeItem('token');
+   
+ 
+
+     // Wait for 2 seconds before navigating to the login page
+     setTimeout(() => {
+      setLoading(false);
+      setProfileModalVisible(false);
+      navigation.navigate("Login");
+    }, 2000);
+
+
+  }
 
   return (
     <Modal
@@ -28,7 +53,7 @@ const SelectionModal = ({ profileModalVisible, setProfileModalVisible, email }) 
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.overlay}
-          activeOpacity={1} // Prevents clicks on the overlay from propagating to the modal
+          activeOpacity={1}
           onPress={closeModal}
         />
 
@@ -37,16 +62,17 @@ const SelectionModal = ({ profileModalVisible, setProfileModalVisible, email }) 
             <IconButton
               icon="close"
               iconColor="#000"
-              size={30}
+              size={responsiveFontSize(3.5)}
               onPress={closeModal}
               style={styles.cancelButton}
             />
 
             <Text style={styles.headerText}>example@gmail.com</Text>
             <View>
-         
-            <Avatar.Image size={100} source={require("../images/profilePhoto.png")}   />
-             
+              <Avatar.Image
+                size={responsiveFontSize(10)}
+                source={require("../images/profilePhoto.png")}
+              />
             </View>
 
             <View style={styles.nameContainer}>
@@ -66,25 +92,11 @@ const SelectionModal = ({ profileModalVisible, setProfileModalVisible, email }) 
               mode="contained"
               style={styles.signoutButton}
               buttonColor="#007BFF"
+              onPress={handleSignOut}
+              loading={loading}
             >
               Sign Out
             </Button>
-
-            <Button
-              mode="contained"
-              style={styles.settingButton}
-              buttonColor="#65676B"
-              icon="cog-outline"
-            >
-              Setting
-            </Button>
-
-            <View style={styles.bottomContainer}>
-              <Text style={styles.bottomText}>Privacy Policy</Text>
-         
-             <IconButton icon="circle" size={5} style={styles.dot} />
-              <Text style={styles.bottomText}>Terms of Service</Text>
-            </View>
           </View>
         </View>
       </View>
@@ -95,62 +107,62 @@ const SelectionModal = ({ profileModalVisible, setProfileModalVisible, email }) 
 const styles = StyleSheet.create({
   bottomContainer: {
     flexDirection: "row",
-    marginTop:Platform.OS === "ios" ? "9%" : "10%",
+    marginTop: responsiveHeight(3),
   },
   dot: {
-   top:Platform.OS === "ios" ? -8 : -6,
+    top: responsiveHeight(-0.6),
   },
   bottomText: {
     color: "#65676B",
-    fontSize: 12,
+    fontSize: responsiveFontSize(1.5),
   },
 
   ManageButton: {
     borderColor: "#007BFF",
-    marginTop: 10,
-    width: 250,
-    padding: 2,
+    marginTop: responsiveHeight(1.7),
+    width: responsiveWidth(60),
+    padding: 1,
   },
 
   signoutButton: {
-    marginTop: 15,
-    width: 150,
-    padding: 2,
+    marginTop: responsiveHeight(1.7),
+    width: responsiveWidth(40),
+    padding: 1,
   },
 
   settingButton: {
-    marginTop: 15,
-    width: 150,
-    padding: 2,
+    marginTop: responsiveHeight(1.7),
+    width: responsiveWidth(40),
+    padding: 1,
   },
   nameText: {
-    fontSize: 20,
+    fontSize: responsiveFontSize(2.3),
     color: "#000",
     marginLeft: 10,
   },
   nameContainer: {
-    marginTop: 15,
+    marginTop: responsiveHeight(2),
     flexDirection: "row",
   },
   headerText: {
-    fontSize: 14,
-    marginBottom: 20,
+    fontSize: responsiveFontSize(1.9),
+    marginBottom: responsiveHeight(2.5),
   },
   container: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7 )", // Semi-transparent overlay color
+    backgroundColor: "rgba(0, 0, 0, 0.7 )",
   },
 
   centeredView: {
     flex: 1,
-    marginTop: Platform.OS === "ios" ? "30%" : "20%",
+    marginTop: responsiveHeight(10),
     alignItems: "center",
   },
   modalView: {
     margin: 20,
     backgroundColor: "#fff",
     borderRadius: 20,
-    padding: 15,
+    padding: responsiveHeight(1),
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -159,8 +171,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.4,
     shadowRadius: 4,
-    width: "80%",
-    height: "57%",
+    width: responsiveWidth(80),
+    height: responsiveHeight(43),
   },
 
   cancelButton: {
@@ -171,3 +183,21 @@ const styles = StyleSheet.create({
 });
 
 export default SelectionModal;
+
+// <Button
+// mode="contained"
+// style={styles.settingButton}
+// buttonColor="#65676B"
+// icon="cog-outline"
+// >
+// Setting
+// </Button>
+
+
+// <View style={styles.bottomContainer}>
+// <Text style={styles.bottomText}>Privacy Policy</Text>
+
+// <IconButton icon="circle" size={5} style={styles.dot} />
+// <Text style={styles.bottomText}>Terms of Service</Text>
+// </View>
+
