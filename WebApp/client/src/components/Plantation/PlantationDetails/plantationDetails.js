@@ -9,6 +9,7 @@ import { MdGrass,MdFormatLineSpacing } from "react-icons/md";
 import { GiGrassMushroom } from "react-icons/gi";
 import { FaTree } from "react-icons/fa";
 import { RxRowSpacing } from "react-icons/rx";
+import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
 
 export default function PlantationDetails({
   onBackToSidebar,
@@ -22,22 +23,22 @@ export default function PlantationDetails({
   const [numberOfPlants, setnumberOfPlants] = useState(null);
   const [PlantDensity, setPlantDensity] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-        try {
-            const response = await fetch('http://10.10.23.159:3000/api/plantation/numberOfPlants');
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            setnumberOfPlants(data.data);
-            
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
-    fetchData();
-  }, []);
+  const [currentPage, setCurrentPage] = useState(null);
+  const [animatePage, setAnimatePage] = useState(false);
+
+  const handleFertilization = () => {
+      setCurrentPage("Fertilizing");
+      setAnimatePage(true);
+  };
+
+  const handleBackClick = () => {
+    setAnimatePage(false);
+    setTimeout(() => {
+      setCurrentPage(null);
+    }, 300);
+  };
+
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,6 +77,8 @@ export default function PlantationDetails({
 
 
   return (
+  <div>
+    {!currentPage && (
     <div style={styles.content}>
       <div style={styles.header}>
         <MdArrowBack
@@ -179,7 +182,7 @@ export default function PlantationDetails({
       </div>
 
       <div style={styles.bottom}>
-        <button style={styles.Button1}>
+        <button style={styles.Button1} onClick={handleFertilization}>
           <p style={styles.Box4ButtonText}>Fertilization</p>
         </button>
       </div>
@@ -190,6 +193,28 @@ export default function PlantationDetails({
         </button>
       </div>
 
+    </div>
+    )}
+    <div
+        style={{
+          transform: animatePage ? "translateX(0)" : "translateX(-100%)",
+          transition: "transform 0.3s ease-in-out",
+          backgroundColor: "whitesmoke",
+          overflow: "auto", // Add scrollbar if content exceeds container height
+        }}
+      >
+        {currentPage === "Fertilizing" && (
+          <Fertilizing
+            onBackToSidebar={handleBackClick}
+            textPlant={textPlant}
+            PlantDensity={PlantDensity}
+            numberOfPlants={numberOfPlants}
+
+
+
+          />
+        )}
+      </div>
     </div>
   );
 }
