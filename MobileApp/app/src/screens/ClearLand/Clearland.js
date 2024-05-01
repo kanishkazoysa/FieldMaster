@@ -22,66 +22,146 @@ import {
 } from "react-native-paper";
 import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
+import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
-
-import ButtonForWeed from "../../components/ButtonForWeed";
-import DropdownPlants from "../../components/DropdownPlants";
-// import LaborInputField from "../components/LaborInputField";
-// import WorkHourInput from "../components/WorkHourInput";
-// import PlantInput from "../components/PlantInput";
-import DropdownStones from "../../components/DropdownStones";
-// import AddButton from "../components/AddButton";
-// import MachineInput from "../components/MachineInput";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
+import axios from "axios";
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveScreenFontSize,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
 
 export default function ClearLand() {
   const [text, setText] = React.useState("");
 
-  const [searchItem, setSearchItem] = useState("");
-  const [searchItems, setSearchItems] = useState([]);
-
-  const handleSearchItem = () => {
-    if (searchItem.trim() !== "") {
-      setSearchItems([...searchItems, { item: searchItem, machineCount }]);
-      setSearchItem("");
-      setMachineCount(""); // Reset machineCount after adding
-    }
-  };
-
+  const [pressed, setPressed] = useState(null);
+  const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
+  const [plantCount, setPlantCount] = useState("");
+  const [stoneTypeSelectedValue, setStoneTypeSelectedValue] = useState(null);
+  const [stonesCount, setStonesCount] = useState("");
   const [laborCount, setLaborCount] = useState("");
   const [workHours, setWorkHours] = useState("");
+  const [searchItem, setSearchItem] = useState("");
   const [machineCount, setMachineCount] = useState("");
-  const [plantCount, setPlantCount] = useState("");
-  const [stonesCount, setStonesCount] = useState("");
   const navigation = useNavigation();
+
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState([
+    "Bulldozers",
+    "Excavators",
+    "Backhoes",
+    "Skid-steer loaders",
+    "Chainsaws",
+    "Brush cutters",
+    "Tractors",
+    "Land clearing rakes",
+  ]);
+
+  const handleSearch = (query) => {
+
+    if (query === "") {
+      setSearchSuggestions([]);
+      return;
+    }
+    const filteredSuggestions = suggestions.filter((item) =>
+      item.toLowerCase().includes(query.toLowerCase())
+    );
+    setSearchSuggestions(filteredSuggestions);
+  };
+
+  const handleSuggestionSelect = (item) => {
+    setSearchItem(item);
+    setSearchSuggestions([]);
+  };
+  
+  const handlePlantCountChange = (text) => {
+    setPlantCount(text);
+  };
+
+  const handleStoneCountChange = (text) => {
+    setStonesCount(text);
+  };
+  const handleLaborCountChange = (text) => {
+    setLaborCount(text);
+  };
+  const handleWorkHourChange = (text) => {
+    setWorkHours(text);
+  };
+  const handleMachineCountChange = (text) => {
+    setMachineCount(text);
+  };
+
   const handleEffortOutput = () => {
     navigation.navigate("EffortOutput");
   };
 
-  const handleClear = () => {
-    navigation.navigate("EffortOutput", {
-      laborCount: laborCount,
-      workHours: workHours,
-      machineCount: machineCount,
-      plantCount: plantCount,
-      stonesCount: stonesCount,
-    });
+  const placeholder1 = {
+    label: "Select Type",
+    value: null,
+    color: "red",
   };
 
-  /displAY/
+  const options1 = [
+    { label: "Low", value: "Low" },
+    { label: "Medium", value: "Medium" },
+    { label: "High", value: "High" },
+  ];
+
+  const placeholder = {
+    label: "Select Type",
+    value: null,
+    color: "red",
+  };
+
+  const options = [
+    { label: "Small", value: "Small" },
+    { label: "Medium", value: "Medium" },
+    { label: "High", value: "High" },
+  ];
+
+  /display/;
 
   const [displayValues, setDisplayValues] = useState([]);
 
   const handleAdd = () => {
-    //validation part Add button
+    //Validation plant count
+    let errorMessage = "";
+    let countInt = parseInt(plantCount, 10);
 
-    const combinedValue = plantCount + " x " + "low";
+  switch (plantTypeSelectedValue) {
+    case "Low":
+      if (!(countInt >=1  && countInt <= 3)) {
+        errorMessage = "Enter a number between 0 and 4";
+      }
+      break;
+    case "Medium":
+      if (!(countInt >3 && countInt <= 6)) {
+        errorMessage = "Enter a number between 3 and 7";
+      }
+      break;
+    case "High":
+      if (!(countInt > 6 && countInt <= 10)) {
+        errorMessage = "Enter a number between 6 and 11";
+      }
+      break;
+    default:
+      errorMessage = "Invalid plant type selection.";
+  }
+
+  if (errorMessage) {
+    alert(errorMessage);
+    return;
+  }
+
+    //validation part Add button
+    const combinedValue = plantCount + " x " + plantTypeSelectedValue;
     const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
     setDisplayValues(newDisplayValues);
+    setPlantTypeSelectedValue("");
     setPlantCount("");
-    //setinputValueFenceAmount("");
   };
 
   const handleRemoveValue = (index) => {
@@ -93,15 +173,43 @@ export default function ClearLand() {
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
-    //validation part Add button
+    //Validation for stone count
+    let errorMessage = "";
+    let countInt = parseInt(stonesCount, 10);
 
-    const combinedValue1 = plantCount + " x " + "low";
+  switch (stoneTypeSelectedValue) {
+    case "Small":
+      if (!(countInt >=1  && countInt <= 3)) {
+        errorMessage = "Enter a number between 0 and 4";
+      }
+      break;
+    case "Medium":
+      if (!(countInt >3 && countInt <= 6)) {
+        errorMessage = "Enter a number between 3 and 7";
+      }
+      break;
+    case "High":
+      if (!(countInt > 6 && countInt <= 10)) {
+        errorMessage = "Enter a number between 6 and 11";
+      }
+      break;
+    default:
+      errorMessage = "Invalid plant type selection.";
+  }
+
+  if (errorMessage) {
+    alert(errorMessage);
+    return;
+  }
+    
+    //validation part Add button
+    const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
       Boolean
     );
     setDisplayValues1(newDisplayValues1);
+    setStoneTypeSelectedValue("");
     setStonesCount("");
-    //setinputValueFenceAmount("");
   };
 
   const handleRemoveValue1 = (index) => {
@@ -115,19 +223,80 @@ export default function ClearLand() {
   const handleAdd2 = () => {
     //validation part Add button
 
-    const combinedValue2 = plantCount + " x " + "low";
+    const combinedValue2 = searchItem + " x " + machineCount;
     const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
       Boolean
     );
     setDisplayValues2(newDisplayValues2);
-    setPlantCount("");
-    //setinputValueFenceAmount("");
+    setSearchItem("");
+    setMachineCount("");
   };
 
   const handleRemoveValue2 = (index) => {
     const newDisplayValues2 = [...displayValues2];
     newDisplayValues2.splice(index, 1);
     setDisplayValues2(newDisplayValues2);
+  };
+
+  const postData = async () => {
+    try {
+      const response = await axios.post(
+        "http://10.10.22.163:5000/api/clearLand/clearLand",
+        {
+          pressed,
+          plantTypeSelectedValue,
+          plantCount,
+          displayValues,
+          stoneTypeSelectedValue,
+          stonesCount,
+          displayValues1,
+          laborCount,
+          workHours,
+          searchItem,
+          machineCount,
+          displayValues2,
+        }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Something went wrong");
+    }
+  };
+  const handleClear = () => {
+    if (
+      !pressed ||
+      !(displayValues.length > 0) ||
+      !(displayValues1.length > 0) ||
+      !laborCount ||
+      !workHours ||
+      !(displayValues2.length > 0)
+    ) {
+      // Display error message
+      Alert.alert("Error", "Please fill in all fields");
+      return; // Stop execution if fields are empty
+    }
+    postData();
+    navigation.navigate("EffortOutput", {
+      data: displayValues,
+      data1: displayValues1,
+      data2: displayValues2,
+      weedType: pressed,
+      plantType: plantTypeSelectedValue,
+      plantCount: plantCount,
+      stoneType: stoneTypeSelectedValue,
+      stonesCount: stonesCount,
+      laborCount: laborCount,
+      workHours: workHours,
+      machineCount: machineCount,
+    });
+
+    setPressed(" ");
+    setLaborCount(" ");
+    setWorkHours(" ");
+    setDisplayValues([]);
+    setDisplayValues1([]);
+    setDisplayValues2([]);
   };
 
   return (
@@ -142,52 +311,110 @@ export default function ClearLand() {
         <View style={styles.container2}>
           {/* Weeds box */}
           <Card style={styles.card1}>
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row" }}
-            >
+            <Card.Content style={styles.cardContent}>
               <MaterialCommunityIcons
                 name="sprout-outline"
-                size={20}
+                size={responsiveFontSize(3)}
                 color="#65676B"
               />
-              <Text style={{ marginLeft: 5 }} variant="titleLarge">
+              <Text style={styles.cardTopText} variant="titleLarge">
                 Weeds
               </Text>
-              <ButtonForWeed></ButtonForWeed>
+              <PaperProvider>
+                <View style={styles.weedButton}>
+                  <Button
+                    style={[
+                      styles.button,
+                      pressed === "low" && styles.pressedButton,
+                    ]}
+                    labelStyle={[
+                      styles.text,
+                      pressed === "low" && styles.pressedText,
+                    ]}
+                    mode="contained-tonal"
+                    onPress={() => setPressed("low")}
+                  >
+                    Low
+                  </Button>
+                  <Button
+                    style={[
+                      styles.button,
+                      pressed === "medium" && styles.pressedButton,
+                    ]}
+                    labelStyle={[
+                      styles.text,
+                      pressed === "medium" && styles.pressedText,
+                    ]}
+                    mode="contained-tonal"
+                    onPress={() => setPressed("medium")}
+                  >
+                    Medium
+                  </Button>
+                  <Button
+                    style={[
+                      styles.button,
+                      pressed === "high" && styles.pressedButton,
+                    ]}
+                    labelStyle={[
+                      styles.text,
+                      pressed === "high" && styles.pressedText,
+                    ]}
+                    mode="contained-tonal"
+                    onPress={() => setPressed("high")}
+                  >
+                    High
+                  </Button>
+                </View>
+              </PaperProvider>
             </Card.Content>
           </Card>
 
           {/* Plants box */}
           <Card style={styles.card1}>
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
-            >
-              <MaterialCommunityIcons name="sprout" size={20} color="#65676B" />
-              <Text style={{ marginLeft: 5 }} variant="titleLarge">
+            <Card.Content style={styles.cardContent}>
+              <MaterialCommunityIcons name="sprout" size={responsiveFontSize(3)} color="#65676B" />
+              <Text style={styles.cardTopText} variant="titleLarge">
                 Plants
               </Text>
-              <DropdownPlants />
-              <Text style={{ marginTop: 30, marginLeft: 10, fontSize: 16 }}>
-                Count :{" "}
-                <View style={{ marginTop: -1 }}>
-                  <TextInput
-                    style={{
-                      backgroundColor: "transparent",
-                      height: 20,
-                      paddingHorizontal: 3,
-                      width: 40,
-                    }}
-                    keyboardType="numeric"
-                    placeholder="Count"
-                    placeholderStyles={{ width: 40, paddingHorizontal: 3 }}
-                    mode="flat"
-                    value={plantCount}
-                    onChangeText={(count) => setPlantCount(count)}
-                    placeholderTextColor={"#838383"}
-                    underlineStyle={{ width: 45, marginLeft: 5 }}
-                  />
-                </View>
-              </Text>
+              <View style={styles.Dropdown1}>
+                <RNPickerSelect
+                  placeholder={placeholder1}
+                  items={options1}
+                  onValueChange={(value) => setPlantTypeSelectedValue(value)}
+                  value={plantTypeSelectedValue}
+                  style={{ cursor: "pointer" }}
+                />
+              </View>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: responsiveHeight(3.5),
+                }}
+              >
+                <Text style={styles.countText}>
+                  Count :{" "}
+                  <View style={{ marginTop: -1 }}>
+                    <TextInput
+                      style={{
+                        backgroundColor: "transparent",
+                        height: 20,
+                        paddingHorizontal: 0,
+                        width: 40,
+                      }}
+                      keyboardType="numeric"
+                      placeholder="Count"
+                      placeholderStyles={{ width: 40, paddingHorizontal: 3 }}
+                      mode="flat"
+                      value={plantCount}
+                      onChangeText={handlePlantCountChange}
+                      placeholderTextColor={"#838383"}
+                      underlineStyle={{ width: 45, marginLeft: 3 }}
+                    />
+                  </View>
+                </Text>
+              </View>
+
               <Button
                 style={styles.addButton}
                 labelStyle={styles.addButtonText}
@@ -210,7 +437,7 @@ export default function ClearLand() {
                   >
                     <MaterialCommunityIcons
                       name="close-circle-outline"
-                      size={20}
+                      size={responsiveFontSize(2.7)}
                       color="#007BFF"
                     />
                   </TouchableOpacity>
@@ -221,43 +448,54 @@ export default function ClearLand() {
 
           {/* Stones box */}
           <Card style={styles.card1}>
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
-            >
-              <Image
-                style={{ marginRight: 5 }}
-                source={require("../../../assets/Stones.png")}
-              />
-              <Text style={{}} variant="titleLarge">
+            <Card.Content style={styles.cardContent}>
+              <Image source={require("../../../assets/Stones.png")} />
+              <Text style={styles.cardTopText} variant="titleLarge">
                 Stones
               </Text>
-              <DropdownStones />
-              <Text style={{ marginTop: 30, marginLeft: 10, fontSize: 16 }}>
-                Count :{" "}
-                <View style={{ marginTop: -1 }}>
-                  <TextInput
-                    style={{
-                      backgroundColor: "transparent",
-                      height: 20,
-                      paddingHorizontal: 3,
-                      width: 40,
-                    }}
-                    keyboardType="numeric"
-                    placeholder="Count"
-                    placeholderStyles={{ width: 40, paddingHorizontal: 3 }}
-                    mode="flat"
-                    value={stonesCount}
-                    onChangeText={(count) => setStonesCount(count)}
-                    placeholderTextColor={"#838383"}
-                    underlineStyle={{ width: 45, marginLeft: 5 }}
-                  />
-                </View>
-              </Text>
+              <View style={styles.Dropdown1}>
+                <RNPickerSelect
+                  placeholder={placeholder}
+                  items={options}
+                  onValueChange={(value) => setStoneTypeSelectedValue(value)}
+                  value={stoneTypeSelectedValue}
+                />
+              </View>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: responsiveHeight(3.5),
+                }}
+              >
+                <Text style={styles.countText}>
+                  Count :{" "}
+                  <View style={{ marginTop: -1 }}>
+                    <TextInput
+                      style={{
+                        backgroundColor: "transparent",
+                        height: 20,
+                        paddingHorizontal: 3,
+                        width: 40,
+                      }}
+                      keyboardType="numeric"
+                      placeholder="Count"
+                      placeholderStyles={{ width: 40, paddingHorizontal: 3 }}
+                      mode="flat"
+                      value={stonesCount}
+                      onChangeText={handleStoneCountChange}
+                      placeholderTextColor={"#838383"}
+                      underlineStyle={{ width: 45, marginLeft: 5 }}
+                    />
+                  </View>
+                </Text>
+              </View>
+
               <Button
                 style={styles.addButton}
                 labelStyle={styles.addButtonText}
                 buttonColor="#007BFF"
-                mode="contained"
+                mode="contained-tonal"
                 onPress={handleAdd1}
               >
                 Add
@@ -286,15 +524,13 @@ export default function ClearLand() {
 
           {/* Labors box */}
           <Card style={styles.card2}>
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row",  }}
-            >
+            <Card.Content style={{ display: "flex", flexDirection: "row" }}>
               <MaterialCommunityIcons
                 name="account-hard-hat"
                 size={20}
                 color="#65676B"
               />
-              <Text style={{ marginLeft: 5 }} variant="titleLarge">
+              <Text style={styles.cardTopText} variant="titleLarge">
                 Labors :
               </Text>
               <View style={{ marginTop: -5 }}>
@@ -309,8 +545,8 @@ export default function ClearLand() {
                   keyboardType="numeric"
                   placeholder="Enter count of Labors"
                   mode="flat"
+                  onChangeText={handleLaborCountChange}
                   value={laborCount}
-                  onChangeText={(count) => setLaborCount(count)}
                   placeholderTextColor={"#838383"}
                   underlineStyle={{ width: 157, marginLeft: 7 }}
                 />
@@ -320,15 +556,13 @@ export default function ClearLand() {
 
           {/* Work hours box */}
           <Card style={styles.card2}>
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row",  }}
-            >
+            <Card.Content style={{ display: "flex", flexDirection: "row" }}>
               <MaterialCommunityIcons
                 name="clock-time-eight-outline"
                 size={20}
                 color="#65676B"
               />
-              <Text style={{ marginLeft: 5 }} variant="titleLarge">
+              <Text style={styles.cardTopText} variant="titleLarge">
                 Work Hours :
               </Text>
               <View style={{ marginTop: -5 }}>
@@ -343,8 +577,8 @@ export default function ClearLand() {
                   keyboardType="numeric"
                   placeholder="Enter count of hours"
                   mode="flat"
+                  onChangeText={handleWorkHourChange}
                   value={workHours}
-                  onChangeText={(count) => setWorkHours(count)}
                   placeholderTextColor={"#838383"}
                   underlineStyle={{ width: 155, marginLeft: 6 }}
                 />
@@ -354,15 +588,13 @@ export default function ClearLand() {
 
           {/* Machinery box */}
           <Card style={styles.card3}>
-            <Card.Content
-              style={{ display: "flex", flexDirection: "row", marginTop: -5 }}
-            >
+            <Card.Content style={styles.cardContent}>
               <MaterialCommunityIcons
                 name="excavator"
                 size={20}
                 color="#65676B"
               />
-              <Text style={{ marginLeft: 5 }} variant="titleLarge">
+              <Text style={styles.cardTopText} variant="titleLarge">
                 Machinery
               </Text>
               <View
@@ -373,13 +605,28 @@ export default function ClearLand() {
                   alignItems: "center",
                 }}
               >
-                <Searchbar
-                  placeholder="Search for machines"
-                  placeholderStyle={{ fontSize: 16, marginTop: -14 }}
-                  inputStyle={{ fontSize: 16, marginTop: -14 }}
-                  style={styles.Searchbar}
-                  onChangeText={setSearchItem}
-                ></Searchbar>
+                <View style={styles.SearchbarContainer}>
+                  <Searchbar
+                    placeholder="Search for machines"
+                    placeholderStyle={{ fontSize: 16, marginTop: -14 }}
+                    inputStyle={{ fontSize: 16, marginTop: -14 }}
+                    style={styles.Searchbar}
+                    onChangeText={(text) => {
+                      setSearchItem(text);
+                      handleSearch(text);
+                    }}
+                    value={searchItem}
+                  ></Searchbar>
+                  {searchSuggestions.map((item, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.suggestionItem}
+                      onPress={() => handleSuggestionSelect(item)}
+                    >
+                      <Text>{item}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
                 <Text
                   style={{
                     fontSize: 16,
@@ -403,21 +650,14 @@ export default function ClearLand() {
                     keyboardType="numeric"
                     placeholder="Enter count of machines"
                     mode="flat"
+                    onChangeText={handleMachineCountChange}
                     value={machineCount}
-                    onChangeText={(count) => setMachineCount(count)}
                     placeholderTextColor={"#838383"}
                     underlineStyle={{ width: 180, marginLeft: 7 }}
                   />
                 </View>
                 <Button
-                  style={{
-                    width: 119,
-                    height: 35,
-                    borderRadius: 11,
-                    marginTop: 10,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
+                  style={styles.machineAddButton}
                   labelStyle={styles.addButtonText}
                   buttonColor="#007BFF"
                   mode="contained-tonal"
@@ -425,7 +665,6 @@ export default function ClearLand() {
                 >
                   Add
                 </Button>
-                {/* <Text>{searchItem}*{machineCount}</Text> */}
               </View>
             </Card.Content>
 
@@ -454,9 +693,9 @@ export default function ClearLand() {
             <CustomButton
               onPress={handleClear}
               text="Calculate"
-              iconName="calculator" // Change the icon name as needed
-              iconColor="white" // Change the color of the icon
-              buttonColor="#007BFF" // Change the background color of the button
+              iconName="calculator"
+              iconColor="white"
+              buttonColor="#007BFF"
             />
           </View>
         </View>
@@ -468,97 +707,167 @@ export default function ClearLand() {
 const styles = StyleSheet.create({
   container2: {
     alignItems: "center",
+    flex: 1,
   },
 
   card1: {
     height: "max-content",
     borderRadius: 11,
-    marginTop: 10,
-    paddingBottom: 5,
+    marginTop: responsiveHeight(1),
+    paddingBottom: responsiveHeight(0.3),
     width: "93%",
     backgroundColor: "#fff",
   },
+
+  weedButton: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: responsiveHeight(1),
+    marginBottom: responsiveHeight(-1),
+    marginLeft: responsiveWidth(2.6),
+  },
   card2: {
-    height: "max-content",	
+    height: "max-content",
     justifyContent: "center",
-    marginTop: 10,
+    marginTop: responsiveHeight(1),
     width: "93%",
     backgroundColor: "#fff",
     borderRadius: 11,
+  },
+  countText: {
+    marginLeft: responsiveWidth(3.5),
+    fontSize: responsiveFontSize(2.2),
   },
   card3: {
     height: "max-content",
-    marginTop: 10,
-    paddingBottom: 10,
+    marginTop: responsiveHeight(1),
+    marginBottom: responsiveHeight(3),
+    paddingBottom: responsiveHeight(0.3),
     width: "93%",
     borderRadius: 11,
     backgroundColor: "#fff",
   },
+  cardTopText: {
+    marginLeft: responsiveWidth(1),
+  },
+  cardContent: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: responsiveHeight(-1),
+  },
   calButtton: {
-    
-   
-    marginTop: 10,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  placeholder: {
-    fontSize: 1,
+    marginTop: responsiveHeight(4),
+    bottom:responsiveHeight(2),
+    alignItems: "center",
   },
   Searchbar: {
     backgroundColor: "#F0F2F5",
-    height: 29,
-    width: 253,
+    height: responsiveHeight(4.5),
+    width: responsiveWidth(65),
   },
   addButton: {
-    width: 20,
-    height: 35,
+    width: responsiveWidth(5),
+    height: responsiveHeight(3.5),
     borderRadius: 11,
-    marginTop: 27,
-    marginLeft: 25,
+    marginTop: responsiveHeight(3.5),
+    marginLeft: responsiveWidth(4.5),
     justifyContent: "center",
     alignItems: "center",
   },
   addButtonText: {
     color: "#fff",
-    width: "80%",
-    height: 20,
+    width: "45%",
+    height: responsiveFontSize(2.5),
+    marginTop: responsiveHeight(0.4),
+    marginBottom: responsiveHeight(1),
   },
 
   displayValuesContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginTop: 5,
+    marginTop: responsiveHeight(1),
     alignItems: "center",
     backgroundColor: "white",
     height: "max-content",
     borderRadius: 11,
+    width: "100%",
   },
   displayValueContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
     backgroundColor: "whitesmoke",
-    marginRight: 15,
-    marginLeft: 15,
-    marginBottom: 10,
+    marginRight: responsiveWidth(1.2),
+    marginLeft: responsiveWidth(1.2),
+    marginBottom: responsiveHeight(1),
     borderRadius: 8,
-    padding: 2,
-    width: "25%",
+    padding: responsiveWidth(0.6),
     borderWidth: 1,
     borderColor: "#007BFF",
   },
   displayValueText: {
-    fontSize: 14,
-    marginRight: 5,
+    fontSize: responsiveFontSize(1.4),
+    marginRight: responsiveWidth(1),
     color: "#007BFF",
   },
   closeButton: {},
   closeButtonText: {
     color: "white",
-    fontSize: 14,
+  },
+  button: {
+    borderColor: "#CED0D4",
+    borderWidth: 1,
+    backgroundColor: "#fff",
+    borderRadius: 11,
+    width: responsiveWidth(25),
+    height: responsiveHeight(4.5),
+    marginLeft: responsiveWidth(-20),
+    marginTop: responsiveHeight(3),
+  },
+  pressedButton: {
+    borderColor: "#0866FF",
+  },
+  text: {
+    marginLeft: responsiveScreenFontSize(0.2),
+    marginRight: responsiveFontSize(1),
+    fontSize: responsiveFontSize(1.8),
+    paddingVertical: responsiveHeight(0),
+    paddingHorizontal: responsiveWidth(0),
+    marginTop: responsiveHeight(0.4),
+    marginBottom: responsiveHeight(1),
+    color: "#CED0D4",
+  },
+  pressedText: {
+    color: "#0866FF",
+  },
+  Dropdown1: {
+    backgroundColor: "#F0F2F5",
+    borderRadius: 10,
+    width: "40%",
+    height: responsiveHeight(4),
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: responsiveWidth(-17),
+    marginTop: responsiveHeight(3.5),
+  },
+  machineAddButton: {
+    width: responsiveWidth(30),
+    height: responsiveHeight(3.5),
+    borderRadius: 11,
+    marginTop: responsiveHeight(2),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  SearchbarContainer: {
+    marginBottom: responsiveHeight(0.2),
+  },
+  suggestionItem: {
+    borderWidth: responsiveWidth(0.1),
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: responsiveHeight(1),
+    marginTop: responsiveHeight(0.5),
+    backgroundColor: "#f9f9f9",
   },
 });

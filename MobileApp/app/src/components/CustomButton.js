@@ -29,7 +29,7 @@ const styles = {
   },
   buttonText: {
     color: "white",
-    fontSize: 16,
+    fontSize: responsiveFontSize(2),
  
   },
 };

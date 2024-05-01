@@ -1,4 +1,9 @@
 import { StyleSheet ,StatusBar, Platform} from 'react-native';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
 
 export const styles = StyleSheet.create({
   testingText: {
@@ -6,7 +11,7 @@ export const styles = StyleSheet.create({
   },
 
   top_Bar: {
-    height: 45,
+    height: responsiveHeight(6.5),
     backgroundColor: "#007BFF",
 
     ...Platform.select({
@@ -16,16 +21,6 @@ export const styles = StyleSheet.create({
     }),
   },
 
-  headerText: {
-    fontSize: 18,
-    textAlign: "center",
-    color: "white",
-    position: "absolute",
-    bottom: 7,
-    left: 0,
-    right: 0,
-  },
-
   low_outer: {
     height: '100%',
   },
@@ -33,22 +28,24 @@ export const styles = StyleSheet.create({
   imageView: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20,
+    marginTop: responsiveHeight(2),
   },
   imageStyling: {
-    width: 300,
-    height: 300,
+    width: responsiveWidth(80),
+    height: responsiveHeight(35),
     borderRadius: 20,
   },
   iconBlockStyling: {
+   display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    marginTop: 25,
-    paddingHorizontal: 35,
+    marginTop: responsiveHeight(2.5),
+    justifyContent: 'center',
+    
   },
   iconBlockInner: {
     alignItems: 'center',
+    marginHorizontal: 20,
+
   },
   iconOuter_01: {
     backgroundColor: '#655757',
@@ -85,10 +82,10 @@ export const styles = StyleSheet.create({
   infoBottom: {},
   blockView: {
     flexDirection: 'row',
-    marginVertical: 10,
+    marginVertical: responsiveHeight(1),
   },
   textView: {
-    marginLeft: 10,
+    marginLeft: responsiveWidth(2),
   },
   text01Styling: {
     color: '#65676B',
@@ -105,12 +102,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   descriptionBlock: {
-    marginHorizontal: 40,
-    marginTop: 20,
-    height: 200,
+    marginLeft: responsiveWidth(5),
+    marginTop: responsiveHeight(2),
+    height: responsiveHeight(20),
   },
   subTextOuter: {
-    marginTop: 10,
+    marginTop: responsiveHeight(1),
   },
   subTextStyle: {
     textAlign: 'justify',

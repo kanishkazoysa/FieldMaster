@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,6 @@ import {
   TouchableWithoutFeedback,
   Platform,
   Keyboard,
-  KeyboardAvoidingView
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Appbar, TextInput, Button } from "react-native-paper";
@@ -28,6 +27,7 @@ export default function RegisterScreen() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigation = useNavigation();
   const [passwordError, setPasswordError] = useState("");
+  
 
   const handleSignUp = async () => {
     if (!email || !password || !confirmPassword) {
@@ -83,7 +83,7 @@ export default function RegisterScreen() {
   };
 
   return (
-    
+  
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
@@ -106,7 +106,11 @@ export default function RegisterScreen() {
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
-              width={responsiveWidth(89)}
+              style={{
+                width: responsiveWidth(87),
+                height: responsiveHeight(6),
+                fontSize: responsiveFontSize(1.9),
+              }}
               value={email}
               onChangeText={(text) => setEmail(text)}
             />
@@ -118,7 +122,11 @@ export default function RegisterScreen() {
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
-              width={responsiveWidth(75)}
+              style={{
+                width: responsiveWidth(87),
+                height: responsiveHeight(6),
+                fontSize: responsiveFontSize(1.9),
+              }}
               value={password}
               onChangeText={(text) => {
                 setPassword(text);
@@ -143,7 +151,11 @@ export default function RegisterScreen() {
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
-              width={responsiveWidth(75)}
+              style={{
+                width: responsiveWidth(87),
+                height: responsiveHeight(6),
+                fontSize: responsiveFontSize(1.9),
+              }}
               value={confirmPassword}
               onChangeText={(text) => setConfirmPassword(text)}
               secureTextEntry={!showConfirmPassword}
@@ -170,7 +182,7 @@ export default function RegisterScreen() {
             <Text style={[styles.signupText, styles.signupLink]}>Log in</Text>
           </TouchableOpacity>
         </View>
-
+       
         <View style={styles.privacyTermsContainer}>
           <Text style={styles.privacyText}>
             By clicking "Sign up" you agree to our
@@ -185,8 +197,10 @@ export default function RegisterScreen() {
             </TouchableOpacity>
           </View>
         </View>
+    
       </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+   
   );
 }
 
@@ -204,12 +218,12 @@ const styles = StyleSheet.create({
   button: {
     marginTop: responsiveHeight(3),
     backgroundColor: "#007BFF",
-    width: 337,
-    padding: 2,
+    width: responsiveWidth(80),
+    padding: responsiveHeight(0),
   },
 
   head: {
-    fontSize: responsiveFontSize(5), 
+    fontSize: responsiveFontSize(5),
     fontWeight: "bold",
     top: responsiveHeight(0.1),
   },
@@ -253,9 +267,11 @@ const styles = StyleSheet.create({
   },
 
   privacyTermsContainer: {
-    
-    marginTop:
-      Platform.OS === "android" ? responsiveHeight(40) : responsiveHeight(2.5),
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    alignItems: "center",
+    marginBottom: responsiveHeight(2),
   },
 
   privacyText: {
