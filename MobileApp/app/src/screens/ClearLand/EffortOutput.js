@@ -24,7 +24,7 @@ import {
   import AlertButton from "../../components/AlertButton";
   import CustomButton from "../../components/CustomButton";
   import { responsiveFontSize, responsiveHeight, responsiveScreenFontSize, responsiveWidth } from "react-native-responsive-dimensions";
-  import axios from "axios";
+import AxiosInstance from "../../AxiosInstance";
   
   export default function EffortOutput({ route }) {
     const { laborCount,workHours,machineCount,plantCount,stonesCount } = route.params;
@@ -36,7 +36,7 @@ import {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://10.10.22.163:5000/api/clearLand/latestClearLand");
+                AxiosInstance.get("/api/clearLand/latestClearLand");
                 setLatestData(response.data);
             } catch (error) {
                 console.error(error);

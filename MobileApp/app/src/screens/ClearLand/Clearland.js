@@ -26,7 +26,7 @@ import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
-import axios from "axios";
+import AxiosInstance from "../../AxiosInstance";
 import {
   responsiveFontSize,
   responsiveHeight,
@@ -240,8 +240,8 @@ export default function ClearLand() {
 
   const postData = async () => {
     try {
-      const response = await axios.post(
-        "http://10.10.22.163:5000/api/clearLand/clearLand",
+      AxiosInstance.post(
+        "/api/clearLand/clearLand",
         {
           pressed,
           plantTypeSelectedValue,
