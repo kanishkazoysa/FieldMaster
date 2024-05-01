@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Polygon } from 'react-native-maps';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
-import { TextInput } from 'react-native';
+import { TextInput, Alert } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { Polyline } from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -19,8 +19,10 @@ import * as Location from 'expo-location';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import AxiosInstance from '../../AxiosInstance';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const PointAddingScreen = ({ navigation, route }) => {
+  const [showUserLocation, setShowUserLocation] = useState(false);
   const [isPolygonComplete, setIsPolygonComplete] = useState(false);
   const [region, setRegion] = useState(null);
   const [locationPoints, setLocationPoints] = useState([]);
@@ -57,6 +59,7 @@ const PointAddingScreen = ({ navigation, route }) => {
           latitudeDelta: 0.0005,
           longitudeDelta: 0.0005,
         });
+        setShowUserLocation(true); // Set showUserLocation to true
       }
       return newShowCurrentLocation;
     });
@@ -121,29 +124,41 @@ const PointAddingScreen = ({ navigation, route }) => {
     const perimeterMeters = length(poly, { units: 'meters' });
     const areaPerches = areaMeters / 25.29285264;
     const perimeterKilometers = perimeterMeters / 1000;
-    console.log(points);
-    /* the axios request is used to save the template */
-    AxiosInstance.post("/api/auth/mapTemplate/saveTemplate", {
-        locationPoints: points,
-        area: areaPerches,
-        perimeter: perimeterKilometers,
-      })
-      .then((response) => {
-        console.log(response.data);
-        navigation.navigate('SaveScreen', {
-          id: response.data._id,
-          area: areaPerches,
-          perimeter: perimeterKilometers,
-          userId: response.data.userId,
-        });
-      })
-      .catch((error) => {
-        console.error(error.response.data);
-      });
-    alert(
-      `Area: ${areaPerches.toFixed(
-        2
-      )} perches, Perimeter: ${perimeterKilometers.toFixed(2)} kilometers`
+
+    Alert.alert(
+      'Confirmation',
+      `Area: ${areaPerches.toFixed(2)} perches, Perimeter: ${perimeterKilometers.toFixed(2)} kilometers`,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => setPoints([]), // Clear the points when Cancel is pressed
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            /* the axios request is used to save the template */
+            AxiosInstance.post('/api/auth/mapTemplate/saveTemplate', {
+              locationPoints: points,
+              area: areaPerches,
+              perimeter: perimeterKilometers,
+            })
+              .then((response) => {
+                console.log(response.data);
+                navigation.navigate('SaveScreen', {
+                  id: response.data._id,
+                  area: areaPerches,
+                  perimeter: perimeterKilometers,
+                  userId: response.data.userId,
+                });
+              })
+              .catch((error) => {
+                console.error(error.response.data);
+              });
+          },
+        },
+      ],
+      { cancelable: false }
     );
   };
 
@@ -238,7 +253,9 @@ const PointAddingScreen = ({ navigation, route }) => {
             <MaterialIcons name='cancel' size={24} color='#707070' />
           </TouchableOpacity>
         )}
-        <View style={{ marginLeft: 10 }}></View>
+        <View style={{ marginLeft: 10 }}>
+          <TouchableOpacity></TouchableOpacity>
+        </View>
       </View>
       <Modal
         animationType='slide'
@@ -278,12 +295,6 @@ const PointAddingScreen = ({ navigation, route }) => {
           </View>
         </View>
       </Modal>
-      <View>
-        <Appbar.Header style={{ backgroundColor: '#0866FF' }}>
-          <Appbar.BackAction color='#ffffff' onPress={handleCancel} />
-          <Appbar.Content title='Create Map' color='#ffffff' />
-        </Appbar.Header>
-      </View>
       {/* including map view */}
       {region && (
         <View style={{ flex: 1 }}>
@@ -291,7 +302,7 @@ const PointAddingScreen = ({ navigation, route }) => {
             ref={mapRef}
             style={{ flex: 1, paddingTop: 100 }}
             region={region}
-            showsUserLocation={true}
+            showsUserLocation={showUserLocation}
             onUserLocationChange={(event) => {
               const { latitude, longitude } = event.nativeEvent.coordinate;
               setRegion({
@@ -355,7 +366,7 @@ const PointAddingScreen = ({ navigation, route }) => {
             )}
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.button2}
+            style={styles.locationFocusBtn}
             onPress={focusOnCurrentLocation}
           >
             <FontAwesomeIcon
@@ -397,7 +408,7 @@ const PointAddingScreen = ({ navigation, route }) => {
               <Text style={styles.btmBtnStyle}>Save</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={handleClearPoints}
+              onPress={handleCancel}
               style={styles.cancelBtnStyle}
             >
               <Text style={styles.btmBtnStyle}>Cancel</Text>

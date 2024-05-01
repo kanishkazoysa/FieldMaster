@@ -1,9 +1,10 @@
-import { StyleSheet ,StatusBar, Platform} from 'react-native';
+import { StyleSheet, StatusBar, Platform } from 'react-native';
+
 import {
+  responsiveFontSize,
   responsiveHeight,
   responsiveWidth,
-  responsiveFontSize,
-} from "react-native-responsive-dimensions";
+} from 'react-native-responsive-dimensions';
 
 export const styles = StyleSheet.create({
   testingText: {
@@ -11,14 +12,24 @@ export const styles = StyleSheet.create({
   },
 
   top_Bar: {
-    height: responsiveHeight(6.5),
-    backgroundColor: "#007BFF",
+    height: responsiveHeight(5),
+    backgroundColor: '#007BFF',
 
     ...Platform.select({
       android: {
-        marginTop: StatusBar.currentHeight,
+        marginTop: responsiveHeight(3),
       },
     }),
+  },
+
+  headerText: {
+    fontSize: responsiveFontSize(2.5),
+    textAlign: 'center',
+    color: 'white',
+    position: 'absolute',
+    bottom: responsiveHeight(1),
+    left: responsiveWidth(40),
+    right: responsiveWidth(40),
   },
 
   low_outer: {
@@ -29,45 +40,46 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: responsiveHeight(2),
+    marginTop: responsiveHeight(2),
   },
   imageStyling: {
-    width: responsiveWidth(80),
+    width: responsiveWidth(70),
     height: responsiveHeight(35),
     borderRadius: 20,
   },
   iconBlockStyling: {
-   display: 'flex',
+    display: 'flex',
     flexDirection: 'row',
-    marginTop: responsiveHeight(2.5),
-    justifyContent: 'center',
-    
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginTop: responsiveHeight(2),
+    paddingHorizontal: responsiveWidth(10),
   },
   iconBlockInner: {
     alignItems: 'center',
     marginHorizontal: 20,
-
   },
   iconOuter_01: {
     backgroundColor: '#655757',
     borderRadius: 1000,
-    padding: 10,
+    padding: responsiveWidth(2.5),
   },
   iconOuter_02: {
     backgroundColor: '#3AA859',
     borderRadius: 100,
-    padding: 10,
+    padding: responsiveWidth(2.5),
   },
   iconOuter_03: {
     backgroundColor: '#5452CC',
     borderRadius: 100,
-    padding: 10,
+    padding: responsiveWidth(2.5),
   },
   infoBlock: {
     backgroundColor: 'white',
-    marginTop: 20,
-    marginHorizontal: 40,
+    marginTop: responsiveHeight(2),
+    marginHorizontal: responsiveWidth(12),
     borderRadius: 10,
-    padding: 10,
+    padding: responsiveWidth(3),
   },
   landInfoView: {
     backgroundColor: 'red',
@@ -102,11 +114,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   descriptionBlock: {
-    marginLeft: responsiveWidth(5),
+    marginHorizontal: responsiveWidth(13),
     marginTop: responsiveHeight(2),
     height: responsiveHeight(20),
   },
   subTextOuter: {
+    marginTop: responsiveHeight(1),
     marginTop: responsiveHeight(1),
   },
   subTextStyle: {
