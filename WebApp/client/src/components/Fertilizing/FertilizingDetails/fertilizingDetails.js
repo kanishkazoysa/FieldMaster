@@ -68,12 +68,7 @@ export default function FertilizingDetails({
 //     setTotal((plantcount*totalAmount/1000));
 //   })
 
-  const handleBackClick = () => {
-    setAnimatePage(false);
-    setTimeout(() => {
-      setCurrentPage(null);
-    }, 300);
-  };
+ 
 
   
 

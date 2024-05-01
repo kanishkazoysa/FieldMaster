@@ -4,7 +4,7 @@ import { MdArrowBack } from "react-icons/md";
 import { GiWeight } from "react-icons/gi";
 
 import { PiSquareDuotone } from "react-icons/pi";
-import { MdGrass} from "react-icons/md";
+import { MdGrass } from "react-icons/md";
 import { GiGrassMushroom } from "react-icons/gi";
 import { SlChemistry } from "react-icons/sl";
 import { FaClockRotateLeft } from "react-icons/fa6";
@@ -18,25 +18,25 @@ import FertilizingDetails from "../FertilizingDetails/fertilizingDetails";
 import { GiHourglass } from "react-icons/gi";
 import { FaHourglass } from 'react-icons/fa'; // Importing Hourglass icon from react-icons/fa
 
-  
+
 export default function Fertilizing(
-    { 
-        onBackToSidebar,
-        textPlant ,
-        PlantDensity,
-        numberOfPlants
-    }) {
+  {
+    onBackToSidebar,
+    textPlant,
+    PlantDensity,
+    numberOfPlants
+  }) {
   const [perimeter, setPerimeter] = useState("1.5");
   const [area, setArea] = useState("100");
- 
+
   const [textFertilizationType, setTextFertilizationType] =
     useState("");
   const [textFertilizationNUmberoftime, setTextFertilizationNUmberoftime] =
     useState("");
   const [textFertilizationAmount, setTextFertilizationAmount] =
     useState("");
-    const [FertilizerAmountUnitselectedValue, setFertilizerAmountUnitselectedValue] = useState(null);
-    const [FertilizerAmountUnitselectedValue1, setFertilizerAmountUnitselectedValue1] = useState(null);
+  const [FertilizerAmountUnitselectedValue, setFertilizerAmountUnitselectedValue] = useState(null);
+  const [FertilizerAmountUnitselectedValue1, setFertilizerAmountUnitselectedValue1] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
@@ -52,15 +52,15 @@ export default function Fertilizing(
   const handleInputAmount = (event) => {
     setTextFertilizationAmount(event.target.value);
   };
-  
 
- 
+
+
   const handleAmountUnitChange = (selectedOption) => {
     setFertilizerAmountUnitselectedValue1(selectedOption);
     setFertilizerAmountUnitselectedValue(selectedOption.value);
   };
 
-  
+
 
   const handleFertilizingDetails = async (e) => {
 
@@ -69,10 +69,10 @@ export default function Fertilizing(
       if (
 
         !textFertilizationNUmberoftime ||
-        !textFertilizationAmount||
+        !textFertilizationAmount ||
         !textFertilizationType ||
         !FertilizerAmountUnitselectedValue
-        
+
       ) {
         throw new Error("Please fill in all fields");
       }
@@ -84,7 +84,7 @@ export default function Fertilizing(
       // Prepare data for the request
       const requestData = {
         textPlant,
-        
+
 
       };
 
@@ -266,12 +266,7 @@ export default function Fertilizing(
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === "fertilizingDetails" && (
-          <FertilizingDetails
-            
-
-          />
-        )}
+        {currentPage === "fertilizingDetails" && (<FertilizingDetails onBackToSidebar={handleBackClick}/>)}
       </div>
     </div>
   );
