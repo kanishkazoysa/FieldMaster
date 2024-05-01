@@ -4,9 +4,10 @@ import { RiWalkFill } from "react-icons/ri";
 import { MdLocationOn } from "react-icons/md";
 import { FaCalculator } from "react-icons/fa6";
 import { useState } from "react";
+import Calculator from "../Calculator/calculator";
 
 
-const StartMeasurePage = ({ onBackToSidebar }) => {
+export default function StartMeasurePage  ({ onBackToSidebar }) {
 
   const [hoveredOption, setHoveredOption] = useState(null);
 
@@ -17,9 +18,27 @@ const StartMeasurePage = ({ onBackToSidebar }) => {
   const handleOptionLeave = () => {
     setHoveredOption(null);
   };
+
+  const [currentPage, setCurrentPage] = useState(null);
+  const [animatePage, setAnimatePage] = useState(false);
+  
+  const handleBackClick = () => {
+    setAnimatePage(false);
+    setTimeout(() => {
+    setCurrentPage(null);
+    }, 300);
+  };
+
+  const handlemanualCalculatorClik = () => {
+    setCurrentPage("Calculator");
+    setAnimatePage(true);
+  }
+  
   
   return (
     <div>
+      {!currentPage && (
+      <div>
       <div style={styles.header}>
         <MdArrowBack
           onClick={onBackToSidebar}
@@ -72,6 +91,7 @@ const StartMeasurePage = ({ onBackToSidebar }) => {
       </div>
     </div>
     
+
     <div
       style={{
         ...styles.options,
@@ -79,6 +99,7 @@ const StartMeasurePage = ({ onBackToSidebar }) => {
       }}
       onMouseEnter={() => handleOptionHover('manualCalculator')}
       onMouseLeave={handleOptionLeave}
+      onClick={handlemanualCalculatorClik}
     >
       <div style={styles.iconContainer}>
         <FaCalculator fontSize={22} style={{ marginLeft: '10px', marginTop: '12px' }} color="#fff" />
@@ -92,9 +113,18 @@ const StartMeasurePage = ({ onBackToSidebar }) => {
         </div>
       </div>
     </div>
-       
-
-       
+       </div>
+       </div>
+      )}
+      <div
+        style={{
+          transform: animatePage ? "translateX(0)" : "translateX(-100%)",
+          transition: "transform 0.3s ease-in-out",
+          backgroundColor: "whitesmoke",
+          overflow: "auto", // Add scrollbar if content exceeds container height
+        }}
+      >
+        {currentPage === "Calculator" && (<Calculator onBackToSidebar={handleBackClick}/>)}
       </div>
     </div>
   );
@@ -155,4 +185,3 @@ textContainer :{
   },
 };
 
-export default StartMeasurePage;

@@ -19,7 +19,7 @@ export default function SetupCard() {
         style={{
           display: "flex",
           justifyContent: "space-evenly",
-          padding: "3rem 2rem 5rem 2rem",
+          padding: "3rem 2rem 1rem 2rem",
         }}
       >
         <MDBCard style={{ maxWidth: "22rem" }}>
