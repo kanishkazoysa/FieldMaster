@@ -89,7 +89,7 @@ export function SaveScreen({ navigation, route }) {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('PointAddingScreen');
+              navigation.goBack();
             }}
           >
             <View>
@@ -182,6 +182,8 @@ export function SaveScreen({ navigation, route }) {
               />
             </View>
           </View>
+        </View>
+      </ScrollView>
         </View>
       </ScrollView>
     </View>

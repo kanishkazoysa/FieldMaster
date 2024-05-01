@@ -40,6 +40,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: responsiveHeight(2),
+    marginTop: responsiveHeight(2),
   },
   imageStyling: {
     width: responsiveWidth(70),
@@ -47,6 +48,7 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
   },
   iconBlockStyling: {
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -55,6 +57,7 @@ export const styles = StyleSheet.create({
   },
   iconBlockInner: {
     alignItems: 'center',
+    marginHorizontal: 20,
   },
   iconOuter_01: {
     backgroundColor: '#655757',
@@ -116,6 +119,7 @@ export const styles = StyleSheet.create({
     height: responsiveHeight(20),
   },
   subTextOuter: {
+    marginTop: responsiveHeight(1),
     marginTop: responsiveHeight(1),
   },
   subTextStyle: {

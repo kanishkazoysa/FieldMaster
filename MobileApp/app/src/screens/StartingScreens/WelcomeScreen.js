@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useRef } from 'react';
-
 import { Button } from 'react-native-paper';
 import * as Animatable from 'react-native-animatable';
+import {
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
 
 export default function WelcomeScreen() {
   const navigation = useNavigation();
@@ -83,10 +85,10 @@ export default function WelcomeScreen() {
 }
 const styles = StyleSheet.create({
   button: {
-    margin: 10,
+    margin:"2%",
     backgroundColor: '#007BFF',
-    width: 337,
-    padding: 2,
+    width:"85%",
+    padding: 0.1,
   },
 
   imgSection: {
@@ -113,18 +115,19 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     position: 'absolute',
     top: '40%',
-    width: '100%',
+    width: '93%',
   },
   header: {
     position: 'absolute',
-    top: '0.1%',
+    top: '-7%',
     fontWeight: 'bold',
-    fontSize: 28,
+    fontSize: responsiveFontSize(4),
   },
   text: {
     position: 'absolute',
-    top: '10%',
-    width: 337,
+    top: '7%',
+    width: "95%",
     textAlign: 'center',
+    fontSize: responsiveFontSize(1.9),
   },
 });

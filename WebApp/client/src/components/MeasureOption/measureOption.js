@@ -108,10 +108,11 @@ const styles = {
     cursor: 'pointer',
   },
   header: {
-    backgroundColor: "#fff",
     display: "flex",
     marginTop: "-5%",
     marginLeft: "-5%",
+    padding: "18px",
+
   },
   backButton: {
     marginRight: "10px",
@@ -122,7 +123,8 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: "10%",
+    padding: "20px",
+
   },
   options:{
     display: "flex",
