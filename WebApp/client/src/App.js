@@ -16,6 +16,9 @@ import { Carousel } from 'bootstrap';
 import plantation from './pages/plantation';
 import Home from "./pages/Home";
 import EmailVerified from "./pages/EmailVerified"
+import Managemap from "./pages/Managemap";
+
+
 export default function App() {
   return (
     <Router>
@@ -24,8 +27,7 @@ export default function App() {
         <Route path='/' element={<MainContent />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/emailVerification" element={<EmailVerified />} />
-        {/* Route for the new page */}
-        {/* {/<Route path='/newpage' element={<plantation />} />/} */}
+        <Route path="/managemap" element={<Managemap />} />
       </Routes>
     </Router>
   );
