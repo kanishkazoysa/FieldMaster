@@ -13,7 +13,7 @@ import ContactForm from "./components/HomeComponents/contact/contact";
 import "./index.css";
 import Home from "./pages/Home";
 import EmailVerified from "./pages/EmailVerified"
-
+import Managemap from "./pages/Managemap"
 
 export default function App() {
   return (
@@ -23,6 +23,7 @@ export default function App() {
         <Route path="/" element={<MainContent />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/emailVerification" element={<EmailVerified />} />
+        {/* <Route path="/Managemap" element={<Managemap />}/> */}
       </Routes>
     </Router>
   );
@@ -38,6 +39,7 @@ export default function App() {
 // MainContent component
 const MainContent = () => (
   <>
+    {/* <Managemap/> */}
     <Navbar />
     <div className="container">
       <Hero />

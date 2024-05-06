@@ -241,7 +241,7 @@ export default function ClearLand() {
   const postData = async () => {
     try {
       const response = await axios.post(
-        "http://10.10.22.163:5000/api/clearLand/clearLand",
+        "http://192.168.8.173:5000/api/clearLand/clearLand",
         {
           pressed,
           plantTypeSelectedValue,

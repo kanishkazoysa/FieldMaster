@@ -8,7 +8,8 @@ import { IoBookmarks } from "react-icons/io5";
 import { RiWalkFill } from "react-icons/ri";
 import StartMeasurePage from '../MeasureOption/measureOption.js';
 import SavedTemplates from '../SavedTemplates/savedTemplates.js';
-import Fence from "../Fence/Fence/fence";
+// import Fence from "../Fence/Fence/fence";
+import ClearLand from "../ClearLand/ClearLand/clearLand";
 
 
 export default function SideNavbar() {
@@ -36,7 +37,7 @@ export default function SideNavbar() {
   };
 
   const handleSavedTemplatesClick = () => {
-    setCurrentPage('Fence'); // Update this line
+    setCurrentPage('ClearLand'); // Update this line
     setAnimatePage(true);
   };
 
@@ -97,7 +98,7 @@ export default function SideNavbar() {
         }}
       >
         {currentPage === 'StartMeasure' && <StartMeasurePage onBackToSidebar={handleBackClick} />}
-        {currentPage === 'Fence' && <Fence onBackToSidebar={handleBackClick} />}
+        {currentPage === 'ClearLand' && <ClearLand onBackToSidebar={handleBackClick} />}
       </div>
       </div>
     </Sidebar>
