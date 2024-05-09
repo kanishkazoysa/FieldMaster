@@ -69,13 +69,13 @@ export default function LoginScreen() {
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-        <Appbar.Header style={styles.header}>
-          <Appbar.BackAction
-            onPress={() => navigation.goBack()}
-            color="white"
-          />
-        </Appbar.Header>
+          <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+          <Appbar.Header style={styles.header}>
+            <Appbar.BackAction
+              onPress={() => navigation.goBack()}
+              color="white"
+            />
+          </Appbar.Header>
 
         <View style={styles.textSection}>
           <Text style={styles.welcomeText}>Welcome </Text>

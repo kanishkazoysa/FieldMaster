@@ -27,12 +27,15 @@ const SelectionModal = ({
   };
   const navigation = useNavigation();
 
+  const handleManageAccount = () => {
+    setProfileModalVisible(false);
+    navigation.navigate("ProfileManagement");
+  };
+
   const  handleSignOut = async () => {
     setLoading(true);
     await  AsyncStorage.removeItem('token');
-   
- 
-
+  
      // Wait for 2 seconds before navigating to the login page
      setTimeout(() => {
       setLoading(false);
@@ -82,6 +85,7 @@ const SelectionModal = ({
 
             <Button
               mode="outlined"
+              onPress={handleManageAccount}
               style={styles.ManageButton}
               textColor="#007BFF"
             >
