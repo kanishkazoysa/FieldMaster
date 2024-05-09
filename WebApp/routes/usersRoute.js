@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { PassThrough } = require("nodemailer/lib/xoauth2");
-const middleware = require("../middleware/middleware");
+const auth = require("../middleware/middleware");
 
 let transporter = nodemailer.createTransport({
   service: "gmail",
@@ -173,6 +173,36 @@ router.post("/change-password", async (req, res) => {
     console.error("Error changing password:", error);
     res.status(500).json({ error: "Internal server error" });
   }
+});
+
+router.get('/details', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).send({ success: false, message: 'User not found' });
+    }
+    res.send({ success: true, user });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+});
+
+router.post('/updateProfile',auth, async (req, res ) =>{
+  const {fname, lname, email} = req.body;
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).send({ success: false, message: 'User not found' });
+    }
+    user.fname = fname;
+    user.lname = lname;
+    user.email = email;
+    await user.save();
+    res.send({ success: true, user });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+
 });
 
 module.exports = router;

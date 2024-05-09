@@ -1,20 +1,16 @@
 // SelectionModal.js
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Modal
-} from "react-native";
-import { IconButton, Avatar, Button, } from "react-native-paper";
-import { useNavigation, } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
+import { IconButton, Avatar, Button } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
+import axios from "axios"; // make sure to install axios
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ProfileAvatar from "../components/ProfileAvatar";
 
 const SelectionModal = ({
   profileModalVisible,
@@ -22,29 +18,46 @@ const SelectionModal = ({
   email,
 }) => {
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState({});
   const closeModal = () => {
     setProfileModalVisible(false);
   };
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = await AsyncStorage.getItem("token");
+      const response = await axios.get(
+        "http://192.168.1.104:5000/api/users/details",
+        {
+          headers: { Authorization: token },
+        }
+      );
+      setUser(response.data.user);
+    };
+
+    if (profileModalVisible) {
+      fetchUser();
+    }
+  }, [profileModalVisible]);
 
   const handleManageAccount = () => {
     setProfileModalVisible(false);
     navigation.navigate("ProfileManagement");
   };
 
-  const  handleSignOut = async () => {
+  const handleSignOut = async () => {
     setLoading(true);
-    await  AsyncStorage.removeItem('token');
-  
-     // Wait for 2 seconds before navigating to the login page
-     setTimeout(() => {
+    await AsyncStorage.removeItem("token");
+    // Wait for 2 seconds before navigating to the login page
+    setTimeout(() => {
       setLoading(false);
       setProfileModalVisible(false);
       navigation.navigate("Login");
     }, 2000);
+  };
 
-
-  }
+ 
 
   return (
     <Modal
@@ -70,17 +83,14 @@ const SelectionModal = ({
               style={styles.cancelButton}
             />
 
-            <Text style={styles.headerText}>example@gmail.com</Text>
+            <Text style={styles.headerText}>{user.email}</Text>
             <View>
-              <Avatar.Image
-                size={responsiveFontSize(10)}
-                source={require("../images/profilePhoto.png")}
-              />
+              <ProfileAvatar userData={user} textSize={10} />
             </View>
 
             <View style={styles.nameContainer}>
               <Text style={styles.nameText}>Hi ,</Text>
-              <Text style={styles.nameText}>Jhon</Text>
+              <Text style={styles.nameText}>{user.fname}</Text>
             </View>
 
             <Button
@@ -149,7 +159,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   headerText: {
-    fontSize: responsiveFontSize(1.9),
+    fontSize: responsiveFontSize(1.5),
     marginBottom: responsiveHeight(2.5),
   },
   container: {
@@ -197,11 +207,9 @@ export default SelectionModal;
 // Setting
 // </Button>
 
-
 // <View style={styles.bottomContainer}>
 // <Text style={styles.bottomText}>Privacy Policy</Text>
 
 // <IconButton icon="circle" size={5} style={styles.dot} />
 // <Text style={styles.bottomText}>Terms of Service</Text>
 // </View>
-
