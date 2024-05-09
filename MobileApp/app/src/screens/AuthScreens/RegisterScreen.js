@@ -7,7 +7,9 @@ import {
   StyleSheet,
   Alert,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
   Platform,
+  ScrollView,
   Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -20,6 +22,8 @@ import {
 import AxiosInstance from "../../AxiosInstance";
 
 export default function RegisterScreen() {
+  const [fName, setFName] = useState("");
+  const [lName, setLName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -30,7 +34,7 @@ export default function RegisterScreen() {
   
 
   const handleSignUp = async () => {
-    if (!email || !password || !confirmPassword) {
+    if (!fName || !lName || !email || !password || !confirmPassword) {
       Alert.alert("Please fill in all fields");
       return;
     }
@@ -45,7 +49,7 @@ export default function RegisterScreen() {
       return;
     }
 
-    AxiosInstance.post("/api/users/register", { email, password })
+    AxiosInstance.post("/api/users/register", { email, password ,fName, lName })
       .then((response) => {
         if (response.data.success) {
           Alert.alert(
@@ -85,7 +89,11 @@ export default function RegisterScreen() {
   return (
   
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <View style={styles.container}>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "padding" : " height"} 
+      style={styles.container}
+    >
+      
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
         <Appbar.Header style={styles.header}>
           <Appbar.BackAction
@@ -93,7 +101,7 @@ export default function RegisterScreen() {
             color="white"
           />
         </Appbar.Header>
-
+<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.textSection}>
           <Text style={styles.head}>Hi!</Text>
           <Text style={styles.text}>Create a new account</Text>
@@ -102,19 +110,40 @@ export default function RegisterScreen() {
         <View style={styles.field}>
           <View style={{ marginBottom: 10 }}>
             <TextInput
-              label="email"
+              label="First Name"
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
-              style={{
-                width: responsiveWidth(87),
-                height: responsiveHeight(6),
-                fontSize: responsiveFontSize(1.9),
-              }}
+              style={styles.inputButton}
+              value={fName}
+              theme={{ roundness: 10 }}
+              onChangeText={(text) => setFName(text)}
+            />
+            <TextInput
+              label="Last Name"
+              mode="outlined"
+              outlineColor="#d9d7d2"
+              activeOutlineColor="#007BFF"
+              style={styles.inputButton}
+              value={lName}
+              theme={{ roundness: 10 }}
+              onChangeText={(text) => setLName(text)}
+            />
+            <TextInput
+              label="Email"
+              mode="outlined"
+              outlineColor="#d9d7d2"
+              activeOutlineColor="#007BFF"
+              style={styles.inputButton}
               value={email}
+              theme={{ roundness: 10 }}
               onChangeText={(text) => setEmail(text)}
             />
           </View>
+
+          <Text style={{marginTop:30,marginBottom:10}}>
+          Create a password that is at least 8 characters long
+          </Text>
 
           <View style={{ marginBottom: 10 }}>
             <TextInput
@@ -127,6 +156,7 @@ export default function RegisterScreen() {
                 height: responsiveHeight(6),
                 fontSize: responsiveFontSize(1.9),
               }}
+              theme={{ roundness: 10 }}
               value={password}
               onChangeText={(text) => {
                 setPassword(text);
@@ -151,6 +181,7 @@ export default function RegisterScreen() {
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
+              theme={{ roundness: 10 }}
               style={{
                 width: responsiveWidth(87),
                 height: responsiveHeight(6),
@@ -182,7 +213,7 @@ export default function RegisterScreen() {
             <Text style={[styles.signupText, styles.signupLink]}>Log in</Text>
           </TouchableOpacity>
         </View>
-       
+
         <View style={styles.privacyTermsContainer}>
           <Text style={styles.privacyText}>
             By clicking "Sign up" you agree to our
@@ -198,7 +229,9 @@ export default function RegisterScreen() {
           </View>
         </View>
     
-      </View>
+     
+      </ScrollView>
+      </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
    
   );
@@ -238,6 +271,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+    justifyContent: 'space-between',
   },
 
   textSection: {
@@ -252,7 +286,7 @@ const styles = StyleSheet.create({
   loginTextContainer: {
     flexDirection: "row",
     marginLeft: responsiveWidth(8),
-    top: responsiveHeight(8),
+    top: responsiveHeight(5),
   },
 
   signupText: {
@@ -267,11 +301,12 @@ const styles = StyleSheet.create({
   },
 
   privacyTermsContainer: {
-    position: "absolute",
-    bottom: 0,
+    marginBottom: 10,
+  flex:1,
+  justifyContent: "flex-end",
     width: "100%",
     alignItems: "center",
-    marginBottom: responsiveHeight(2),
+    
   },
 
   privacyText: {
@@ -296,4 +331,12 @@ const styles = StyleSheet.create({
     color: "red",
     marginLeft: 10,
   },
+  inputButton: {
+    width: responsiveWidth(87),
+    height: responsiveHeight(6),
+    fontSize: responsiveFontSize(1.9),
+    marginBottom: 10,
+  },
+  
 });
+ 

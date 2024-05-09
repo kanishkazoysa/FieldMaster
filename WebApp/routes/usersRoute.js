@@ -24,7 +24,7 @@ transporter.verify((error, success) => {
 
 // register a new user
 router.post("/register", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password , fName ,lName } = req.body;
   const VerifyId = uuidv4();
   const mailOptions = {
     from: "kanishkazoysa1234@gmail.com",
@@ -70,7 +70,7 @@ router.post("/register", async (req, res) => {
         console.log("Email sent: " + info.response);
       }
     });
-    const newUser = new User({ email, password });
+    const newUser = new User({ email, password, lname: lName, fname: fName });
     await newUser.save();
 
     res.status(200).send({
