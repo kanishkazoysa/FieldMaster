@@ -190,12 +190,12 @@ export default function RegisterScreen() {
               value={confirmPassword}
               onChangeText={(text) => setConfirmPassword(text)}
               secureTextEntry={!showConfirmPassword}
-              right={
-                <TextInput.Icon
-                  icon={showConfirmPassword ? "eye" : "eye-off"}
-                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                />
-              }
+              // right={
+              //   <TextInput.Icon
+              //     icon={showConfirmPassword ? "eye" : "eye-off"}
+              //     onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              //   />
+              // }
             />
             {passwordError ? (
               <Text style={styles.errorText}>{passwordError}</Text>
