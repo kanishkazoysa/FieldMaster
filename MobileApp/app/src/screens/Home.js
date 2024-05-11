@@ -32,13 +32,14 @@ import axios from "axios";
 import Config from "react-native-config";
 import ProfileAvatar from "../components/ProfileAvatar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from '@react-navigation/native';
 
 const apiKey = Config.GOOGLE_MAPS_API_KEY;
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigation = useNavigation();
-  const [isFocused, setIsFocused] = useState(false);
+  const [isfocused, setIsFocused] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [showCurrentLocation, setShowCurrentLocation] = useState(false);
@@ -49,12 +50,15 @@ export default function Home() {
   const mapRef = React.useRef(null);
   const [userData, setUserData] = useState(null);
 
+  const isFocused = useIsFocused();
+  
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
         const response = await axios.get(
-          "http://192.168.1.104:5000/api/users/details",
+          "http://192.168.1.102:5000/api/users/details",
           {
             headers: { Authorization: token },
           }
@@ -67,8 +71,10 @@ export default function Home() {
       }
     };
   
-    fetchUserData();
-  }, []);
+    if (isFocused) {
+      fetchUserData();
+    }
+  }, [isFocused]);
   
 
   //get the current location
@@ -245,7 +251,7 @@ export default function Home() {
               onBlur={onBlur}
               style={[
                 styles.searchbarInput,
-                isFocused ? styles.searchbarInputFocused : null,
+                isfocused ? styles.searchbarInputFocused : null,
               ]}
               onChangeText={setSearchQuery}
               value={searchQuery}
