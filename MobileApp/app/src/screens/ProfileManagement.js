@@ -1,4 +1,10 @@
-import { View, Text, StatusBar, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { Appbar, TextInput, Button, Avatar } from "react-native-paper";
 import {
   responsiveHeight,
@@ -10,17 +16,38 @@ import axios from "axios"; // make sure to install axios
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import ProfileAvatar from "../components/ProfileAvatar";
+import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
 
 const ProfileManagement = () => {
   const [user, setUser] = useState({});
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
+  const [forceUpdate, setForceUpdate] = useState(0);
+
+  useEffect(() => {
+    setForceUpdate((prevValue) => prevValue + 1);
+  }, [user.imageUrl]);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
       const token = await AsyncStorage.getItem("token");
       const response = await axios.get(
-        "http://192.168.1.104:5000/api/users/details",
+        "http://192.168.1.102:5000/api/users/details",
         {
           headers: { Authorization: token },
         }
@@ -32,24 +59,38 @@ const ProfileManagement = () => {
   }, []);
 
   const handleConfirm = async () => {
-    setLoading(true);
-    const token = await AsyncStorage.getItem("token");
-    try {
-      const response = await axios.post(
-        "http://192.168.1.104:5000/api/users/updateProfile",
-        user,
-        { headers: { Authorization: token } }
-      );
-      if (response.data.success) {
-        setTimeout(() => navigation.navigate("Home"), 2000);
-      } else {
-        alert("An error occurred");
-      }
-    } catch (error) {
-      console.log(error);
-      alert("An error occurred");
-    }
-  };
+  setLoading(true);
+  const token = await AsyncStorage.getItem("token");
+  let localUri = image;
+  let filename;
+
+  // Prepare the data
+  let formData = new FormData();
+  formData.append('user', JSON.stringify(user));
+
+  // Check if image is not null
+  if (localUri) {
+    filename = localUri.split('/').pop();
+
+    // Infer the type of the image
+    let match = /\.(\w+)$/.exec(filename);
+    let type = match ? `image/${match[1]}` : `image`;
+
+    formData.append('photo', { uri: localUri, name: filename, type });
+  }
+
+  try {
+    const response = await axios.post(
+      "http://192.168.1.102:5000/api/users/updateProfile",
+      formData,
+      { headers: { Authorization: token, 'Content-Type': 'multipart/form-data', } }
+    );
+    navigation.navigate('Home');
+  } catch (error) {
+    console.log(error);
+    alert("An error occurred");
+  }
+};
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
@@ -58,7 +99,9 @@ const ProfileManagement = () => {
       </Appbar.Header>
 
       <View style={styles.section1}>
-        <ProfileAvatar userData={user} textSize={20} />
+        <TouchableOpacity onPress={pickImage}>
+          <ProfileAvatar userData={user} textSize={20} image={image} />
+        </TouchableOpacity>
       </View>
       <View style={styles.section2}>
         <Text style={styles.text1}>Your Information</Text>
