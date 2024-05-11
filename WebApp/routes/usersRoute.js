@@ -7,6 +7,18 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { PassThrough } = require("nodemailer/lib/xoauth2");
 const auth = require("../middleware/middleware");
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now())
+  }
+});
+
+const upload = multer({ storage: storage });
 
 let transporter = nodemailer.createTransport({
   service: "gmail",
@@ -187,22 +199,38 @@ router.get('/details', auth, async (req, res) => {
   }
 });
 
-router.post('/updateProfile',auth, async (req, res ) =>{
-  const {fname, lname, email} = req.body;
+router.post('/updateProfile', auth, upload.single('photo'), async (req, res) => {
+  if (!req.body.user) {
+    return res.status(400).send({ success: false, message: 'User data not provided' });
+  }
+
+  let userUpdate;
   try {
-    const user = await User.findById(req.userId);
-    if (!user) {
-      return res.status(404).send({ success: false, message: 'User not found' });
-    }
-    user.fname = fname;
-    user.lname = lname;
-    user.email = email;
+    userUpdate = JSON.parse(req.body.user);
+  } catch (error) {
+    return res.status(400).send({ success: false, message: 'Invalid user data' });
+  }
+
+  const user = await User.findById(req.userId);
+
+  if (!user) {
+    return res.status(404).send({ success: false, message: 'User not found' });
+  }
+
+  if (req.file) {
+  user.imageUrl = `uploads/${req.file.filename}`; // e.g., "uploads/photo-1715444811685"
+}
+
+  user.fname = userUpdate.fname || user.fname;
+  user.lname = userUpdate.lname || user.lname;
+  user.email = userUpdate.email || user.email;
+
+  try {
     await user.save();
     res.send({ success: true, user });
   } catch (error) {
     res.status(500).send({ success: false, message: 'Server error' });
   }
-
 });
 
 module.exports = router;
