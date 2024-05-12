@@ -187,6 +187,7 @@ router.post("/change-password", async (req, res) => {
   }
 });
 
+//get user details
 router.get('/details', auth, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
@@ -199,6 +200,8 @@ router.get('/details', auth, async (req, res) => {
   }
 });
 
+
+//update user profile with upload photo
 router.post('/updateProfile', auth, upload.single('photo'), async (req, res) => {
   if (!req.body.user) {
     return res.status(400).send({ success: false, message: 'User data not provided' });
