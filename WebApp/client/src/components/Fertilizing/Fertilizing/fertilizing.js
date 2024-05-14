@@ -129,14 +129,14 @@ export default function Fertilizing(
             <p style={styles.titleText}>Plantation Info</p>
             <div style={styles.propertyBox}>
               <div style={styles.property}>
-                <FaTree color="gray" size={28} />
+                <FaTree color="gray" size={28}/>
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Type</p>
                   <p style={styles.propertyValue}>{textPlant}</p>
                 </div>
               </div>
               <div style={styles.property}>
-                <PiSquareDuotone color="gray" size={35} />
+                <PiSquareDuotone color="gray" size={35}/>
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>

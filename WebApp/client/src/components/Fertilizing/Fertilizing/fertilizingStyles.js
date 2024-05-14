@@ -68,7 +68,7 @@ export const styles = {
       alignItems: "center",
       justifyContent: "left",
       backgroundColor: "white",
-      width: "46%",
+      width: "50%",
       //height: 50,
     },
   
@@ -86,7 +86,8 @@ export const styles = {
     },
   
     propertyValue: {
-      fontSize: 13,
+      fontSize: 12,
+      
       fontWeight: "bold",
       marginBottom: 0,
     },
@@ -140,7 +141,7 @@ export const styles = {
     },
   
     Box2PropertyLabel: {
-      fontSize: 13,
+      fontSize: 12,
       marginLeft: 2,
       marginBottom: 0,
     },
@@ -202,7 +203,7 @@ export const styles = {
     },
   
     Box3PropertyLabel: {
-      fontSize: 13,
+      fontSize: 12,
       marginLeft: 7,
       marginBottom: 0,
     },
@@ -388,12 +389,9 @@ export const styles = {
       backgroundColor: "#0866FF",
       alignItems: "center",
       justifyContent: "center",
-      marginTop: 130,
+      marginTop: 90,
       borderRadius: 11,
       borderWidth: 0,
     },
-  
-    
-    
   };
   

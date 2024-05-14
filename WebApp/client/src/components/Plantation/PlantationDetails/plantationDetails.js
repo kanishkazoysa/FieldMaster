@@ -43,7 +43,7 @@ export default function PlantationDetails({
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await fetch('http://10.10.23.159:3000/api/plantation/numberOfPlants');
+            const response = await fetch('http://192.168.1.3:3000/api/plantation/numberOfPlants');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -61,7 +61,7 @@ export default function PlantationDetails({
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await fetch('http://10.10.23.159:3000/api/plantation/plantDensity');
+            const response = await fetch('http://192.168.1.3:3000/api/plantation/plantDensity');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }

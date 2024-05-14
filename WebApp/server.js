@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const middleware = require("./middleware/middleware");
 const app = express();
 
-const dbconfig = require("./db");
+const dbconfig = require("./db"); 
 const userRoute = require("./routes/usersRoute.js");
 const mailRoute = require("./routes/mailRoute.js");
 const plantationRoute = require("./routes/plantationRoute.js");

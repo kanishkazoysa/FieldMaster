@@ -38,7 +38,7 @@ export const styles = {
     /*first section*/
   
     Box1: {
-      width: "90%",
+      width: "95%",
       height: "91px",
       display: "flex",
       flexDirection: "column",
@@ -47,7 +47,7 @@ export const styles = {
       marginTop: "30px",
       borderRadius: "11px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-      padding: "6px",
+      padding: "6px"
     },
   
     titleText: {
