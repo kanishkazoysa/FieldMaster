@@ -5,7 +5,10 @@ import { MdArrowBack } from "react-icons/md";
 import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { BsBoundingBox } from "react-icons/bs";
-import { PiSquareDuotone, PiPlantFill, PiTreeFill } from "react-icons/pi";
+import { PiSquareDuotone, PiPlantFill, PiTreeFill,PiClock } from "react-icons/pi";
+import { HiTruck } from "react-icons/hi2";
+import { GiStonePile } from "react-icons/gi";
+import { GrUserWorker } from "react-icons/gr";
 import Select from "react-select";
 import axios from "axios";
 import { styles } from "./clearLandStyles";
@@ -97,7 +100,127 @@ export default function ClearLand({ onBackToSidebar }) {
                 </div>
               </div>
             </div>
+            <div style={styles.box3InnerBottom}>
+              <div style={styles.dropDownContainer}>
+                <select style={styles.dropdown}>
+                  <option value="" disabled selected>
+                    Select
+                  </option>
+                  <option value="option1">Low</option>
+                  <option value="option2">Medium</option>
+                  <option value="option3">High</option>
+                </select>
+              </div>
+              <div style={styles.box3middleContainer}>
+                <p style={styles.box3inputLabel}>Count:</p>
+                <div style={styles.box3inputContainer}>
+                  <input
+                    type="text"
+                    style={styles.box3input}
+                    placeholder="00"
+                    // value={con}
+                    // onChange={}
+                  />
+                </div>
+              </div>
+              <div style={styles.addButtonContainer}>
+                <button style={styles.addButton} onClick={console}>
+                  <p style={styles.addButtonText}>Add</p>
+                </button>
+              </div>
+            </div>
           </div>
+
+          {/* fourth box */}
+           <div style={styles.box3}>
+            <div>
+              <div style={styles.box2InnerTop}>
+                <GiStonePile color="gray" size={20} />
+                <div style={styles.box2PropertyDetails}>
+                  <p style={styles.Box2PropertyLabel}>Stones</p>
+                </div>
+              </div>
+            </div>
+            <div style={styles.box3InnerBottom}>
+              <div style={styles.dropDownContainer}>
+                <select style={styles.dropdown}>
+                  <option value="" disabled selected>
+                    Select
+                  </option>
+                  <option value="option1">Low</option>
+                  <option value="option2">Medium</option>
+                  <option value="option3">High</option>
+                </select>
+              </div>
+              <div style={styles.box3middleContainer}>
+                <p style={styles.box3inputLabel}>Count:</p>
+                <div style={styles.box3inputContainer}>
+                  <input
+                    type="text"
+                    style={styles.box3input}
+                    placeholder="00"
+                    // value={con}
+                    // onChange={}
+                  />
+                </div>
+              </div>
+              <div style={styles.addButtonContainer}>
+                <button style={styles.addButton} onClick={console}>
+                  <p style={styles.addButtonText}>Add</p>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* fifth box */}
+          <div style={styles.box5}>
+          <div style={styles.box5leftcontainer}>
+                <GrUserWorker color="gray" size={20} />
+                <div style={styles.box2PropertyDetails}>
+                  <p style={styles.Box2PropertyLabel}>Labors : </p>
+                </div>
+              </div>
+              <div style={styles.box5inputContainer}>
+              <input
+                    type="text"
+                    style={{...styles.box3input,width:"70%"}}
+                    placeholder="Enter labor count"
+                    // value={con}
+                    // onChange={}
+                  />
+                </div>
+          </div>
+
+           {/* sixth box */}
+           <div style={styles.box5}>
+          <div style={{...styles.box5leftcontainer,width:"65%"}}>
+                <PiClock color="gray" size={20} />
+                <div style={styles.box2PropertyDetails}>
+                  <p style={styles.Box2PropertyLabel}>Work hours : </p>
+                </div>
+              </div>
+              <div style={styles.box5inputContainer}>
+              <input
+                    type="text"
+                    style={{...styles.box3input,width:"100%",marginLeft:"-30px"}}
+                    placeholder="Enter no of hours"
+                    // value={con}
+                    // onChange={}
+                  />
+                </div>
+          </div>
+
+          {/* seventh box */}
+          <div style={styles.box7}>
+          <div>
+              <div style={styles.box2InnerTop}>
+                <HiTruck color="gray" size={20} />
+                <div style={styles.box2PropertyDetails}>
+                  <p style={styles.Box2PropertyLabel}>Machinery</p>
+                </div>
+              </div>
+            </div>
+            </div>
         </div>
       )}
 
@@ -108,8 +231,7 @@ export default function ClearLand({ onBackToSidebar }) {
           backgroundColor: "whitesmoke",
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
-      >
-      </div>
+      ></div>
     </div>
   );
 }
