@@ -5,7 +5,12 @@ import { MdArrowBack } from "react-icons/md";
 import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { BsBoundingBox } from "react-icons/bs";
-import { PiSquareDuotone, PiPlantFill, PiTreeFill,PiClock } from "react-icons/pi";
+import {
+  PiSquareDuotone,
+  PiPlantFill,
+  PiTreeFill,
+  PiClock,
+} from "react-icons/pi";
 import { HiTruck } from "react-icons/hi2";
 import { GiStonePile } from "react-icons/gi";
 import { GrUserWorker } from "react-icons/gr";
@@ -20,6 +25,8 @@ export default function ClearLand({ onBackToSidebar }) {
   const [area, setArea] = useState("100");
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
   const [plantTypeSelectedValue1, setPlantTypeSelectedValue1] = useState(null);
+  const [pressed, setPressed] = useState(null);
+
   const handlePlantTypeChange = (selectedOption) => {
     setPlantTypeSelectedValue1(selectedOption);
     setPlantTypeSelectedValue(selectedOption.value);
@@ -77,14 +84,57 @@ export default function ClearLand({ onBackToSidebar }) {
                 </div>
               </div>
               <div style={styles.box2InnerBottom}>
-                <button style={styles.box2Button}>
-                  <p style={styles.box2ButtonText}>Low</p>
+                <button
+                  style={
+                    pressed === "Low" ? styles.pressedButton : styles.box2Button
+                  }
+                  onClick={() => setPressed("Low")}
+                >
+                  <p
+                    style={
+                      pressed === "Low"
+                        ? styles.pressedText
+                        : styles.box2ButtonText
+                    }
+                  >
+                    Low
+                  </p>
                 </button>
-                <button style={styles.box2Button}>
-                  <p style={styles.box2ButtonText}>Medium</p>
+                <button
+                  style={
+                    pressed === "Medium"
+                      ? styles.pressedButton
+                      : styles.box2Button
+                  }
+                  onClick={() => setPressed("Medium")}
+                >
+                  <p
+                    style={
+                      pressed === "Medium"
+                        ? styles.pressedText
+                        : styles.box2ButtonText
+                    }
+                  >
+                    Medium
+                  </p>
                 </button>
-                <button style={styles.box2Button}>
-                  <p style={styles.box2ButtonText}>High</p>
+                <button
+                  style={
+                    pressed === "High"
+                      ? styles.pressedButton
+                      : styles.box2Button
+                  }
+                  onClick={() => setPressed("High")}
+                >
+                  <p
+                    style={
+                      pressed === "High"
+                        ? styles.pressedText
+                        : styles.box2ButtonText
+                    }
+                  >
+                    High
+                  </p>
                 </button>
               </div>
             </div>
@@ -106,9 +156,11 @@ export default function ClearLand({ onBackToSidebar }) {
                   <option value="" disabled selected>
                     Select
                   </option>
-                  <option value="option1">Low</option>
-                  <option value="option2">Medium</option>
-                  <option value="option3">High</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                  value={plantTypeSelectedValue1}
+                  onChange={handlePlantTypeChange}
                 </select>
               </div>
               <div style={styles.box3middleContainer}>
@@ -132,7 +184,7 @@ export default function ClearLand({ onBackToSidebar }) {
           </div>
 
           {/* fourth box */}
-           <div style={styles.box3}>
+          <div style={styles.box3}>
             <div>
               <div style={styles.box2InnerTop}>
                 <GiStonePile color="gray" size={20} />
@@ -174,45 +226,49 @@ export default function ClearLand({ onBackToSidebar }) {
 
           {/* fifth box */}
           <div style={styles.box5}>
-          <div style={styles.box5leftcontainer}>
-                <GrUserWorker color="gray" size={20} />
-                <div style={styles.box2PropertyDetails}>
-                  <p style={styles.Box2PropertyLabel}>Labors : </p>
-                </div>
+            <div style={styles.box5leftcontainer}>
+              <GrUserWorker color="gray" size={20} />
+              <div style={styles.box2PropertyDetails}>
+                <p style={styles.Box2PropertyLabel}>Labors : </p>
               </div>
-              <div style={styles.box5inputContainer}>
+            </div>
+            <div style={styles.box5inputContainer}>
               <input
-                    type="text"
-                    style={{...styles.box3input,width:"70%"}}
-                    placeholder="Enter labor count"
-                    // value={con}
-                    // onChange={}
-                  />
-                </div>
+                type="text"
+                style={{ ...styles.box3input, width: "70%" }}
+                placeholder="Enter labor count"
+                // value={con}
+                // onChange={}
+              />
+            </div>
           </div>
 
-           {/* sixth box */}
-           <div style={styles.box5}>
-          <div style={{...styles.box5leftcontainer,width:"65%"}}>
-                <PiClock color="gray" size={20} />
-                <div style={styles.box2PropertyDetails}>
-                  <p style={styles.Box2PropertyLabel}>Work hours : </p>
-                </div>
+          {/* sixth box */}
+          <div style={styles.box5}>
+            <div style={{ ...styles.box5leftcontainer, width: "65%" }}>
+              <PiClock color="gray" size={20} />
+              <div style={styles.box2PropertyDetails}>
+                <p style={styles.Box2PropertyLabel}>Work hours : </p>
               </div>
-              <div style={styles.box5inputContainer}>
+            </div>
+            <div style={styles.box5inputContainer}>
               <input
-                    type="text"
-                    style={{...styles.box3input,width:"100%",marginLeft:"-30px"}}
-                    placeholder="Enter no of hours"
-                    // value={con}
-                    // onChange={}
-                  />
-                </div>
+                type="text"
+                style={{
+                  ...styles.box3input,
+                  width: "100%",
+                  marginLeft: "-30px",
+                }}
+                placeholder="Enter no of hours"
+                // value={con}
+                // onChange={}
+              />
+            </div>
           </div>
 
           {/* seventh box */}
           <div style={styles.box7}>
-          <div>
+            <div>
               <div style={styles.box2InnerTop}>
                 <HiTruck color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
@@ -220,7 +276,32 @@ export default function ClearLand({ onBackToSidebar }) {
                 </div>
               </div>
             </div>
+
+            <div style={styles.box7InputContainer}>
+              <p style={styles.box7inputLabel}>Count : </p>
+              <input
+                type="text"
+                style={styles.box7input}
+                placeholder="Enter machine count"
+                // value={con}
+                // onChange={}
+              />
             </div>
+            <div style={styles.box7addButtonContainer}>
+              <button
+                style={{ ...styles.addButton, width: "100%" }}
+                onClick={console}
+              >
+                <p style={styles.addButtonText}>Add</p>
+              </button>
+            </div>
+          </div>
+
+          <div style={styles.bottom}>
+            <button style={styles.Button1} onClick={console}>
+              <p style={styles.addButtonText}>Calculate</p>
+            </button>
+          </div>
         </div>
       )}
 
