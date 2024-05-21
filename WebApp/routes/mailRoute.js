@@ -7,8 +7,8 @@ const userVerificationSchema = require("../models/userVerification");
 let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "kanishkazoysa1234@gmail.com",
-    pass: "babx gpyj vvyx kpkp",
+    user: "kanishkazoysa12345@gmail.com",
+    pass: "wjslelydqmaozths",
   },
 });
 
