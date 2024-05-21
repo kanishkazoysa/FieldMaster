@@ -14,7 +14,6 @@ import {
 import { HiTruck } from "react-icons/hi2";
 import { GiStonePile } from "react-icons/gi";
 import { GrUserWorker } from "react-icons/gr";
-import Select from "react-select";
 import axios from "axios";
 import { styles } from "./clearLandStyles";
 
@@ -25,12 +24,120 @@ export default function ClearLand({ onBackToSidebar }) {
   const [area, setArea] = useState("100");
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
   const [plantTypeSelectedValue1, setPlantTypeSelectedValue1] = useState(null);
+  const [stoneTypeSelectedValue, setStoneTypeSelectedValue] = useState(null);
+  const [stoneTypeSelectedValue1, setStoneTypeSelectedValue1] = useState(null);
   const [pressed, setPressed] = useState(null);
+  const [plantCount, setPlantCount] = useState("");
+  const [stonesCount, setStonesCount] = useState("");
+  const [laborCount, setLaborCount] = useState("");
+  const [workHours, setWorkHours] = useState("");
+  const [machineCount, setMachineCount] = useState("");
 
-  const handlePlantTypeChange = (selectedOption) => {
-    setPlantTypeSelectedValue1(selectedOption);
-    setPlantTypeSelectedValue(selectedOption.value);
+  const handlePlantTypeChange = (event) => {
+    setPlantTypeSelectedValue(event.target.value);
   };
+
+  const handlePlantCountChange = (event) => {
+    setPlantCount(event.target.value);
+  };
+
+  const handleStoneTypeChange = (event) => {
+    setStoneTypeSelectedValue(event.target.value);
+  };
+
+  const handleStoneCountChange = (event) => {
+    setStonesCount(event.target.value);
+  };
+
+  const handleLaborCountChange = (event) => {
+    setLaborCount(event.target.value);
+  };
+
+  const handleWorkHourChange = (event) => {
+    setWorkHours(event.target.value);
+  };
+
+  const handleMachineCountChange = (event) => {
+    setMachineCount(event.target.value);
+  };
+
+  const [displayValues, setDisplayValues] = useState([]);
+  const handleAdd = () => {
+    //validation part Add button
+    const combinedValue = plantCount + " x " + plantTypeSelectedValue;
+    const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
+    setDisplayValues(newDisplayValues);
+    setPlantTypeSelectedValue("");
+    setPlantCount("");
+  };
+
+  const handleRemoveValue = (index) => {
+    const newDisplayValues = [...displayValues];
+    newDisplayValues.splice(index, 1);
+    setDisplayValues(newDisplayValues);
+  };
+
+  const [displayValues1, setDisplayValues1] = useState([]);
+
+  const handleAdd1 = () => {
+    
+    //validation part Add button
+    const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
+    const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
+      Boolean
+    );
+    setDisplayValues1(newDisplayValues1);
+    setStoneTypeSelectedValue("");
+    setStonesCount("");
+  };
+
+  const handleRemoveValue1 = (index) => {
+    const newDisplayValues1 = [...displayValues1];
+    newDisplayValues1.splice(index, 1);
+    setDisplayValues1(newDisplayValues1);
+  };
+
+  const handleClearlandDetails = async (e) => {
+    try {
+      // Validate required fields
+      if (!pressed || !(displayValues.length > 0) || !(displayValues1.length > 0) || !laborCount || !workHours) {
+        throw new Error("Please fill in all fields");
+      }
+
+      setCurrentPage("EffortOutput"); // Update this line
+      setAnimatePage(true);
+      e.preventDefault();
+
+      // Prepare data for the request
+      const requestData = {
+        displayValues,
+        displayValues1,
+        // displayValues2,
+        pressed,
+        plantTypeSelectedValue,
+        plantCount,
+        stoneTypeSelectedValue,
+        stonesCount,
+        laborCount,
+        workHours,
+        machineCount,
+      };
+
+      // Make POST request to the backend
+      const response = await axios.post(
+        "http://192.168.8.173:3000/api/clearLand/clearLand",
+        requestData
+      );
+
+      // Handle successful response
+      console.log("Response:", response.data);
+    } catch (error) {
+      // Handle errors
+      console.error("Error:", error.message);
+      alert("Error: " + error.message);
+    }
+  };
+
   const handleBackClick = () => {
     setAnimatePage(false);
     setTimeout(() => {
@@ -152,15 +259,16 @@ export default function ClearLand({ onBackToSidebar }) {
             </div>
             <div style={styles.box3InnerBottom}>
               <div style={styles.dropDownContainer}>
-                <select style={styles.dropdown}>
+                <select style={styles.dropdown}
+                value={plantTypeSelectedValue}
+                onChange={handlePlantTypeChange}
+                >
                   <option value="" disabled selected>
                     Select
                   </option>
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
                   <option value="High">High</option>
-                  value={plantTypeSelectedValue1}
-                  onChange={handlePlantTypeChange}
                 </select>
               </div>
               <div style={styles.box3middleContainer}>
@@ -170,16 +278,34 @@ export default function ClearLand({ onBackToSidebar }) {
                     type="text"
                     style={styles.box3input}
                     placeholder="00"
-                    // value={con}
-                    // onChange={}
+                    value={plantCount}
+                    onChange={handlePlantCountChange}
+                    onSubmitEditing={handleAdd}
                   />
                 </div>
               </div>
               <div style={styles.addButtonContainer}>
-                <button style={styles.addButton} onClick={console}>
+                <button style={styles.addButton} onClick={handleAdd}>
                   <p style={styles.addButtonText}>Add</p>
                 </button>
               </div>
+            </div>
+            <div style={styles.displayValuesContainer}>
+              {displayValues.map((value, index) => (
+                <div key={index} style={styles.displayValueContainer}>
+                  <div style={styles.displayValueText}>{value}</div>
+                  <button
+                    onClick={() => handleRemoveValue(index)}
+                    style={styles.closeButton}
+                  >
+                    <IoIosCloseCircleOutline
+                      name="close-circle-outline"
+                      size={20}
+                      color="#007BFF"
+                    />
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -195,13 +321,17 @@ export default function ClearLand({ onBackToSidebar }) {
             </div>
             <div style={styles.box3InnerBottom}>
               <div style={styles.dropDownContainer}>
-                <select style={styles.dropdown}>
+                <select style={styles.dropdown}
+                 value={stoneTypeSelectedValue}
+                 onChange={handleStoneTypeChange}
+                >
                   <option value="" disabled selected>
                     Select
                   </option>
-                  <option value="option1">Low</option>
-                  <option value="option2">Medium</option>
-                  <option value="option3">High</option>
+                  <option value="Small">Small</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                 
                 </select>
               </div>
               <div style={styles.box3middleContainer}>
@@ -211,16 +341,34 @@ export default function ClearLand({ onBackToSidebar }) {
                     type="text"
                     style={styles.box3input}
                     placeholder="00"
-                    // value={con}
-                    // onChange={}
+                    value={stonesCount}
+                    onChange={handleStoneCountChange}
+                    onSubmitEditing={handleAdd1}
                   />
                 </div>
               </div>
               <div style={styles.addButtonContainer}>
-                <button style={styles.addButton} onClick={console}>
+                <button style={styles.addButton} onClick={handleAdd1}>
                   <p style={styles.addButtonText}>Add</p>
                 </button>
               </div>
+            </div>
+            <div style={styles.displayValuesContainer}>
+              {displayValues1.map((value, index) => (
+                <div key={index} style={styles.displayValueContainer}>
+                  <div style={styles.displayValueText}>{value}</div>
+                  <button
+                    onClick={() => handleRemoveValue1(index)}
+                    style={styles.closeButton}
+                  >
+                    <IoIosCloseCircleOutline
+                      name="close-circle-outline"
+                      size={20}
+                      color="#007BFF"
+                    />
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -237,8 +385,8 @@ export default function ClearLand({ onBackToSidebar }) {
                 type="text"
                 style={{ ...styles.box3input, width: "70%" }}
                 placeholder="Enter labor count"
-                // value={con}
-                // onChange={}
+                value={laborCount}
+                onChange={handleLaborCountChange}
               />
             </div>
           </div>
@@ -260,8 +408,8 @@ export default function ClearLand({ onBackToSidebar }) {
                   marginLeft: "-30px",
                 }}
                 placeholder="Enter no of hours"
-                // value={con}
-                // onChange={}
+                value={workHours}
+                onChange={handleWorkHourChange}
               />
             </div>
           </div>
@@ -283,8 +431,8 @@ export default function ClearLand({ onBackToSidebar }) {
                 type="text"
                 style={styles.box7input}
                 placeholder="Enter machine count"
-                // value={con}
-                // onChange={}
+                value={machineCount}
+                onChange={handleMachineCountChange}
               />
             </div>
             <div style={styles.box7addButtonContainer}>
@@ -298,21 +446,31 @@ export default function ClearLand({ onBackToSidebar }) {
           </div>
 
           <div style={styles.bottom}>
-            <button style={styles.Button1} onClick={console}>
+            <button style={styles.Button1} onClick={handleClearlandDetails}>
               <p style={styles.addButtonText}>Calculate</p>
             </button>
           </div>
         </div>
       )}
 
-      <div
+<div
         style={{
           transform: animatePage ? "translateX(0)" : "translateX(-100%)",
           transition: "transform 0.3s ease-in-out",
           backgroundColor: "whitesmoke",
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
-      ></div>
+      >
+        {/* {currentPage === "FenceDetails" && (
+          <FenceDetails
+            onBackToSidebar={handleBackClick}
+            inputValuePostspace={inputValuePostspace}
+            displayValues={displayValues}
+            PostSpaceUnitselectedValue={PostSpaceUnitselectedValue}
+            FenceTypeselectedValue={FenceTypeselectedValue}
+          />
+        )} */}
+      </div>
     </div>
   );
 }
