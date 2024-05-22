@@ -28,16 +28,6 @@ const ProfileManagement = () => {
   const [image, setImage] = useState(null);
   const [forceUpdate, setForceUpdate] = useState(0);
 
-  const [dialogVisible, setDialogVisible] = useState(false);
-
-  const showDialog = () => {
-    setDialogVisible(true);
-  };
-
-  const handleCancel = () => {
-    setDialogVisible(false);
-  };
-
   useEffect(() => {
     setForceUpdate((prevValue) => prevValue + 1);
   }, [user.imageUrl]);
@@ -62,7 +52,7 @@ const ProfileManagement = () => {
     });
 
     if (!result.canceled) {
-      setImage(result.uri);
+      setImage(result.assets[0].uri);
     }
   };
   const handlePressAvatar = () => {
@@ -139,19 +129,10 @@ const ProfileManagement = () => {
       </Appbar.Header>
 
       <View style={styles.section1}>
-        <TouchableOpacity onPress={showDialog}>
+        <TouchableOpacity onPress={handlePressAvatar}>
           <ProfileAvatar userData={user} textSize={20} image={image} />
           <Fontisto style={styles.cameraIcon} name="camera" size={responsiveFontSize(3.5)} color="gray" />
         </TouchableOpacity>
-        <Dialog.Container visible={dialogVisible} contentStyle={{ backgroundColor: '#f9f9f9' }}>
-  <Dialog.Title style={{ color: '#007BFF' }}>Choose an option</Dialog.Title>
-  <Dialog.Description style={{ color: '#333' }}>
-    Would you like to open the gallery or use the camera?
-  </Dialog.Description>
-  <Dialog.Button label="Cancel" color="#007BFF" onPress={handleCancel} />
-  <Dialog.Button label="Open Gallery" color="#007BFF" onPress={pickImage} />
-  <Dialog.Button label="Open Camera" color="#007BFF" onPress={takeImage} />
-</Dialog.Container>
       </View>
 
       <View style={styles.section2}>
@@ -253,8 +234,7 @@ const styles = StyleSheet.create({
   { 
     top: responsiveHeight(-4),
     right: responsiveWidth(-31),
-  },
-  
+  }
 });
 
 export default ProfileManagement;
