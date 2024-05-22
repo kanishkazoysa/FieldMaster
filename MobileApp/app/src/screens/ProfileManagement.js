@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { Appbar, TextInput, Button, Avatar } from "react-native-paper";
+import { Appbar, TextInput, Button,  } from "react-native-paper";
 import {
   responsiveHeight,
   responsiveWidth,
@@ -18,6 +18,8 @@ import { useNavigation } from "@react-navigation/native";
 import ProfileAvatar from "../components/ProfileAvatar";
 import * as ImagePicker from "expo-image-picker";
 import Fontisto from '@expo/vector-icons/Fontisto';
+import { Alert } from "react-native";
+import Dialog from "react-native-dialog";
 
 const ProfileManagement = () => {
   const [user, setUser] = useState({});
@@ -25,6 +27,16 @@ const ProfileManagement = () => {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [forceUpdate, setForceUpdate] = useState(0);
+
+  const [dialogVisible, setDialogVisible] = useState(false);
+
+  const showDialog = () => {
+    setDialogVisible(true);
+  };
+
+  const handleCancel = () => {
+    setDialogVisible(false);
+  };
 
   useEffect(() => {
     setForceUpdate((prevValue) => prevValue + 1);
@@ -41,6 +53,34 @@ const ProfileManagement = () => {
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
+  };
+  const takeImage = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.uri);
+    }
+  };
+  const handlePressAvatar = () => {
+    Alert.alert(
+      "Choose an option",
+      "Would you like to open the gallery or use the camera?",
+      [
+        {
+          text: "Open Gallery",
+          onPress: pickImage,
+        },
+        {
+          text: "Open Camera",
+          onPress: takeImage,
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   useEffect(() => {
@@ -99,10 +139,19 @@ const ProfileManagement = () => {
       </Appbar.Header>
 
       <View style={styles.section1}>
-        <TouchableOpacity onPress={pickImage}>
+        <TouchableOpacity onPress={showDialog}>
           <ProfileAvatar userData={user} textSize={20} image={image} />
           <Fontisto style={styles.cameraIcon} name="camera" size={responsiveFontSize(3.5)} color="gray" />
         </TouchableOpacity>
+        <Dialog.Container visible={dialogVisible} contentStyle={{ backgroundColor: '#f9f9f9' }}>
+  <Dialog.Title style={{ color: '#007BFF' }}>Choose an option</Dialog.Title>
+  <Dialog.Description style={{ color: '#333' }}>
+    Would you like to open the gallery or use the camera?
+  </Dialog.Description>
+  <Dialog.Button label="Cancel" color="#007BFF" onPress={handleCancel} />
+  <Dialog.Button label="Open Gallery" color="#007BFF" onPress={pickImage} />
+  <Dialog.Button label="Open Camera" color="#007BFF" onPress={takeImage} />
+</Dialog.Container>
       </View>
 
       <View style={styles.section2}>
@@ -204,7 +253,8 @@ const styles = StyleSheet.create({
   { 
     top: responsiveHeight(-4),
     right: responsiveWidth(-31),
-  }
+  },
+  
 });
 
 export default ProfileManagement;
