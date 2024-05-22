@@ -92,6 +92,7 @@ export default function ForgotPassword({ route }) {
                 mode="outlined"
                 outlineColor="#d9d7d2"
                 activeOutlineColor="#007BFF"
+                theme={{ roundness: 10 }}
                 style={{
                   width: responsiveWidth(87),
                   height: responsiveHeight(6),
@@ -110,6 +111,7 @@ export default function ForgotPassword({ route }) {
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
+              theme={{ roundness: 10 }}
               style={{
                 width: responsiveWidth(87),
                 height: responsiveHeight(6),

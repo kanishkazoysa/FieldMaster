@@ -6,7 +6,19 @@ const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { PassThrough } = require("nodemailer/lib/xoauth2");
-const middleware = require("../middleware/middleware");
+const auth = require("../middleware/middleware");
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now())
+  }
+});
+
+const upload = multer({ storage: storage });
 
 let transporter = nodemailer.createTransport({
   service: "gmail",
@@ -24,7 +36,7 @@ transporter.verify((error, success) => {
 
 // register a new user
 router.post("/register", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password , fName ,lName } = req.body;
   const VerifyId = uuidv4();
   const mailOptions = {
     from: "kanishkazoysa1234@gmail.com",
@@ -70,7 +82,7 @@ router.post("/register", async (req, res) => {
         console.log("Email sent: " + info.response);
       }
     });
-    const newUser = new User({ email, password });
+    const newUser = new User({ email, password, lname: lName, fname: fName });
     await newUser.save();
 
     res.status(200).send({
@@ -172,6 +184,55 @@ router.post("/change-password", async (req, res) => {
   } catch (error) {
     console.error("Error changing password:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//get user details
+router.get('/details', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).send({ success: false, message: 'User not found' });
+    }
+    res.send({ success: true, user });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+});
+
+
+//update user profile with upload photo
+router.post('/updateProfile', auth, upload.single('photo'), async (req, res) => {
+  if (!req.body.user) {
+    return res.status(400).send({ success: false, message: 'User data not provided' });
+  }
+
+  let userUpdate;
+  try {
+    userUpdate = JSON.parse(req.body.user);
+  } catch (error) {
+    return res.status(400).send({ success: false, message: 'Invalid user data' });
+  }
+
+  const user = await User.findById(req.userId);
+
+  if (!user) {
+    return res.status(404).send({ success: false, message: 'User not found' });
+  }
+
+  if (req.file) {
+  user.imageUrl = `uploads/${req.file.filename}`; // e.g., "uploads/photo-1715444811685"
+}
+
+  user.fname = userUpdate.fname || user.fname;
+  user.lname = userUpdate.lname || user.lname;
+  user.email = userUpdate.email || user.email;
+
+  try {
+    await user.save();
+    res.send({ success: true, user });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
   }
 });
 

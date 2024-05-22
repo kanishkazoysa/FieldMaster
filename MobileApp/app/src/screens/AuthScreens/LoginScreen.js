@@ -89,6 +89,7 @@ export default function LoginScreen() {
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
+              theme={{ roundness: 10 }}
               style={{
                 width: responsiveWidth(87),
                 height: responsiveHeight(6),
@@ -104,6 +105,7 @@ export default function LoginScreen() {
               label="password"
               mode="outlined"
               outlineColor="#d9d7d2"
+              theme={{ roundness: 10 }}
               activeOutlineColor="#007BFF"
               style={{
                 width: responsiveWidth(87),
