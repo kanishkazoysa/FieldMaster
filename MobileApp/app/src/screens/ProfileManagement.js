@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import ProfileAvatar from "../components/ProfileAvatar";
 import * as ImagePicker from "expo-image-picker";
-import * as DocumentPicker from "expo-document-picker";
+import Fontisto from '@expo/vector-icons/Fontisto';
 
 const ProfileManagement = () => {
   const [user, setUser] = useState({});
@@ -47,7 +47,7 @@ const ProfileManagement = () => {
     const fetchUser = async () => {
       const token = await AsyncStorage.getItem("token");
       const response = await axios.get(
-        "http://192.168.1.102:5000/api/users/details",
+        "http://192.168.1.100:5000/api/users/details",
         {
           headers: { Authorization: token },
         }
@@ -81,7 +81,7 @@ const ProfileManagement = () => {
 
   try {
     const response = await axios.post(
-      "http://192.168.1.102:5000/api/users/updateProfile",
+      "http://192.168.1.100:5000/api/users/updateProfile",
       formData,
       { headers: { Authorization: token, 'Content-Type': 'multipart/form-data', } }
     );
@@ -101,8 +101,10 @@ const ProfileManagement = () => {
       <View style={styles.section1}>
         <TouchableOpacity onPress={pickImage}>
           <ProfileAvatar userData={user} textSize={20} image={image} />
+          <Fontisto style={styles.cameraIcon} name="camera" size={responsiveFontSize(3.5)} color="gray" />
         </TouchableOpacity>
       </View>
+
       <View style={styles.section2}>
         <Text style={styles.text1}>Your Information</Text>
         <View style={styles.inputContainer}>
@@ -167,6 +169,7 @@ const styles = StyleSheet.create({
   },
   section1: {
     flex: 1,
+    borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -197,7 +200,11 @@ const styles = StyleSheet.create({
     padding: responsiveHeight(0),
     alignSelf: "center",
   },
-  Avatar: {},
+  cameraIcon:
+  { 
+    top: responsiveHeight(-4),
+    right: responsiveWidth(-31),
+  }
 });
 
 export default ProfileManagement;

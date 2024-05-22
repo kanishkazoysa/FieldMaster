@@ -58,7 +58,7 @@ export default function Home() {
       try {
         const token = await AsyncStorage.getItem("token");
         const response = await axios.get(
-          "http://192.168.1.102:5000/api/users/details",
+          "http://192.168.1.100:5000/api/users/details",
           {
             headers: { Authorization: token },
           }
