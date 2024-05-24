@@ -77,7 +77,7 @@ const ProfileManagement = () => {
     const fetchUser = async () => {
       const token = await AsyncStorage.getItem("token");
       const response = await axios.get(
-        "http://192.168.1.100:5000/api/users/details",
+        "http://192.168.1.102:5000/api/users/details",
         {
           headers: { Authorization: token },
         }
@@ -111,7 +111,7 @@ const ProfileManagement = () => {
 
   try {
     const response = await axios.post(
-      "http://192.168.1.100:5000/api/users/updateProfile",
+      "http://192.168.1.102:5000/api/users/updateProfile",
       formData,
       { headers: { Authorization: token, 'Content-Type': 'multipart/form-data', } }
     );

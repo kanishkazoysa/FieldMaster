@@ -4,7 +4,7 @@ import { Avatar } from "react-native-paper";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 const ProfileAvatar = ({ userData, onPress, textSize , image }) => {
-  const serverUrl = "http://192.168.1.100:5000"; // Replace with your server URL
+  const serverUrl = "http://192.168.1.102:5000"; // Replace with your server URL
 
   const getEmailColor = (email) => {
     if (!email) {
