@@ -12,7 +12,7 @@ const plantationRoute = require("./routes/plantationRoute.js");
 const fertilizerRoute= require("./routes/fertilizerRoute.js");
 const fenceRoute = require("./routes/fenceRoute.js");
 const clearLandRoute = require("./routes/clearLandRoute.js");
-const MapTemplateRoute = require("./routes/MapTemplateRoutes.js")
+const MapTemplateRoute = require("./routes/MapTemplateRoute.js")
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
