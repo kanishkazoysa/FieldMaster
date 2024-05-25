@@ -1,3 +1,5 @@
+/* new resize map */
+
 import React, { useEffect, useState } from 'react';
 import { Polygon } from 'react-native-maps';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -33,6 +35,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
   const mapRef = React.useRef(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
   const [isMarkerMoved, setIsMarkerMoved] = useState(false);
+  const [lastEnteredPoint, setLastEnteredPoint] = useState(null);
 
   const closeModal = () => {
     setModalVisible(false);
@@ -115,8 +118,8 @@ const ResizeMapScreen = ({ navigation, route }) => {
           latitude: point.latitude,
           longitude: point.longitude,
         }));
-        const response = await axios.put(
-          `${backendUrl}/api/mapTemplate/updateTemplate/${templateId}`,
+        const response = await AxiosInstance.put(
+          `/api/auth/mapTemplate/updateTemplate/${templateId}`,
           {
             locationPoints,
           }
@@ -160,10 +163,47 @@ const ResizeMapScreen = ({ navigation, route }) => {
   const toggleMapType = () => {
     setShowDropdown(!showDropdown);
   };
+
+  const handleMapPress = (event) => {
+    if (!isButtonPressed) {
+      const newPoint = event.nativeEvent.coordinate;
+      setLastEnteredPoint(newPoint);
+      const newPoints = [...points, newPoint];
+
+      if (newPoints.length > 3) {
+        let minDistance = Infinity;
+        let insertIndex = 0;
+
+        for (let i = 0; i < newPoints.length - 1; i++) {
+          const point1 = newPoints[i];
+          const point2 = newPoints[i + 1];
+
+          const dx1 = point1.latitude - newPoint.latitude;
+          const dy1 = point1.longitude - newPoint.longitude;
+          const dx2 = point2.latitude - newPoint.latitude;
+          const dy2 = point2.longitude - newPoint.longitude;
+
+          const distance = dx1 * dx1 + dy1 * dy1 + dx2 * dx2 + dy2 * dy2; // sum of squared distances to the two points
+
+          if (distance < minDistance) {
+            minDistance = distance;
+            insertIndex = i + 1;
+          }
+        }
+
+        // insert newPoint at insertIndex in the newPoints array
+        newPoints.splice(insertIndex, 0, newPoint);
+        newPoints.pop(); // remove the duplicate newPoint at the end
+        setPoints(newPoints);
+      } else {
+        setPoints(newPoints);
+      }
+    }
+  };
   return (
     <>
       <Modal
-        animationType='slide'
+        animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}
@@ -202,8 +242,8 @@ const ResizeMapScreen = ({ navigation, route }) => {
       </Modal>
       <View>
         <Appbar.Header style={{ backgroundColor: '#007BFF' }}>
-          <Appbar.BackAction color='#ffffff' onPress={handleCancel} />
-          <Appbar.Content title='Resize Map' color='#ffffff' />
+          <Appbar.BackAction color="#ffffff" onPress={handleCancel} />
+          <Appbar.Content title="Resize Map" color="#ffffff" />
         </Appbar.Header>
       </View>
       {/* including map view */}
@@ -215,11 +255,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
             region={region}
             showsUserLocation={true}
             mapType={mapTypes[mapTypeIndex].value}
-            onPress={(event) => {
-              if (!isButtonPressed) {
-                setPoints([...points, event.nativeEvent.coordinate]);
-              }
-            }}
+            onPress={handleMapPress}
             mapPadding={{ top: 0, right: -100, bottom: 0, left: 0 }}
           >
             {points.map((point, index) => (
@@ -233,15 +269,15 @@ const ResizeMapScreen = ({ navigation, route }) => {
             {!isPolygonComplete && points.length > 1 && (
               <Polyline
                 coordinates={points}
-                strokeColor='#000'
+                strokeColor="#000"
                 strokeWidth={1}
               />
             )}
             {isPolygonComplete && points.length > 2 && (
               <Polygon
                 coordinates={points}
-                strokeColor='#000'
-                fillColor='rgba(199, 192, 192, 0.5)'
+                strokeColor="#000"
+                fillColor="rgba(199, 192, 192, 0.5)"
                 strokeWidth={1}
               />
             )}
@@ -254,7 +290,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
               toggleMapType();
             }}
           >
-            <FontAwesomeIcon icon={faLayerGroup} size={25} color='#fff' />
+            <FontAwesomeIcon icon={faLayerGroup} size={25} color="#fff" />
             {showDropdown && (
               <View style={styles.dropdownContainer}>
                 <FlatList
@@ -279,7 +315,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
             <FontAwesomeIcon
               icon={faLocationCrosshairs}
               size={25}
-              color='#fff'
+              color="#fff"
             />
           </TouchableOpacity>
           <View>
@@ -289,9 +325,9 @@ const ResizeMapScreen = ({ navigation, route }) => {
                 onPressOut={() => setIsButtonPressed(false)}
               >
                 <MaterialCommunityIcons
-                  name='arrow-u-left-top'
+                  name="arrow-u-left-top"
                   size={24}
-                  color='white'
+                  color="white"
                   style={styles.sideIconStyle}
                   onPress={handleUndoLastPoint}
                 />
