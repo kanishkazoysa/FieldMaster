@@ -264,7 +264,9 @@ const ResizeMapScreen = ({ navigation, route }) => {
                 coordinate={point}
                 draggable
                 onDragEnd={(e) => handleMarkerDragEnd(e, index)}
-              />
+              >
+                <View style={styles.markerStyle} />
+              </Marker>
             ))}
             {!isPolygonComplete && points.length > 1 && (
               <Polyline
