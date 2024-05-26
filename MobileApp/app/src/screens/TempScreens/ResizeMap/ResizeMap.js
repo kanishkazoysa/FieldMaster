@@ -107,8 +107,14 @@ const ResizeMapScreen = ({ navigation, route }) => {
   }, []);
 
   const handleUndoLastPoint = () => {
-    if (points.length > 0) {
-      setPoints(points.slice(0, -1));
+    if (points.length > 0 && lastEnteredPoint) {
+      const newPoints = points.filter(
+        (point) =>
+          point.latitude !== lastEnteredPoint.latitude ||
+          point.longitude !== lastEnteredPoint.longitude
+      );
+      setPoints(newPoints);
+      setLastEnteredPoint(null); // Reset last entered point
     }
   };
   const handleSaveMap = async () => {
@@ -169,6 +175,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
       const newPoint = event.nativeEvent.coordinate;
       setLastEnteredPoint(newPoint);
       const newPoints = [...points, newPoint];
+      setPoints(newPoints);
 
       if (newPoints.length > 3) {
         let minDistance = Infinity;
@@ -183,7 +190,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
           const dx2 = point2.latitude - newPoint.latitude;
           const dy2 = point2.longitude - newPoint.longitude;
 
-          const distance = dx1 * dx1 + dy1 * dy1 + dx2 * dx2 + dy2 * dy2; // sum of squared distances to the two points
+          const distance = dx1 * dx1 + dy1 * dy1 + dx2 * dx2 + dy2 * dy2;
 
           if (distance < minDistance) {
             minDistance = distance;
@@ -199,6 +206,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
         setPoints(newPoints);
       }
     }
+    setIsMarkerMoved(true);
   };
   return (
     <>
@@ -253,7 +261,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
             ref={mapRef}
             style={{ flex: 1, paddingTop: 100 }}
             region={region}
-            showsUserLocation={true}
+            showsUserLocation={false}
             mapType={mapTypes[mapTypeIndex].value}
             onPress={handleMapPress}
             mapPadding={{ top: 0, right: -100, bottom: 0, left: 0 }}
