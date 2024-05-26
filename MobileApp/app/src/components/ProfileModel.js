@@ -11,6 +11,7 @@ import {
 import axios from "axios"; // make sure to install axios
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProfileAvatar from "../components/ProfileAvatar";
+import AxiosInstance from "../AxiosInstance";
 
 const SelectionModal = ({
   profileModalVisible,
@@ -26,13 +27,7 @@ const SelectionModal = ({
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = await AsyncStorage.getItem("token");
-      const response = await axios.get(
-        "http://192.168.1.106:5000/api/users/details",
-        {
-          headers: { Authorization: token },
-        }
-      );
+      const response = await AxiosInstance.get("/api/users/details");
       setUser(response.data.user);
     };
 
