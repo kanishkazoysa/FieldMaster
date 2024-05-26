@@ -27,6 +27,7 @@ import { useNavigation } from "@react-navigation/native";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import axios from "axios";
+import AxiosInstance from "../../AxiosInstance";
 import {
   responsiveFontSize,
   responsiveHeight,
@@ -61,7 +62,6 @@ export default function ClearLand() {
   ]);
 
   const handleSearch = (query) => {
-
     if (query === "") {
       setSearchSuggestions([]);
       return;
@@ -76,7 +76,7 @@ export default function ClearLand() {
     setSearchItem(item);
     setSearchSuggestions([]);
   };
-  
+
   const handlePlantCountChange = (text) => {
     setPlantCount(text);
   };
@@ -131,30 +131,30 @@ export default function ClearLand() {
     let errorMessage = "";
     let countInt = parseInt(plantCount, 10);
 
-  switch (plantTypeSelectedValue) {
-    case "Low":
-      if (!(countInt >=1  && countInt <= 3)) {
-        errorMessage = "Enter a number between 0 and 4";
-      }
-      break;
-    case "Medium":
-      if (!(countInt >3 && countInt <= 6)) {
-        errorMessage = "Enter a number between 3 and 7";
-      }
-      break;
-    case "High":
-      if (!(countInt > 6 && countInt <= 10)) {
-        errorMessage = "Enter a number between 6 and 11";
-      }
-      break;
-    default:
-      errorMessage = "Invalid plant type selection.";
-  }
+    switch (plantTypeSelectedValue) {
+      case "Low":
+        if (!(countInt >= 1 && countInt <= 3)) {
+          errorMessage = "Enter a number between 0 and 4";
+        }
+        break;
+      case "Medium":
+        if (!(countInt > 3 && countInt <= 6)) {
+          errorMessage = "Enter a number between 3 and 7";
+        }
+        break;
+      case "High":
+        if (!(countInt > 6 && countInt <= 10)) {
+          errorMessage = "Enter a number between 6 and 11";
+        }
+        break;
+      default:
+        errorMessage = "Invalid plant type selection.";
+    }
 
-  if (errorMessage) {
-    alert(errorMessage);
-    return;
-  }
+    if (errorMessage) {
+      alert(errorMessage);
+      return;
+    }
 
     //validation part Add button
     const combinedValue = plantCount + " x " + plantTypeSelectedValue;
@@ -177,31 +177,31 @@ export default function ClearLand() {
     let errorMessage = "";
     let countInt = parseInt(stonesCount, 10);
 
-  switch (stoneTypeSelectedValue) {
-    case "Small":
-      if (!(countInt >=1  && countInt <= 3)) {
-        errorMessage = "Enter a number between 0 and 4";
-      }
-      break;
-    case "Medium":
-      if (!(countInt >3 && countInt <= 6)) {
-        errorMessage = "Enter a number between 3 and 7";
-      }
-      break;
-    case "High":
-      if (!(countInt > 6 && countInt <= 10)) {
-        errorMessage = "Enter a number between 6 and 11";
-      }
-      break;
-    default:
-      errorMessage = "Invalid plant type selection.";
-  }
+    switch (stoneTypeSelectedValue) {
+      case "Small":
+        if (!(countInt >= 1 && countInt <= 3)) {
+          errorMessage = "Enter a number between 0 and 4";
+        }
+        break;
+      case "Medium":
+        if (!(countInt > 3 && countInt <= 6)) {
+          errorMessage = "Enter a number between 3 and 7";
+        }
+        break;
+      case "High":
+        if (!(countInt > 6 && countInt <= 10)) {
+          errorMessage = "Enter a number between 6 and 11";
+        }
+        break;
+      default:
+        errorMessage = "Invalid plant type selection.";
+    }
 
-  if (errorMessage) {
-    alert(errorMessage);
-    return;
-  }
-    
+    if (errorMessage) {
+      alert(errorMessage);
+      return;
+    }
+
     //validation part Add button
     const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
@@ -238,65 +238,59 @@ export default function ClearLand() {
     setDisplayValues2(newDisplayValues2);
   };
 
-  const postData = async () => {
-    try {
-      const response = await axios.post(
-        "http://192.168.8.173:5000/api/clearLand/clearLand",
-        {
-          pressed,
-          plantTypeSelectedValue,
-          plantCount,
-          displayValues,
-          stoneTypeSelectedValue,
-          stonesCount,
-          displayValues1,
-          laborCount,
-          workHours,
-          searchItem,
-          machineCount,
-          displayValues2,
+  const handleClear = async () => {
+    AxiosInstance.post("/api/clearLand/clearLand", {
+      pressed,
+      plantTypeSelectedValue,
+      plantCount,
+      displayValues,
+      stoneTypeSelectedValue,
+      stonesCount,
+      displayValues1,
+      laborCount,
+      workHours,
+      searchItem,
+      machineCount,
+      displayValues2,
+    })
+      .then((response) => {
+        if (
+          !pressed ||
+          !(displayValues.length > 0) ||
+          !(displayValues1.length > 0) ||
+          !laborCount ||
+          !workHours ||
+          !(displayValues2.length > 0)
+        ) {
+          // Display error message
+          Alert.alert("Error", "Please fill in all fields");
+          return; // Stop execution if fields are empty
         }
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "Something went wrong");
-    }
-  };
-  const handleClear = () => {
-    if (
-      !pressed ||
-      !(displayValues.length > 0) ||
-      !(displayValues1.length > 0) ||
-      !laborCount ||
-      !workHours ||
-      !(displayValues2.length > 0)
-    ) {
-      // Display error message
-      Alert.alert("Error", "Please fill in all fields");
-      return; // Stop execution if fields are empty
-    }
-    postData();
-    navigation.navigate("EffortOutput", {
-      data: displayValues,
-      data1: displayValues1,
-      data2: displayValues2,
-      weedType: pressed,
-      plantType: plantTypeSelectedValue,
-      plantCount: plantCount,
-      stoneType: stoneTypeSelectedValue,
-      stonesCount: stonesCount,
-      laborCount: laborCount,
-      workHours: workHours,
-      machineCount: machineCount,
-    });
+        navigation.navigate("EffortOutput", {
+          data: displayValues,
+          data1: displayValues1,
+          data2: displayValues2,
+          weedType: pressed,
+          plantType: plantTypeSelectedValue,
+          plantCount: plantCount,
+          stoneType: stoneTypeSelectedValue,
+          stonesCount: stonesCount,
+          laborCount: laborCount,
+          workHours: workHours,
+          machineCount: machineCount,
+        });
 
-    setPressed(" ");
-    setLaborCount(" ");
-    setWorkHours(" ");
-    setDisplayValues([]);
-    setDisplayValues1([]);
-    setDisplayValues2([]);
+        setPressed(" ");
+        setLaborCount(" ");
+        setWorkHours(" ");
+        setDisplayValues([]);
+        setDisplayValues1([]);
+        setDisplayValues2([]);
+      })
+      .catch((error) => {
+        console.error("Error:", error.response.data);
+        Alert.alert("Error", "Something went wrong");
+      });
   };
 
   return (
@@ -372,7 +366,11 @@ export default function ClearLand() {
           {/* Plants box */}
           <Card style={styles.card1}>
             <Card.Content style={styles.cardContent}>
-              <MaterialCommunityIcons name="sprout" size={responsiveFontSize(3)} color="#65676B" />
+              <MaterialCommunityIcons
+                name="sprout"
+                size={responsiveFontSize(3)}
+                color="#65676B"
+              />
               <Text style={styles.cardTopText} variant="titleLarge">
                 Plants
               </Text>
@@ -758,7 +756,7 @@ const styles = StyleSheet.create({
   },
   calButtton: {
     marginTop: responsiveHeight(4),
-    bottom:responsiveHeight(2),
+    bottom: responsiveHeight(2),
     alignItems: "center",
   },
   Searchbar: {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Polygon } from 'react-native-maps';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Modal, StatusBar } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { Polyline } from 'react-native-maps';
 
@@ -17,6 +17,7 @@ import * as Location from 'expo-location';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import AxiosInstance from '../../../AxiosInstance';
+import Headersection from '../../../components/Headersection';
 
 const ResizeMapScreen = ({ navigation, route }) => {
   const { templateId } = route.params;
@@ -201,11 +202,15 @@ const ResizeMapScreen = ({ navigation, route }) => {
         </View>
       </Modal>
       <View>
+      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+      <Headersection navigation={navigation} title="Resize Map"></Headersection>
+      </View>
+      {/* <View>
         <Appbar.Header style={{ backgroundColor: '#0866FF' }}>
           <Appbar.BackAction color='#ffffff' onPress={handleCancel} />
           <Appbar.Content title='Resize Map' color='#ffffff' />
         </Appbar.Header>
-      </View>
+      </View> */}
       {/* including map view */}
       {region && (
         <View style={{ flex: 1 }}>
