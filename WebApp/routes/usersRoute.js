@@ -187,6 +187,8 @@ router.post("/change-password", async (req, res) => {
   }
 });
 
+
+
 //get user details
 router.get('/details', auth, async (req, res) => {
   try {
