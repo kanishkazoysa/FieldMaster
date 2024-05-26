@@ -35,7 +35,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from '@react-navigation/native';
 import AxiosInstance from "../AxiosInstance";
 
-const apiKey = Config.GOOGLE_MAPS_API_KEY;
+const apiKey ='AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U'
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
