@@ -8,6 +8,14 @@ export const styles = StyleSheet.create({
     backgroundColor: 'lightgrey',
     height: '100%',
   },
+  markerStyle: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 1,
+  },
   top_Bar: {
     alignItems: 'center',
     justifyContent: 'center',
