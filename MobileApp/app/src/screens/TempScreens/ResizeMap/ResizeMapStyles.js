@@ -11,9 +11,8 @@ export const styles = StyleSheet.create({
   top_Bar: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#007BFF',
+    backgroundColor: '#0866FF',
     color: 'white',
-    height: 80,
   },
   imageView: {
     alignItems: 'center',
@@ -105,13 +104,13 @@ export const styles = StyleSheet.create({
   },
   appBarContent: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
   },
   appBarTextStyle: {
     color: 'white',
     marginHorizontal: 120,
-    fontSize: 16,
-    marginTop: 10,
+    fontWeight: 'bold',
+    fontSize: 15,
   },
   inputBlock: {
     marginHorizontal: 30,

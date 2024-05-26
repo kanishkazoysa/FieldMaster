@@ -7,37 +7,46 @@ import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { errorUtils } from '../../../common.app';
 import AxiosInstance from '../../../AxiosInstance';
+import {
+  responsiveHeight,
+  responsiveFontSize,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 
 const CustomPerimeterIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="vector-square"
-    size={30}
-    color="grey"
+    name='vector-square'
+    size={responsiveFontSize(3.7)}
+    color='grey'
   />
 );
 const CustomAreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="texture-box"
-    size={30}
-    color="grey"
+    name='texture-box'
+    size={responsiveFontSize(3.7)}
+    color='grey'
   />
 );
 
 export function SaveScreen({ navigation, route }) {
-  const { id, area: initialArea, perimeter: initialPerimeter,userId } = route.params;
+  const {
+    id,
+    area: initialArea,
+    perimeter: initialPerimeter,
+    userId,
+  } = route.params;
   const [perimeter, setPerimeter] = React.useState(
     parseFloat(initialPerimeter).toFixed(2)
   );
   const [area, setArea] = React.useState(parseFloat(initialArea).toFixed(2));
   // rest of the code
-  const [templateName, setTemplateName] = React.useState('demo template');
-  const [measureName, setMeasureName] = React.useState('Tea');
-  const [landType, setLandType] = React.useState('Slope');
-  const [location, setLocation] = React.useState('Kandy');
-  const [descriptionText, setDescriptionText] =
-    React.useState('demo description');
+  const [templateName, setTemplateName] = React.useState('');
+  const [measureName, setMeasureName] = React.useState('');
+  const [landType, setLandType] = React.useState('');
+  const [location, setLocation] = React.useState('');
+  const [descriptionText, setDescriptionText] = React.useState('');
 
   /* this function is used to save the data */
   const onSaveButtonPress = () => {
@@ -53,8 +62,7 @@ export function SaveScreen({ navigation, route }) {
       landType: landType,
       location: location,
       description: descriptionText,
-      id:userId
-
+      id: userId,
     };
     console.log(dataItem);
 
@@ -81,7 +89,7 @@ export function SaveScreen({ navigation, route }) {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('PointAddingScreen');
+              navigation.goBack();
             }}
           >
             <View>
@@ -127,7 +135,6 @@ export function SaveScreen({ navigation, route }) {
                 <TextInput
                   style={styles.input_text}
                   value={templateName}
-                  placeholder='Template Name'
                   onChangeText={(text) => setTemplateName(text)}
                 />
               </View>
@@ -136,7 +143,6 @@ export function SaveScreen({ navigation, route }) {
                 <TextInput
                   style={styles.input_text}
                   value={measureName}
-                  placeholder='Measures Name'
                   onChangeText={(text) => setMeasureName(text)}
                 />
               </View>
@@ -145,7 +151,6 @@ export function SaveScreen({ navigation, route }) {
                 <TextInput
                   style={styles.input_text}
                   value={location}
-                  placeholder='Location'
                   onChangeText={(text) => setLocation(text)}
                   outlineColor='black'
                   underlineColor='black'
@@ -156,7 +161,6 @@ export function SaveScreen({ navigation, route }) {
                 <TextInput
                   style={styles.input_text}
                   value={landType}
-                  placeholder='Land Type'
                   onChangeText={(text) => setLandType(text)}
                   outlineColor='black'
                   underlineColor='black'
@@ -168,18 +172,18 @@ export function SaveScreen({ navigation, route }) {
               <Text style={styles.bold_text1}>Description:</Text>
 
               <TextInput
-                placeholder="Type here..."
+                placeholder='Type here...'
                 value={descriptionText}
                 onChangeText={(text) => setDescriptionText(text)}
                 multiline={true}
-                numberOfLines={6} // Optional: Set the number of lines to display initially
+                numberOfLines={6}
                 style={styles.description_input}
-                underlineColor="transparent"
+                underlineColor='transparent'
               />
             </View>
           </View>
-          </View>
-        </ScrollView>
+        </View>
+      </ScrollView>
     </View>
   );
 }

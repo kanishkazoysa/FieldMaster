@@ -14,11 +14,10 @@ import Otp from "./src/screens/AuthScreens/Otp";
 import CreateNewPassword from "./src/screens/AuthScreens/CreateNewPassword";
 import Home from "./src/screens/Home";
 import WalkaroundLand from "./src/screens/WalkaroundLand";
-import Fence from "./src/screens/FenceSetup/Fence";
-import FenceDetails from "./src/screens/FenceSetup/FenceDetails";
+import Fence from "./src/screens/FenceSetup/fence/Fence";
+import FenceDetails from "./src/screens/FenceSetup/fenceDetails/FenceDetails";
 
 /* Template screens importing */
-
 
 import SaveScreen from "./src/screens/TempScreens/SaveScreen/SaveScreen";
 import TemplateView from "./src/screens/TempScreens/TemplateView/TemplateView";
@@ -33,8 +32,9 @@ import Plantation from "./src/screens/Plantation/Plantation";
 import Clearland from './src/screens/ClearLand/Clearland';
 import EffortOutput from './src/screens/ClearLand/EffortOutput';
 import ResizeMap from './src/screens/TempScreens/ResizeMap/ResizeMap';
-
 import PointAddingScreen from './src/screens/PointAddingScreen/PointAddingScreen';
+
+import ProfileManagement from "./src/screens/ProfileManagement";
 
 
 
@@ -44,7 +44,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="TemplatesScreen"
+        initialRouteName="WelcomeScreen"
         screenOptions={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // Slide-in/slide-out animation
@@ -78,21 +78,14 @@ const App = () => {
           component={FertilizationDetails}
         />
 
-<Stack.Screen
-          name="Clearland"
-          component={Clearland}
-          
-        />
+        <Stack.Screen name="Clearland" component={Clearland} />
 
-<Stack.Screen
-          name="EffortOutput"
-          component={EffortOutput}
-          
-        />
+        <Stack.Screen name="EffortOutput" component={EffortOutput} />
 
        
 
         <Stack.Screen name='PointAddingScreen' component={PointAddingScreen} />
+        <Stack.Screen name="ProfileManagement" component={ProfileManagement} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -70,36 +70,36 @@ const ResizeMapScreen = ({ navigation, route }) => {
       });
       setCurrentLocation(location);
 
-     
-        AxiosInstance.get(
-          `/api/auth/mapTemplate/getOneTemplate/${templateId}`
-        )
-          .then((response) => {
-            setPoints(response.data.locationPoints);
-            console.log(response.data.locationPoints);
-    
-            // Calculate the average latitude and longitude
-            const avgLatitude =
-              response.data.locationPoints.reduce(
-                (total, point) => total + point.latitude,
-                0
-              ) / response.data.locationPoints.length;
-            const avgLongitude =
-              response.data.locationPoints.reduce(
-                (total, point) => total + point.longitude,
-                0
-              ) / response.data.locationPoints.length;
-    
-            setRegion({
-              latitude: avgLatitude,
-              longitude: avgLongitude,
-              latitudeDelta: 0.0005,
-              longitudeDelta: 0.0005,
-            });
-          })
-      .catch((error) => {
-        console.error('An error occurred while fetching the template:', error);
-      });
+      AxiosInstance.get(`/api/auth/mapTemplate/getOneTemplate/${templateId}`)
+        .then((response) => {
+          setPoints(response.data.locationPoints);
+          console.log(response.data.locationPoints);
+
+          // Calculate the average latitude and longitude
+          const avgLatitude =
+            response.data.locationPoints.reduce(
+              (total, point) => total + point.latitude,
+              0
+            ) / response.data.locationPoints.length;
+          const avgLongitude =
+            response.data.locationPoints.reduce(
+              (total, point) => total + point.longitude,
+              0
+            ) / response.data.locationPoints.length;
+
+          setRegion({
+            latitude: avgLatitude,
+            longitude: avgLongitude,
+            latitudeDelta: 0.0005,
+            longitudeDelta: 0.0005,
+          });
+        })
+        .catch((error) => {
+          console.error(
+            'An error occurred while fetching the template:',
+            error
+          );
+        });
     })();
   }, []);
 
@@ -148,7 +148,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
   };
 
   const handleCancel = () => {
-    navigation.navigate('SavedTemplatesScreen');
+    navigation.goBack();
   };
   const mapTypes = [
     { name: 'Satellite', value: 'satellite' },
@@ -201,7 +201,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
         </View>
       </Modal>
       <View>
-        <Appbar.Header style={{ backgroundColor: '#0866FF' }}>
+        <Appbar.Header style={{ backgroundColor: '#007BFF' }}>
           <Appbar.BackAction color='#ffffff' onPress={handleCancel} />
           <Appbar.Content title='Resize Map' color='#ffffff' />
         </Appbar.Header>

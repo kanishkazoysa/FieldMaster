@@ -2,11 +2,14 @@ const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema(
   {
-    name: {
+    fname: {
       type: String,
       required: false,
     },
-
+    lname: {
+      type: String,
+      required: false,
+    },
     email: {
       type: String,
       required: true,
@@ -24,6 +27,10 @@ const userSchema = mongoose.Schema(
       default: false,
     },
     token: {
+      type: String,
+      default: "",
+    },
+    imageUrl: {
       type: String,
       default: "",
     },

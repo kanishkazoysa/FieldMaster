@@ -2,6 +2,11 @@ import { StyleSheet, View, StatusBar} from "react-native";
 import React, { useEffect } from "react";
 import * as Animatable from 'react-native-animatable';
 import { CommonActions } from "@react-navigation/native";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
 
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
@@ -39,20 +44,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: 200,
-    height: 200,
+    width: responsiveWidth(55),
+    height: responsiveHeight(35),
     resizeMode: "contain",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginTop: 20,
-  },
-  subtitle: {
-    fontSize: 16,
-    marginTop: 10,
-    color: "#888",
-  },
+  }
 });
 
 export default SplashScreen;

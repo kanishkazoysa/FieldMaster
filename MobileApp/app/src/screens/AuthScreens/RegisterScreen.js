@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,9 +7,10 @@ import {
   StyleSheet,
   Alert,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
   Platform,
+  ScrollView,
   Keyboard,
-  KeyboardAvoidingView
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Appbar, TextInput, Button } from "react-native-paper";
@@ -21,6 +22,8 @@ import {
 import AxiosInstance from "../../AxiosInstance";
 
 export default function RegisterScreen() {
+  const [fName, setFName] = useState("");
+  const [lName, setLName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -28,9 +31,10 @@ export default function RegisterScreen() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigation = useNavigation();
   const [passwordError, setPasswordError] = useState("");
+  
 
   const handleSignUp = async () => {
-    if (!email || !password || !confirmPassword) {
+    if (!fName || !lName || !email || !password || !confirmPassword) {
       Alert.alert("Please fill in all fields");
       return;
     }
@@ -45,7 +49,7 @@ export default function RegisterScreen() {
       return;
     }
 
-    AxiosInstance.post("/api/users/register", { email, password })
+    AxiosInstance.post("/api/users/register", { email, password ,fName, lName })
       .then((response) => {
         if (response.data.success) {
           Alert.alert(
@@ -83,9 +87,13 @@ export default function RegisterScreen() {
   };
 
   return (
-    
+  
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <View style={styles.container}>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "padding" : " height"} 
+      style={styles.container}
+    >
+      
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
         <Appbar.Header style={styles.header}>
           <Appbar.BackAction
@@ -93,7 +101,7 @@ export default function RegisterScreen() {
             color="white"
           />
         </Appbar.Header>
-
+<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.textSection}>
           <Text style={styles.head}>Hi!</Text>
           <Text style={styles.text}>Create a new account</Text>
@@ -102,15 +110,40 @@ export default function RegisterScreen() {
         <View style={styles.field}>
           <View style={{ marginBottom: 10 }}>
             <TextInput
-              label="email"
+              label="First Name"
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
-              width={responsiveWidth(89)}
+              style={styles.inputButton}
+              value={fName}
+              theme={{ roundness: 10 }}
+              onChangeText={(text) => setFName(text)}
+            />
+            <TextInput
+              label="Last Name"
+              mode="outlined"
+              outlineColor="#d9d7d2"
+              activeOutlineColor="#007BFF"
+              style={styles.inputButton}
+              value={lName}
+              theme={{ roundness: 10 }}
+              onChangeText={(text) => setLName(text)}
+            />
+            <TextInput
+              label="Email"
+              mode="outlined"
+              outlineColor="#d9d7d2"
+              activeOutlineColor="#007BFF"
+              style={styles.inputButton}
               value={email}
+              theme={{ roundness: 10 }}
               onChangeText={(text) => setEmail(text)}
             />
           </View>
+
+          <Text style={{marginTop:30,marginBottom:10}}>
+          Create a password that is at least 8 characters long
+          </Text>
 
           <View style={{ marginBottom: 10 }}>
             <TextInput
@@ -118,7 +151,12 @@ export default function RegisterScreen() {
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
-              width={responsiveWidth(75)}
+              style={{
+                width: responsiveWidth(87),
+                height: responsiveHeight(6),
+                fontSize: responsiveFontSize(1.9),
+              }}
+              theme={{ roundness: 10 }}
               value={password}
               onChangeText={(text) => {
                 setPassword(text);
@@ -143,16 +181,21 @@ export default function RegisterScreen() {
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
-              width={responsiveWidth(75)}
+              theme={{ roundness: 10 }}
+              style={{
+                width: responsiveWidth(87),
+                height: responsiveHeight(6),
+                fontSize: responsiveFontSize(1.9),
+              }}
               value={confirmPassword}
               onChangeText={(text) => setConfirmPassword(text)}
               secureTextEntry={!showConfirmPassword}
-              right={
-                <TextInput.Icon
-                  icon={showConfirmPassword ? "eye" : "eye-off"}
-                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                />
-              }
+              // right={
+              //   <TextInput.Icon
+              //     icon={showConfirmPassword ? "eye" : "eye-off"}
+              //     onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              //   />
+              // }
             />
             {passwordError ? (
               <Text style={styles.errorText}>{passwordError}</Text>
@@ -185,8 +228,12 @@ export default function RegisterScreen() {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
-    </TouchableWithoutFeedback>
+    
+     
+      </ScrollView>
+      </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+   
   );
 }
 
@@ -204,12 +251,12 @@ const styles = StyleSheet.create({
   button: {
     marginTop: responsiveHeight(3),
     backgroundColor: "#007BFF",
-    width: 337,
-    padding: 2,
+    width: responsiveWidth(80),
+    padding: responsiveHeight(0),
   },
 
   head: {
-    fontSize: responsiveFontSize(5), 
+    fontSize: responsiveFontSize(5),
     fontWeight: "bold",
     top: responsiveHeight(0.1),
   },
@@ -224,6 +271,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+    justifyContent: 'space-between',
   },
 
   textSection: {
@@ -238,7 +286,7 @@ const styles = StyleSheet.create({
   loginTextContainer: {
     flexDirection: "row",
     marginLeft: responsiveWidth(8),
-    top: responsiveHeight(8),
+    top: responsiveHeight(5),
   },
 
   signupText: {
@@ -253,9 +301,12 @@ const styles = StyleSheet.create({
   },
 
   privacyTermsContainer: {
+    marginBottom: 10,
+  flex:1,
+  justifyContent: "flex-end",
+    width: "100%",
+    alignItems: "center",
     
-    marginTop:
-      Platform.OS === "android" ? responsiveHeight(40) : responsiveHeight(2.5),
   },
 
   privacyText: {
@@ -280,4 +331,12 @@ const styles = StyleSheet.create({
     color: "red",
     marginLeft: 10,
   },
+  inputButton: {
+    width: responsiveWidth(87),
+    height: responsiveHeight(6),
+    fontSize: responsiveFontSize(1.9),
+    marginBottom: 10,
+  },
+  
 });
+ 

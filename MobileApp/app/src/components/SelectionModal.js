@@ -3,6 +3,11 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import { IconButton } from "react-native-paper";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import CalculatorInput from "./calculator/calculatorInput";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
 
 const SelectionModal = ({ modalVisible, setModalVisible, options  }) => {
   const closeModal = () => {
@@ -42,8 +47,8 @@ const SelectionModal = ({ modalVisible, setModalVisible, options  }) => {
         <View style={styles.centeredView}>
           <IconButton
             icon="close"
-            iconColor="white"
-            size={30}
+            iconColor="black"
+            size={responsiveFontSize(3)}
             onPress={closeModal}
             style={styles.cancelButton}
           />
@@ -55,7 +60,7 @@ const SelectionModal = ({ modalVisible, setModalVisible, options  }) => {
                 onPress={() => handleOptionClick(option, index)}
               >
                 <View style={styles.innerView1}>
-                  <IconButton icon={option.icon} iconColor='white' size={45} />
+                  <IconButton icon={option.icon} iconColor='white' size={responsiveFontSize(4.7)} />
                 </View>
                 <View style={styles.innerView2}>
                   <Text style={styles.modelHeader}>{option.Header}</Text>
@@ -86,12 +91,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 12,
+    marginTop: responsiveHeight(5),
   },
   modalView: {
-    margin: 20,
     borderRadius: 20,
-    padding: 15,
+    padding: responsiveHeight(2),
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -100,8 +104,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.4,
     shadowRadius: 4,
-    width: '80%',
-    height: '50%',
+    width: responsiveWidth(80),
+    height: responsiveHeight(45),
   },
   modalOption: {
     flex: 1,
@@ -109,20 +113,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 10,
-    padding: 10,
+    margin: responsiveHeight(1),
+    padding: responsiveHeight(1),
     backgroundColor: '#007BFF',
     borderRadius: 11,
   },
   modelHeader: {
     color: 'white',
-    fontSize: 16,
+    fontSize: responsiveFontSize(2),
     fontWeight: 'bold',
   },
   modelText: {
-    marginTop: 10,
+    marginTop:responsiveHeight(1),
     color: 'white',
-    fontSize: 12,
+    fontSize: responsiveFontSize(1.6),
   },
 
   innerView1: {
@@ -136,8 +140,11 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     position: "absolute",
-    top: 160,
-    right: 25,
+    top: responsiveHeight(20),
+    right: responsiveWidth(5),
+    width: responsiveWidth(8.3),
+    height: responsiveHeight(4),
+    backgroundColor: "#fff",
   },
 });
 

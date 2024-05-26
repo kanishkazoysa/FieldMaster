@@ -9,39 +9,23 @@ footer-container {
   min-height: 100vh;
   overflow-x: hidden;
   width: 100vw;
+  
 }
 
 .container1 {
   flex: 1;
   width: 100vw;
 }
-
-a {
-  color: rgb(231, 231, 231);
-  text-decoration: none;
+.newsletter{
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  background-color: #007bff;
+  color: aliceblue;
+  border-radius: 2rem;
 }
 
-li {
-  list-style: none;
-}
 
-input {
-  position: relative;
-  height: 100%;
-}
-
-input[type="email"] {
-  padding: 7px 8px;
-  border: 1px solid rgb(206, 206, 206);
-}
-input[type="button"] {
-  border: none;
-  padding: 7px 12px;
-  background: rgb(79, 223, 79);
-  color: rgb(255, 255, 255);
-  border: 1px solid rgb(79, 223, 79);
-  cursor: pointer;
-}
 
 main {
   flex: 1;
@@ -49,8 +33,8 @@ main {
 
 footer {
   bottom: 0;
-  background: #007bff;
-  color: white;
+  background: white;
+  color: #007bff;
   width: 100vw;
   max-width: 100vw;
   overflow-x: hidden;
@@ -64,6 +48,9 @@ footer .info {
   align-items: center;
   justify-content: space-between;
   background: rgb(29, 29, 29);
+  padding-right: 100px;
+  padding-left: 80px;
+  color: aliceblue;
 }
 
 footer .info .legal {
@@ -89,13 +76,14 @@ footer .social i {
   font-size: 1.4rem;
   margin: 2px 8px;
   cursor: pointer;
+   height: 4px;
 }
 
 footer .social:before {
   position: absolute;
   content: "";
   width: 90%;
-  height: 1px;
+  height: 4px;
   background: rgba(255, 255, 255, 0.192);
   top: 0;
   left: 50%;
@@ -107,23 +95,50 @@ footer .social:before {
 footer .top {
   padding: 2rem 0;
   display: flex;
-  align-items: center;
   justify-content: space-evenly;
   flex-direction: row;
+  
 }
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+
+.contact-form label {
+  margin-bottom: 10px;
+  
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 0 8px 8px 0;
+  margin-bottom: 16px;
+}
+
+.submit-button {
+  background-color: white;
+  color: blue;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  border-radius: 1rem;
+  width: 100%;
+}
+
+.submit-button:hover {
+  background-color: darkblue;
+  color: aliceblue;
+}
+
 
 footer .top .pages {
   display: flex;
   flex-direction: row;
+  
 }
 
-footer .top .pages ul {
-  margin: 20px;
-}
-
-footer .top .pages ul li {
-  margin: 5px;
-}
 
 footer .newsletter h3 {
   margin-bottom: 10px;

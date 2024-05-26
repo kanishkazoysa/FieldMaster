@@ -78,7 +78,12 @@ export default function ForgotPassword() {
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
-              width={responsiveWidth(85)}
+              theme={{ roundness: 10 }}
+              style={{
+                width: responsiveWidth(87),
+                height: responsiveHeight(6),
+                fontSize: responsiveFontSize(1.9),
+              }}
               value={email}
               onChangeText={(text) => setEmail(text)}
             />
@@ -118,7 +123,7 @@ const styles = StyleSheet.create({
     marginTop: "3%",
   },
   text: {
-    fontSize: responsiveFontSize(2),
+    fontSize: responsiveFontSize(1.9),
     marginTop: "1%",
   },
   container: {
@@ -139,9 +144,9 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(3),
   },
   button: {
-    marginTop: responsiveHeight(5),
+    marginTop: responsiveHeight(3),
     backgroundColor: "#007BFF",
-    width: 337,
-    padding: 2,
+    width: responsiveWidth(80),
+    padding: responsiveHeight(0),
   },
 });
