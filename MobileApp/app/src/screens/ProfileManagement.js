@@ -20,6 +20,7 @@ import * as ImagePicker from "expo-image-picker";
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { Alert } from "react-native";
 import Dialog from "react-native-dialog";
+import AxiosInstance from "../AxiosInstance";
 
 const ProfileManagement = () => {
   const [user, setUser] = useState({});
@@ -76,12 +77,7 @@ const ProfileManagement = () => {
   useEffect(() => {
     const fetchUser = async () => {
       const token = await AsyncStorage.getItem("token");
-      const response = await axios.get(
-        "http://192.168.1.106:5000/api/users/details",
-        {
-          headers: { Authorization: token },
-        }
-      );
+      const response = await AxiosInstance.get("/api/users/details");
       setUser(response.data.user);
     };
 
@@ -110,10 +106,10 @@ const ProfileManagement = () => {
   }
 
   try {
-    const response = await axios.post(
-      "http://192.168.1.106:5000/api/users/updateProfile",
+    const response = AxiosInstance.post(
+      "/api/users/updateProfile",
       formData,
-      { headers: { Authorization: token, 'Content-Type': 'multipart/form-data', } }
+      { headers: {'Content-Type': 'multipart/form-data', } }
     );
     navigation.navigate('Home');
   } catch (error) {

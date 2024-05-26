@@ -2,9 +2,10 @@ import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { Avatar } from "react-native-paper";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import AxiosInstance from "../AxiosInstance";
 
 const ProfileAvatar = ({ userData, onPress, textSize , image }) => {
-  const serverUrl = "http://192.168.1.106:5000"; // Replace with your server URL
+  const serverUrl = AxiosInstance.defaults.baseURL; // Replace with your server URL
 
   const getEmailColor = (email) => {
     if (!email) {

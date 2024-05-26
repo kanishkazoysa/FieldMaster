@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { Button, Avatar } from "react-native-paper";
+import { Button } from "react-native-paper";
 import * as Location from "expo-location";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -33,6 +33,7 @@ import Config from "react-native-config";
 import ProfileAvatar from "../components/ProfileAvatar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from '@react-navigation/native';
+import AxiosInstance from "../AxiosInstance";
 
 const apiKey = Config.GOOGLE_MAPS_API_KEY;
 
@@ -56,13 +57,7 @@ export default function Home() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = await AsyncStorage.getItem("token");
-        const response = await axios.get(
-          "http://192.168.1.106:5000/api/users/details",
-          {
-            headers: { Authorization: token },
-          }
-        );
+        const response = await AxiosInstance.get("/api/users/details");
         if (response.data.user) {
           setUserData(response.data.user);
         }

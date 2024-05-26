@@ -92,6 +92,7 @@ export default function Home() {
             style={styles.searchBox}
             onKeyDown={handleKeyDown}
           />
+          
         </StandaloneSearchBox>
 
         </GoogleMap>

@@ -24,7 +24,7 @@ let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "kanishkazoysa1234@gmail.com",
-    pass: "babx gpyj vvyx kpkp",
+    pass: "sldh spke vqbu znhw",
   },
 });
 
@@ -186,6 +186,8 @@ router.post("/change-password", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
 
 //get user details
 router.get('/details', auth, async (req, res) => {
