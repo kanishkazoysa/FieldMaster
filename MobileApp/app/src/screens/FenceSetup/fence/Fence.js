@@ -28,7 +28,7 @@ export default function Fence({route}) {
   const [inputValueFenceLength, setinputValueFenceLength] = useState("");
   const [inputValueFenceAmount, setinputValueFenceAmount] = useState("");
   const [inputValuePostspace, setinputValuePostspace] = useState("");
-  const [perimeter, setperimeter] = useState("1500");
+  // const [perimeter, setperimeter] = useState("1500");
   //const [Area, setArea] = useState("100");
   const [fenceLengthsArray, setFenceLengthsArray] = useState([]);
   const [fenceAmountsArray, setFenceAmountsArray] = useState([]);
