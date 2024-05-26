@@ -105,7 +105,7 @@ export const styles = StyleSheet.create({
     box2PropertyDetails: {
       flexDirection: "column",
       marginLeft: responsiveWidth(1),
-      width: "50%",
+      width: "70%",
       backgroundColor: "white",
     },
     Box2PropertyLabel: {
@@ -165,7 +165,7 @@ export const styles = StyleSheet.create({
       height: responsiveHeight(2.7),
       marginTop: responsiveHeight(1),
       justifyContent: "flex-start",
-      backgroundColor: "whitesmoke",
+      backgroundColor: "white",
       flexDirection: "column",
     },
   

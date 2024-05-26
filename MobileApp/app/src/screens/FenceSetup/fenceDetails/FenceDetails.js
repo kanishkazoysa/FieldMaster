@@ -21,7 +21,7 @@ import AxiosInstance from "../../../AxiosInstance";
 
 export default function FenceDetails({ route }) {
   const navigation = useNavigation();
-  const { fenceType, postSpace, PostSpaceUnit, data } = route.params;
+  const { fenceType, postSpace, PostSpaceUnit, data,Area,Perimeter } = route.params;
   const [numberOfSticks, setnumberOfSticks] = useState(null);
 
   // get number of Sticks from  database
@@ -218,7 +218,7 @@ const html = `
               />
               <View style={styles.box2PropertyDetails}>
                 <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                <Text style={styles.Box2PropertyValue}>1.5Km</Text>
+                <Text style={styles.Box2PropertyValue}>{Perimeter} km</Text>
               </View>
             </View>
             <View style={styles.box2Property}>
@@ -229,7 +229,7 @@ const html = `
               />
               <View style={styles.box2PropertyDetails}>
                 <Text style={styles.Box2PropertyLabel}>Area</Text>
-                <Text style={styles.Box2PropertyValue}>100 acres</Text>
+                <Text style={styles.Box2PropertyValue}>{Area} perches</Text>
               </View>
             </View>
           </View>

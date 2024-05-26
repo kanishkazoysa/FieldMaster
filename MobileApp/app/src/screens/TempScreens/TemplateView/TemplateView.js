@@ -136,7 +136,7 @@ const TemplateView = ({ route, navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate('Fence', { id: item._id })}
+            onPress={() => navigation.navigate('Fence', { id: item._id, Area:item.area, Perimeter:item.perimeter  })}
           >
             <View style={styles.iconBlockInner}>
               <View style={styles.iconOuter_03}>

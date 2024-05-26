@@ -66,7 +66,7 @@ export const styles = StyleSheet.create({
     propertyDetails: {
       flexDirection: "column",
       marginLeft: responsiveWidth(2),
-      width: "50%",
+      width: "70%",
       height: responsiveHeight(4.6),
       backgroundColor: "white",
     },
