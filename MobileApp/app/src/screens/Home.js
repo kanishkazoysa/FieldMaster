@@ -196,14 +196,7 @@ export default function Home() {
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.select({
-          ios: 0,
-          android: -responsiveHeight(10),
-        })}
-      >
+     
         <View style={styles.container}>
           <MapView
             ref={mapRef}
@@ -345,7 +338,6 @@ export default function Home() {
             </View>
           </View>
         </View>
-      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }

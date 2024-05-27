@@ -39,9 +39,7 @@ export default function Home() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigation = useNavigation();
   const mapRef = useRef(null);
-  const [polygonArea, setPolygonArea] = useState(0); // Renamed state variable
   const [calculatedArea, setCalculatedArea] = useState(0);
-  const [calculatedPerimeter, setCalculatedPerimeter] = useState(0);
   const [polygonPerimeter, setPolygonPerimeter] = useState(0);
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
@@ -205,8 +203,8 @@ export default function Home() {
         pathCoordinates.map((coord) => [coord.longitude, coord.latitude]),
       ],
     };
-    const polygonArea = area(polygon);
-    setCalculatedArea(polygonArea);
+    const PolygonArea = area(polygon);
+    setCalculatedArea(PolygonArea);
   
     let perimeter = 0;
     for (let i = 0; i < pathCoordinates.length - 1; i++) {
@@ -234,14 +232,14 @@ export default function Home() {
   const saveMapData = async () => {
     AxiosInstance.post("/api/auth/mapTemplate/saveTemplate", {
       locationPoints: pathCoordinates,
-      area: polygonArea,
+      area: calculatedArea,
       perimeter: polygonPerimeter,
     })
       .then((response) => {
         console.log(response.data._id);
         navigation.navigate("SaveScreen", {
           id: response.data._id,
-          area: polygonArea,
+          area: calculatedArea,
           perimeter: polygonPerimeter,
           userId: response.data.userId,
         });
@@ -272,10 +270,10 @@ export default function Home() {
       
         <View style={styles.overlay}>
           <Text style={styles.overlayText}>
-            Area: {calculatedArea.toFixed(2)} sq units
+            Area: {calculatedArea.toFixed(4)} sq units
           </Text>
           <Text style={styles.overlayText}>
-            Perimeter: {calculatedPerimeter.toFixed(2)} km
+            Perimeter: {polygonPerimeter.toFixed(4)} km
           </Text>
         </View>
      
@@ -295,8 +293,8 @@ export default function Home() {
         {drawPolyline && pathCoordinates.length > 0 && (
           <Polyline
             coordinates={pathCoordinates}
-            strokeWidth={2}
-            strokeColor="blue"
+            strokeWidth={2.3}
+            strokeColor="white"
           />
         )}
         {points.map((point, index) => (
