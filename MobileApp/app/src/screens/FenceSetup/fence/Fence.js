@@ -115,12 +115,15 @@ export default function Fence({route}) {
     
     // send data to back end
     AxiosInstance.post("/api/fence/fence", {
+      id,
       FenceTypeselectedValue,
       inputValuePostspace,
       PostSpaceUnitselectedValue,
       displayValues,
       fenceAmountsArray,
       fenceLengthsArray,
+      Perimeter,
+      
     })
       .then((response) => {
         if (

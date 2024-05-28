@@ -6,8 +6,10 @@ function calculateNumberOfSticks (perimeter,gapBetweenSticks,gapUnit,totalGateLe
   const convertedGap = convertToCommonUnit(gapBetweenSticks, gapUnit);
   const remainingPerimeter = perimeter - totalGateLengths;
   let numberOfSticks = Math.ceil(remainingPerimeter / convertedGap);
-  numberOfSticks -= gateCount;
-  numberOfSticks += 2;
+  if(gateCount>0){
+    numberOfSticks -= gateCount;
+    numberOfSticks += 2;
+  }
   return numberOfSticks;
 }
 
@@ -38,15 +40,17 @@ function calculateSum(array) {
 router.post("/fence", async (req, res) => {
   try {
     const {
+      id,
       FenceTypeselectedValue,
       inputValuePostspace,
       PostSpaceUnitselectedValue,
       displayValues,
       fenceAmountsArray,
       fenceLengthsArray,
+      Perimeter,
     } = req.body;
 
-    const perimeter = 1500;
+    const perimeter = Perimeter*1000;
     const gapBetweenSticks = inputValuePostspace;
     const gapUnit = PostSpaceUnitselectedValue;
     const gateLength = fenceLengthsArray;
@@ -57,6 +61,7 @@ router.post("/fence", async (req, res) => {
     const numberOfSticks = calculateNumberOfSticks(perimeter,gapBetweenSticks,gapUnit,totalGateLengths,gateCount);
 
     const newFence = new fenceModel({
+      Id:id,
       FenceType: FenceTypeselectedValue,
       PostSpace: inputValuePostspace,
       PostSpaceUnit: PostSpaceUnitselectedValue,
