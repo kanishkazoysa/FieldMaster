@@ -122,6 +122,7 @@ const ProfileManagement = () => {
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
       <Appbar.Header style={styles.header}>
         <Appbar.BackAction onPress={() => navigation.goBack()} color="white" />
+        <Appbar.Content style={styles.appbarText} title="Profile" color="white" titleStyle={{ fontSize: 20 }}  />
       </Appbar.Header>
 
       <View style={styles.section1}>
@@ -203,6 +204,10 @@ zIndex:  1,
         marginTop: StatusBar.currentHeight,
       },
     }),
+  },
+  appbarText: {
+    alignItems: "center",
+    marginRight: responsiveWidth(12),
   },
   container: {
     flex: 1,
