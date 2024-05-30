@@ -85,6 +85,10 @@ const ProfileManagement = () => {
     fetchUser();
   }, []);
 
+  const handleChangePassword = () => {
+    navigation.navigate("Forgot", { email: user.email });
+  };
+
   const handleConfirm = async () => {
   setLoading(true);
   const token = await AsyncStorage.getItem("token");
@@ -177,7 +181,7 @@ const ProfileManagement = () => {
           />
         </View>
         <Button
-          onPress={handleConfirm}
+          onPress={handleChangePassword}
           mode="outlined"
           textColor="#007BFF"
           loading={loading}
