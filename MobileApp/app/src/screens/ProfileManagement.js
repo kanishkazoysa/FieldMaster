@@ -126,9 +126,15 @@ const ProfileManagement = () => {
 
       <View style={styles.section1}>
         <TouchableOpacity onPress={handlePressAvatar}>
-          <ProfileAvatar userData={user} textSize={20} image={image} />
-          <Fontisto style={styles.cameraIcon} name="camera" size={responsiveFontSize(3.5)} color="gray" />
+          <ProfileAvatar userData={user} textSize={16} image={image} />
+          <Fontisto style={styles.cameraIcon} name="camera" size={responsiveFontSize(2.6)} color="#007BFF" />
         </TouchableOpacity>
+        <Text style={styles.avtarTxt}>
+          {user.fname} {user.lname}
+          </Text>
+          <Text>
+          {user.email}
+          </Text>
       </View>
 
       <View style={styles.section2}>
@@ -167,6 +173,15 @@ const ProfileManagement = () => {
         </View>
         <Button
           onPress={handleConfirm}
+          mode="outlined"
+          textColor="#007BFF"
+          loading={loading}
+          style={styles.button1}
+        >
+          Change Password
+        </Button>
+        <Button
+          onPress={handleConfirm}
           mode="contained"
           loading={loading}
           style={styles.button}
@@ -182,7 +197,7 @@ const styles = StyleSheet.create({
   header: {
     height: 50,
     backgroundColor: "#007BFF",
-
+zIndex:  1,
     ...Platform.select({
       android: {
         marginTop: StatusBar.currentHeight,
@@ -196,6 +211,7 @@ const styles = StyleSheet.create({
   section1: {
     flex: 1,
     borderRadius: 30,
+    marginTop: responsiveHeight(3),
     alignItems: "center",
     justifyContent: "center",
   },
@@ -213,14 +229,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   inputField: {
-    width: responsiveWidth(87),
+    width: responsiveWidth(82),
     height: responsiveHeight(6),
     fontSize: responsiveFontSize(1.9),
     marginBottom: responsiveHeight(2),
     borderRadius: 15,
   },
+  button1: {
+    marginTop: responsiveHeight(1),
+    width: responsiveWidth(82),
+    height: responsiveHeight(5.5),
+    alignSelf: "center",
+    borderRadius:10,
+    borderWidth:1.7,
+    borderColor:"#007BFF"
+  },
   button: {
-    marginTop: responsiveHeight(10),
+    marginTop: responsiveHeight(5),
     backgroundColor: "#007BFF",
     width: responsiveWidth(60),
     padding: responsiveHeight(0),
@@ -228,9 +253,15 @@ const styles = StyleSheet.create({
   },
   cameraIcon:
   { 
-    top: responsiveHeight(-4),
-    right: responsiveWidth(-31),
-  }
+    top: responsiveHeight(-3),
+    right: responsiveWidth(-25),
+  },
+  avtarTxt: {
+    fontSize: responsiveFontSize(3),
+    marginTop: responsiveHeight(-2),
+    textAlign: "center",
+    fontWeight: "bold",
+  },
 });
 
 export default ProfileManagement;
