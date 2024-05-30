@@ -4,6 +4,7 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { Appbar, TextInput, Button,  } from "react-native-paper";
 import {
@@ -84,6 +85,10 @@ const ProfileManagement = () => {
     fetchUser();
   }, []);
 
+  const handleChangePassword = () => {
+    navigation.navigate("Forgot", { email: user.email });
+  };
+
   const handleConfirm = async () => {
   setLoading(true);
   const token = await AsyncStorage.getItem("token");
@@ -122,13 +127,23 @@ const ProfileManagement = () => {
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
       <Appbar.Header style={styles.header}>
         <Appbar.BackAction onPress={() => navigation.goBack()} color="white" />
+        <Appbar.Content style={styles.appbarText} title="Profile" color="white" titleStyle={{ fontSize: 20 }}  />
       </Appbar.Header>
 
+      <ScrollView>
       <View style={styles.section1}>
         <TouchableOpacity onPress={handlePressAvatar}>
-          <ProfileAvatar userData={user} textSize={20} image={image} />
-          <Fontisto style={styles.cameraIcon} name="camera" size={responsiveFontSize(3.5)} color="gray" />
+        <View style={{borderWidth: 3, borderColor: '#007BFF', borderRadius: 150, padding: 4.5}}>
+        <ProfileAvatar userData={user} textSize={16} image={image} />
+      </View>
+          <Fontisto style={styles.cameraIcon} name="camera" size={responsiveFontSize(2.4)} color="#007BFF" />
         </TouchableOpacity>
+        <Text style={styles.avtarTxt}>
+          {user.fname} {user.lname}
+          </Text>
+          <Text>
+          {user.email}
+          </Text>
       </View>
 
       <View style={styles.section2}>
@@ -166,6 +181,15 @@ const ProfileManagement = () => {
           />
         </View>
         <Button
+          onPress={handleChangePassword}
+          mode="outlined"
+          textColor="#007BFF"
+          loading={loading}
+          style={styles.button1}
+        >
+          Change Password
+        </Button>
+        <Button
           onPress={handleConfirm}
           mode="contained"
           loading={loading}
@@ -174,6 +198,7 @@ const ProfileManagement = () => {
           Update
         </Button>
       </View>
+      </ScrollView>
     </View>
   );
 };
@@ -182,12 +207,16 @@ const styles = StyleSheet.create({
   header: {
     height: 50,
     backgroundColor: "#007BFF",
-
+zIndex:  1,
     ...Platform.select({
       android: {
         marginTop: StatusBar.currentHeight,
       },
     }),
+  },
+  appbarText: {
+    alignItems: "center",
+    marginRight: responsiveWidth(12),
   },
   container: {
     flex: 1,
@@ -196,6 +225,7 @@ const styles = StyleSheet.create({
   section1: {
     flex: 1,
     borderRadius: 30,
+    marginTop: responsiveHeight(3),
     alignItems: "center",
     justifyContent: "center",
   },
@@ -213,14 +243,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   inputField: {
-    width: responsiveWidth(87),
+    width: responsiveWidth(82),
     height: responsiveHeight(6),
     fontSize: responsiveFontSize(1.9),
     marginBottom: responsiveHeight(2),
     borderRadius: 15,
   },
+  button1: {
+    marginTop: responsiveHeight(1),
+    width: responsiveWidth(82),
+    height: responsiveHeight(5.5),
+    alignSelf: "center",
+    borderRadius:10,
+    borderWidth:1.7,
+    borderColor:"#007BFF"
+  },
   button: {
-    marginTop: responsiveHeight(10),
+    marginTop: responsiveHeight(5),
     backgroundColor: "#007BFF",
     width: responsiveWidth(60),
     padding: responsiveHeight(0),
@@ -228,9 +267,15 @@ const styles = StyleSheet.create({
   },
   cameraIcon:
   { 
-    top: responsiveHeight(-4),
-    right: responsiveWidth(-31),
-  }
+    top: responsiveHeight(-2.7),
+    right: responsiveWidth(-27),
+  },
+  avtarTxt: {
+    fontSize: responsiveFontSize(3),
+    marginTop: responsiveHeight(-2),
+    textAlign: "center",
+    fontWeight: "bold",
+  },
 });
 
 export default ProfileManagement;
