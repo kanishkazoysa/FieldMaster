@@ -4,6 +4,7 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { Appbar, TextInput, Button,  } from "react-native-paper";
 import {
@@ -125,6 +126,7 @@ const ProfileManagement = () => {
         <Appbar.Content style={styles.appbarText} title="Profile" color="white" titleStyle={{ fontSize: 20 }}  />
       </Appbar.Header>
 
+      <ScrollView>
       <View style={styles.section1}>
         <TouchableOpacity onPress={handlePressAvatar}>
         <View style={{borderWidth: 3, borderColor: '#007BFF', borderRadius: 150, padding: 4.5}}>
@@ -192,6 +194,7 @@ const ProfileManagement = () => {
           Update
         </Button>
       </View>
+      </ScrollView>
     </View>
   );
 };
