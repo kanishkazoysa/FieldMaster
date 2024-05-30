@@ -127,8 +127,10 @@ const ProfileManagement = () => {
 
       <View style={styles.section1}>
         <TouchableOpacity onPress={handlePressAvatar}>
-          <ProfileAvatar userData={user} textSize={16} image={image} />
-          <Fontisto style={styles.cameraIcon} name="camera" size={responsiveFontSize(2.6)} color="#007BFF" />
+        <View style={{borderWidth: 3, borderColor: '#007BFF', borderRadius: 150, padding: 4.5}}>
+        <ProfileAvatar userData={user} textSize={16} image={image} />
+      </View>
+          <Fontisto style={styles.cameraIcon} name="camera" size={responsiveFontSize(2.4)} color="#007BFF" />
         </TouchableOpacity>
         <Text style={styles.avtarTxt}>
           {user.fname} {user.lname}
@@ -258,8 +260,8 @@ zIndex:  1,
   },
   cameraIcon:
   { 
-    top: responsiveHeight(-3),
-    right: responsiveWidth(-25),
+    top: responsiveHeight(-2.7),
+    right: responsiveWidth(-27),
   },
   avtarTxt: {
     fontSize: responsiveFontSize(3),
