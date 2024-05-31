@@ -37,8 +37,12 @@ const SelectionModal = ({
   }, [profileModalVisible]);
 
   const handleManageAccount = () => {
+    setManageLoading(true); // Set loading state to true when manage account is clicked
+    setTimeout(() => {
+      setManageLoading(false); // Set loading state to false after navigating to the profile management page
     setProfileModalVisible(false);
     navigation.navigate("ProfileManagement");
+  }, 2000);
   };
 
   const handleSignOut = async () => {
@@ -93,6 +97,7 @@ const SelectionModal = ({
               onPress={handleManageAccount}
               style={styles.ManageButton}
               textColor="#007BFF"
+              loading={manageLoading} // Add loading prop to Button
             >
               Manage your account
             </Button>
