@@ -8,7 +8,6 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
-import axios from "axios"; // make sure to install axios
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProfileAvatar from "../components/ProfileAvatar";
 import AxiosInstance from "../AxiosInstance";
@@ -19,6 +18,7 @@ const SelectionModal = ({
   
 }) => {
   const [loading, setLoading] = useState(false);
+  const [manageLoading, setManageLoading] = useState(false); // New state for manage button loading
   const [user, setUser] = useState({});
   const closeModal = () => {
     setProfileModalVisible(false);
