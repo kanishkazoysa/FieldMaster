@@ -16,7 +16,7 @@ import AxiosInstance from "../AxiosInstance";
 const SelectionModal = ({
   profileModalVisible,
   setProfileModalVisible,
-  email,
+  
 }) => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({});
