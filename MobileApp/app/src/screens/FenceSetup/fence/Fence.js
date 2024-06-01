@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
@@ -18,23 +17,19 @@ import { useNavigation } from "@react-navigation/native";
 import {styles} from './FenceStyles';
 import Headersection from "../../../components/Headersection";
 import CustomButton from "../../../components/CustomButton";
-import axios from "axios";
 import AxiosInstance from "../../../AxiosInstance";
 
 export default function Fence({route}) {
+  const navigation = useNavigation();
+
   const{id,Area,Perimeter} =  route.params;
   const [FenceTypeselectedValue, setFenceTypeSelectedValue] = useState(null);
   const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] =useState(null);
   const [inputValueFenceLength, setinputValueFenceLength] = useState("");
   const [inputValueFenceAmount, setinputValueFenceAmount] = useState("");
   const [inputValuePostspace, setinputValuePostspace] = useState("");
-  // const [perimeter, setperimeter] = useState("1500");
-  //const [Area, setArea] = useState("100");
   const [fenceLengthsArray, setFenceLengthsArray] = useState([]);
   const [fenceAmountsArray, setFenceAmountsArray] = useState([]);
-
-  const navigation = useNavigation();
-
   const [displayValues, setDisplayValues] = useState([]);
   let inputValueFenceAmountRef = useRef(null);
 
@@ -112,7 +107,6 @@ export default function Fence({route}) {
 
   //calculate button click
   const handleFenceDetails = async () => {
-    
     // send data to back end
     AxiosInstance.post("/api/fence/fence", {
       id,
@@ -136,16 +130,9 @@ export default function Fence({route}) {
           return;
         }
         navigation.navigate("FenceDetails", {
-          data: displayValues,
-          fenceType: FenceTypeselectedValue,
-          PostSpaceUnit: PostSpaceUnitselectedValue,
-          postSpace: inputValuePostspace,
-          Area:Area,
-          Perimeter:Perimeter,
+          id:id,
         });
-        //console.log(response.data);
       })
-
       .catch((error) => {
         console.error("Error:", error.response.data);
         Alert.alert("Error", "Failed to create fence. Please try again.");
