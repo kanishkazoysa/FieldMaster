@@ -8,6 +8,8 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 
+import AxiosInstance from '../../../AxiosInstance';
+
 const ClearLandIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
@@ -81,6 +83,7 @@ const CustomEditIcon = ({ navigation, item }) => (
 
 const TemplateView = ({ route, navigation }) => {
   const { item } = route.params;
+  const  id  = item._id
   useEffect(() => {
     console.log('template view screen ', item._id);
   }, []);
@@ -89,6 +92,29 @@ const TemplateView = ({ route, navigation }) => {
     console.log(item);
     navigation.navigate('ResizeMap', { templateId: item._id });
   };
+
+  
+// check id exist in the databse
+  const checkId = async (id) => {
+    try {
+      const response = await AxiosInstance.get(`/api/fence/check-id/${id}`);
+      if (response.data.exists) {
+        console.log('ID exists');
+        navigation.navigate('FenceDetails', { id: item._id });
+      } else {
+        console.log('ID does not exist');
+      }
+    } catch (error) {
+      // Handle error, maybe show a message to the user
+if (error.response.status === 404) {
+      console.log('ID not found');
+      navigation.navigate('Fence', { id: item._id, Area: item.area, Perimeter: item.perimeter });
+    } else {
+      console.error('Error checking ID:', error);
+      // Handle other errors
+    }    }
+  };
+  
 
   return (
     <>
@@ -135,9 +161,7 @@ const TemplateView = ({ route, navigation }) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Fence', { id: item._id, Area:item.area, Perimeter:item.perimeter  })}
-          >
+          <TouchableOpacity onPress={() => checkId(item._id)}>
             <View style={styles.iconBlockInner}>
               <View style={styles.iconOuter_03}>
                 <FenceSetupIcon />
@@ -188,7 +212,7 @@ const TemplateView = ({ route, navigation }) => {
         </View>
         {/* Description block */}
         <View style={styles.descriptionBlock}>
-          <Text style={styles.text02Styling}>Description</Text>
+         <Text style={styles.text02Styling}>Description</Text>
           <View style={styles.subTextOuter}>
             <Text style={styles.subTextStyle}>{item.description}</Text>
           </View>
