@@ -86,7 +86,25 @@ const ProfileManagement = () => {
   }, []);
 
   const handleChangePassword = () => {
-    navigation.navigate("Forgot", { userEmail: user.email });
+    AxiosInstance.post("/api/mail/otp", { email: user.email })
+      .then(async (response) => {
+        if (response.status == 200) {
+          const data = await response.data.otp;
+          Alert.alert("OTP sent successfully");
+          navigation.navigate("Otp", { email, Otp: data });
+        } else {
+          Alert.alert("Error", data.error || "Something went wrong");
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 400) {
+          Alert.alert("Error", err.response.data.error);
+          return;
+        }else{
+          Alert.alert("Error", "An error occurred while sending OTP");
+        }
+      
+      });
   };
 
   const handleConfirm = async () => {
