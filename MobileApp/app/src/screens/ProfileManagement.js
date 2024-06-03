@@ -13,15 +13,14 @@ import {
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 import React, { useEffect, useState } from "react";
-import axios from "axios"; // make sure to install axios
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import ProfileAvatar from "../components/ProfileAvatar";
 import * as ImagePicker from "expo-image-picker";
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { Alert } from "react-native";
-import Dialog from "react-native-dialog";
 import AxiosInstance from "../AxiosInstance";
+import { ActivityIndicator } from 'react-native';
 
 const ProfileManagement = () => {
   const [user, setUser] = useState({});
@@ -77,9 +76,11 @@ const ProfileManagement = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
+      setLoading(true);
       const token = await AsyncStorage.getItem("token");
       const response = await AxiosInstance.get("/api/users/details");
       setUser(response.data.user);
+      setLoading(false);
     };
 
     fetchUser();
@@ -141,6 +142,22 @@ const ProfileManagement = () => {
   }
 };
   return (
+    <View style={{ flex: 1 }}>
+    {loading && (
+      <View style={{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 2
+      }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    )}
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
       <Appbar.Header style={styles.header}>
@@ -217,6 +234,7 @@ const ProfileManagement = () => {
         </Button>
       </View>
       </ScrollView>
+    </View>
     </View>
   );
 };
