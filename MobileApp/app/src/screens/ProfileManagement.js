@@ -86,7 +86,7 @@ const ProfileManagement = () => {
   }, []);
 
   const handleChangePassword = () => {
-    navigation.navigate("Forgot", { email: user.email });
+    navigation.navigate("Forgot", { userEmail: user.email });
   };
 
   const handleConfirm = async () => {
