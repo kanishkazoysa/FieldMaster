@@ -17,6 +17,7 @@ import {
 } from "react-native-responsive-dimensions";
 import { Appbar, Button, TextInput } from "react-native-paper";
 import AxiosInstance from "../../AxiosInstance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ForgotPassword({ route }) {
   const [newPassword, setNewPassword] = useState("");
@@ -40,6 +41,8 @@ export default function ForgotPassword({ route }) {
       return;
     }
 
+    const token = await AsyncStorage.getItem("token");
+    
     AxiosInstance.post("/api/users/change-password", { email, newPassword })
       .then((response) => {
         if (response.status === 200) {
@@ -50,7 +53,11 @@ export default function ForgotPassword({ route }) {
               {
                 text: "OK",
                 onPress: () => {
-                  navigation.navigate("Login");
+                  if (token != null) {
+                    navigation.navigate("ProfileManagement");
+                  } else {
+                    navigation.navigate("Login");
+                  }
                 },
               },
             ],
