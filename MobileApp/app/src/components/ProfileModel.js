@@ -38,11 +38,11 @@ const SelectionModal = ({
 
   const handleManageAccount = () => {
     setManageLoading(true); // Set loading state to true when manage account is clicked
-    setTimeout(() => {
+   
       setManageLoading(false); // Set loading state to false after navigating to the profile management page
     setProfileModalVisible(false);
     navigation.navigate("ProfileManagement");
-  }, 2000);
+  
   };
 
   const handleSignOut = async () => {
