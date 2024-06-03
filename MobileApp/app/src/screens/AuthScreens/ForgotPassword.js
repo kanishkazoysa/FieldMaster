@@ -74,7 +74,8 @@ export default function ForgotPassword() {
 
           <View style={styles.field}>
             <TextInput
-              label="email"
+            //get email from props OR user input
+              label={"Email"}
               mode="outlined"
               outlineColor="#d9d7d2"
               activeOutlineColor="#007BFF"
