@@ -91,7 +91,7 @@ const ProfileManagement = () => {
         if (response.status == 200) {
           const data = await response.data.otp;
           Alert.alert("OTP sent successfully");
-          navigation.navigate("Otp", { email, Otp: data });
+          navigation.navigate("Otp", { email: user.email, Otp: data });
         } else {
           Alert.alert("Error", data.error || "Something went wrong");
         }
