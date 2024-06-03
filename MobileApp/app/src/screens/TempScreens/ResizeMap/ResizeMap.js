@@ -42,6 +42,8 @@ const ResizeMapScreen = ({ navigation, route }) => {
     setMapTypeIndex(index);
     setShowDropdown(false);
   };
+
+  //focuses the map on the current location of the user
   const focusOnCurrentLocation = () => {
     setSearchedLocation(null);
     setShowCurrentLocation((prevShowCurrentLocation) => {
@@ -58,6 +60,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
     });
   };
 
+  //handling location and fetching template data
   useEffect(() => {
     console.log('Template ID:', templateId);
     (async () => {
@@ -104,11 +107,14 @@ const ResizeMapScreen = ({ navigation, route }) => {
     })();
   }, []);
 
+  //remove last point from the array
   const handleUndoLastPoint = () => {
     if (points.length > 0) {
       setPoints(points.slice(0, -1));
     }
   };
+
+  //save the updates points to the backend is a marker was moved
   const handleSaveMap = async () => {
     if (isMarkerMoved) {
       try {
@@ -136,6 +142,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
     }
   };
 
+  //update the point's coordinates when a marker is dragged to a new location
   const handleMarkerDragEnd = (event, index) => {
     const newPoints = [...points];
     newPoints[index] = event.nativeEvent.coordinate;
@@ -143,6 +150,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
     setIsMarkerMoved(true);
   };
 
+  //select a map type
   const handleSetMapType = (type) => {
     selectMapType(type);
     setModalVisible(false);

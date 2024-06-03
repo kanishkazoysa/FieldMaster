@@ -205,6 +205,7 @@ export const styles = {
     borderRight: "none",
     borderTop: "none",
     outline: "none",
+    fontSize: 14,
   },
   box3inputLabel: {
     fontSize: 12,
