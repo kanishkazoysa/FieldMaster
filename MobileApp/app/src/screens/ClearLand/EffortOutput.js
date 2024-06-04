@@ -271,8 +271,7 @@ export default function EffortOutput({ route }) {
       ></Headersection>
 
       <ScrollView>
-        <AlertButton></AlertButton>
-
+      
         <View style={styles.topSection}>
           <TouchableOpacity style={styles.iconButton} onPress={BackToHome}>
             <MaterialCommunityIcons name="home" size={26} color="#007BFF" />
@@ -286,10 +285,13 @@ export default function EffortOutput({ route }) {
           </TouchableOpacity>
         </View>
         <View style={styles.container2}>
-          <Card style={styles.card1}>
+        
+       
+
+       <Card style={styles.card1}>
             <Card.Content style={styles.card1Content}>
               <Text style={styles.card1Text1}>Total Effort Cout</Text>
-
+              <AlertButton></AlertButton>
               <View style={styles.card1Left}>
                 <Image
                   style={{
@@ -318,7 +320,10 @@ export default function EffortOutput({ route }) {
                 </View>
               </View>
             </Card.Content>
+            
           </Card>
+   
+          
 
           <Card style={styles.card2}>
             <Card.Content style={styles.card2Content}>
@@ -419,6 +424,17 @@ export default function EffortOutput({ route }) {
 }
 
 const styles = StyleSheet.create({
+  topSection: {
+    flexDirection: "row",
+    marginTop: responsiveHeight(0.5),
+    padding:responsiveWidth(0),
+    width: "100%",
+    justifyContent: "space-between",
+  },
+  iconButton: {
+    padding: 6,
+  },
+
   container2: {
     flex: 1,
     alignItems: "center",
