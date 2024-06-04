@@ -29,7 +29,6 @@ import SelectionModal from "../components/SelectionModal";
 import ProfileModel from "../components/ProfileModel";
 import axios from "axios";
 import ProfileAvatar from "../components/ProfileAvatar";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from '@react-navigation/native';
 import AxiosInstance from "../AxiosInstance";
 
