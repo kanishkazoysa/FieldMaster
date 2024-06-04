@@ -11,68 +11,68 @@ import {
 const ClearLandIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='island'
+    name="island"
     size={responsiveFontSize(2.8)}
-    color='white'
+    color="white"
   />
 );
 
 const PlantationIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='sprout'
+    name="sprout"
     size={responsiveFontSize(2.8)}
-    color='white'
+    color="white"
   />
 );
 
 const FenceSetupIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='fence'
+    name="fence"
     size={responsiveFontSize(2.8)}
-    color='white'
+    color="white"
   />
 );
 
 const TypeIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='format-list-bulleted-type'
+    name="format-list-bulleted-type"
     size={responsiveFontSize(2.8)}
-    color='grey'
+    color="grey"
   />
 );
 const PerimeterIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='vector-square'
+    name="vector-square"
     size={responsiveFontSize(2.8)}
-    color='grey'
+    color="grey"
   />
 );
 
 const AreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='texture-box'
+    name="texture-box"
     size={responsiveFontSize(2.8)}
-    color='grey'
+    color="grey"
   />
 );
 
 const CustomMapIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='map-marker-radius'
+    name="map-marker-radius"
     size={responsiveFontSize(2.8)}
-    color='grey'
+    color="grey"
   />
 );
 
 const CustomEditIcon = ({ navigation, item }) => (
   <MaterialCommunityIcons
-    name='square-edit-outline'
+    name="square-edit-outline"
     size={responsiveFontSize(2.8)}
     color={'white'}
     style={{ marginRight: responsiveWidth(2) }}
@@ -92,7 +92,7 @@ const TemplateView = ({ route, navigation }) => {
 
   return (
     <>
-      <Appbar.Header style={styles.top_Bar} dark={true} mode='center-aligned'>
+      <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
         <Appbar.BackAction
           onPress={() => {
             navigation.navigate('SavedTemplatesScreen');
@@ -136,7 +136,7 @@ const TemplateView = ({ route, navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate('Fence', { id: item._id })}
+            onPress={() => navigation.navigate('Fence', { id: item._id, Area:item.area, Perimeter:item.perimeter  })}
           >
             <View style={styles.iconBlockInner}>
               <View style={styles.iconOuter_03}>
@@ -163,7 +163,7 @@ const TemplateView = ({ route, navigation }) => {
               <View style={styles.blockView}>
                 <PerimeterIcon />
                 <View style={styles.textView}>
-                  <Text style={styles.text01Styling}>Perimeter</Text>
+                  <Text style={styles.text01Styling}>Perimeter </Text>
                   <Text style={styles.text02Styling}>{item.perimeter} km</Text>
                 </View>
               </View>
@@ -173,7 +173,7 @@ const TemplateView = ({ route, navigation }) => {
                 <AreaIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Area</Text>
-                  <Text style={styles.text02Styling}>{item.area} perches</Text>
+                  <Text style={styles.text02Styling}>{item.area} perch</Text>
                 </View>
               </View>
               <View style={styles.blockView}>

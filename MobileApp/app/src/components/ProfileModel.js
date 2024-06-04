@@ -8,7 +8,6 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
-import axios from "axios"; // make sure to install axios
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProfileAvatar from "../components/ProfileAvatar";
 import AxiosInstance from "../AxiosInstance";
@@ -16,9 +15,10 @@ import AxiosInstance from "../AxiosInstance";
 const SelectionModal = ({
   profileModalVisible,
   setProfileModalVisible,
-  email,
+  
 }) => {
   const [loading, setLoading] = useState(false);
+  const [manageLoading, setManageLoading] = useState(false); // New state for manage button loading
   const [user, setUser] = useState({});
   const closeModal = () => {
     setProfileModalVisible(false);
@@ -37,8 +37,12 @@ const SelectionModal = ({
   }, [profileModalVisible]);
 
   const handleManageAccount = () => {
+    setManageLoading(true); // Set loading state to true when manage account is clicked
+   
+      setManageLoading(false); // Set loading state to false after navigating to the profile management page
     setProfileModalVisible(false);
     navigation.navigate("ProfileManagement");
+  
   };
 
   const handleSignOut = async () => {
@@ -93,6 +97,7 @@ const SelectionModal = ({
               onPress={handleManageAccount}
               style={styles.ManageButton}
               textColor="#007BFF"
+              loading={manageLoading} // Add loading prop to Button
             >
               Manage your account
             </Button>

@@ -35,7 +35,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from '@react-navigation/native';
 import AxiosInstance from "../AxiosInstance";
 
-const apiKey = Config.GOOGLE_MAPS_API_KEY;
+const apiKey ='AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U'
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -196,14 +196,7 @@ export default function Home() {
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.select({
-          ios: 0,
-          android: -responsiveHeight(10),
-        })}
-      >
+     
         <View style={styles.container}>
           <MapView
             ref={mapRef}
@@ -345,7 +338,6 @@ export default function Home() {
             </View>
           </View>
         </View>
-      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }

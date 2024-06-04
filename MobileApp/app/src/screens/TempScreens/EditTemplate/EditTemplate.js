@@ -17,15 +17,15 @@ const theme = {
 };
 
 const PerimeterIcon = (props) => (
-  <MaterialCommunityIcons {...props} name='crop' size={25} color='grey' />
+  <MaterialCommunityIcons {...props} name="crop" size={25} color="grey" />
 );
 
 const AreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='dice-4-outline'
+    name="dice-4-outline"
     size={25}
-    color='grey'
+    color="grey"
   />
 );
 
@@ -42,12 +42,11 @@ const EditTemplate = ({ route, navigation }) => {
       landType !== item.landType ||
       description !== item.description
     ) {
-      AxiosInstance
-        .put(`/api/auth/mapTemplate/updateTemplate/${item._id}`, {
-          measureName: measureName,
-          landType: landType,
-          description: description,
-        })
+      AxiosInstance.put(`/api/auth/mapTemplate/updateTemplate/${item._id}`, {
+        measureName: measureName,
+        landType: landType,
+        description: description,
+      })
         .then((response) => {
           alert('Template updated');
           navigation.navigate('SavedTemplatesScreen');
@@ -67,7 +66,7 @@ const EditTemplate = ({ route, navigation }) => {
           <Appbar.Header
             style={styles.top_Bar}
             dark={true}
-            mode='center-aligned'
+            mode="center-aligned"
           >
             <View style={styles.appBarContent}>
               <TouchableOpacity onPress={handleSave}>
@@ -84,13 +83,16 @@ const EditTemplate = ({ route, navigation }) => {
             </View>
           </Appbar.Header>
         </View>
-        <ScrollView>
+        <ScrollView
+          contentContainerStyle={styles.scrollViewCenter}
+          style={styles.scrollViewStyle}
+        >
           <View style={styles.low_outer}>
             <MaterialCommunityIcons
-              name='square-edit-outline'
+              name="square-edit-outline"
               size={25}
               style={styles.editIconStyle}
-              color='#65676B'
+              color="#65676B"
               onPress={() => {
                 navigation.navigate('ResizeMap', {
                   templateId: item._id,
@@ -137,9 +139,9 @@ const EditTemplate = ({ route, navigation }) => {
               <TextInput
                 value={measureName}
                 onChangeText={setMeasureName}
-                backgroundColor='white'
+                backgroundColor="white"
                 style={styles.textInput}
-                activeUnderlineColor='black'
+                activeUnderlineColor="black"
               />
             </View>
             <View style={styles.inputBlock}>
@@ -147,8 +149,8 @@ const EditTemplate = ({ route, navigation }) => {
               <TextInput
                 value={landType}
                 onChangeText={setLandType}
-                backgroundColor='white'
-                activeUnderlineColor='black'
+                backgroundColor="white"
+                activeUnderlineColor="black"
                 style={styles.textInput02}
               />
             </View>
@@ -163,8 +165,8 @@ const EditTemplate = ({ route, navigation }) => {
                   style={styles.descriptionInput}
                   multiline={true}
                   numberOfLines={4}
-                  outlineColor='black'
-                  activeUnderlineColor='black'
+                  outlineColor="black"
+                  activeUnderlineColor="black"
                   theme={{ colors: { primary: 'black' } }}
                 />
               </View>

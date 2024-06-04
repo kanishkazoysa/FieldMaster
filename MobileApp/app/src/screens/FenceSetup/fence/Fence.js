@@ -21,14 +21,15 @@ import CustomButton from "../../../components/CustomButton";
 import axios from "axios";
 import AxiosInstance from "../../../AxiosInstance";
 
-export default function Fence() {
+export default function Fence({route}) {
+  const{id,Area,Perimeter} =  route.params;
   const [FenceTypeselectedValue, setFenceTypeSelectedValue] = useState(null);
   const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] =useState(null);
   const [inputValueFenceLength, setinputValueFenceLength] = useState("");
   const [inputValueFenceAmount, setinputValueFenceAmount] = useState("");
   const [inputValuePostspace, setinputValuePostspace] = useState("");
-  const [perimeter, setperimeter] = useState("1500");
-  const [Area, setArea] = useState("100");
+  // const [perimeter, setperimeter] = useState("1500");
+  //const [Area, setArea] = useState("100");
   const [fenceLengthsArray, setFenceLengthsArray] = useState([]);
   const [fenceAmountsArray, setFenceAmountsArray] = useState([]);
 
@@ -136,6 +137,8 @@ export default function Fence() {
           fenceType: FenceTypeselectedValue,
           PostSpaceUnit: PostSpaceUnitselectedValue,
           postSpace: inputValuePostspace,
+          Area:Area,
+          Perimeter:Perimeter,
         });
         //console.log(response.data);
       })
@@ -174,7 +177,7 @@ export default function Fence() {
                   />
                   <View style={styles.propertyDetails}>
                     <Text style={styles.propertyLabel}>Perimeter</Text>
-                    <Text style={styles.propertyValue}>{perimeter} m</Text>
+                    <Text style={styles.propertyValue}>{Perimeter} km</Text>
                   </View>
                 </View>
                 <View style={styles.property}>
@@ -185,7 +188,7 @@ export default function Fence() {
                   />
                   <View style={styles.propertyDetails}>
                     <Text style={styles.propertyLabel}>Area</Text>
-                    <Text style={styles.propertyValue}>{Area} acres</Text>
+                    <Text style={styles.propertyValue}>{Area} perches</Text>
                   </View>
                 </View>
               </View>

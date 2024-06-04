@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
   },
   low_outer: {
     height: '100%',
+    width: '90%',
   },
   top_Bar: {
     alignItems: 'center',
@@ -146,5 +147,8 @@ export const styles = StyleSheet.create({
   editIconStyle: {
     marginLeft: marginLeft,
     marginTop: 10,
+  },
+  scrollViewCenter: {
+    alignItems: 'center',
   },
 });

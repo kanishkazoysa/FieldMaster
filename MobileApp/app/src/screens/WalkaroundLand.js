@@ -21,7 +21,6 @@ import { distance } from "@turf/turf";
 import {
   responsiveHeight,
   responsiveWidth,
-  responsiveFontSize,
 } from "react-native-responsive-dimensions";
 
 const BACKGROUND_LOCATION_TASK = "background-location-task";
@@ -39,9 +38,7 @@ export default function Home() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigation = useNavigation();
   const mapRef = useRef(null);
-  const [polygonArea, setPolygonArea] = useState(0); // Renamed state variable
   const [calculatedArea, setCalculatedArea] = useState(0);
-  const [calculatedPerimeter, setCalculatedPerimeter] = useState(0);
   const [polygonPerimeter, setPolygonPerimeter] = useState(0);
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
@@ -209,24 +206,16 @@ export default function Home() {
     setCalculatedArea(polygonArea);
   
     let perimeter = 0;
-    for (let i = 0; i < pathCoordinates.length - 1; i++) {
-      const point1 = [
+    for (let i = 0; i < pathCoordinates.length; i++) {
+      const start = [
         pathCoordinates[i].longitude,
         pathCoordinates[i].latitude,
       ];
-      const point2 = [
-        pathCoordinates[i + 1].longitude,
-        pathCoordinates[i + 1].latitude,
-      ];
-      perimeter += distance(point1, point2, { units: "kilometers" });
+      const end = i === pathCoordinates.length - 1
+        ? [pathCoordinates[0].longitude, pathCoordinates[0].latitude]
+        : [pathCoordinates[i + 1].longitude, pathCoordinates[i + 1].latitude];
+      perimeter += distance(start, end, { units: "kilometers" });
     }
-    // Add the distance between the last point and the first point to close the polygon
-    const point1 = [pathCoordinates[0].longitude, pathCoordinates[0].latitude];
-    const point2 = [
-      pathCoordinates[pathCoordinates.length - 1].longitude,
-      pathCoordinates[pathCoordinates.length - 1].latitude,
-    ];
-    perimeter += distance(point1, point2, { units: "kilometers" });
   
     setPolygonPerimeter(perimeter);
   };
@@ -234,14 +223,14 @@ export default function Home() {
   const saveMapData = async () => {
     AxiosInstance.post("/api/auth/mapTemplate/saveTemplate", {
       locationPoints: pathCoordinates,
-      area: polygonArea,
+      area: calculatedArea,
       perimeter: polygonPerimeter,
     })
       .then((response) => {
         console.log(response.data._id);
         navigation.navigate("SaveScreen", {
           id: response.data._id,
-          area: polygonArea,
+          area: calculatedArea,
           perimeter: polygonPerimeter,
           userId: response.data.userId,
         });
@@ -272,10 +261,10 @@ export default function Home() {
       
         <View style={styles.overlay}>
           <Text style={styles.overlayText}>
-            Area: {calculatedArea.toFixed(2)} sq units
+            Area: {calculatedArea.toFixed(4)} sq meters
           </Text>
           <Text style={styles.overlayText}>
-            Perimeter: {calculatedPerimeter.toFixed(2)} km
+            Perimeter: {polygonPerimeter.toFixed(4)} km
           </Text>
         </View>
      
@@ -295,8 +284,8 @@ export default function Home() {
         {drawPolyline && pathCoordinates.length > 0 && (
           <Polyline
             coordinates={pathCoordinates}
-            strokeWidth={2}
-            strokeColor="blue"
+            strokeWidth={2.3}
+            strokeColor="white"
           />
         )}
         {points.map((point, index) => (
