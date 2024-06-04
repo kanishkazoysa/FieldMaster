@@ -35,7 +35,9 @@ import {
   responsiveWidth,
 } from "react-native-responsive-dimensions";
 
-export default function ClearLand() {
+export default function ClearLand({ route }) {
+  const navigation = useNavigation();
+  const{id,Area,Perimeter} =  route.params;
   const [text, setText] = React.useState("");
 
   const [pressed, setPressed] = useState(null);
@@ -47,8 +49,6 @@ export default function ClearLand() {
   const [workHours, setWorkHours] = useState("");
   const [searchItem, setSearchItem] = useState("");
   const [machineCount, setMachineCount] = useState("");
-  const navigation = useNavigation();
-
   const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [suggestions, setSuggestions] = useState([
     "Bulldozers",
@@ -94,9 +94,11 @@ export default function ClearLand() {
     setMachineCount(text);
   };
 
-  const handleEffortOutput = () => {
-    navigation.navigate("EffortOutput");
-  };
+  // const handleEffortOutput = () => {
+  //   navigation.navigate("EffortOutput",{
+  //     id:id,
+  //   });
+  // };
 
   const placeholder1 = {
     label: "Select Type",
@@ -240,6 +242,7 @@ export default function ClearLand() {
 
   const handleClear = async () => {
     AxiosInstance.post("/api/clearLand/clearLand", {
+      id,
       pressed,
       plantTypeSelectedValue,
       plantCount,
@@ -267,6 +270,7 @@ export default function ClearLand() {
           return; // Stop execution if fields are empty
         }
         navigation.navigate("EffortOutput", {
+          id: id,
           data: displayValues,
           data1: displayValues1,
           data2: displayValues2,

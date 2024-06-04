@@ -8,6 +8,7 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from "react-native-responsive-dimensions";
+import AxiosInstance from '../../../AxiosInstance';
 
 const ClearLandIcon = (props) => (
   <MaterialCommunityIcons {...props} name='island' size={25} color='white' />
@@ -67,6 +68,28 @@ const CustomEditIcon = ({ navigation }) => (
 
 const TemplateView = ({ route, navigation }) => {
   const { item } = route.params;
+
+  // check id exist in the databse
+  const checkId = async (id) => {
+    try {
+      const response = await AxiosInstance.get(`/api/clearLand/check-id/${id}`);
+      if (response.data.exists) {
+        console.log('ID exists');
+        navigation.navigate('EffortOutput', { id: item._id });
+      } else {
+        console.log('ID does not exist');
+      }
+    } catch (error) {
+      // Handle error, maybe show a message to the user
+if (error.response.status === 404) {
+      console.log('ID not found');
+      navigation.navigate('Clearland', { id: item._id});
+    } else {
+      console.error('Error checking ID:', error);
+      // Handle other errors
+    }    }
+  };
+
   return (
     <>
       <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
@@ -90,7 +113,7 @@ const TemplateView = ({ route, navigation }) => {
         <View style={styles.iconBlockStyling}>
   
         <View style={styles.iconBlockInner}>
-          <TouchableOpacity onPress={() => navigation.navigate('Clearland')}>
+          <TouchableOpacity onPress={() => checkId(item._id)}>
             <View style={styles.iconOuter_01}>
               <ClearLandIcon />
             </View>

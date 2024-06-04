@@ -1,25 +1,28 @@
 const mongoose = require("mongoose");
 
 const clearLandSchema = mongoose.Schema(
-    {
+    {   
+        Id: {
+            type: String,
+        },
         WeedType: {
             type: String,
         },
-        PlantDetails: {
-            type: [String],
-        },
-        StoneDetails: {
-            type: [String],
-        },
+        PlantDetails: [{
+            type: String,
+        }],
+        StoneDetails: [{
+            type: String,
+        }],
         LaborsCOunt: {
             type: String,
         },
         WorkHoursCount: {
             type: String,
         },
-        MachineDetails: {
-            type: [String],
-        },
+        MachineDetails: [{
+            type: String,
+        }],
     }
     );
 
