@@ -261,7 +261,7 @@ export default function Home() {
       
         <View style={styles.overlay}>
           <Text style={styles.overlayText}>
-            Area: {calculatedArea.toFixed(4)} sq units
+            Area: {calculatedArea.toFixed(4)} sq meters
           </Text>
           <Text style={styles.overlayText}>
             Perimeter: {polygonPerimeter.toFixed(4)} km
