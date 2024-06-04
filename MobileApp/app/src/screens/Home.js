@@ -8,7 +8,6 @@ import {
   TextInput,
   FlatList,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
   Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
