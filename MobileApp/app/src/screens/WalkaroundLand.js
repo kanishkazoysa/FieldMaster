@@ -203,28 +203,20 @@ export default function Home() {
         pathCoordinates.map((coord) => [coord.longitude, coord.latitude]),
       ],
     };
-    const PolygonArea = area(polygon);
-    setCalculatedArea(PolygonArea);
+    const polygonArea = area(polygon);
+    setCalculatedArea(polygonArea);
   
     let perimeter = 0;
-    for (let i = 0; i < pathCoordinates.length - 1; i++) {
-      const point1 = [
+    for (let i = 0; i < pathCoordinates.length; i++) {
+      const start = [
         pathCoordinates[i].longitude,
         pathCoordinates[i].latitude,
       ];
-      const point2 = [
-        pathCoordinates[i + 1].longitude,
-        pathCoordinates[i + 1].latitude,
-      ];
-      perimeter += distance(point1, point2, { units: "kilometers" });
+      const end = i === pathCoordinates.length - 1
+        ? [pathCoordinates[0].longitude, pathCoordinates[0].latitude]
+        : [pathCoordinates[i + 1].longitude, pathCoordinates[i + 1].latitude];
+      perimeter += distance(start, end, { units: "kilometers" });
     }
-    // Add the distance between the last point and the first point to close the polygon
-    const point1 = [pathCoordinates[0].longitude, pathCoordinates[0].latitude];
-    const point2 = [
-      pathCoordinates[pathCoordinates.length - 1].longitude,
-      pathCoordinates[pathCoordinates.length - 1].latitude,
-    ];
-    perimeter += distance(point1, point2, { units: "kilometers" });
   
     setPolygonPerimeter(perimeter);
   };
