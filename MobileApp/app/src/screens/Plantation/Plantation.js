@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,26 +9,48 @@ import {
   ScrollView,
   TextInput,
   Alert,
+  TouchableOpacity,
 } from "react-native";
-
-
-import React, { useState, useEffect } from "react";
 import { Keyboard } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
-import {styles} from "./PlantationStyles";
-
+import { styles } from "./PlantationStyles";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
-
-//Data submission to the backend API is implemented using axios
-import axios from "axios";
 import AxiosInstance from "../../AxiosInstance";
 
-export default function Plantation() {
-
+export default function Plantation({ route }) {
+  const navigation = useNavigation();
+  const { id, Area, Perimeter } = route.params;
+  const [textRowSpace, setRowSpace] = useState("");
+  const [numberOfPlants, setnumberOfPlants] = useState(null);
+  const [PlantationDensity, setPlantDensity] = useState(null);
+  const [textPlant, setplantType] = useState("");
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [textPlantSpace, setTextPlantSpace] = useState("");
+  const [PlantSpaceUnitselectedValue, setPlantSpaceUnitSelectedValue] = useState(null);
+  const [RowSpacingUnitselectedValue, setRowSpacingUnitSelectedValue] = useState(null);
+
+  const PlantSpaceUnitPlaceholder = {
+    label: "M",
+    value: null,
+    color: "blue",
+  };
+
+  const PlantSpaceUnitOptions = [
+    { label: "m", value: "m" },
+  ];
+
+  const RowSpacingUnitPlaceholder = {
+    label: "M",
+    value: null,
+    color: "blue",
+  };
+
+  const RowSpacingUnitOptions = [
+    { label: "m", value: "m" },
+  ];
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -49,82 +72,40 @@ export default function Plantation() {
     };
   }, []);
 
-
-  const [textPlant, setTextPlant] = useState("");
-  const [textplantspace, setTextPlantSpace] = useState("");
-  const [textRowspace, setTextRowSpace] = useState("");
-
-  const navigation = useNavigation();
-
-  const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] =
-    useState(null);
-  const [RowSpacingUnitselectedValue, RowSpacingUnitSetSelectedValue] =
-    useState(null);
-
-  const PlantSpaceUnitPlaceholder = {
-    label: "M",
-    value: null,
-    color: "blue",
-  };
-
-  const PlantSpaceUnitOptions = [
-    // { label: "cm", value: "cm" },
-    { label: "m", value: "m" },
-
-  ];
-
-  const RowSpacingUnitplaceholder = {
-    label: "M",
-    value: null,
-    color: "blue",
-  };
-
-  const RowSpacingUnitOptions = [
-    //{ label: "cm", value: "cm" },
-    { label: "m", value: "m" },
-  ];
-
-  //handles submission of plantation details and navigation to PlantationDetails
-  const handlePlantationDetails = () => {
-    if (
-      !textPlant ||
-      !textplantspace ||
-      !textRowspace ||
-      !PlantSpaceUnitselectedValue
-
-    ) {
-      Alert.alert("Error", "Please fill in all fields");
-      return;
-    }
+  //calculate button click
+  const handlePlantationDetails = async () => {
+    // send data to back end
     AxiosInstance.post("/api/plantation/plantation", {
-      textPlant,
-      textplantspace,
-      textRowspace,
-      PlantSpaceUnitselectedValue
+      id,
+       textPlant,
+      textPlantSpace,
+      textRowSpace,
+      PlantSpaceUnitselectedValue,
+      RowSpacingUnitselectedValue,
+      Area,
+      Perimeter,
+      
     })
-      .then(async (response) => {
-        console.log(response.data);
-
+      .then((response) => {
+        if (
+          !textPlant ||
+          !textPlantSpace ||
+          !textRowSpace ||
+          !PlantSpaceUnitselectedValue
+        ) {
+          // Display error message
+          Alert.alert("Error", "Please fill in all fields");
+          return;
+        }
+        navigation.navigate("PlantationDetails", {
+          id:id,
+        });
       })
       .catch((error) => {
-        console.error(error);
-        Alert.alert("Error", "Something went wrong");
-
-      })
-      navigation.navigate("PlantationDetails", {
-        textPlant: textPlant,
-        selectedValue: PlantSpaceUnitselectedValue,
-        textplantspace: textplantspace,
-        textRowspace: textRowspace,
-        selectedValue1: RowSpacingUnitselectedValue,
+        console.error("Error:", error.response.data);
+        Alert.alert("Error", "Failed to create plantation. Please try again.");
       });
-
-  }
-
-
-
-//navigating to the "PlantationDetails" screen while passing some data as route parameters
-  
+  };
 
 return (
   <KeyboardAvoidingView
@@ -132,44 +113,29 @@ return (
     behavior={Platform.OS === "ios" ? "padding" : "margin"}
     keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
   >
-    {/* Static section at the top */}
     <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-
-    {/*Header section*/}
     <Headersection navigation={navigation} title="Plantation" />
-
     <ScrollView contentContainerStyle={styles.scrollContent}>
-      {/* Top section */}
       <View style={styles.top}>
-
         <View style={styles.Box1}>
-
           <Text style={styles.titleText}>Land Info</Text>
           <View style={styles.propertyBox}>
             <View style={styles.property}>
               <MaterialCommunityIcons name="grid" size={36} color="gray" />
               <View style={styles.propertyDetails}>
                 <Text style={styles.propertyLabel}>Type</Text>
-                <Text style={styles.propertyValue}>Flat</Text>
+                <Text style={styles.propertyValue}>{type}</Text>
               </View>
             </View>
             <View style={styles.property}>
-              <MaterialCommunityIcons
-                name="texture-box"
-                size={36}
-                color="gray"
-              />
+              <MaterialCommunityIcons name="texture-box" size={36} color="gray" />
               <View style={styles.propertyDetails}>
                 <Text style={styles.propertyLabel}>Area</Text>
-                <Text style={styles.propertyValue}>2 acres</Text>
+                <Text style={styles.propertyValue}>{area} acres</Text>
               </View>
             </View>
           </View>
         </View>
-
-
-
-        {/* Second section */}
 
         <View style={styles.Box2}>
           <View style={styles.TopText}>
@@ -190,8 +156,6 @@ return (
           />
         </View>
 
-        {/* Third section */}
-
         <View style={styles.Box2}>
           <View style={styles.TopText}>
             <MaterialCommunityIcons name="apps" size={20} color="gray" />
@@ -202,7 +166,7 @@ return (
               keyboardType="numeric"
               style={styles.Box2input}
               placeholder="Enter Plant Space"
-              value={textplantspace}
+              value={textPlantSpace}
               onChangeText={setTextPlantSpace}
               placeholderTextColor={"#838383"}
               borderBottomColor="lightgray"
@@ -213,9 +177,7 @@ return (
               <RNPickerSelect
                 placeholder={PlantSpaceUnitPlaceholder}
                 items={PlantSpaceUnitOptions}
-                onValueChange={(value) =>
-                  PlantSpaceUnitSetSelectedValue(value)
-                }
+                onValueChange={(value) => setPlantSpaceUnitSelectedValue(value)}
                 value={PlantSpaceUnitselectedValue}
                 style={{
                   inputIOS: {
@@ -230,15 +192,9 @@ return (
           </View>
         </View>
 
-        {/* Forth section */}
-
         <View style={styles.Box2}>
           <View style={styles.TopText}>
-            <MaterialCommunityIcons
-              name="format-line-spacing"
-              size={20}
-              color="gray"
-            />
+            <MaterialCommunityIcons name="format-line-spacing" size={20} color="gray" />
             <Text style={styles.Box2titleText}>Row Spacing</Text>
           </View>
           <View style={styles.Box3propertyBox}>
@@ -246,7 +202,7 @@ return (
               keyboardType="numeric"
               style={styles.Box2input}
               placeholder="Enter Row Space"
-              value={textRowspace}
+              value={textRowSpace}
               onChangeText={setTextRowSpace}
               placeholderTextColor={"#838383"}
               borderBottomColor="lightgray"
@@ -255,12 +211,10 @@ return (
             />
             <View style={styles.dropdownContainer}>
               <RNPickerSelect
-                placeholder={RowSpacingUnitplaceholder}
+                placeholder={RowSpacingUnitPlaceholder}
                 items={RowSpacingUnitOptions}
-                onValueChange={(value) =>
-                  PlantSpaceUnitSetSelectedValue(value)
-                }
-                value={PlantSpaceUnitselectedValue}
+                onValueChange={(value) => setRowSpacingUnitSelectedValue(value)}
+                value={RowSpacingUnitselectedValue}
                 style={{
                   inputIOS: {
                     textAlign: "center",
@@ -274,8 +228,6 @@ return (
           </View>
         </View>
       </View>
-
-      {/* Bottom section */}
 
       {!isKeyboardVisible && (
         <View style={styles.bottom}>
@@ -292,4 +244,3 @@ return (
   </KeyboardAvoidingView>
 );
 }
-
