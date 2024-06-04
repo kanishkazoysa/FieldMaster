@@ -21,7 +21,6 @@ import { distance } from "@turf/turf";
 import {
   responsiveHeight,
   responsiveWidth,
-  responsiveFontSize,
 } from "react-native-responsive-dimensions";
 
 const BACKGROUND_LOCATION_TASK = "background-location-task";
