@@ -21,6 +21,7 @@ import { distance } from "@turf/turf";
 import {
   responsiveHeight,
   responsiveWidth,
+  responsiveFontSize,
 } from "react-native-responsive-dimensions";
 
 const BACKGROUND_LOCATION_TASK = "background-location-task";
@@ -42,6 +43,7 @@ export default function Home() {
   const [polygonPerimeter, setPolygonPerimeter] = useState(0);
   const [isResizeButtonDisabled, setIsResizeButtonDisabled] = useState(true);
   const [isStartPauseButtonDisabled, setIsStartPauseButtonDisabled] = useState(false);
+  const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -84,11 +86,13 @@ export default function Home() {
     if (!trackingPaused) {
       setDrawPolyline(true);
       setPathCoordinates([initialLocation]);
+      setIsSaveButtonDisabled(true);
     } else {
       setTrackingStarted(false);
       calculateAreaAndPerimeter();
       setIsResizeButtonDisabled(false); // Enable the "Resize" button
       setIsStartPauseButtonDisabled(true);
+      setIsSaveButtonDisabled(false); // Enable the "Save" button
       if (currentLocation) {
         const lineCoordinates = [currentLocation, initialLocation];
         setPathCoordinates((prevCoordinates) => [
@@ -188,13 +192,6 @@ export default function Home() {
     { name: "Terrain", value: "terrain" },
   ];
 
-  const addPoint = () => {
-    if (pathCoordinates.length > 0) {
-      const latestLocation = pathCoordinates[pathCoordinates.length - 1];
-      setPoints((prevPoints) => [...prevPoints, latestLocation]);
-    }
-  };
-
   const calculateAreaAndPerimeter = () => {
     const polygon = {
       type: "Polygon",
@@ -251,20 +248,23 @@ export default function Home() {
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={saveMapData}
-          style={[styles.appbarButton, { marginLeft: "auto" }]}
-        >
-          <Text style={styles.buttonText}>Save</Text>
-        </TouchableOpacity>
+        onPress={saveMapData}
+        style={[styles.appbarButton, { marginLeft: "auto" }]}
+        disabled={isSaveButtonDisabled}
+      >
+        <Text style={[styles.buttonText, isSaveButtonDisabled && { color: "rgba(255, 255, 255, 0.5)" }]}>
+          Save
+        </Text>
+      </TouchableOpacity>
       </Appbar.Header>
 
       
         <View style={styles.overlay}>
           <Text style={styles.overlayText}>
-            Area: {calculatedArea.toFixed(4)} sq meters
+            Area: {calculatedArea.toFixed(2)} sq meters
           </Text>
           <Text style={styles.overlayText}>
-            Perimeter: {polygonPerimeter.toFixed(4)} km
+            Perimeter: {polygonPerimeter.toFixed(3)} km
           </Text>
         </View>
      
@@ -297,7 +297,7 @@ export default function Home() {
         style={styles.layerIconContainer}
         onPress={toggleMapType}
       >
-        <FontAwesomeIcon icon={faLayerGroup} size={25} color="#fff" />
+        <FontAwesomeIcon icon={faLayerGroup} size={responsiveFontSize(2.8)} color="#fff" />
         {showDropdown && (
           <View style={styles.dropdownContainer}>
             <FlatList
@@ -328,7 +328,7 @@ export default function Home() {
               isStartPauseButtonDisabled && { backgroundColor: "rgba(131, 180, 255, 0.8)"},
             ]}
 
-            labelStyle={isStartPauseButtonDisabled && { color: "rgba(255, 255, 255)" }}
+            labelStyle={isStartPauseButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }}
           
           >
             {trackingPaused ? "Pause" : "Start"}
@@ -344,7 +344,7 @@ export default function Home() {
           isResizeButtonDisabled && {  backgroundColor: "rgba(131, 180, 255, 0.8)" },
         ]}
 
-        labelStyle={isResizeButtonDisabled && { color: "rgba(255, 255, 255)" }}
+        labelStyle={isResizeButtonDisabled && { color: "rgba(255, 255, 255 ,0.7)" }}
         
       >
             Resize
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
   layerIconContainer: {
     position: "absolute",
     backgroundColor: "rgba(0,0,0, 0.7)",
-    padding: responsiveHeight(1.2),
+    padding: responsiveHeight(1),
     borderRadius: 5,
     left: responsiveWidth(5),
     top: responsiveHeight(78),
@@ -369,8 +369,8 @@ const styles = StyleSheet.create({
   },
   dropdownContainer: {
     position: "absolute",
-    left: 50,
-    top: -120,
+    top: responsiveHeight(-16.5),
+    left: responsiveWidth(12),
     backgroundColor: "rgba(0,0,0, 0.7)",
     borderRadius: 5,
     elevation: 3,
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
   },
   overlayText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: responsiveFontSize(2),
     marginHorizontal: 20,
   },
   dropdownItem: {
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   header: {
-    height: 50,
+    height: responsiveHeight(6.5),
     backgroundColor: "#007BFF",
     flexDirection: "row",
     alignItems: "center",
@@ -411,12 +411,11 @@ const styles = StyleSheet.create({
     }),
   },
   appbarButton: {
-    padding: 8,
-    marginRight: 8,
+    padding: responsiveWidth(3.5),
   },
   buttonText: {
     color: "white",
-    fontSize: 16,
+    fontSize: responsiveFontSize(2),
   },
   container: {
     flex: 1,
@@ -429,8 +428,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     bottom: responsiveHeight(3),
-    left: 16,
-    right: 16,
+    left: responsiveWidth(3),
+    right: responsiveWidth(3),
   },
   buttonWrapper: {
     flex: 1,
