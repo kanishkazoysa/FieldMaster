@@ -40,6 +40,8 @@ export default function Home() {
   const mapRef = useRef(null);
   const [calculatedArea, setCalculatedArea] = useState(0);
   const [polygonPerimeter, setPolygonPerimeter] = useState(0);
+  const [isResizeButtonDisabled, setIsResizeButtonDisabled] = useState(true);
+  
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -85,6 +87,7 @@ export default function Home() {
     } else {
       setTrackingStarted(false);
       calculateAreaAndPerimeter();
+      setIsResizeButtonDisabled(false); // Enable the "Resize" button
 
       if (currentLocation) {
         const lineCoordinates = [currentLocation, initialLocation];
@@ -94,9 +97,6 @@ export default function Home() {
         ]);
       }
       stopLocationUpdates();
-    }
-    if (trackingPaused) {
-      setIsButtonDisabled(true);
     }
   };
 
@@ -328,13 +328,16 @@ export default function Home() {
           </Button>
         </View>
         <View style={styles.buttonWrapper}>
-          <Button
-            icon="content-save-all"
-            mode="contained"
-            onPress={addPoint}
-            style={styles.button}
-          >
-            Add Points
+        <Button
+        icon="resize"
+        mode="contained"
+        disabled={isResizeButtonDisabled}
+        style={[
+          styles.button,
+          isResizeButtonDisabled && { backgroundColor: "gray" },
+        ]}
+      >
+            Resize
           </Button>
         </View>
       </View>
