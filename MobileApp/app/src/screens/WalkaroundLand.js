@@ -318,16 +318,19 @@ export default function Home() {
 
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
-        <Button
-        icon={trackingPaused ? "pause" : "play-outline"}
-        mode="contained"
-        onPress={handleStartPress}
-        disabled={isStartPauseButtonDisabled}
-        style={[
-          styles.button,
-          isStartPauseButtonDisabled && { backgroundColor: "gray" },
-        ]}
-      >
+          <Button
+            icon={trackingPaused ? "pause" : "play-outline"}
+            mode="contained"
+            onPress={handleStartPress}
+            disabled={isStartPauseButtonDisabled}
+            style={[
+              styles.button,
+              isStartPauseButtonDisabled && { backgroundColor: "rgba(131, 180, 255, 0.8)"},
+            ]}
+
+            labelStyle={isStartPauseButtonDisabled && { color: "rgba(255, 255, 255)" }}
+          
+          >
             {trackingPaused ? "Pause" : "Start"}
           </Button>
         </View>
@@ -338,8 +341,11 @@ export default function Home() {
         disabled={isResizeButtonDisabled}
         style={[
           styles.button,
-          isResizeButtonDisabled && { backgroundColor: "gray" },
+          isResizeButtonDisabled && {  backgroundColor: "rgba(131, 180, 255, 0.8)" },
         ]}
+
+        labelStyle={isResizeButtonDisabled && { color: "rgba(255, 255, 255)" }}
+        
       >
             Resize
           </Button>
