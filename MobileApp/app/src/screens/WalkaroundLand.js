@@ -41,7 +41,7 @@ export default function Home() {
   const [calculatedArea, setCalculatedArea] = useState(0);
   const [polygonPerimeter, setPolygonPerimeter] = useState(0);
   const [isResizeButtonDisabled, setIsResizeButtonDisabled] = useState(true);
-  
+  const [isStartPauseButtonDisabled, setIsStartPauseButtonDisabled] = useState(false);
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -88,7 +88,7 @@ export default function Home() {
       setTrackingStarted(false);
       calculateAreaAndPerimeter();
       setIsResizeButtonDisabled(false); // Enable the "Resize" button
-
+      setIsStartPauseButtonDisabled(true);
       if (currentLocation) {
         const lineCoordinates = [currentLocation, initialLocation];
         setPathCoordinates((prevCoordinates) => [
@@ -318,12 +318,16 @@ export default function Home() {
 
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
-          <Button
-            icon={trackingPaused ? "pause" : "play-outline"}
-            mode="contained"
-            onPress={handleStartPress}
-            style={styles.button}
-          >
+        <Button
+        icon={trackingPaused ? "pause" : "play-outline"}
+        mode="contained"
+        onPress={handleStartPress}
+        disabled={isStartPauseButtonDisabled}
+        style={[
+          styles.button,
+          isStartPauseButtonDisabled && { backgroundColor: "gray" },
+        ]}
+      >
             {trackingPaused ? "Pause" : "Start"}
           </Button>
         </View>
