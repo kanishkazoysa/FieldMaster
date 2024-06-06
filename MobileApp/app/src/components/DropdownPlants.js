@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import RNPickerSelect from 'react-native-picker-select';
-import { View, Text ,StyleSheet } from 'react-native';
+import { View ,StyleSheet } from 'react-native';
 
 const Dropdown = () => {
   const [selectedValue, setSelectedValue] = useState(null);
