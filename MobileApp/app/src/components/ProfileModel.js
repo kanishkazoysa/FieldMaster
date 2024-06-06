@@ -1,7 +1,7 @@
 // SelectionModal.js
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
-import { IconButton, Avatar, Button } from "react-native-paper";
+import { IconButton, Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import {
   responsiveHeight,
