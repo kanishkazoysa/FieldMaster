@@ -142,7 +142,7 @@ router.get("/check-id/:id", async (req, res) => {
     }
   });
 
-router.delete("/ /:id", async (req, res) => {
+router.delete("/deletePlantation/:id", async (req, res) => {
     const id = req.params.id;
     try {
       const deletedPlantation = await plantationModel.findOneAndDelete({ Id: id });

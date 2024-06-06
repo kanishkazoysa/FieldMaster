@@ -1,12 +1,8 @@
 const mongoose = require("mongoose");
 
 const plantationSchema = mongoose.Schema(
-<<<<<<< Updated upstream
-    {   Id:{
-=======
     {
         Id: {
->>>>>>> Stashed changes
             type: String,
         },
         PlantType: {
