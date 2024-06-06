@@ -21,10 +21,20 @@ export const styles = StyleSheet.create({
   
     },
   
+    topSection: {
+      flexDirection: "row",
+      marginTop: responsiveHeight(1),
+      padding:responsiveWidth(0.6),
+      width: "100%",
+      justifyContent: "space-between", // Align the items to the right
+    },
+    iconButton: {
+      padding: 6,
+    },
+  
     top: {
       alignItems: "center",
       width: "100%",
-  
     },
   
     box1: {
