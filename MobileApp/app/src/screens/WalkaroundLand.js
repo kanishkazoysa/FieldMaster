@@ -282,7 +282,7 @@ export default function Home() {
           latitude: 6.2427,
           longitude: 80.0607,
           latitudeDelta: 0.0922 / Math.pow(2, 20), // Adjust the zoom level here
-    longitudeDelta: 0.0421 / Math.pow(2, 20), // Adjust the zoom level here
+          longitudeDelta: 0.0421 / Math.pow(2, 20), // Adjust the zoom level here
         }}
       >
         {drawPolyline && pathCoordinates.length > 0 && (
