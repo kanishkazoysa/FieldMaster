@@ -44,6 +44,7 @@ export default function Home() {
   const [isStartPauseButtonDisabled, setIsStartPauseButtonDisabled] = useState(false);
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
   const [resizingMode, setResizingMode] = useState(false);
+  
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -280,8 +281,8 @@ export default function Home() {
         initialRegion={{
           latitude: 6.2427,
           longitude: 80.0607,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.0922 / Math.pow(2, 20), // Adjust the zoom level here
+    longitudeDelta: 0.0421 / Math.pow(2, 20), // Adjust the zoom level here
         }}
       >
         {drawPolyline && pathCoordinates.length > 0 && (
