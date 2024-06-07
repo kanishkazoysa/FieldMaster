@@ -36,7 +36,6 @@ export default function Home() {
   const [trackingPaused, setTrackingPaused] = useState(false);
   const [drawPolyline, setDrawPolyline] = useState(false);
   const [points, setPoints] = useState([]);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigation = useNavigation();
   const mapRef = useRef(null);
   const [calculatedArea, setCalculatedArea] = useState(0);
@@ -44,6 +43,7 @@ export default function Home() {
   const [isResizeButtonDisabled, setIsResizeButtonDisabled] = useState(true);
   const [isStartPauseButtonDisabled, setIsStartPauseButtonDisabled] = useState(false);
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
+  const [resizingMode, setResizingMode] = useState(false);
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -89,10 +89,9 @@ export default function Home() {
       setIsSaveButtonDisabled(true);
     } else {
       setTrackingStarted(false);
-      calculateAreaAndPerimeter();
-      setIsResizeButtonDisabled(false); // Enable the "Resize" button
+      setIsResizeButtonDisabled(false);
       setIsStartPauseButtonDisabled(true);
-      setIsSaveButtonDisabled(false); // Enable the "Save" button
+      setIsSaveButtonDisabled(false);
       if (currentLocation) {
         const lineCoordinates = [currentLocation, initialLocation];
         setPathCoordinates((prevCoordinates) => [
@@ -101,7 +100,11 @@ export default function Home() {
         ]);
       }
       stopLocationUpdates();
+      calculateAreaAndPerimeter(); // Call calculateAreaAndPerimeter when tracking is paused
     }
+  };
+  const handleResizeEnd = () => {
+    calculateAreaAndPerimeter();
   };
 
   useEffect(() => {
@@ -268,7 +271,7 @@ export default function Home() {
           </Text>
         </View>
      
-      <MapView
+        <MapView
         ref={mapRef}
         style={styles.map}
         mapType={mapTypes[mapTypeIndex].value}
@@ -288,8 +291,25 @@ export default function Home() {
             strokeColor="white"
           />
         )}
-        {points.map((point, index) => (
-          <Marker key={index} coordinate={point} pinColor="red" />
+        {resizingMode && pathCoordinates.map((coordinate, index) => (
+          <Marker
+            key={index}
+            coordinate={coordinate}
+            pinColor="red"
+            draggable
+            onDragEnd={(event) => {
+              const { latitude, longitude } = event.nativeEvent.coordinate;
+              const updatedCoordinates = [...pathCoordinates];
+              updatedCoordinates[index] = { latitude, longitude };
+              if (index === 0) {
+                updatedCoordinates[updatedCoordinates.length - 1] = { latitude, longitude };
+              } else if (index === updatedCoordinates.length - 1) {
+                updatedCoordinates[0] = { latitude, longitude };
+              }
+              setPathCoordinates(updatedCoordinates);
+              handleResizeEnd(); // Call handleResizeEnd when a marker is dragged and dropped
+            }}
+          />
         ))}
       </MapView>
 
@@ -341,14 +361,13 @@ export default function Home() {
         disabled={isResizeButtonDisabled}
         style={[
           styles.button,
-          isResizeButtonDisabled && {  backgroundColor: "rgba(131, 180, 255, 0.8)" },
+          isResizeButtonDisabled && { backgroundColor: "rgba(131, 180, 255, 0.8)" },
         ]}
-
-        labelStyle={isResizeButtonDisabled && { color: "rgba(255, 255, 255 ,0.7)" }}
-        
+        labelStyle={isResizeButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }}
+        onPress={() => setResizingMode(!resizingMode)}
       >
-            Resize
-          </Button>
+        Resize
+      </Button>
         </View>
       </View>
     </View>
