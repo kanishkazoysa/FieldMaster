@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import {
   View,
   Text,
@@ -239,7 +239,7 @@ export default function RegisterScreen() {
 
 const styles = StyleSheet.create({
   header: {
-    height: 50,
+    height: responsiveHeight(6.5),
     backgroundColor: "#007BFF",
 
     ...Platform.select({

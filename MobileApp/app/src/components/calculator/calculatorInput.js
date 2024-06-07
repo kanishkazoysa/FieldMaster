@@ -19,7 +19,6 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
-import { Platform } from "react-native";
 
 const CalculatorSelectModel = ({
   calculatorModalVisible,
