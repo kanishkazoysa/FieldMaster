@@ -1,7 +1,7 @@
 // SelectionModal.js
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
-import { IconButton, Avatar, Button } from "react-native-paper";
+import { IconButton, Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import {
   responsiveHeight,
@@ -84,7 +84,7 @@ const SelectionModal = ({
 
             <Text style={styles.headerText}>{user.email}</Text>
             <View>
-              <ProfileAvatar userData={user} textSize={10} />
+              <ProfileAvatar userData={user} textSize={responsiveFontSize(1.4)} />
             </View>
 
             <View style={styles.nameContainer}>
@@ -119,13 +119,7 @@ const SelectionModal = ({
 };
 
 const styles = StyleSheet.create({
-  bottomContainer: {
-    flexDirection: "row",
-    marginTop: responsiveHeight(3),
-  },
-  dot: {
-    top: responsiveHeight(-0.6),
-  },
+  
   bottomText: {
     color: "#65676B",
     fontSize: responsiveFontSize(1.5),
@@ -135,19 +129,13 @@ const styles = StyleSheet.create({
     borderColor: "#007BFF",
     marginTop: responsiveHeight(1.7),
     width: responsiveWidth(60),
-    padding: 1,
+    padding: responsiveHeight(0.1),
   },
 
   signoutButton: {
-    marginTop: responsiveHeight(1.7),
+    marginTop: responsiveHeight(1.9),
     width: responsiveWidth(40),
-    padding: 1,
-  },
-
-  settingButton: {
-    marginTop: responsiveHeight(1.7),
-    width: responsiveWidth(40),
-    padding: 1,
+    padding: responsiveHeight(0.1),
   },
   nameText: {
     fontSize: responsiveFontSize(2.3),
@@ -173,7 +161,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalView: {
-    margin: 20,
+    margin: responsiveHeight(2),
     backgroundColor: "#fff",
     borderRadius: 20,
     padding: responsiveHeight(1),
@@ -181,14 +169,13 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 5,
-      height: 9,
+      height: responsiveHeight(2),
     },
     shadowOpacity: 0.4,
     shadowRadius: 4,
     width: responsiveWidth(80),
-    height: responsiveHeight(43),
+    height: responsiveHeight(40),
   },
-
   cancelButton: {
     position: "absolute",
     top: 0,
