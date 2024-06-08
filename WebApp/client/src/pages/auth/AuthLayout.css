@@ -1,0 +1,60 @@
+/* AuthLayout.css */
+
+.background {
+    display: flex;
+    justify-content: flex-end;
+    height: 93vh;
+    margin: 10px;
+    
+    
+}
+.carousel-container {
+    width: 50%;
+    border-radius: 2%;
+  }
+
+.side-img {
+    height: 100%;
+    width: 50%;
+    object-fit: cover;
+    right: 0;
+}
+
+/* AuthLayout.css */
+
+.background {
+    display: flex;
+    justify-content: flex-end;
+    height: 93vh;
+    margin: 10px;
+    
+    
+}
+.carousel-container {
+    width: 50%;
+    border-radius: 2%;
+  }
+
+.side-img {
+    height: 100%;
+    width: 50%;
+    object-fit: cover;
+    right: 0;
+}
+
+/* For screens smaller than 1000px, hide the carousel */
+@media (max-width: 1200px) {
+    .carousel-container {
+        display: none;
+    }
+    .side-img {
+        width: 80%;
+    }
+}
+
+/* For screens larger than 1000px, make the carousel take up 50% of the width */
+@media (min-width: 1000px) {
+    .carousel-container {
+        width: 50%;
+    }
+}
