@@ -11,11 +11,14 @@ import {
 const CalculatorModel = ({
   calculatorSelectModalVisible,
   setCalculatorSelectModalVisible,
+  //get area and perimeter from previous page
+  area, 
+  perimeter 
 }) => {
-  const [selectedValue, setSelectedValue] = useState("sqm");
   const closeModal = () => {
     setCalculatorSelectModalVisible(false);
   };
+
 
   return (
     <Modal
@@ -30,7 +33,12 @@ const CalculatorModel = ({
           activeOpacity={1}
           onPress={closeModal}
         />
-
+{/* access area and perimeter from previous page
+        <View>
+          <Text>Area: {area}</Text>
+          <Text>Perimeter: {perimeter}</Text>
+        </View>
+*/}
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <IconButton

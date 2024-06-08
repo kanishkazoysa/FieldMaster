@@ -27,6 +27,9 @@ const CalculatorSelectModel = ({
   const [calculatorSelectModalVisible, setCalculatorSelectModalVisible] =
     useState(false);
   const [selectedValue, setSelectedValue] = useState("sqm");
+  const [area, setArea] = useState(""); // New state variable for area
+  const [perimeter, setPerimeter] = useState(""); // New state variable for perimeter
+
 
   const closeModal = () => {
     setCalculatorModalVisible(false);
@@ -88,6 +91,7 @@ const CalculatorSelectModel = ({
                       style={styles.input}
                       placeholder={"00.00"}
                       keyboardType="numeric"
+                      onChangeText={text => setArea(text)} // Update area state variable
                     />
 
                     <View style={styles.dropdown}>
@@ -132,6 +136,7 @@ const CalculatorSelectModel = ({
                       style={styles.input}
                       placeholder={"00.00"}
                       keyboardType="numeric"
+                      onChangeText={text => setPerimeter(text)} // Update perimeter state variable
                     />
 
                     <View style={styles.dropdown}>
@@ -170,6 +175,8 @@ const CalculatorSelectModel = ({
       <CalculatorSelect
         calculatorSelectModalVisible={calculatorSelectModalVisible}
         setCalculatorSelectModalVisible={setCalculatorSelectModalVisible}
+        area={area} // Pass area as prop
+        perimeter={perimeter} // Pass perimeter as prop
       />
     </View>
   );
