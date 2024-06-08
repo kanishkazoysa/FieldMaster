@@ -64,7 +64,7 @@ function ContactForm() {
 
           
         </div>
-        <div className="social-icon" style={{ textAlign: "center", marginBottom: "2rem"}}>
+        <div className="social-icon">
           <FontAwesomeIcon icon={faLinkedin} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
           <FontAwesomeIcon icon={faGithub} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
           <FontAwesomeIcon icon={faFacebook} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
@@ -73,6 +73,7 @@ function ContactForm() {
           <FontAwesomeIcon icon={faYoutube} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
         </div>
         <div className="info">
+        
           <div className="legal">
             <a href="#">Terms & Conditions</a><a href="#">Privacy Policy</a>
           </div>

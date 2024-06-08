@@ -48,7 +48,7 @@ footer-container {
   color: black;
   text-align: left;
   border: 0;
-  
+  border-radius: 0.5rem;
 }
 .inputName{
   display: flex;
@@ -64,10 +64,12 @@ input{
   padding: 1rem;
   font-size: 1rem;
   background-color: rgb(242, 243, 244);
+  border-radius: 0.5rem;
 }
 
 textarea {
   border: 0;
+  border-radius: 0.5rem;
   /* border-bottom: 1px solid #007bff; */
   padding: 1rem;
   font-size: 1rem;
@@ -98,11 +100,18 @@ footer .info {
   padding-right: 100px;
   padding-left: 80px;
   color: aliceblue;
+  
+}
+.social-icon{
+  padding-top:1rem ;
+  text-align: center;
+  background: rgb(29, 29, 29);
 }
 
 footer .info .legal {
   display: flex;
   flex-wrap: nowrap;
+  margin-top: 1rem;
 }
 
 footer .info .legal > a {
@@ -117,17 +126,6 @@ footer .social {
   align-items: center;
   justify-content: center;
   position: relative;
-}
-
-footer .social i {
-  font-size: 1.4rem;
-  margin: 2px 8px;
-  cursor: pointer;
-   height: 4px;
-}
-
-.social :hover {
-  color: #06396f;
 }
 
 footer .social:before {
