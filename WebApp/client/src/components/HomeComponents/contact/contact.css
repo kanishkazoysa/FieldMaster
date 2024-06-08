@@ -57,14 +57,16 @@ footer-container {
   color: black;
   text-align: left;
   border: 0;
+  
 }
-input{
+.input1{
   border: 0;
   /* border-bottom: 1px solid #007bff; */
   padding: 1rem;
   font-size: 1rem;
   background-color: rgb(242, 243, 244);
   border-radius: 0.5rem;
+  height: 25px;
 }
 
 textarea {
@@ -103,7 +105,7 @@ footer .info {
   
 }
 .social-icon{
-  padding-top:1rem ;
+  
   text-align: center;
   background: rgb(29, 29, 29);
 }

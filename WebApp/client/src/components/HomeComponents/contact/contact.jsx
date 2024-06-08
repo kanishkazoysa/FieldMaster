@@ -14,9 +14,9 @@ function ContactForm() {
       <footer className='footer-container'>
         <div className="top">
           <div className="pages">
-            <div className="contact-video-container">
-              <div className="contact-video">
-                <video  height="390rem" autoPlay loop muted>
+            <div className="contact-video-container" >
+              <div className="contact-video" style={{borderRadius:"0.5rem"}}>
+                <video  height="390rem" autoPlay loop muted style={{borderRadius:"0.5rem"}}>
                   <source src={video3} type="video/mp4" />
                 </video>
               </div>
@@ -29,7 +29,7 @@ function ContactForm() {
             <label htmlFor="contact_name">Name : </label> 
             </div>
             <div className='contactInput'>
-            <input
+            <input className="input1"
               type="text"
               name="contact_name"
               id="contact_name"
@@ -40,7 +40,7 @@ function ContactForm() {
             <label>Email : </label> 
             </div>
             <div className='contactInput'>
-            <input
+            <input className="input1"
               type="email"
               name="contact_email"
               id="contact_email"
@@ -64,19 +64,20 @@ function ContactForm() {
 
           
         </div>
-        <div className="social-icon">
-          <FontAwesomeIcon icon={faLinkedin} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faGithub} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faFacebook} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faInstagram} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faTwitter} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faYoutube} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
-        </div>
-        <div className="info">
         
-          <div className="legal">
-            <a href="#">Terms & Conditions</a><a href="#">Privacy Policy</a>
+        <div className="info">
+        <div className="copyright" >
+            <a href="#" style={{color:"white"}}>Terms & Conditions</a> / <a href="#" style={{color:"white"}}>Privacy Policy</a>
           </div>
+        <div className="social-icon">
+          <FontAwesomeIcon icon={faLinkedin} style={{ color: "white" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
+          <FontAwesomeIcon icon={faGithub} style={{ color: "white" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
+          <FontAwesomeIcon icon={faFacebook} style={{ color: "white" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
+          <FontAwesomeIcon icon={faInstagram} style={{ color: "white" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
+          <FontAwesomeIcon icon={faTwitter} style={{ color: "white" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
+          <FontAwesomeIcon icon={faYoutube} style={{ color: "white" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
+        </div>
+          
           <div className="copyright">2021 Copyright &copy; FIELDMASTER</div>
         </div>
       </footer>
