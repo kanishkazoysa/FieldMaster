@@ -9,26 +9,24 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-
-
 import React, { useState, useEffect } from "react";
 import { Keyboard } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation ,useRoute} from "@react-navigation/native";
 import {styles} from "./PlantationStyles";
 
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
-
 //Data submission to the backend API is implemented using axios
 import axios from "axios";
 import AxiosInstance from "../../AxiosInstance";
 
 export default function Plantation({route}) {
-  const{id,Area,Perimeter} =  route.params;
+  const{id,area,perimeter} =  route.params;
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
+  route = useRoute(); // get route
+  console.log(area, perimeter);
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -151,7 +149,7 @@ return (
               />
               <View style={styles.propertyDetails}>
                 <Text style={styles.propertyLabel}>Area</Text>
-                <Text style={styles.propertyValue}>2 acres</Text>
+                <Text style={styles.propertyValue}>{area} acres</Text>
               </View>
             </View>
           </View>
