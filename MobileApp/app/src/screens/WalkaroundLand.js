@@ -35,7 +35,6 @@ export default function Home() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [trackingPaused, setTrackingPaused] = useState(false);
   const [drawPolyline, setDrawPolyline] = useState(false);
-  const [points, setPoints] = useState([]);
   const navigation = useNavigation();
   const mapRef = useRef(null);
   const [calculatedArea, setCalculatedArea] = useState(0);
@@ -367,7 +366,7 @@ export default function Home() {
         labelStyle={isResizeButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }}
         onPress={() => setResizingMode(!resizingMode)}
       >
-        Resize
+        {resizingMode ? "Done" : "Resize"}
       </Button>
         </View>
       </View>
