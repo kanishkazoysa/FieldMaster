@@ -25,8 +25,6 @@ function calculatePlantationDensity(area, plantSpacing, rowSpacing) {
 
     return plantationDensity;
 }
-
-
 function convertToCommonUnit(value, unit) {
     if (unit === 'cm') {
         return value / 100;
@@ -68,7 +66,31 @@ router.post("/plantation", async (req, res) => {
     }
 });
 
-
+router.post("/plantationFromManualCalculator", async (req, res) => {
+    try {
+      const { textplantspace, textRowspace, textPlant, PlantSpaceUnitselectedValue, area } = req.body;
+      const plantSpacing = convertToCommonUnit(textplantspace, PlantSpaceUnitselectedValue);
+      const rowSpacing = convertToCommonUnit(textRowspace, PlantSpaceUnitselectedValue);
+      const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
+      const calculatedPlantDensity = calculatePlantationDensity(area, plantSpacing, rowSpacing);
+  
+      // Log and send data
+      console.log("Number of plants:", numberOfPlants);
+      console.log("Plantation density:", calculatedPlantDensity);
+      console.log("Plant type:", textPlant);
+  
+      res.json({
+        status: "ok",
+        data: {
+          numberOfPlants,
+          calculatedPlantDensity,
+          textPlant
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ status: "error", data: error.message });
+    }
+  });
 
 router.get("/numberOfPlants/:id", async (req, res) => {
     const id = req.params.id;
@@ -155,6 +177,53 @@ router.delete("/deletePlantation/:id", async (req, res) => {
     }
 });
   
+router.get("/plantDensityFromManualCalculator", async (req, res) => {
+    try {
+        const plant = await plantationModel.findOne().sort({ _id: -1 });
+
+        if (!plant) {
+            return res.status(404).json({ status: "error", message: "No recently updated data found" });
+        }
+
+        const plantationDensity = plant.PlantDensity;
+
+        res.json({ status: "success", data: plantationDensity });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
+});
+router.get("/numberOfPlantsFromManualCalculator", async (req, res) => {
+    
+    try {
+        const plant = await plantationModel.findOne().sort({ _id: -1 });
+        if (!plant ) {
+            return res.status(404).json({ status: "error", message: "No recently updated data found" });
+        }
+
+        const numberOfPlants = plant.NoOfPlants;
+        
+
+        res.json({ status: "success", data: numberOfPlants });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
+});
+
+router.get("/plantTypeFromManualCalculator", async (req, res) => {
+    try {
+        const plant = await plantationModel.findOne().sort({ _id: -1 });
+
+        if (!plant) {
+            return res.status(404).json({ status: "error", message: "No recently updated data found" });
+        }
+
+        const plantType = plant.PlantType;
+
+        res.json({ status: "success", data: plantType });
+    } catch (error) {
+        res.status(500).json({ status: "error", message: error.message });
+    }
+});
 
 
 module.exports = router;

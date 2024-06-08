@@ -22,6 +22,8 @@ import CustomButton from "../../components/CustomButton";
 import axios from "axios";
 import AxiosInstance from "../../AxiosInstance";
 
+
+
 export default function Plantation({route}) {
   const{id,area,perimeter} =  route.params;
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -47,7 +49,7 @@ export default function Plantation({route}) {
     };
   }, []);
 
-
+  
   const [textPlant, setTextPlant] = useState("");
   const [textplantspace, setTextPlantSpace] = useState("");
   const [textRowspace, setTextRowSpace] = useState("");
@@ -101,6 +103,8 @@ export default function Plantation({route}) {
         textRowspace,
         PlantSpaceUnitselectedValue,
         id,
+      
+        
       });
       console.log(response.data);
       navigation.navigate("PlantationDetails", { id: id });
@@ -110,7 +114,33 @@ export default function Plantation({route}) {
     }
   };
   
-
+  const handlePlantationDetailsFromManualCalculator = async () => {
+    if (
+      !textPlant ||
+      !textplantspace ||
+      !textRowspace ||
+      !PlantSpaceUnitselectedValue
+    ) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
+    }
+  
+    try {
+      const response = await AxiosInstance.post("/api/plantation/plantationFromManualCalculator", {
+        textPlant,
+        textplantspace,
+        textRowspace,
+        PlantSpaceUnitselectedValue,
+        area
+        
+      });
+      console.log(response.data);
+      navigation.navigate("PlantationDetails", { id: id });
+    } catch (error) {
+      console.error("Error:", error.response?.data || error.message);
+      Alert.alert("Error", "Something went wrong");
+    }
+  };
 //navigating to the "PlantationDetails" screen while passing some data as route parameters
   
 
@@ -268,7 +298,7 @@ return (
       {!isKeyboardVisible && (
         <View style={styles.bottom}>
           <CustomButton
-            onPress={handlePlantationDetails}
+            onPress={id ? handlePlantationDetails : handlePlantationDetailsFromManualCalculator}
             text="Calculate Plantation"
             iconName="calculator"
             iconColor="white"
