@@ -213,13 +213,6 @@ const ResizeMapScreen = ({ navigation, route }) => {
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
       <Headersection navigation={navigation} title="Resize Map"></Headersection>
       </View>
-      {/* <View>
-        <Appbar.Header style={{ backgroundColor: '#0866FF' }}>
-          <Appbar.BackAction color='#ffffff' onPress={handleCancel} />
-          <Appbar.Content title='Resize Map' color='#ffffff' />
-        </Appbar.Header>
-      </View> */}
-      {/* including map view */}
       {region && (
         <View style={{ flex: 1 }}>
           <MapView
