@@ -16,7 +16,9 @@ import { GiStonePile } from "react-icons/gi";
 import { GrUserWorker } from "react-icons/gr";
 import axios from "axios";
 import { styles } from "./clearLandStyles";
-
+import { FiSearch } from "react-icons/fi";
+import { Input, Space, List, AutoComplete } from "antd";
+import { CloseSquareFilled } from "@ant-design/icons";
 export default function ClearLand({ onBackToSidebar }) {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
@@ -32,6 +34,21 @@ export default function ClearLand({ onBackToSidebar }) {
   const [laborCount, setLaborCount] = useState("");
   const [workHours, setWorkHours] = useState("");
   const [machineCount, setMachineCount] = useState("");
+
+  // const { Search } = Input;
+
+  const machineryList = [
+    "Bulldozers",
+    "Excavators",
+    "Backhoes",
+    "Skid-steer loaders",
+    "Chainsaws",
+    "Brush cutters",
+    "Tractors",
+    "Land clearing rakes",
+  ];
+
+  const prefix = <FiSearch style={{ fontSize: 16, color: "#d3d3d3" }} />;
 
   const handlePlantTypeChange = (event) => {
     setPlantTypeSelectedValue(event.target.value);
@@ -80,7 +97,6 @@ export default function ClearLand({ onBackToSidebar }) {
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
-    
     //validation part Add button
     const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
@@ -97,10 +113,55 @@ export default function ClearLand({ onBackToSidebar }) {
     setDisplayValues1(newDisplayValues1);
   };
 
+  const [displayValues2, setDisplayValues2] = useState([]);
+  const handleAdd2 = () => {
+    //validation part Add button
+    const combinedValue2 = machineCount + " x " + searchValue;
+    const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
+      Boolean
+    );
+    setDisplayValues2(newDisplayValues2);
+    setSearchValue("");
+    setMachineCount("");
+  };
+
+  const handleRemoveValue2 = (index) => {
+    const newDisplayValues2 = [...displayValues2];
+    newDisplayValues2.splice(index, 1);
+    setDisplayValues2(newDisplayValues2);
+  };
+
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredMachinery, setFilteredMachinery] = useState([]);
+
+  const handleSearchChange = (value) => {
+    setSearchValue(value);
+
+    if (value) {
+      const filtered = machineryList.filter((item) =>
+        item.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredMachinery(filtered);
+    } else {
+      setFilteredMachinery([]);
+    }
+  };
+
+  const handleItemClick = (item) => {
+    setSearchValue(item);
+    setFilteredMachinery([]); // Clear the list after selecting an item
+  };
+
   const handleClearlandDetails = async (e) => {
     try {
       // Validate required fields
-      if (!pressed || !(displayValues.length > 0) || !(displayValues1.length > 0) || !laborCount || !workHours) {
+      if (
+        !pressed ||
+        !(displayValues.length > 0) ||
+        !(displayValues1.length > 0) ||
+        !laborCount ||
+        !workHours
+      ) {
         throw new Error("Please fill in all fields");
       }
 
@@ -112,7 +173,7 @@ export default function ClearLand({ onBackToSidebar }) {
       const requestData = {
         displayValues,
         displayValues1,
-        // displayValues2,
+        displayValues2,
         pressed,
         plantTypeSelectedValue,
         plantCount,
@@ -259,9 +320,10 @@ export default function ClearLand({ onBackToSidebar }) {
             </div>
             <div style={styles.box3InnerBottom}>
               <div style={styles.dropDownContainer}>
-                <select style={styles.dropdown}
-                value={plantTypeSelectedValue}
-                onChange={handlePlantTypeChange}
+                <select
+                  style={styles.dropdown}
+                  value={plantTypeSelectedValue}
+                  onChange={handlePlantTypeChange}
                 >
                   <option value="" disabled selected>
                     Select
@@ -321,9 +383,10 @@ export default function ClearLand({ onBackToSidebar }) {
             </div>
             <div style={styles.box3InnerBottom}>
               <div style={styles.dropDownContainer}>
-                <select style={styles.dropdown}
-                 value={stoneTypeSelectedValue}
-                 onChange={handleStoneTypeChange}
+                <select
+                  style={styles.dropdown}
+                  value={stoneTypeSelectedValue}
+                  onChange={handleStoneTypeChange}
                 >
                   <option value="" disabled selected>
                     Select
@@ -331,7 +394,6 @@ export default function ClearLand({ onBackToSidebar }) {
                   <option value="Small">Small</option>
                   <option value="Medium">Medium</option>
                   <option value="High">High</option>
-                 
                 </select>
               </div>
               <div style={styles.box3middleContainer}>
@@ -425,6 +487,47 @@ export default function ClearLand({ onBackToSidebar }) {
               </div>
             </div>
 
+            <Space direction="vertical" style={{ width: "100%"}}>
+              <AutoComplete
+                option={filteredMachinery.map((item) => ({ value: item }))}
+                value={searchValue}
+                onChange={setSearchValue}
+                onSearch={handleSearchChange}
+              >
+                <Input
+                  size="small"
+                  placeholder="Search for machines"
+                  prefix={prefix}
+                  style={styles.searchbar}
+                  allowClear={{
+                    clearIcon: <CloseSquareFilled />,
+                  }}
+                />
+              </AutoComplete>
+              {filteredMachinery.length > 0 && (
+                <List
+                  bordered
+                  dataSource={filteredMachinery}
+                  renderItem={(item) => (
+                    <List.Item
+                      onClick={() => handleItemClick(item)}
+                      style={styles.searchbarListItems}
+                      size="small"
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "#f0f0f0";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "#fff";
+                      }}
+                    >
+                      {item}
+                    </List.Item>
+                  )}
+                  style={styles.searchbarList}
+                />
+              )}
+            </Space>
+
             <div style={styles.box7InputContainer}>
               <p style={styles.box7inputLabel}>Count : </p>
               <input
@@ -433,15 +536,31 @@ export default function ClearLand({ onBackToSidebar }) {
                 placeholder="Enter machine count"
                 value={machineCount}
                 onChange={handleMachineCountChange}
+                onSubmitEditing={handleAdd2}
               />
             </div>
             <div style={styles.box7addButtonContainer}>
-              <button
-                style={{ ...styles.addButton, width: "100%" }}
-                onClick={console}
-              >
-                <p style={styles.addButtonText}>Add</p>
-              </button>
+                <button style={{...styles.addButton,width:"100%"}} onClick={handleAdd2}>
+                  <p style={styles.addButtonText}>Add</p>
+                </button>
+              </div>
+
+              <div style={styles.displayValuesContainer}>
+              {displayValues2.map((value, index) => (
+                <div key={index} style={styles.displayValueContainer}>
+                  <div style={styles.displayValueText}>{value}</div>
+                  <button
+                    onClick={() => handleRemoveValue2(index)}
+                    style={styles.closeButton}
+                  >
+                    <IoIosCloseCircleOutline
+                      name="close-circle-outline"
+                      size={20}
+                      color="#007BFF"
+                    />
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -453,7 +572,7 @@ export default function ClearLand({ onBackToSidebar }) {
         </div>
       )}
 
-<div
+      <div
         style={{
           transform: animatePage ? "translateX(0)" : "translateX(-100%)",
           transition: "transform 0.3s ease-in-out",

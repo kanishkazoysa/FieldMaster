@@ -93,15 +93,6 @@ router.delete("/deleteClearLand/:id", async (req, res) => {
 });
 
 module.exports = router;
-//get data
-// router.get("/latestClearLand", async (req, res) => {
-//     try {
-//         const latestClearLand = await clearLandModel.findOne().sort({ _id: -1 });
-//         res.status(200).json(latestClearLand);
-//     } catch (error) {
-//         res.status(500).json({ error: "Failed to get latest clear land data" });
-//     }
-// });
 
 
 

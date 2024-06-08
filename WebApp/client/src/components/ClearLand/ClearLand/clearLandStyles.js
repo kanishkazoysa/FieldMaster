@@ -275,7 +275,7 @@ export const styles = {
   box7: {
     display: "flex",
     width: "95%",
-    height: 150,
+    height: "auto",
     flexDirection: "column",
     backgroundColor: "white",
     marginTop: 10,
@@ -291,7 +291,7 @@ export const styles = {
     // justifyContent: "space-between",
     width: "100%",
     height: "30%",
-    marginTop: 60,
+    marginTop: 20,
     marginLeft: 20,
     marginRight: 20,
   },
@@ -371,7 +371,7 @@ export const styles = {
     backgroundColor: "white",
     height: "max-content",
     borderRadius: 11,
-    width: "100%",
+    width: "auto",
   },
   displayValueContainer: {
     display: "flex",
@@ -384,7 +384,7 @@ export const styles = {
     marginBottom: 10,
     borderRadius: 8,
     padding: 2,
-    width: "25%",
+    width: "auto",
     height: 30,
     border: "1px solid lightblue",
   },
@@ -403,4 +403,23 @@ export const styles = {
     color: "white",
     fontSize: 14,
   },
+  searchbar:{
+    width: 200,
+                    borderRadius: 50,
+                    marginLeft: 35,
+                    marginTop: 10,
+                    padding: -10,
+                    borderColor: "grey",
+  },
+  searchbarList:{
+    width: 200,
+                    borderRadius: 11,
+                    marginLeft: 35,
+                    marginTop: -1, //To align the dropdown with the search box
+  },
+  searchbarListItems:{
+    cursor: "pointer",
+                        padding: "5px 20px",
+                        borderRadius: 11,
+  }
 };
