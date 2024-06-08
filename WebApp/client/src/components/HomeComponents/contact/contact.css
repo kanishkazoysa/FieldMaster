@@ -20,12 +20,59 @@ footer-container {
   display: flex;
   flex-direction: column;
   width: 500px;
-  background-color: #007bff;
-  color: aliceblue;
+  background-color: white;
+  color: #007bff;
   border-radius: 2rem;
+  text-align: left;
 }
 
+.contactSupport{
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  color: #007bff;
+  border-radius: 2rem;
+  text-align: left;
+  font-size: 2rem;
 
+}
+.contactForm{
+  width: 20%;
+  
+}
+.contactInput{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: rgb(199, 187, 187);
+  color: black;
+  text-align: left;
+  border: 0;
+  
+}
+.inputName{
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  color: black;
+  text-align: left;
+  border: 0;
+}
+input{
+  border: 0;
+  /* border-bottom: 1px solid #007bff; */
+  padding: 1rem;
+  font-size: 1rem;
+  background-color: rgb(242, 243, 244);
+}
+
+textarea {
+  border: 0;
+  /* border-bottom: 1px solid #007bff; */
+  padding: 1rem;
+  font-size: 1rem;
+  background-color: rgb(242, 243, 244);
+}
 
 main {
   flex: 1;
@@ -45,7 +92,7 @@ footer {
 footer .info {
   padding: 1rem 1rem;
   display: flex;
-  align-items: center;
+  align-items: left;
   justify-content: space-between;
   background: rgb(29, 29, 29);
   padding-right: 100px;
@@ -79,6 +126,10 @@ footer .social i {
    height: 4px;
 }
 
+.social :hover {
+  color: #06396f;
+}
+
 footer .social:before {
   position: absolute;
   content: "";
@@ -100,38 +151,21 @@ footer .top {
   
 }
 
-.contact-form {
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-}
-
-.contact-form label {
-  margin-bottom: 10px;
-  
-}
-
-.contact-form input,
-.contact-form textarea {
-  padding: 0 8px 8px 0;
-  margin-bottom: 16px;
-}
-
 .submit-button {
-  background-color: white;
-  color: blue;
+  background-color: #007bff;
+  color: white;
   cursor: pointer;
   padding: 10px;
   border: none;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   width: 100%;
+  margin-top: 1rem;
 }
 
 .submit-button:hover {
   background-color: darkblue;
   color: aliceblue;
 }
-
 
 footer .top .pages {
   display: flex;
@@ -140,14 +174,6 @@ footer .top .pages {
 }
 
 
-footer .newsletter h3 {
-  margin-bottom: 10px;
-}
-footer .newsletter form {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 /* Responsive adjustments */
 @media screen and (max-width: 768px) {
