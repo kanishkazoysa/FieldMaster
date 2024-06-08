@@ -15,16 +15,22 @@ import Home from "./pages/Home";
 import EmailVerified from "./pages/EmailVerified";
 import Managemap from "./pages/Managemap";
 import RegisterPage from "./pages/auth/Register/RegisterPage";
+import AuthLayout from "./pages/auth/AuthLayout";
 
 export default function App() {
   return (
     <Router>
       <Routes>
+        <Route element={<AuthLayout />}>
+          <Route path="/register" element={<RegisterPage />} />
+        </Route>
+
+        
         {/* Route for the main content */}
         <Route path="/" element={<MainContent />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/emailVerification" element={<EmailVerified />} />
-        <Route path="/register" element={<RegisterPage />} />
+
         <Route path="/managemap" element={<Managemap />} />
       </Routes>
     </Router>
