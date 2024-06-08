@@ -7,18 +7,23 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
+import { useNavigation } from '@react-navigation/native';
 
 const CalculatorModel = ({
   calculatorSelectModalVisible,
   setCalculatorSelectModalVisible,
   //get area and perimeter from previous page
   area, 
-  perimeter 
+  perimeter,
 }) => {
   const closeModal = () => {
     setCalculatorSelectModalVisible(false);
   };
-
+  const navigation = useNavigation();
+  // navigate to different pages with area and perimeter
+  const navigateToPage = (page) => {
+    navigation.navigate(page, { area, perimeter });
+  };
 
   return (
     <Modal
@@ -33,12 +38,6 @@ const CalculatorModel = ({
           activeOpacity={1}
           onPress={closeModal}
         />
-{/* access area and perimeter from previous page
-        <View>
-          <Text>Area: {area}</Text>
-          <Text>Perimeter: {perimeter}</Text>
-        </View>
-*/}
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <IconButton
@@ -56,6 +55,7 @@ const CalculatorModel = ({
               <View style={styles.button}>
                 <TouchableOpacity
                   style={styles.selectButton}
+                  onPress={() => navigateToPage('Clearland')} // navigate to ClearLand page
                 >
                   <View style={styles.icon}>
                     <MaterialCommunityIcons
@@ -80,6 +80,7 @@ const CalculatorModel = ({
               <View style={styles.button}>
                 <TouchableOpacity
                   style={styles.selectButton}
+                  onPress={() => navigateToPage('Plantation')} // navigate to Plantation page
                 >
                   <View style={styles.icon}>
                     <MaterialCommunityIcons
@@ -104,6 +105,7 @@ const CalculatorModel = ({
               <View style={styles.button}>
                 <TouchableOpacity
                   style={styles.selectButton}
+                  onPress={() => navigateToPage('Fence')} // navigate to FenceSetup page
                 >
                   <View
                     style={{ ...styles.icon, left: responsiveWidth(-26.6) }}
@@ -122,7 +124,7 @@ const CalculatorModel = ({
                       marginLeft: responsiveWidth(-9),
                     }}
                   >
-                    <Text style={{ color: "#FFF", fontSize:responsiveFontSize(1.6) }}>FENCE SETUP</Text>
+                    <Text style={{ color: "#FFF", fontSize:responsiveFontSize(1.6) }  }>FENCE SETUP</Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -205,5 +207,6 @@ const styles = StyleSheet.create({
     right: 0,
   },
 });
+
 
 export default CalculatorModel;
