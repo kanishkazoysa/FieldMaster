@@ -104,8 +104,8 @@ const CalculatorSelectModel = ({
                           setSelectedAreaUnit(itemValue)
                         }
                       >
-                        <Picker.Item label="Square Meters" value="sqm" />
-                        <Picker.Item label="Square Feet" value="sqft" />
+                        {/* <Picker.Item label="Square Meters" value="sqm" />
+                        <Picker.Item label="Square Feet" value="sqft" /> */}
                         <Picker.Item label="Acres" value="acres" />
                         {/* Add more items as needed */}
                       </Picker>
@@ -151,7 +151,7 @@ const CalculatorSelectModel = ({
                         }
                       >
                         <Picker.Item label="m" value="m" />
-                        <Picker.Item label="Km" value="km" />
+                        {/* <Picker.Item label="Km" value="km" /> */}
                         {/* Add more items as needed */}
                       </Picker>
                     </View>

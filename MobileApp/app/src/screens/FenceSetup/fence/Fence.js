@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation,useRoute } from "@react-navigation/native";
 
 import {styles} from './FenceStyles';
 import Headersection from "../../../components/Headersection";
@@ -22,13 +22,16 @@ import axios from "axios";
 import AxiosInstance from "../../../AxiosInstance";
 
 export default function Fence() {
+ 
+  const route = useRoute(); // get route
+  const{area,perimeter} =  route.params;
   const [FenceTypeselectedValue, setFenceTypeSelectedValue] = useState(null);
   const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] =useState(null);
   const [inputValueFenceLength, setinputValueFenceLength] = useState("");
   const [inputValueFenceAmount, setinputValueFenceAmount] = useState("");
   const [inputValuePostspace, setinputValuePostspace] = useState("");
-  const [perimeter, setperimeter] = useState("1500");
-  const [Area, setArea] = useState("100");
+  // const [perimeter, setperimeter] = useState("1500");
+  // const [Area, setArea] = useState("100");
   const [fenceLengthsArray, setFenceLengthsArray] = useState([]);
   const [fenceAmountsArray, setFenceAmountsArray] = useState([]);
 
@@ -185,7 +188,7 @@ export default function Fence() {
                   />
                   <View style={styles.propertyDetails}>
                     <Text style={styles.propertyLabel}>Area</Text>
-                    <Text style={styles.propertyValue}>{Area} acres</Text>
+                    <Text style={styles.propertyValue}>{area} acres</Text>
                   </View>
                 </View>
               </View>
