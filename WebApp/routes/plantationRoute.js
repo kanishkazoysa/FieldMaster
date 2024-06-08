@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const plantationModel = require("../models/plantation");
+const MapTemplateModel = require("../models/MapTemplateModel");
 
 function calculateNumberOfPlants(area, plantSpacing, rowSpacing) {
     const areaInSquareMeters = parseFloat(area) * 4046.86;
@@ -36,7 +37,7 @@ function convertToCommonUnit(value, unit) {
 
 router.post("/plantation", async (req, res) => {
     try {
-        const { textplantspace, textRowspace, textPlant, PlantSpaceUnitselectedValue } = req.body;
+        const { textplantspace, textRowspace, textPlant, PlantSpaceUnitselectedValue,id } = req.body;
         const area = 2;
 
         const plantSpacing = convertToCommonUnit(textplantspace, PlantSpaceUnitselectedValue);
@@ -50,6 +51,7 @@ router.post("/plantation", async (req, res) => {
         console.log("Plant type:", textPlant);
 
         const newPlantation = new plantationModel({
+            Id:id,
             PlantType: textPlant,
             PlantSpace: textplantspace,
             RowSpace: textRowspace,
@@ -68,17 +70,26 @@ router.post("/plantation", async (req, res) => {
 
 
 
-router.get("/numberOfPlants", async (req, res) => {
+router.get("/numberOfPlants/:id", async (req, res) => {
+    const id = req.params.id;
     try {
-        const plant = await plantationModel.findOne().sort({ _id: -1 });
+        const plant = await plantationModel.findOne({ Id: id });
+        const map = await MapTemplateModel.findOne({ Id: id });
 
-        if (!plant) {
+        if (!plant && !map) {
             return res.status(404).json({ status: "error", message: "No recently updated data found" });
         }
 
         const numberOfPlants = plant.NoOfPlants;
+        const PlnatType = plant.PlantType;
+        const plantspace = plant.PlantSpace;
+        const rowSpace = plant.RowSpace;
+        const PlantDensity = plant.PlantDensity;
+        const Unit = plant.Unit;
+        const area = map.area;
+        const perimeter = map.perimeter;
 
-        res.json({ status: "success", data: numberOfPlants });
+        res.json({ status: "success",numberOfPlants, PlnatType, plantspace, rowSpace, PlantDensity, Unit, area, perimeter });
     } catch (error) {
         res.status(500).json({ status: "error", message: error.message });
     }
@@ -115,6 +126,35 @@ router.get("/plantType", async (req, res) => {
         res.status(500).json({ status: "error", message: error.message });
     }
 });
+
+
+router.get("/check-id/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+      const item = await plantationModel.findOne({ Id: id });
+      if (item) {
+        res.status(200).json({ exists: true });
+      } else {
+        res.status(404).json({ exists: false });
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'Invalid ID format' });
+    }
+  });
+
+router.delete("/deletePlantation/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+      const deletedPlantation = await plantationModel.findOneAndDelete({ Id: id });
+      if (!deletedPlantation) {
+        return res.status(404).send('Fence not found.');
+      }
+      res.send('Fence deleted successfully.');
+    } catch (error) {
+      res.status(500).send('Error while deleting fence.');
+    }
+});
+  
 
 
 module.exports = router;

@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
 const plantationSchema = mongoose.Schema(
-    {   Id:{
+    {
+        Id: {
             type: String,
         },
         PlantType: {

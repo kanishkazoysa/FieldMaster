@@ -8,6 +8,8 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 
+import AxiosInstance from '../../../AxiosInstance';
+
 const ClearLandIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
@@ -90,6 +92,27 @@ const TemplateView = ({ route, navigation }) => {
     navigation.navigate('ResizeMap', { templateId: item._id });
   };
 
+
+  const checkIdPlantation = async (id) => {
+    try {
+      const response = await AxiosInstance.get(`/api/plantation/check-id/${id}`);
+      if (response.data.exists) {
+        console.log('ID exists');
+        navigation.navigate('PlantationDetails', { id: item._id });
+      } else {
+        console.log('ID does not exist');
+      }
+    } catch (error) {
+      // Handle error, maybe show a message to the user
+if (error.response.status === 404) {
+      console.log('ID not found');
+      navigation.navigate('Plantation', { id: item._id, Area: item.area, Perimeter: item.perimeter });
+    } else {
+      console.error('Error checking ID:', error);
+      // Handle other errors
+    }    }
+  };
+
   return (
     <>
       <Appbar.Header style={styles.top_Bar} dark={true} mode='center-aligned'>
@@ -122,15 +145,11 @@ const TemplateView = ({ route, navigation }) => {
             <Text>Clear land</Text>
           </View>
 
-          <TouchableOpacity onPress={() => navigation.navigate('Plantation')}>
+          <TouchableOpacity onPress={() => checkIdPlantation(item._id)}>
             <View style={styles.iconBlockInner}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Plantation')}
-              >
                 <View style={styles.iconOuter_02}>
                   <PlantationIcon />
                 </View>
-              </TouchableOpacity>
               <Text>Plantation</Text>
             </View>
           </TouchableOpacity>

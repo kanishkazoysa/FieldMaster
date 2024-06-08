@@ -20,13 +20,8 @@ import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import AxiosInstance from "../../AxiosInstance";
 
-export default function Plantation({ route }) {
-  const navigation = useNavigation();
-  const { id, Area, Perimeter } = route.params;
-  const [textRowSpace, setRowSpace] = useState("");
-  const [numberOfPlants, setnumberOfPlants] = useState(null);
-  const [PlantationDensity, setPlantDensity] = useState(null);
-  const [textPlant, setplantType] = useState("");
+export default function Plantation({route}) {
+  const{id,Area,Perimeter} =  route.params;
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [textPlantSpace, setTextPlantSpace] = useState("");
   const [PlantSpaceUnitselectedValue, setPlantSpaceUnitSelectedValue] = useState(null);
@@ -72,40 +67,72 @@ export default function Plantation({ route }) {
     };
   }, []);
 
-  //calculate button click
-  const handlePlantationDetails = async () => {
-    // send data to back end
-    AxiosInstance.post("/api/plantation/plantation", {
-      id,
-       textPlant,
-      textPlantSpace,
-      textRowSpace,
-      PlantSpaceUnitselectedValue,
-      RowSpacingUnitselectedValue,
-      Area,
-      Perimeter,
-      
-    })
-      .then((response) => {
-        if (
-          !textPlant ||
-          !textPlantSpace ||
-          !textRowSpace ||
-          !PlantSpaceUnitselectedValue
-        ) {
-          // Display error message
-          Alert.alert("Error", "Please fill in all fields");
-          return;
-        }
-        navigation.navigate("PlantationDetails", {
-          id:id,
-        });
-      })
-      .catch((error) => {
-        console.error("Error:", error.response.data);
-        Alert.alert("Error", "Failed to create plantation. Please try again.");
-      });
+
+  const [textPlant, setTextPlant] = useState("");
+  const [textplantspace, setTextPlantSpace] = useState("");
+  const [textRowspace, setTextRowSpace] = useState("");
+
+  const navigation = useNavigation();
+
+  const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] =
+    useState(null);
+  const [RowSpacingUnitselectedValue, RowSpacingUnitSetSelectedValue] =
+    useState(null);
+
+  const PlantSpaceUnitPlaceholder = {
+    label: "M",
+    value: null,
+    color: "blue",
   };
+
+  const PlantSpaceUnitOptions = [
+    // { label: "cm", value: "cm" },
+    { label: "m", value: "m" },
+
+  ];
+
+  const RowSpacingUnitplaceholder = {
+    label: "M",
+    value: null,
+    color: "blue",
+  };
+
+  const RowSpacingUnitOptions = [
+    //{ label: "cm", value: "cm" },
+    { label: "m", value: "m" },
+  ];
+
+  //handles submission of plantation details and navigation to PlantationDetails
+  const handlePlantationDetails = async () => {
+    if (
+      !textPlant ||
+      !textplantspace ||
+      !textRowspace ||
+      !PlantSpaceUnitselectedValue
+    ) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
+    }
+  
+    try {
+      const response = await AxiosInstance.post("/api/plantation/plantation", {
+        textPlant,
+        textplantspace,
+        textRowspace,
+        PlantSpaceUnitselectedValue,
+        id,
+      });
+      console.log(response.data);
+      navigation.navigate("PlantationDetails", { id: id });
+    } catch (error) {
+      console.error("Error:", error.response?.data || error.message);
+      Alert.alert("Error", "Something went wrong");
+    }
+  };
+  
+
+//navigating to the "PlantationDetails" screen while passing some data as route parameters
+  
 
 return (
   <KeyboardAvoidingView
