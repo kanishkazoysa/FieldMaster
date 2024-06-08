@@ -4,14 +4,22 @@ import { AiOutlineClose } from 'react-icons/ai'; // Importing close icon from re
 import logo from '../images/logo.png'; 
 import MobileImage from '../images/MobileImage.png'; // Import MobileImage
 import WebImage from '../images/WebImage.png'; // Import web image
+import { useNavigate } from 'react-router-dom';
+
 
 const GetStarted = ({ toggleModal }) => {
     const [visible, setVisible] = useState(true);
+    const navigate = useNavigate();
 
     const closeModal = () => {
         setVisible(false);
         toggleModal(); // Call toggleModal to close the modal from the parent component
     };
+
+    const navigateToRegister = () => {
+        navigate('/register'); // Navigate to RegisterPage
+    };
+
 
     return (
         <Modal isOpen={visible} onRequestClose={closeModal} style={modalStyles}>
@@ -36,7 +44,7 @@ const GetStarted = ({ toggleModal }) => {
                 <h3>Web App</h3>
                     <img src={WebImage} alt="Web Image" style={imageStyles} />
                     <p style={paragraphStyles}>This app empowers you to easily calculate and record accurate area measurements while on the move and at your convenience at your desired place anywhere at anytime with super realtime mapping of the area.</p>
-                    <button style={buttonStyles}>Download Now</button>
+                    <button style={buttonStyles} onClick={navigateToRegister}>Download Now</button>
                 </div>
             </div>
         </Modal>

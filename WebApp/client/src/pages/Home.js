@@ -39,9 +39,7 @@ export default function Home() {
       input.blur();
     }
   };
-  const onLoad = useCallback((map) => {
-    mapRef.current = map;
-  }, []);
+  
   
   const onSearchBoxLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
