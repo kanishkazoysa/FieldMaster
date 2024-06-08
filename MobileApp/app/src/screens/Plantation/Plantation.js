@@ -125,7 +125,7 @@ return (
     {/* Static section at the top */}
     <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
-    {/Header section/}
+    {/*Header section*/}
     <Headersection navigation={navigation} title="Plantation" />
 
     <ScrollView contentContainerStyle={styles.scrollContent}>
