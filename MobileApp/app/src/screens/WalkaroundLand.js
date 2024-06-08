@@ -16,6 +16,7 @@ import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import area from "@turf/area";
+import { convertArea } from "@turf/helpers";
 import AxiosInstance from "../AxiosInstance";
 import { distance } from "@turf/turf";
 import {
@@ -203,7 +204,7 @@ export default function Home() {
       ],
     };
     const polygonArea = area(polygon);
-    setCalculatedArea(polygonArea);
+    setCalculatedArea(polygonArea*0.03954);
   
     let perimeter = 0;
     for (let i = 0; i < pathCoordinates.length; i++) {
@@ -264,7 +265,7 @@ export default function Home() {
       
         <View style={styles.overlay}>
           <Text style={styles.overlayText}>
-            Area: {calculatedArea.toFixed(2)} sq meters
+            Area: {calculatedArea.toFixed(2)} perches
           </Text>
           <Text style={styles.overlayText}>
             Perimeter: {polygonPerimeter.toFixed(3)} km
