@@ -22,36 +22,47 @@ function ContactForm() {
               </div>
             </div>
           </div>
-          <div className="newsletter" style={{border : "1px solid #007BFF"}}>
-           
-            <form className="contact-form" style={{paddingLeft : "0rem"}}>
-            <h2 style={{ textAlign: "left" }}>Stay in Touch</h2>
-        <label htmlFor="contact_name">Enter your name here:</label>
-        <input
-          type="text"
-          name="contact_name"
-          id="contact_name"
-          placeholder="John Doe"
-        />
 
-        <label htmlFor="newsletter_email">Example@gmail.com:</label>
-        <input
-          type="email"
-          name="newsletter_email"
-          id="newsletter_email"
-          placeholder="example@gmail.com"
-        />
+          <div className="contactForm">
+            <div className="contactSupport" >Stay In Touch</div>
+            <div className="inputName">
+            <label htmlFor="contact_name">Name : </label> 
+            </div>
+            <div className='contactInput'>
+            <input
+              type="text"
+              name="contact_name"
+              id="contact_name"
+              placeholder="John Doe"
+            />
+            </div>
+            <div className="inputName">
+            <label>Email : </label> 
+            </div>
+            <div className='contactInput'>
+            <input
+              type="email"
+              name="contact_email"
+              id="contact_email"
+              placeholder="doe@gmail.com"
+            />
+            </div>
+            <div className="inputName">
+            <label>Message : </label> 
+            </div>
+            <div className='contactInput'>
+            <textarea rows={3} cols={30}
+              name="contact_message"
+              id="contact_message"
+              placeholder="Type your message here"
+            >    
+            </textarea>
+            </div>
 
-        <label htmlFor="contact_message">Type your message here:</label>
-        <textarea rows={3} cols={30}
-           name="contact_message"
-          id="contact_message"
-          placeholder="Type your message here"
-        ></textarea>
-
-        <input type="submit" value="Submit" className="submit-button" />
-      </form>
+            <input type="submit" value="Submit" className="submit-button" />
           </div>
+
+          
         </div>
         <div className="social-icon" style={{ textAlign: "center", marginBottom: "2rem"}}>
           <FontAwesomeIcon icon={faLinkedin} style={{ color: "#007BFF" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
