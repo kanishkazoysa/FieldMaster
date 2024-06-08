@@ -15,7 +15,7 @@ import React, { useState, useEffect } from "react";
 import { Keyboard } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation ,useRoute } from "@react-navigation/native";//
 import {styles} from "./PlantationStyles";
 
 import Headersection from "../../components/Headersection";
@@ -55,6 +55,11 @@ export default function Plantation() {
   const [textRowspace, setTextRowSpace] = useState("");
 
   const navigation = useNavigation();
+  const route = useRoute(); // get route
+  const { area, perimeter } = route.params; // get area and perimeter from previous page
+
+  //print area and perimeter
+  console.log(area, perimeter);
 
   const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] =
     useState(null);
