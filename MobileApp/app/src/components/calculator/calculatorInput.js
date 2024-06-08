@@ -19,7 +19,6 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
-import { Platform } from "react-native";
 
 const CalculatorSelectModel = ({
   calculatorModalVisible,
@@ -27,7 +26,10 @@ const CalculatorSelectModel = ({
 }) => {
   const [calculatorSelectModalVisible, setCalculatorSelectModalVisible] =
     useState(false);
-  const [selectedValue, setSelectedValue] = useState("sqm");
+  const [selectedAreaUnit, setSelectedAreaUnit] = useState("sqm");
+  const [selectedPerimeterUnit, setSelectedPerimeterUnit] = useState("m");
+  const [inputAreaValue, setInputAreaValue] = useState(""); // State for Area input
+  const [inputPerimeterValue, setInputPerimeterValue] = useState(""); // State for Perimeter input
 
   const closeModal = () => {
     setCalculatorModalVisible(false);
@@ -37,8 +39,6 @@ const CalculatorSelectModel = ({
     setCalculatorSelectModalVisible(true);
     setCalculatorModalVisible(false);
   };
-
-  const navigation = useNavigation();
 
   return (
     <View>
@@ -89,17 +89,19 @@ const CalculatorSelectModel = ({
                       style={styles.input}
                       placeholder={"00.00"}
                       keyboardType="numeric"
+                      value={inputAreaValue}
+                      onChangeText={setInputAreaValue}
                     />
 
                     <View style={styles.dropdown}>
                       <Picker
-                        selectedValue={selectedValue}
+                        selectedValue={selectedAreaUnit}
                         style={{
                           height: responsiveHeight(6),
                           width: responsiveWidth(30),
                         }}
-                        onValueChange={(itemValue, itemIndex) =>
-                          setSelectedValue(itemValue)
+                        onValueChange={(itemValue) =>
+                          setSelectedAreaUnit(itemValue)
                         }
                       >
                         <Picker.Item label="Square Meters" value="sqm" />
@@ -133,22 +135,23 @@ const CalculatorSelectModel = ({
                       style={styles.input}
                       placeholder={"00.00"}
                       keyboardType="numeric"
+                      value={inputPerimeterValue}
+                      onChangeText={setInputPerimeterValue}
                     />
 
                     <View style={styles.dropdown}>
                       <Picker
-                        selectedValue={selectedValue}
+                        selectedValue={selectedPerimeterUnit}
                         style={{
                           height: responsiveHeight(6),
                           width: responsiveWidth(30),
                         }}
-                        onValueChange={(itemValue, itemIndex) =>
-                          setSelectedValue(itemValue)
+                        onValueChange={(itemValue) =>
+                          setSelectedPerimeterUnit(itemValue)
                         }
                       >
                         <Picker.Item label="m" value="m" />
                         <Picker.Item label="Km" value="km" />
-
                         {/* Add more items as needed */}
                       </Picker>
                     </View>
@@ -171,6 +174,8 @@ const CalculatorSelectModel = ({
       <CalculatorSelect
         calculatorSelectModalVisible={calculatorSelectModalVisible}
         setCalculatorSelectModalVisible={setCalculatorSelectModalVisible}
+        area={inputAreaValue}
+        perimeter={inputPerimeterValue}
       />
     </View>
   );
@@ -222,6 +227,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalView: {
+   
     marginTop: responsiveHeight(40),
     alignSelf: "center",
     backgroundColor: "#fff",
