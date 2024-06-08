@@ -15,7 +15,7 @@ import {
     Searchbar,
     placeholderStyle,
   } from "react-native-paper";
-  import { useNavigation } from "@react-navigation/native";
+  import { useNavigation ,useRoute} from "@react-navigation/native";
   import { MaterialCommunityIcons } from "@expo/vector-icons";
   
   import * as Print from 'expo-print';
@@ -28,7 +28,8 @@ import AxiosInstance from "../../AxiosInstance";
   
   export default function EffortOutput({ route }) {
     const { laborCount,workHours,machineCount,plantCount,stonesCount } = route.params;
-   
+   route = useRoute(); // get route
+    const {area,perimeter} =  route.params;
     const [searchItems] = useState();
     //get data
     const [latestData, setLatestData] = useState(null);
@@ -241,7 +242,7 @@ import AxiosInstance from "../../AxiosInstance";
                     <Text
                       style={styles.card2Text2}
                     >
-                      1.5km
+                      {perimeter}m
                     </Text>
                   </View>
                 </View>
@@ -260,7 +261,7 @@ import AxiosInstance from "../../AxiosInstance";
                     <Text
                       style={styles.card2Text4}
                     >
-                      100 acres
+                      {area} acres
                     </Text>
                   </View>
                 </View>

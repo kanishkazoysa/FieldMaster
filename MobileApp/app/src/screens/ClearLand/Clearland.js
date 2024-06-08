@@ -23,7 +23,7 @@ import {
 import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation ,useRoute} from "@react-navigation/native";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import AxiosInstance from "../../AxiosInstance";
@@ -36,7 +36,8 @@ import {
 
 export default function ClearLand() {
   const [text, setText] = React.useState("");
-
+  
+  
   const [pressed, setPressed] = useState(null);
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
   const [plantCount, setPlantCount] = useState("");
