@@ -1,23 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { Polygon } from 'react-native-maps';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { View, Text, FlatList, TouchableOpacity, Modal, StatusBar } from 'react-native';
-import { Appbar } from 'react-native-paper';
-import { Polyline } from 'react-native-maps';
+import React, { useEffect, useState } from "react";
+import { Polygon } from "react-native-maps";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+  StatusBar,
+} from "react-native";
+import { Appbar } from "react-native-paper";
+import { Polyline } from "react-native-maps";
 
 import {
   faLayerGroup,
   faLocationCrosshairs,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { styles } from './ResizeMapStyles';
-import MapView, { MAP_TYPES } from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-import * as Location from 'expo-location';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import axios from 'axios';
-import AxiosInstance from '../../../AxiosInstance';
-import Headersection from '../../../components/Headersection';
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { styles } from "./ResizeMapStyles";
+import MapView, { MAP_TYPES } from "react-native-maps";
+import { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import axios from "axios";
+import AxiosInstance from "../../../AxiosInstance";
+import Headersection from "../../../components/Headersection";
 
 const ResizeMapScreen = ({ navigation, route }) => {
   const { templateId } = route.params;
@@ -62,11 +69,11 @@ const ResizeMapScreen = ({ navigation, route }) => {
 
   //handling location and fetching template data
   useEffect(() => {
-    console.log('Template ID:', templateId);
+    console.log("Template ID:", templateId);
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access location was denied');
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
         return;
       }
       let location = await Location.getCurrentPositionAsync({
@@ -74,36 +81,36 @@ const ResizeMapScreen = ({ navigation, route }) => {
       });
       setCurrentLocation(location);
 
-     
-        AxiosInstance.get(
-          `/api/auth/mapTemplate/getOneTemplate/${templateId}`
-        )
-          .then((response) => {
-            setPoints(response.data.locationPoints);
-            console.log(response.data.locationPoints);
-    
-            // Calculate the average latitude and longitude
-            const avgLatitude =
-              response.data.locationPoints.reduce(
-                (total, point) => total + point.latitude,
-                0
-              ) / response.data.locationPoints.length;
-            const avgLongitude =
-              response.data.locationPoints.reduce(
-                (total, point) => total + point.longitude,
-                0
-              ) / response.data.locationPoints.length;
-    
-            setRegion({
-              latitude: avgLatitude,
-              longitude: avgLongitude,
-              latitudeDelta: 0.0005,
-              longitudeDelta: 0.0005,
-            });
-          })
-      .catch((error) => {
-        console.error('An error occurred while fetching the template:', error);
-      });
+      AxiosInstance.get(`/api/auth/mapTemplate/getOneTemplate/${templateId}`)
+        .then((response) => {
+          setPoints(response.data.locationPoints);
+          console.log(response.data.locationPoints);
+
+          // Calculate the average latitude and longitude
+          const avgLatitude =
+            response.data.locationPoints.reduce(
+              (total, point) => total + point.latitude,
+              0
+            ) / response.data.locationPoints.length;
+          const avgLongitude =
+            response.data.locationPoints.reduce(
+              (total, point) => total + point.longitude,
+              0
+            ) / response.data.locationPoints.length;
+
+          setRegion({
+            latitude: avgLatitude,
+            longitude: avgLongitude,
+            latitudeDelta: 0.0005,
+            longitudeDelta: 0.0005,
+          });
+        })
+        .catch((error) => {
+          console.error(
+            "An error occurred while fetching the template:",
+            error
+          );
+        });
     })();
   }, []);
 
@@ -130,14 +137,14 @@ const ResizeMapScreen = ({ navigation, route }) => {
         );
 
         if (response.status === 200) {
-          console.log('Location updated successfully');
+          console.log("Location updated successfully");
           setIsMarkerMoved(false);
-          navigation.navigate('SavedTemplatesScreen');
+          navigation.navigate("SavedTemplatesScreen");
         } else {
-          console.log('Failed to update location');
+          console.log("Failed to update location");
         }
       } catch (error) {
-        console.error('An error occurred while updating the location:', error);
+        console.error("An error occurred while updating the location:", error);
       }
     }
   };
@@ -157,13 +164,13 @@ const ResizeMapScreen = ({ navigation, route }) => {
   };
 
   const handleCancel = () => {
-    navigation.navigate('SavedTemplatesScreen');
+    navigation.navigate("SavedTemplatesScreen");
   };
   const mapTypes = [
-    { name: 'Satellite', value: 'satellite' },
-    { name: 'Standard', value: 'standard' },
-    { name: 'Hybrid', value: 'hybrid' },
-    { name: 'Terrain', value: 'terrain' },
+    { name: "Satellite", value: "satellite" },
+    { name: "Standard", value: "standard" },
+    { name: "Hybrid", value: "hybrid" },
+    { name: "Terrain", value: "terrain" },
   ];
 
   const toggleMapType = () => {
@@ -172,7 +179,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
   return (
     <>
       <Modal
-        animationType='slide'
+        animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}
@@ -180,9 +187,9 @@ const ResizeMapScreen = ({ navigation, route }) => {
         <View
           style={{
             flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
           }}
         >
           <View style={styles.centeredView}>
@@ -210,8 +217,11 @@ const ResizeMapScreen = ({ navigation, route }) => {
         </View>
       </Modal>
       <View>
-      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-      <Headersection navigation={navigation} title="Resize Map"></Headersection>
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <Headersection
+          navigation={navigation}
+          title="Resize Map"
+        ></Headersection>
       </View>
       {region && (
         <View style={{ flex: 1 }}>
@@ -239,15 +249,15 @@ const ResizeMapScreen = ({ navigation, route }) => {
             {!isPolygonComplete && points.length > 1 && (
               <Polyline
                 coordinates={points}
-                strokeColor='#000'
+                strokeColor="#000"
                 strokeWidth={1}
               />
             )}
             {isPolygonComplete && points.length > 2 && (
               <Polygon
                 coordinates={points}
-                strokeColor='#000'
-                fillColor='rgba(199, 192, 192, 0.5)'
+                strokeColor="#000"
+                fillColor="rgba(199, 192, 192, 0.5)"
                 strokeWidth={1}
               />
             )}
@@ -260,7 +270,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
               toggleMapType();
             }}
           >
-            <FontAwesomeIcon icon={faLayerGroup} size={25} color='#fff' />
+            <FontAwesomeIcon icon={faLayerGroup} size={25} color="#fff" />
             {showDropdown && (
               <View style={styles.dropdownContainer}>
                 <FlatList
@@ -270,7 +280,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
                       style={styles.dropdownItem}
                       onPress={() => selectMapType(index)}
                     >
-                      <Text style={{ color: '#fff' }}>{item.name}</Text>
+                      <Text style={{ color: "#fff" }}>{item.name}</Text>
                     </TouchableOpacity>
                   )}
                   keyExtractor={(item) => item.value}
@@ -285,7 +295,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
             <FontAwesomeIcon
               icon={faLocationCrosshairs}
               size={25}
-              color='#fff'
+              color="#fff"
             />
           </TouchableOpacity>
           <View>
@@ -295,9 +305,9 @@ const ResizeMapScreen = ({ navigation, route }) => {
                 onPressOut={() => setIsButtonPressed(false)}
               >
                 <MaterialCommunityIcons
-                  name='arrow-u-left-top'
+                  name="arrow-u-left-top"
                   size={24}
-                  color='white'
+                  color="white"
                   style={styles.sideIconStyle}
                   onPress={handleUndoLastPoint}
                 />

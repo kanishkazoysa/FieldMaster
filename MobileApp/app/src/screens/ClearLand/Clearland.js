@@ -37,7 +37,7 @@ import {
 
 export default function ClearLand({ route }) {
   const navigation = useNavigation();
-  const{id,Area,Perimeter} =  route.params;
+  const { id, Area, Perimeter } = route.params;
   const [text, setText] = React.useState("");
 
   const [pressed, setPressed] = useState(null);
