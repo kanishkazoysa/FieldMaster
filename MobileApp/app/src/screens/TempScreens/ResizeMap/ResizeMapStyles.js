@@ -1,4 +1,10 @@
 import { StyleSheet } from 'react-native';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveScreenFontSize,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
 
 export const styles = StyleSheet.create({
   testingText: {
@@ -178,27 +184,30 @@ export const styles = StyleSheet.create({
   buttonViewStyle: {
     flexDirection: 'row',
   },
+
+
+  //for resize map
   buttonContainer: {
     position: 'absolute',
-    bottom: 0,
+    bottom: responsiveHeight(0),
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: 'transparent',
-    marginBottom: 10,
+    marginBottom: responsiveHeight(2),
   },
   btnStyle: {
     backgroundColor: '#0866FF',
-    padding: 10,
-    margin: 10,
-    borderRadius: 11,
+    padding: responsiveHeight(1.25),
+    margin: responsiveHeight(1.25),
+    borderRadius: responsiveWidth(2.75),
     alignItems: 'center',
   },
   cancelBtnStyle: {
     backgroundColor: '#FF0000',
-    padding: 10,
-    margin: 10,
-    borderRadius: 11,
+    padding: responsiveHeight(1.25),
+    margin: responsiveHeight(1.25),
+    borderRadius: responsiveWidth(2.75),
     alignItems: 'center',
   },
   sideIconWrap: {
