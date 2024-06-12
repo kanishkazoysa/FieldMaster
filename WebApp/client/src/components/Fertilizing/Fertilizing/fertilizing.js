@@ -245,7 +245,7 @@ const [selectedFrequency, setSelectedFrequency] = useState(null);
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="text"
+                  type="number"
                   style={styles.box3input}
                   placeholder="00"
                   value={textFertilizationNUmberoftime}
@@ -272,7 +272,7 @@ const [selectedFrequency, setSelectedFrequency] = useState(null);
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="text"
+                  type="number"
                   style={styles.box3input}
                   placeholder="100"
                   value={textFertilizationAmount}
@@ -299,10 +299,6 @@ const [selectedFrequency, setSelectedFrequency] = useState(null);
               </div>
             </div>
           </div>
-
-
-
-
 
           {/* calculate button */}
           <div style={styles.bottom}>
