@@ -53,14 +53,18 @@ export default function Fertilizing(
     setTextFertilizationAmount(event.target.value);
   };
 
+  const [frequency, setFrequency] = useState(''); 
 
+  const handleFrequencyChange = (selectedFrequency) => {
+      setFrequency(selectedFrequency);
+  };
 
   const handleAmountUnitChange = (selectedOption) => {
     setFertilizerAmountUnitselectedValue1(selectedOption);
     setFertilizerAmountUnitselectedValue(selectedOption.value);
   };
 
-
+const [selectedFrequency, setSelectedFrequency] = useState(null);
 
   const handleFertilizingDetails = async (e) => {
 
@@ -90,7 +94,7 @@ export default function Fertilizing(
 
       // Make POST request to the backend
       const response = await axios.post(
-        "http://10.10.23.159:3000/api/fertilizers/fertilizers",
+        "http://192.168.1.2:3000/api/fertilizers/fertilizers",
         requestData
       );
 
@@ -184,6 +188,50 @@ export default function Fertilizing(
 
             </div>
           </div>
+
+
+          <div style={styles.BoxFrequency}>
+  <p style={styles.titleText}>Frequency</p>
+  <div style={styles.frequencyButtonContainer}>
+    <button
+      style={{
+        ...styles.frequencyButton,
+        ...(selectedFrequency === 'daily' && styles.selectedFrequencyButton)
+      }}
+      onClick={() => handleFrequencyChange('daily')}
+    >
+      Daily
+    </button>
+    <button
+      style={{
+        ...styles.frequencyButton,
+        ...(selectedFrequency === 'weekly' && styles.selectedFrequencyButton)
+      }}
+      onClick={() => handleFrequencyChange('weekly')}
+    >
+      Weekly
+    </button>
+    <button
+      style={{
+        ...styles.frequencyButton,
+        ...(selectedFrequency === 'monthly' && styles.selectedFrequencyButton)
+      }}
+      onClick={() => handleFrequencyChange('monthly')}
+    >
+      Monthly
+    </button>
+    <button
+      style={{
+        ...styles.frequencyButton,
+        ...(selectedFrequency === 'quarterly' && styles.selectedFrequencyButton)
+      }}
+      onClick={() => handleFrequencyChange('quarterly')}
+    >
+      Quarterly
+    </button>
+  </div>
+</div>
+
           {/* box 3 */}
           <div style={styles.box3}>
             <div style={styles.box3Property}>
@@ -206,6 +254,11 @@ export default function Fertilizing(
               </div>
             </div>
           </div>
+
+
+
+
+
           {/* box 4 */}
           <div style={styles.box3}>
             <div style={styles.box3Property}>
@@ -246,6 +299,8 @@ export default function Fertilizing(
               </div>
             </div>
           </div>
+
+
 
 
 

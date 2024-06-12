@@ -388,12 +388,53 @@ export const styles = {
       backgroundColor: "#0866FF",
       alignItems: "center",
       justifyContent: "center",
-      marginTop: 130,
+      marginTop: 65,
       borderRadius: 11,
       borderWidth: 0,
     },
   
-    
-    
+    //frequency
+    BoxFrequency: {
+      width: "90%",
+      height: "64px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      backgroundColor: "white",
+      marginTop: "10px",
+      borderRadius: "11px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      padding: "10px",
+    },
+
+frequencyButtonContainer: {
+  display: "flex",
+  justifyContent: "space-between",
+  width: "100%",
+  marginTop: "5px",
+},
+
+frequencyButton: {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "white",
+  color: "black",
+  width: "58px", // Adjust width as needed
+  height: "23px", // Adjust height as needed
+  borderRadius: "7px",
+  borderColor:"grey",
+  borderWidth: "0.5px",
+  fontSize: "10px", // Adjust font size as needed
+},
+selectedFrequencyButton: {
+  borderColor: "red", // Border color for selected button
+},
+FeqPropertyLabel: {
+  fontSize: 13,
+  
+  marginBottom: 0,
+},
+
   };
   
