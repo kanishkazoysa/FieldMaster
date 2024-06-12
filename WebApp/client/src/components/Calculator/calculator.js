@@ -96,7 +96,7 @@ export default function Calculator({ onBackToSidebar }) {
                                 <Select
                                     placeholder="Acres"
                                     options={[
-                                        { value: "m", label: "m" },
+                                      { value: "m²", label: "m²" }, 
                                         { value: "Acres", label: "Acres" },
                                     ]}
                                     value={AreaUnitselectedValue1}
@@ -180,6 +180,8 @@ export default function Calculator({ onBackToSidebar }) {
                         onBackToSidebar={handleBackClick}
                         area={area}
                         perimeter={perimeter}
+                        PerimeterUnitselectedValue={PerimeterUnitselectedValue}
+                        AreaUnitselectedValue={AreaUnitselectedValue}
                     />
                 )}
             </div>

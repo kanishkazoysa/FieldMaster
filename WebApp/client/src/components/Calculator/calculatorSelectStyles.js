@@ -119,7 +119,9 @@ export const styles = {
       alignItems: "center",
       marginTop: 20,
     },
-  
+  para:{
+    fontSize:12,
+  },
     Button1: {
       display: "flex",
       width: "100%",
@@ -140,6 +142,17 @@ export const styles = {
       borderTop: "none",
       outline: "none",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      transition: "background-color 0.3s, color 0.3s",
+    },
+    Button1Hover: {
+        backgroundColor: "#007BFF",
+        color: "white",
+    },
+    Box4ButtonTextHover: {
+        color: "white",
+    },
+    iconHover: {
+        color: "white",
     },
     Box4ButtonText: {
       color: "black",
@@ -202,6 +215,18 @@ export const styles = {
         marginTop: "10px",
         borderRadius: "11px",
         boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+        padding: "10px",
+      },
+      BoxPara: {
+        width: "90%",
+        height: "68px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        backgroundColor: "white",
+        marginTop: "10px",
+        borderRadius: "11px",
+        
         padding: "10px",
       },
 }
