@@ -127,7 +127,7 @@ export const styles = {
         backgroundColor: "#0866FF",
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 130,
+        marginTop:20,
         borderRadius: 11,
         borderWidth: 0,
       },
