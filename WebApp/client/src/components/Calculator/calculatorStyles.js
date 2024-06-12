@@ -113,6 +113,27 @@ export const styles = {
         fontSize: 8,
         marginTop: 8,
         marginLeft: -95
-      }
+      },
+      bottom: {
+        width: "92%",
+        alignItems: "center",
+        marginTop: 20,
+      },
     
+      Button1: {
+        display: "flex",
+        width: "100%",
+        height: 35,
+        backgroundColor: "#0866FF",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 130,
+        borderRadius: 11,
+        borderWidth: 0,
+      },
+      Box4ButtonText: {
+        color: "white",
+        fontSize: 13,
+        marginBottom: 0,
+      },
 }
