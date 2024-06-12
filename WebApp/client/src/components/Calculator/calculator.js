@@ -5,6 +5,7 @@ import {styles} from "./calculatorStyles.js";
 import { SiZalando } from "react-icons/si";
 import { FaVectorSquare } from "react-icons/fa6";
 import Select from "react-select";
+import { BsBoundingBox } from "react-icons/bs";
 
 export default function Calculator({onBackToSidebar})  {
     const [perimeter, setPerimeter] = useState("1.5");
@@ -79,9 +80,53 @@ export default function Calculator({onBackToSidebar})  {
                 <p>*Note that this area is approximately correct</p>
             </div>
           </div>
+
+          <div style={styles.box3}>
+            <div style={styles.box3Property}>
+              <div>
+                <BsBoundingBox name="format-line-spacing" size={25} color="gray" />
+              </div>
+              <div style={styles.box3PropertyDetails}>
+                <p style={styles.Box3PropertyLabel}>Perimeter</p>
+              </div>
+            </div>
+            <div style={styles.box3Property}>
+              <div style={styles.box3inputContainer}>
+                <input
+                  type="text"
+                  style={styles.box3input}
+                  placeholder="25"
+                  value={area}
+                  onChange={handleAreaChange}
+                />
+                <Select
+                  placeholder="m"
+                  options={[
+                    { value: "m", label: "m" },
+                    { value: "km", label: "km" },
+                  ]}
+                  value={AreaUnitselectedValue1}
+                  onChange={handleAreaUnitChange}
+                  styles={{
+                    control: (provided) => ({
+                      ...provided,
+                      textAlign: "center",
+                      fontSize: "14px",
+                      width: "120px",
+                      
+                    }),
+                  }}
+                />
+              </div>
+            </div>
+            <div style={styles.smallText}>
+                <p>*Note that this Perimeter is approximately correct</p>
+            </div>
+          </div>
+                  
     </div>
 
-    // area section
+    // perimeter section
 
     
   )
