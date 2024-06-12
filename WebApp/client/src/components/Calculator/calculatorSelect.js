@@ -30,7 +30,7 @@ export default function CalculatorSelect({ onBackToSidebar, area, perimeter, Per
                         <BsBoundingBox color="gray" size={28} />
                         <div style={styles.propertyDetails}>
                             <p style={styles.propertyLabel}>Perimeter</p>
-                            <p style={styles.propertyValue}>{perimeter}{PerimeterUnitselectedValue}</p>
+                            <p style={styles.propertyValue}>{perimeter} {PerimeterUnitselectedValue}</p>
                         </div>
                     </div>
                     <div className="property" style={styles.property}>
