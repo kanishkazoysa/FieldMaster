@@ -8,9 +8,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { errorUtils } from '../../../common.app';
 import AxiosInstance from '../../../AxiosInstance';
 import {
-  responsiveHeight,
   responsiveFontSize,
-  responsiveWidth,
 } from 'react-native-responsive-dimensions';
 
 const CustomPerimeterIcon = (props) => (

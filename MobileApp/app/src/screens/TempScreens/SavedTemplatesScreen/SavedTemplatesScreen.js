@@ -14,8 +14,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import AxiosInstance from "../../../AxiosInstance";
 import {
   responsiveFontSize,
-  responsiveHeight,
-  responsiveWidth,
 } from 'react-native-responsive-dimensions';
 
 const CustomEditIcon = (props) => {
