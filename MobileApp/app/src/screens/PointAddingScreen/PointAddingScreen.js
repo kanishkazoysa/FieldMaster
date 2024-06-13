@@ -111,14 +111,12 @@ const PointAddingScreen = ({ navigation, route }) => {
       alert('You need at least 3 points to calculate area and perimeter');
       return;
     }
-    /* the formattedPoints is used to store the formatted points */
     const formattedPoints = points.map((point) => [
       point.longitude,
       point.latitude,
     ]);
     formattedPoints.push(formattedPoints[0]);
 
-    /* the poly is used to store the polygon */
     const poly = polygon([formattedPoints]);
     const areaMeters = area(poly);
     const perimeterMeters = length(poly, { units: 'meters' });
@@ -131,30 +129,17 @@ const PointAddingScreen = ({ navigation, route }) => {
       [
         {
           text: 'Cancel',
-          onPress: () => setPoints([]), // Clear the points when Cancel is pressed
+          onPress: () => setPoints([]),
           style: 'cancel',
         },
         {
           text: 'OK',
           onPress: () => {
-            /* the axios request is used to save the template */
-            AxiosInstance.post('/api/auth/mapTemplate/saveTemplate', {
+            navigation.navigate('SaveScreen', {
               locationPoints: points,
               area: areaPerches,
               perimeter: perimeterKilometers,
-            })
-              .then((response) => {
-                console.log(response.data);
-                navigation.navigate('SaveScreen', {
-                  id: response.data._id,
-                  area: areaPerches,
-                  perimeter: perimeterKilometers,
-                  userId: response.data.userId,
-                });
-              })
-              .catch((error) => {
-                console.error(error.response.data);
-              });
+            });
           },
         },
       ],
@@ -230,11 +215,11 @@ const PointAddingScreen = ({ navigation, route }) => {
     <>
       <View style={styles.searchbar}>
         <View style={styles.locationIconContainer}>
-          <MaterialIcons name='location-on' size={24} color='#007BFF' />
+          <MaterialIcons name="location-on" size={24} color="#007BFF" />
         </View>
         <TextInput
-          placeholder='Search Location'
-          placeholderTextColor='rgba(0, 0, 0, 0.5)'
+          placeholder="Search Location"
+          placeholderTextColor="rgba(0, 0, 0, 0.5)"
           onFocus={onFocus}
           onBlur={onBlur}
           style={[
@@ -250,7 +235,7 @@ const PointAddingScreen = ({ navigation, route }) => {
             onPress={clearSearchQuery}
             style={styles.clearIconContainer}
           >
-            <MaterialIcons name='cancel' size={24} color='#707070' />
+            <MaterialIcons name="cancel" size={24} color="#707070" />
           </TouchableOpacity>
         )}
         <View style={{ marginLeft: 10 }}>
@@ -258,7 +243,7 @@ const PointAddingScreen = ({ navigation, route }) => {
         </View>
       </View>
       <Modal
-        animationType='slide'
+        animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}
@@ -326,15 +311,15 @@ const PointAddingScreen = ({ navigation, route }) => {
             {!isPolygonComplete && points.length > 1 && (
               <Polyline
                 coordinates={points}
-                strokeColor='#000'
+                strokeColor="#000"
                 strokeWidth={1}
               />
             )}
             {isPolygonComplete && points.length > 2 && (
               <Polygon
                 coordinates={points}
-                strokeColor='#000'
-                fillColor='rgba(199, 192, 192, 0.5)'
+                strokeColor="#000"
+                fillColor="rgba(199, 192, 192, 0.5)"
                 strokeWidth={1}
               />
             )}
@@ -347,7 +332,7 @@ const PointAddingScreen = ({ navigation, route }) => {
               toggleMapType();
             }}
           >
-            <FontAwesomeIcon icon={faLayerGroup} size={25} color='#fff' />
+            <FontAwesomeIcon icon={faLayerGroup} size={25} color="#fff" />
             {showDropdown && (
               <View style={styles.dropdownContainer}>
                 <FlatList
@@ -372,7 +357,7 @@ const PointAddingScreen = ({ navigation, route }) => {
             <FontAwesomeIcon
               icon={faLocationCrosshairs}
               size={25}
-              color='#fff'
+              color="#fff"
             />
           </TouchableOpacity>
           <View>
@@ -382,9 +367,9 @@ const PointAddingScreen = ({ navigation, route }) => {
                 onPressOut={() => setIsButtonPressed(false)}
               >
                 <MaterialCommunityIcons
-                  name='arrow-u-left-top'
+                  name="arrow-u-left-top"
                   size={24}
-                  color='white'
+                  color="white"
                   style={styles.sideIconStyle}
                   onPress={handleUndoLastPoint}
                 />
@@ -394,9 +379,9 @@ const PointAddingScreen = ({ navigation, route }) => {
                 onPressOut={() => setIsButtonPressed(false)}
               >
                 <MaterialCommunityIcons
-                  name='shape-polygon-plus'
+                  name="shape-polygon-plus"
                   size={24}
-                  color='white'
+                  color="white"
                   style={styles.sideIconStyle}
                   onPress={handleCompleteMap}
                 />

@@ -16,17 +16,17 @@ import {
 const CustomPerimeterIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='vector-square'
+    name="vector-square"
     size={responsiveFontSize(3.7)}
-    color='grey'
+    color="grey"
   />
 );
 const CustomAreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='texture-box'
+    name="texture-box"
     size={responsiveFontSize(3.7)}
-    color='grey'
+    color="grey"
   />
 );
 
@@ -36,6 +36,7 @@ export function SaveScreen({ navigation, route }) {
     area: initialArea,
     perimeter: initialPerimeter,
     userId,
+    locationPoints,
   } = route.params;
   const [perimeter, setPerimeter] = React.useState(
     parseFloat(initialPerimeter).toFixed(2)
@@ -50,10 +51,7 @@ export function SaveScreen({ navigation, route }) {
 
   /* this function is used to save the data */
   const onSaveButtonPress = () => {
-    console.log(id);
-    console.log(userId);
     console.log('pressed save');
-    /* this object is used to store the data item */
     const dataItem = {
       perimeter: perimeter,
       area: area,
@@ -62,14 +60,13 @@ export function SaveScreen({ navigation, route }) {
       landType: landType,
       location: location,
       description: descriptionText,
-      id: userId,
+      locationPoints: locationPoints,
     };
     console.log(dataItem);
 
-    /* this is the axios request to update the data */
-    AxiosInstance.put(`/api/auth/mapTemplate/updateTemplate/${id}`, dataItem)
+    AxiosInstance.post('/api/auth/mapTemplate/saveTemplate', dataItem)
       .then((response) => {
-        console.log('data updated');
+        console.log('data saved');
         console.log(response.data);
         navigation.navigate('SavedTemplatesScreen');
       })
@@ -152,8 +149,8 @@ export function SaveScreen({ navigation, route }) {
                   style={styles.input_text}
                   value={location}
                   onChangeText={(text) => setLocation(text)}
-                  outlineColor='black'
-                  underlineColor='black'
+                  outlineColor="black"
+                  underlineColor="black"
                 />
               </View>
               <View style={styles.input_view}>
@@ -162,8 +159,8 @@ export function SaveScreen({ navigation, route }) {
                   style={styles.input_text}
                   value={landType}
                   onChangeText={(text) => setLandType(text)}
-                  outlineColor='black'
-                  underlineColor='black'
+                  outlineColor="black"
+                  underlineColor="black"
                 />
               </View>
             </View>
@@ -172,13 +169,13 @@ export function SaveScreen({ navigation, route }) {
               <Text style={styles.bold_text1}>Description:</Text>
 
               <TextInput
-                placeholder='Type here...'
+                placeholder="Type here..."
                 value={descriptionText}
                 onChangeText={(text) => setDescriptionText(text)}
                 multiline={true}
                 numberOfLines={6}
                 style={styles.description_input}
-                underlineColor='transparent'
+                underlineColor="transparent"
               />
             </View>
           </View>
