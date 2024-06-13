@@ -1,9 +1,10 @@
 import './RegisterStyle.css'
+import RegisterForm from './RegisterForm';
 
 const RegisterPage = () => {
   return (
     <div className='left-container'>
-    <p>jghfhgc li dfhadciu iughdf iughiua iuhifuhas</p>
+    <RegisterForm />
     </div>
   )
 }
