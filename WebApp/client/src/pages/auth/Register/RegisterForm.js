@@ -1,10 +1,11 @@
-import React from 'react';
-import { Form, Input, Button } from 'antd';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Form, Input, Button } from "antd";
+import { Link } from "react-router-dom";
+
 
 const RegisterForm = () => {
   const onFinish = (values) => {
-    console.log('Received values of form:', values);
+    console.log("Received values of form:", values);
   };
 
   return (
@@ -22,7 +23,7 @@ const RegisterForm = () => {
           rules={[
             {
               required: true,
-              message: 'Please input your first name!',
+              message: "Please input your first name!",
             },
           ]}
         >
@@ -34,7 +35,7 @@ const RegisterForm = () => {
           rules={[
             {
               required: true,
-              message: 'Please input your last name!',
+              message: "Please input your last name!",
             },
           ]}
         >
@@ -46,11 +47,11 @@ const RegisterForm = () => {
           rules={[
             {
               required: true,
-              message: 'Please input your email!',
+              message: "Please input your email!",
             },
             {
-              type: 'email',
-              message: 'Please enter a valid email!',
+              type: "email",
+              message: "Please enter a valid email!",
             },
           ]}
         >
@@ -62,7 +63,7 @@ const RegisterForm = () => {
           rules={[
             {
               required: true,
-              message: 'Please input your password!',
+              message: "Please input your password!",
             },
           ]}
         >
@@ -74,14 +75,16 @@ const RegisterForm = () => {
           rules={[
             {
               required: true,
-              message: 'Please confirm your password!',
+              message: "Please confirm your password!",
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue('password') === value) {
+                if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();
                 }
-                return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                return Promise.reject(
+                  new Error("The two passwords that you entered do not match!")
+                );
               },
             }),
           ]}

@@ -2,15 +2,17 @@
 
 
 .left-container {
-  width: 100%;
-  max-width: 400px;
-  padding: 20px;
-  background-color: rgb(38, 70, 99);
-  border-radius: 10px;
-  display: flex;
-  margin-left: 11%;
+  align-items: center;
+  justify-content: center;
 }
+.logo-img {
+ width: 150px;
+} 
+.logo{
+  align-items: center;
+  margin-bottom: 20px;
 
+}
 .register-form-container {
   width: 100%;
   
@@ -33,6 +35,5 @@
 @media (min-width: 1000px) {
   .left-container {
     width: 50%;
-    margin-left: 11%;
   }
 }

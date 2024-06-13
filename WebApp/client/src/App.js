@@ -22,21 +22,24 @@ export default function App() {
     <Router>
       <Routes>
       <Route
-      path="/register"
-      element={
-        <div className="register-container">
-          <RegisterPage />
-          <AuthLayout />
-        </div>
-      }
-    />
+          path="/register"
+          element={
+            <div className="main-container">
+              <div className="page-container">
+                <RegisterPage />
+              </div>
+              <div className="auth-layout">
+                <AuthLayout />
+              </div>
+            </div>
+          }
+        />
 
         
         {/* Route for the main content */}
         <Route path="/" element={<MainContent />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/emailVerification" element={<EmailVerified />} />
-
         <Route path="/managemap" element={<Managemap />} />
       </Routes>
     </Router>
