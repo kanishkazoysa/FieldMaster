@@ -32,10 +32,8 @@ const CustomAreaIcon = (props) => (
 
 export function SaveScreen({ navigation, route }) {
   const {
-    id,
     area: initialArea,
     perimeter: initialPerimeter,
-    userId,
     locationPoints,
   } = route.params;
   const [perimeter, setPerimeter] = React.useState(
@@ -79,24 +77,25 @@ export function SaveScreen({ navigation, route }) {
       <StatusBar barStyle={'light-content'} backgroundColor={'#0866FF'} />
       <Appbar.Header style={styles.top_Bar_Whole} statusBarHeight={0}>
         <View style={styles.top_Bar_View}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <View>
+            <Text style={styles.top_Text_Styling}>Cancel</Text>
+          </View>
+        </TouchableOpacity>
           <TouchableOpacity onPress={onSaveButtonPress}>
             <View>
               <Text style={styles.top_Text_Styling}>Save</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-          >
-            <View>
-              <Text style={styles.top_Text_Styling}>Cancel</Text>
-            </View>
-          </TouchableOpacity>
         </View>
       </Appbar.Header>
+
       {/* three inner views */}
-      <ScrollView style={{ backgroundColor: '#ffffff8a' }}>
+      <ScrollView>
         <View style={styles.low_outer}>
           <View style={[styles.inner_View, styles.inner_View_01]}>
             <View style={styles.inner_View_01_inner}>
@@ -125,7 +124,7 @@ export function SaveScreen({ navigation, route }) {
               </View>
             </View>
           </View>
-          <View style={[styles.inner_View, styles.inner_view_02]}>
+          <View>
             <View style={styles.inner_view_02_inner}>
               <View style={styles.input_view}>
                 <Text style={styles.bold_text}>Template Name :</Text>
@@ -144,23 +143,19 @@ export function SaveScreen({ navigation, route }) {
                 />
               </View>
               <View style={styles.input_view}>
-                <Text style={styles.bold_text}>Location :</Text>
+                <Text style={styles.bold_text}>Location             :</Text>
                 <TextInput
                   style={styles.input_text}
                   value={location}
                   onChangeText={(text) => setLocation(text)}
-                  outlineColor="black"
-                  underlineColor="black"
                 />
               </View>
               <View style={styles.input_view}>
-                <Text style={styles.bold_text}>Land Type :</Text>
+                <Text style={styles.bold_text}>Land Type          :</Text>
                 <TextInput
                   style={styles.input_text}
                   value={landType}
                   onChangeText={(text) => setLandType(text)}
-                  outlineColor="black"
-                  underlineColor="black"
                 />
               </View>
             </View>
