@@ -21,9 +21,15 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route element={<AuthLayout />}>
-          <Route path="/register" element={<RegisterPage />} />
-        </Route>
+      <Route
+      path="/register"
+      element={
+        <div className="register-container">
+          <RegisterPage />
+          <AuthLayout />
+        </div>
+      }
+    />
 
         
         {/* Route for the main content */}
