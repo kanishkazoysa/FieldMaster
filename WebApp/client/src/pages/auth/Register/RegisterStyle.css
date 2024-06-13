@@ -1,0 +1,39 @@
+/* RegisterStyle.css */
+
+
+.left-container {
+  align-items: center;
+  justify-content: center;
+}
+.logo-img {
+ width: 150px;
+} 
+.logo{
+  align-items: center;
+  margin-bottom: 20px;
+
+}
+.register-form-container {
+  width: 100%;
+  
+}
+
+.register-button {
+  width: 100%;
+}
+
+.already-have-account {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.already-have-account a {
+  color: #1890ff;
+}
+
+
+@media (min-width: 1000px) {
+  .left-container {
+    width: 50%;
+  }
+}

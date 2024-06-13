@@ -21,16 +21,25 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route element={<AuthLayout />}>
-          <Route path="/register" element={<RegisterPage />} />
-        </Route>
+      <Route
+          path="/register"
+          element={
+            <div className="main-container">
+              <div className="page-container">
+                <RegisterPage />
+              </div>
+              <div className="auth-layout">
+                <AuthLayout />
+              </div>
+            </div>
+          }
+        />
 
         
         {/* Route for the main content */}
         <Route path="/" element={<MainContent />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/emailVerification" element={<EmailVerified />} />
-
         <Route path="/managemap" element={<Managemap />} />
       </Routes>
     </Router>
