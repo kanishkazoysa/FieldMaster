@@ -37,3 +37,45 @@ code {
     padding: 0 ;
   }
 }
+
+/* AuthLayout.css */
+.main-container {
+  display: flex;
+  flex:2;
+  flex-direction: row;
+  height: 100vh;
+}
+
+.page-container {
+  width: 50%;
+  display: flex;
+  flex:1;
+  justify-content: center;
+  align-items: center;
+ 
+}
+
+.auth-layout {
+  width: 50%;
+  flex:1;
+  padding: 20px 20px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Add this line */
+}
+
+@media (max-width: 999px) {
+  .main-container {
+    flex-direction: raw;
+    align-items: center;
+  }
+
+  .page-container,
+  .auth-layout {
+    width: 100%;
+  }
+
+  .auth-layout {
+    display: none;
+  }
+}
