@@ -1,0 +1,15 @@
+.left-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: rgb(38, 70, 99);
+    border-radius: 10px;
+    margin: 0 auto;
+    
+  }
+  
+  @media (min-width: 1000px) {
+    .left-container {
+      width: 50%;
+    }
+  }
