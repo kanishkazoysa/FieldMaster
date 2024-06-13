@@ -15,8 +15,6 @@ import Select from "react-select";
 import axios from "axios";
 import { FaTree } from "react-icons/fa";
 import FertilizingDetails from "../FertilizingDetails/fertilizingDetails";
-import { GiHourglass } from "react-icons/gi";
-import { FaHourglass } from 'react-icons/fa'; // Importing Hourglass icon from react-icons/fa
 
 
 export default function Fertilizing(
@@ -55,19 +53,18 @@ export default function Fertilizing(
 
   const [frequency, setFrequency] = useState(''); 
 
-  
+  const [selectedFrequency, setSelectedFrequency] = useState(null);
+
+const handleFrequencyChange = (selectedFrequency) => {
+  setSelectedFrequency(selectedFrequency);
+};
 
   const handleAmountUnitChange = (selectedOption) => {
     setFertilizerAmountUnitselectedValue1(selectedOption);
     setFertilizerAmountUnitselectedValue(selectedOption.value);
   };
 
-  const [selectedFrequency, setSelectedFrequency] = useState(null);
-
-  const handleFrequencyChange = (selectedFrequency) => {
-    setSelectedFrequency(selectedFrequency);
-  };
-
+ 
   const handleFertilizingDetails = async (e) => {
 
     try {
@@ -90,6 +87,10 @@ export default function Fertilizing(
       // Prepare data for the request
       const requestData = {
         textPlant,
+        textFertilizationNUmberoftime,
+        textFertilizationAmount,
+        textFertilizationType,
+        FertilizerAmountUnitselectedValue
 
 
       };
@@ -319,7 +320,19 @@ export default function Fertilizing(
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === "fertilizingDetails" && (<FertilizingDetails onBackToSidebar={handleBackClick}/>)}
+        {currentPage === "fertilizingDetails" 
+        && (<FertilizingDetails 
+        onBackToSidebar={handleBackClick}
+        textPlant={textPlant}
+        FertilizerAmountUnitselectedValue={FertilizerAmountUnitselectedValue}
+        textFertilizationNUmberoftime={textFertilizationNUmberoftime}
+        textFertilizationAmount={textFertilizationAmount}
+        textFertilizationType={textFertilizationType}
+        selectedFrequency={selectedFrequency}
+        PlantDensity={PlantDensity}
+        numberOfPlants={numberOfPlants}
+        
+        />)}
       </div>
     </div>
   );
