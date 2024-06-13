@@ -55,16 +55,18 @@ export default function Fertilizing(
 
   const [frequency, setFrequency] = useState(''); 
 
-  const handleFrequencyChange = (selectedFrequency) => {
-      setFrequency(selectedFrequency);
-  };
+  
 
   const handleAmountUnitChange = (selectedOption) => {
     setFertilizerAmountUnitselectedValue1(selectedOption);
     setFertilizerAmountUnitselectedValue(selectedOption.value);
   };
 
-const [selectedFrequency, setSelectedFrequency] = useState(null);
+  const [selectedFrequency, setSelectedFrequency] = useState(null);
+
+  const handleFrequencyChange = (selectedFrequency) => {
+    setSelectedFrequency(selectedFrequency);
+  };
 
   const handleFertilizingDetails = async (e) => {
 
@@ -191,46 +193,46 @@ const [selectedFrequency, setSelectedFrequency] = useState(null);
 
 
           <div style={styles.BoxFrequency}>
-  <p style={styles.titleText}>Frequency</p>
-  <div style={styles.frequencyButtonContainer}>
-    <button
-      style={{
-        ...styles.frequencyButton,
-        ...(selectedFrequency === 'daily' && styles.selectedFrequencyButton)
-      }}
-      onClick={() => handleFrequencyChange('daily')}
-    >
-      Daily
-    </button>
-    <button
-      style={{
-        ...styles.frequencyButton,
-        ...(selectedFrequency === 'weekly' && styles.selectedFrequencyButton)
-      }}
-      onClick={() => handleFrequencyChange('weekly')}
-    >
-      Weekly
-    </button>
-    <button
-      style={{
-        ...styles.frequencyButton,
-        ...(selectedFrequency === 'monthly' && styles.selectedFrequencyButton)
-      }}
-      onClick={() => handleFrequencyChange('monthly')}
-    >
-      Monthly
-    </button>
-    <button
-      style={{
-        ...styles.frequencyButton,
-        ...(selectedFrequency === 'quarterly' && styles.selectedFrequencyButton)
-      }}
-      onClick={() => handleFrequencyChange('quarterly')}
-    >
-      Quarterly
-    </button>
-  </div>
-</div>
+          <p style={styles.titleText}>Frequency</p>
+          <div style={styles.frequencyButtonContainer}>
+            <button
+              style={{
+                ...styles.frequencyButton,
+                ...(selectedFrequency === 'daily' && styles.selectedFrequencyButton)
+              }}
+              onClick={() => handleFrequencyChange('daily')}
+            >
+              Daily
+            </button>
+            <button
+              style={{
+                ...styles.frequencyButton,
+                ...(selectedFrequency === 'weekly' && styles.selectedFrequencyButton)
+              }}
+              onClick={() => handleFrequencyChange('weekly')}
+            >
+              Weekly
+            </button>
+            <button
+              style={{
+                ...styles.frequencyButton,
+                ...(selectedFrequency === 'monthly' && styles.selectedFrequencyButton)
+              }}
+              onClick={() => handleFrequencyChange('monthly')}
+            >
+              Monthly
+            </button>
+            <button
+              style={{
+                ...styles.frequencyButton,
+                ...(selectedFrequency === 'quarterly' && styles.selectedFrequencyButton)
+              }}
+              onClick={() => handleFrequencyChange('quarterly')}
+            >
+              Quarterly
+            </button>
+          </div>
+        </div>
 
           {/* box 3 */}
           <div style={styles.box3}>

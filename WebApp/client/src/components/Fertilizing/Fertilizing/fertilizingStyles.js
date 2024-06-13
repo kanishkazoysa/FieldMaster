@@ -428,7 +428,8 @@ frequencyButton: {
   fontSize: "10px", // Adjust font size as needed
 },
 selectedFrequencyButton: {
-  borderColor: "red", // Border color for selected button
+  borderColor: 'grey',
+  borderWidth: '3px',
 },
 FeqPropertyLabel: {
   fontSize: 13,
