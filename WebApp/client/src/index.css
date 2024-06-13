@@ -37,3 +37,25 @@ code {
     padding: 0 ;
   }
 }
+
+/* RegisterPage.css */
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+@media (min-width: 1000px) {
+  .register-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 999px) {
+  .register-container > :last-child {
+    display: none;
+  }
+}
