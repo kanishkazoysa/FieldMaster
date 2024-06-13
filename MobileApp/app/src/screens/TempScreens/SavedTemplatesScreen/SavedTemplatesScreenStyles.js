@@ -4,8 +4,18 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
+import { Platform, StatusBar } from 'react-native';
 
 export const styles = StyleSheet.create({
+  header: {
+    height: responsiveHeight(6.5),
+    backgroundColor: "#007BFF",
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
+  },
   top_Bar: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -14,7 +24,8 @@ export const styles = StyleSheet.create({
   },
   title_text: {
     color: 'white',
-    fontSize: responsiveFontSize(2.5),
+    fontSize: responsiveFontSize(2.3),
+    marginLeft: responsiveWidth(16.5),
   },
   low_outer: {
     marginTop: 10,
