@@ -4,18 +4,17 @@ import './AuthLayout.css';
 import sideImg from './img1.png'; // Import your image
 
 const contentStyle = {
-  height: '92vh',
+  height: '97vh',
   color: '#fff',
   lineHeight: '160px',
   textAlign: 'center',
   background: '#fff',
 };
 
-const AuthLayout = () => {
+const AuthLayout = ({ children }) => {
   const isAuthenticated = false;
 
   return (
-    <div className="background">
       <div className="carousel-container">
         <Carousel autoplay>
           <div>
@@ -31,8 +30,9 @@ const AuthLayout = () => {
             <img src={sideImg} alt="Slide 4" style={contentStyle} />
           </div>
         </Carousel>
+        {children}
       </div>
-    </div>
+    
   );
 };
 
