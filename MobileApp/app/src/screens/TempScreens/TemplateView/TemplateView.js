@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Appbar, ThemeProvider } from 'react-native-paper';
+import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { Appbar } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './TemplateViewStyles';
 import {
@@ -75,7 +75,7 @@ const CustomEditIcon = ({ navigation, item }) => (
     name="square-edit-outline"
     size={responsiveFontSize(2.8)}
     color={'white'}
-    style={{ marginRight: responsiveWidth(2) }}
+    style={{ marginRight: responsiveWidth(3) }}
   />
 );
 
@@ -98,7 +98,7 @@ const TemplateView = ({ route, navigation }) => {
             navigation.navigate('SavedTemplatesScreen');
           }}
         />
-        <Appbar.Content title={item.templateName} />
+        <Appbar.Content title={item.templateName} titleStyle={styles.title_text} />
         {/* pencil/ pen icon  */}
         <TouchableOpacity onPress={() => handleEdit(item)}>
           <CustomEditIcon />
