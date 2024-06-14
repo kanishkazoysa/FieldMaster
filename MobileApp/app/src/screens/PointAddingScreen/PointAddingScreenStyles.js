@@ -59,6 +59,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0, 0.7)',
     padding: responsiveWidth(2.5),
     marginTop: responsiveWidth(2),
+    borderRadius: 10,
   },
   btmBtnStyle: {
     color: 'white',
@@ -107,7 +108,7 @@ export const styles = StyleSheet.create({
   layerIconContainer: {
     position: 'absolute',
     backgroundColor: 'rgba(0,0,0, 0.7)',
-    padding: responsive,
+    padding: responsiveWidth(2.5),
     borderRadius: 5,
     right: responsiveWidth(3),
     top: Platform.OS === 'android' ? '15%' : '15%',
@@ -127,6 +128,13 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     left: responsiveWidth(1.5),
     zIndex: 1,
+  },
+  mapViewStyling: {
+    flex: 1,
+    paddingTop: 100,
+  },
+  innerViewStyle: {
+    marginLeft: responsiveWidth(2),
   },
   locationIconContainer: {
     position: 'absolute',
