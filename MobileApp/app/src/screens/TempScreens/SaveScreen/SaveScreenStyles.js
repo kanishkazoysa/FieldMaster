@@ -22,7 +22,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: responsiveWidth(5),
-    marginTop: responsiveHeight(2),
   },
   top_Bar_Whole: {
     backgroundColor: '#0866FF',

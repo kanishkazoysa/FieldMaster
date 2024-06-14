@@ -72,7 +72,7 @@ export function SaveScreen({ navigation, route }) {
   };
   return (
     <View>
-      <StatusBar barStyle={'light-content'} backgroundColor={'#0866FF'} />
+      <StatusBar barStyle={'light-content'} backgroundColor={'#007BFF'} />
       <Appbar.Header style={styles.top_Bar_Whole} statusBarHeight={0}>
         <View style={styles.top_Bar_View}>
         <TouchableOpacity
