@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform, StatusBar } from "react-native";
 import {
     responsiveHeight,
     responsiveWidth,
@@ -22,6 +22,28 @@ export const styles = StyleSheet.create({
       alignItems: "center",
       width: "100%",
     },
+
+    header: {
+      height: 45,
+      backgroundColor: "#007BFF",
+  
+      ...Platform.select({
+        android: {
+          marginTop: StatusBar.currentHeight,
+        },
+      }),
+    },
+    headerText: {
+     
+      fontSize: 18,
+      textAlign: "center",
+      color: "white",
+      position: "absolute",
+      bottom: 7,
+      left: 0,
+      right: 0,
+    },
+  
   
     Box1: {
       width: responsiveWidth(86),

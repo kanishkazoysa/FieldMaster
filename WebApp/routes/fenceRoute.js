@@ -95,7 +95,7 @@ router.get("/numberOfSticks/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const Fence = await fenceModel.findOne({ Id: id });
-    const map = await MapTemplateSchema.findOne({ Id: id });
+    const map = await MapTemplateSchema.findOne({ _id: id });
     if (!Fence && !map) {
       return res.status(404).json({ status: "error", message: "No recently updated data found" });
     }
