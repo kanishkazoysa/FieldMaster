@@ -17,6 +17,17 @@ export const styles = StyleSheet.create({
       justifyContent: "space-between",
       height: "100%",
     },
+
+    topSection: {
+      flexDirection: "row",
+      marginTop: responsiveHeight(1),
+      padding:responsiveWidth(0.6),
+      width: "100%",
+      justifyContent: "space-between", // Align the items to the right
+    },
+    iconButton: {
+      padding: 6,
+    },
   
     top: {
       alignItems: "center",
@@ -27,7 +38,7 @@ export const styles = StyleSheet.create({
       backgroundColor: "white",
       width: responsiveWidth(86),
       height: responsiveHeight(13),
-      marginTop: responsiveHeight(5),
+      marginTop: responsiveHeight(2),
       alignItems: "center",
       borderRadius: 11,
       shadowColor: "#000",

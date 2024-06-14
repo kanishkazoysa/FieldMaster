@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
@@ -18,23 +17,19 @@ import { useNavigation } from "@react-navigation/native";
 import {styles} from './FenceStyles';
 import Headersection from "../../../components/Headersection";
 import CustomButton from "../../../components/CustomButton";
-import axios from "axios";
 import AxiosInstance from "../../../AxiosInstance";
 
 export default function Fence({route}) {
+  const navigation = useNavigation();
+
   const{id,Area,Perimeter} =  route.params;
   const [FenceTypeselectedValue, setFenceTypeSelectedValue] = useState(null);
   const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] =useState(null);
   const [inputValueFenceLength, setinputValueFenceLength] = useState("");
   const [inputValueFenceAmount, setinputValueFenceAmount] = useState("");
   const [inputValuePostspace, setinputValuePostspace] = useState("");
-  // const [perimeter, setperimeter] = useState("1500");
-  //const [Area, setArea] = useState("100");
   const [fenceLengthsArray, setFenceLengthsArray] = useState([]);
   const [fenceAmountsArray, setFenceAmountsArray] = useState([]);
-
-  const navigation = useNavigation();
-
   const [displayValues, setDisplayValues] = useState([]);
   let inputValueFenceAmountRef = useRef(null);
 
@@ -55,6 +50,38 @@ export default function Fence({route}) {
       Alert.alert("Validation Error", "Both input fields are required.", [
         { text: "OK" },
       ]);
+      return;
+    }
+
+    if (inputValueFenceLength === null || inputValueFenceLength === '') {
+      Alert.alert("Error", "Please enter a valid Length");
+      return;
+    }
+  
+    if (inputValueFenceLength.includes(".") && inputValueFenceLength.split(".").length > 2) {
+      Alert.alert("Error", "Invalid float number");
+      return;
+    }
+  
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(inputValueFenceLength)) {
+      Alert.alert("Error", "Length must be a float or decimal number");
+      return;
+    }
+  
+    if (inputValueFenceAmount === null || inputValueFenceAmount === '') {
+      Alert.alert("Error", "Please enter a valid Count");
+      return;
+    }
+  
+    if (inputValueFenceAmount.includes(".") && inputValueFenceAmount.split(".").length > 2) {
+      Alert.alert("Error", "Invalid decimal number");
+      return;
+    }
+  
+    const regex2 = /^\d+$/; // allow only decimal numbers
+    if (!regex2.test(inputValueFenceAmount)) {
+      Alert.alert("Error", "Count must be a decimal number");
       return;
     }
 
@@ -112,42 +139,51 @@ export default function Fence({route}) {
 
   //calculate button click
   const handleFenceDetails = async () => {
-    
-    // send data to back end
-    AxiosInstance.post("/api/fence/fence", {
-      FenceTypeselectedValue,
-      inputValuePostspace,
-      PostSpaceUnitselectedValue,
-      displayValues,
-      fenceAmountsArray,
-      fenceLengthsArray,
-    })
-      .then((response) => {
-        if (
-          !PostSpaceUnitselectedValue ||
-          !FenceTypeselectedValue ||
-          !inputValuePostspace
-        ) {
-          // Display error message
-          Alert.alert("Error", "Please fill in all fields");
-          return;
-        }
-        navigation.navigate("FenceDetails", {
-          data: displayValues,
-          fenceType: FenceTypeselectedValue,
-          PostSpaceUnit: PostSpaceUnitselectedValue,
-          postSpace: inputValuePostspace,
-          Area:Area,
-          Perimeter:Perimeter,
-        });
-        //console.log(response.data);
-      })
+  // Validate the data
+  if (!PostSpaceUnitselectedValue ||!FenceTypeselectedValue ||!inputValuePostspace) {
+    // Display error message
+    Alert.alert("Error", "Please fill in all fields");
+    return;
+  }
 
-      .catch((error) => {
-        console.error("Error:", error.response.data);
-        Alert.alert("Error", "Failed to create fence. Please try again.");
+  if (inputValuePostspace === null || inputValuePostspace === '') {
+    Alert.alert("Error", "Please enter a valid Post Space");
+    return;
+  }
+
+  if (inputValuePostspace.includes(".") && inputValuePostspace.split(".").length > 2) {
+    Alert.alert("Error", "Invalid float number");
+    return;
+  }
+
+  const regex = /^\d+(\.\d+)?$/; // allow decimal and float numbers
+  if (!regex.test(inputValuePostspace)) {
+    Alert.alert("Error", "Please enter a valid Post Space");
+    return;
+  }
+
+  // If validation is successful, send data to backend
+  AxiosInstance.post("/api/fence/fence", {
+    id,
+    FenceTypeselectedValue,
+    inputValuePostspace,
+    PostSpaceUnitselectedValue,
+    displayValues,
+    fenceAmountsArray,
+    fenceLengthsArray,
+    Perimeter,
+  })
+   .then((response) => {
+      // If backend response is successful, navigate to detail page
+      navigation.navigate("FenceDetails", {
+        id: id,
       });
-  };
+    })
+   .catch((error) => {
+      console.error("Error:", error.response.data);
+      Alert.alert("Error", "Failed to create fence. Please try again.");
+    });
+};
 
   return (
     <KeyboardAvoidingView
