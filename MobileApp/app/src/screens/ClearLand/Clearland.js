@@ -49,16 +49,14 @@ export default function ClearLand({ route }) {
   const [workHours, setWorkHours] = useState("");
   const [searchItem, setSearchItem] = useState("");
   const [machineCount, setMachineCount] = useState("");
+  const [machineTypeArray, setMachinetypeArray] = useState([]);
+  const [machineCountArray, setMachineCountArray] = useState([]);
   const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [suggestions, setSuggestions] = useState([
-    "Bulldozers",
     "Excavators",
     "Backhoes",
-    "Skid-steer loaders",
     "Chainsaws",
-    "Brush cutters",
-    "Tractors",
-    "Land clearing rakes",
+    "Chainsaw breakers"
   ]);
 
   const handleSearch = (query) => {
@@ -129,35 +127,6 @@ export default function ClearLand({ route }) {
   const [displayValues, setDisplayValues] = useState([]);
 
   const handleAdd = () => {
-    //Validation plant count
-    let errorMessage = "";
-    let countInt = parseInt(plantCount, 10);
-
-    switch (plantTypeSelectedValue) {
-      case "Low":
-        if (!(countInt >= 1 && countInt <= 3)) {
-          errorMessage = "Enter a number between 0 and 4";
-        }
-        break;
-      case "Medium":
-        if (!(countInt > 3 && countInt <= 6)) {
-          errorMessage = "Enter a number between 3 and 7";
-        }
-        break;
-      case "High":
-        if (!(countInt > 6 && countInt <= 10)) {
-          errorMessage = "Enter a number between 6 and 11";
-        }
-        break;
-      default:
-        errorMessage = "Invalid plant type selection.";
-    }
-
-    if (errorMessage) {
-      alert(errorMessage);
-      return;
-    }
-
     //validation part Add button
     const combinedValue = plantCount + " x " + plantTypeSelectedValue;
     const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
@@ -175,37 +144,8 @@ export default function ClearLand({ route }) {
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
-    //Validation for stone count
-    let errorMessage = "";
-    let countInt = parseInt(stonesCount, 10);
-
-    switch (stoneTypeSelectedValue) {
-      case "Small":
-        if (!(countInt >= 1 && countInt <= 3)) {
-          errorMessage = "Enter a number between 0 and 4";
-        }
-        break;
-      case "Medium":
-        if (!(countInt > 3 && countInt <= 6)) {
-          errorMessage = "Enter a number between 3 and 7";
-        }
-        break;
-      case "High":
-        if (!(countInt > 6 && countInt <= 10)) {
-          errorMessage = "Enter a number between 6 and 11";
-        }
-        break;
-      default:
-        errorMessage = "Invalid plant type selection.";
-    }
-
-    if (errorMessage) {
-      alert(errorMessage);
-      return;
-    }
-
-    //validation part Add button
-    const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
+  //validation part Add button
+    const combinedValue1 = stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
       Boolean
     );
@@ -223,8 +163,12 @@ export default function ClearLand({ route }) {
   const [displayValues2, setDisplayValues2] = useState([]);
 
   const handleAdd2 = () => {
-    //validation part Add button
+    //add machine type and machine count to arrays
+    setMachinetypeArray([...machineTypeArray, searchItem]);
+    setMachineCountArray([...machineCountArray, machineCount]);
 
+    
+    //validation part Add button
     const combinedValue2 = searchItem + " x " + machineCount;
     const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
       Boolean
@@ -244,16 +188,12 @@ export default function ClearLand({ route }) {
     AxiosInstance.post("/api/clearLand/clearLand", {
       id,
       pressed,
-      plantTypeSelectedValue,
-      plantCount,
       displayValues,
-      stoneTypeSelectedValue,
-      stonesCount,
       displayValues1,
       laborCount,
       workHours,
-      searchItem,
-      machineCount,
+      machineTypeArray,
+      machineCountArray,
       displayValues2,
     })
       .then((response) => {
@@ -275,13 +215,11 @@ export default function ClearLand({ route }) {
           data1: displayValues1,
           data2: displayValues2,
           weedType: pressed,
-          plantType: plantTypeSelectedValue,
-          plantCount: plantCount,
-          stoneType: stoneTypeSelectedValue,
           stonesCount: stonesCount,
           laborCount: laborCount,
           workHours: workHours,
-          machineCount: machineCount,
+          machinetype: machineTypeArray,
+          machineCount: machineCountArray,
         });
 
         setPressed(" ");
@@ -323,42 +261,42 @@ export default function ClearLand({ route }) {
                   <Button
                     style={[
                       styles.button,
-                      pressed === "low" && styles.pressedButton,
+                      pressed === "Low" && styles.pressedButton,
                     ]}
                     labelStyle={[
                       styles.text,
-                      pressed === "low" && styles.pressedText,
+                      pressed === "Low" && styles.pressedText,
                     ]}
                     mode="contained-tonal"
-                    onPress={() => setPressed("low")}
+                    onPress={() => setPressed("Low")}
                   >
                     Low
                   </Button>
                   <Button
                     style={[
                       styles.button,
-                      pressed === "medium" && styles.pressedButton,
+                      pressed === "Medium" && styles.pressedButton,
                     ]}
                     labelStyle={[
                       styles.text,
-                      pressed === "medium" && styles.pressedText,
+                      pressed === "Medium" && styles.pressedText,
                     ]}
                     mode="contained-tonal"
-                    onPress={() => setPressed("medium")}
+                    onPress={() => setPressed("Medium")}
                   >
                     Medium
                   </Button>
                   <Button
                     style={[
                       styles.button,
-                      pressed === "high" && styles.pressedButton,
+                      pressed === "High" && styles.pressedButton,
                     ]}
                     labelStyle={[
                       styles.text,
-                      pressed === "high" && styles.pressedText,
+                      pressed === "High" && styles.pressedText,
                     ]}
                     mode="contained-tonal"
-                    onPress={() => setPressed("high")}
+                    onPress={() => setPressed("High")}
                   >
                     High
                   </Button>

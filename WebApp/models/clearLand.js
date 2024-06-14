@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+// const { default: EffortOutput } = require("../../MobileApp/app/src/screens/ClearLand/EffortOutput");
 
 const clearLandSchema = mongoose.Schema(
     {   
@@ -20,9 +21,18 @@ const clearLandSchema = mongoose.Schema(
         WorkHoursCount: {
             type: String,
         },
+        Machinetype: [{
+            type: String,
+        }],
+        MachineCount: [{
+            type: String,
+        }],
         MachineDetails: [{
             type: String,
         }],
+        EffortOutput: {
+            type: Number,
+        },
     }
     );
 
