@@ -1,30 +1,40 @@
-import React, { useState } from 'react';
-import { View, Image, Text, ScrollView, Dimensions } from 'react-native';
-import { Appbar, ThemeProvider, TextInput } from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { styles } from './EditTemplateStyle';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import AxiosInstance from '../../../AxiosInstance';
+import React, { useState } from "react";
+import { View, Image, Text, ScrollView, StatusBar } from "react-native";
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
+import { Appbar, ThemeProvider, TextInput } from "react-native-paper";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { styles } from "./EditTemplateStyle";
+import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import AxiosInstance from "../../../AxiosInstance";
 
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'green',
-    accent: 'red',
+    primary: "green",
+    accent: "red",
   },
 };
 
 const PerimeterIcon = (props) => (
-  <MaterialCommunityIcons {...props} name="crop" size={25} color="grey" />
+  <MaterialCommunityIcons
+    {...props}
+    name="crop"
+    size={responsiveFontSize(5)}
+    color="grey"
+  />
 );
 
 const AreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name="dice-4-outline"
-    size={25}
+    size={responsiveFontSize(5)}
     color="grey"
   />
 );
@@ -48,68 +58,65 @@ const EditTemplate = ({ route, navigation }) => {
         description: description,
       })
         .then((response) => {
-          alert('Template updated');
-          navigation.navigate('SavedTemplatesScreen');
+          alert("Template updated");
+          navigation.navigate("SavedTemplatesScreen");
         })
         .catch((error) => {
           console.error(error);
         });
     } else {
-      navigation.navigate('SavedTemplatesScreen');
+      navigation.navigate("SavedTemplatesScreen");
     }
   };
   return (
-    <PaperProvider theme={theme}>
-      <ThemeProvider>
-        <View>
-          {/* Appbar */}
-          <Appbar.Header
-            style={styles.top_Bar}
-            dark={true}
-            mode="center-aligned"
-          >
-            <View style={styles.appBarContent}>
-              <TouchableOpacity onPress={handleSave}>
-                <Text style={styles.appBarTextStyle}>Save</Text>
-              </TouchableOpacity>
-
+        <View style={{flex:1}}>
+          <StatusBar barStyle={"light-content"} />
+          <Appbar.Header style={styles.top_Bar_Whole}>
+            <View style={styles.top_Bar_View}>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('SavedTemplatesScreen');
+                  navigation.goBack();
                 }}
               >
-                <Text style={styles.appBarTextStyle}>Cancel</Text>
+                <View>
+                  <Text style={styles.top_Text_Styling}>Cancel</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleSave}>
+                <View>
+                  <Text style={styles.top_Text_Styling}>Save</Text>
+                </View>
               </TouchableOpacity>
             </View>
           </Appbar.Header>
-        </View>
-        <ScrollView
+        
+          <ScrollView
           contentContainerStyle={styles.scrollViewCenter}
           style={styles.scrollViewStyle}
-        >
+          >
           <View style={styles.low_outer}>
+            <View style={styles.imageView}>
+              <Image
+                source={{ uri: "https://i.ibb.co/9TQd2Bb/map-image.jpg" }}
+                style={styles.imageStyling}
+              />
+            </View>
             <MaterialCommunityIcons
               name="square-edit-outline"
-              size={25}
+              size={responsiveFontSize(3)}
               style={styles.editIconStyle}
               color="#65676B"
               onPress={() => {
-                navigation.navigate('ResizeMap', {
+                navigation.navigate("ResizeMap", {
                   templateId: item._id,
                 });
               }}
             />
-            <View style={styles.imageView}>
-              <Image
-                source={{ uri: 'https://i.ibb.co/9TQd2Bb/map-image.jpg' }}
-                style={styles.imageStyling}
-              />
-            </View>
 
             {/* info_block */}
             <View style={styles.infoBlock}>
               <View style={styles.rowView}>
-                <View style={styles.firstDouble}>
+                <View>
                   <View style={styles.blockView}>
                     <PerimeterIcon />
                     <View style={styles.textView}>
@@ -120,7 +127,7 @@ const EditTemplate = ({ route, navigation }) => {
                     </View>
                   </View>
                 </View>
-                <View style={styles.secondDouble}>
+                <View>
                   <View style={styles.blockView}>
                     <AreaIcon />
                     <View style={styles.textView}>
@@ -145,7 +152,7 @@ const EditTemplate = ({ route, navigation }) => {
               />
             </View>
             <View style={styles.inputBlock}>
-              <Text stye={styles.text02Styling}>Land Type :</Text>
+              <Text stye={styles.text02Styling}>Land Type          :</Text>
               <TextInput
                 value={landType}
                 onChangeText={setLandType}
@@ -154,7 +161,6 @@ const EditTemplate = ({ route, navigation }) => {
                 style={styles.textInput02}
               />
             </View>
-            <View></View>
             {/* Description block */}
             <View style={styles.descriptionBlock}>
               <Text style={styles.text01Styling}>Description</Text>
@@ -167,14 +173,14 @@ const EditTemplate = ({ route, navigation }) => {
                   numberOfLines={4}
                   outlineColor="black"
                   activeUnderlineColor="black"
-                  theme={{ colors: { primary: 'black' } }}
+                  theme={{ colors: { primary: "black" } }}
                 />
               </View>
             </View>
           </View>
         </ScrollView>
-      </ThemeProvider>
-    </PaperProvider>
+          </View>
+    
   );
 };
 
