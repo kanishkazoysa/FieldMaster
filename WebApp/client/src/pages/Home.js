@@ -1,22 +1,23 @@
 import React, { useRef, useState, useCallback } from "react";
 import { GoogleMap, LoadScript, StandaloneSearchBox, Marker } from "@react-google-maps/api";
 import SideNavbar from "../components/SideNavbar/sideNavbar";
-import { MdLocationOn } from "react-icons/md";
+import { MdLocationOn, MdSearch } from "react-icons/md";
+import ProfileModal from "../components/profileManage/ProfileModal";
+import Avatar from "../components/profileManage/Avatar";
 
 export default function Home() {
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handlePlacesChanged = useCallback(() => {
     if (!searchBoxRef.current) return;
   
     const places = searchBoxRef.current.getPlaces();
-    console.log(places); // log the places
     if (places.length === 0) return;
   
     const selectedPlace = places[0];
-    console.log(selectedPlace.geometry); // log the selected place's geometry
     const location = selectedPlace.geometry.location.toJSON();
     setSelectedLocation(location);
   
@@ -24,7 +25,7 @@ export default function Home() {
     bounds.extend(location);
     if (mapRef.current && mapRef.current.state.map) {
       mapRef.current.state.map.fitBounds(bounds);
-      mapRef.current.state.map.setZoom(15); // Set the zoom level to 15
+      mapRef.current.state.map.setZoom(15);
     }
   }, []);
 
@@ -40,10 +41,17 @@ export default function Home() {
     }
   };
   
-  
   const onSearchBoxLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
   }, []);
+
+  const handleAvatarClick = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div style={styles.container}>
@@ -77,27 +85,36 @@ export default function Home() {
             />
           )}
           <MdLocationOn fontSize={27} style={{ marginLeft: '10px', marginTop: '10px' }} color="#fff" />
-
+          
           <StandaloneSearchBox
-          onLoad={onSearchBoxLoad}
-          onPlacesChanged={handlePlacesChanged}
-        >
+            onLoad={onSearchBoxLoad}
+            onPlacesChanged={handlePlacesChanged}
+          >
+            <div style={styles.searchContainer}>
+              <MdSearch style={styles.searchIcon} />
+              <input
+                type="text"
+                placeholder="Search location"
+                style={styles.searchBox}
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+          </StandaloneSearchBox>
 
-          <input
-          
-            type="text"
-            placeholder="Search location"
-            style={styles.searchBox}
-            onKeyDown={handleKeyDown}
-          />
-          
-        </StandaloneSearchBox>
+          <Avatar onClick={handleAvatarClick} style={styles.avatar} />
 
+          {isModalOpen && (
+            <ProfileModal
+              isOpen={isModalOpen}
+              onRequestClose={closeModal}
+            />
+          )}
         </GoogleMap>
       </LoadScript>
     </div>
   );
 }
+
 const styles = {
   container: {
     display: "flex",
@@ -106,29 +123,48 @@ const styles = {
   sidebar: {
     height: "100vh",
   },
-  searchBox: {
+  searchContainer: {
+    display: 'flex',
+    alignItems: 'center',
     boxSizing: 'border-box',
     border: '1px solid transparent',
-    width: '280px',
+    width: '300px',
     height: '35px',
     padding: '0 12px',
     borderRadius: '11px',
     boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
-    fontSize: '14px',
-    outline: 'none',
-    textOverflow: 'ellipsis',
+    backgroundColor: '#fff',
     position: 'absolute',
-    right:'15%',
+    right: '15%',
     top: '2%',
+  },
+  searchIcon: {
+    marginRight: '8px',
+    fontSize: '20px',
+    color: '#757575',
+  },
+  searchBox: {
+    flex: 1,
+    border: 'none',
+    outline: 'none',
+    fontSize: '14px',
+  },
+  avatar: {
+    position: 'absolute',
+    right: '12%',
+    top: '2%',
+    fontSize: '30px',
+    color: '#757575',
+    cursor: 'pointer',
   },
 };
 
 const containerStyle = {
   width: '100%',
-  height: '100vh'
+  height: '100vh',
 };
 
 const center = {
   lat: 6.2667,
-  lng: 80.0333
+  lng: 80.0333,
 };
