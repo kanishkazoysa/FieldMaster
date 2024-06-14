@@ -24,7 +24,7 @@ export default function FenceDetails({ route }) {
 
   const navigation = useNavigation();
 
-  const { id } = route.params;
+  const { id , item} = route.params;
   const [numberOfSticks, setnumberOfSticks] = useState(null);
   const [fenceType , setfenceType] = useState(null);
   const [postSpace, setpostSpac] = useState(null);
@@ -85,8 +85,8 @@ export default function FenceDetails({ route }) {
           onPress: async () => {
             try {
               await FenceDelete(id);
-              Alert.alert('Success', 'Fence deleted successfully.');
-              navigation.navigate('Fence', { id: id, Area: Area, Perimeter: Perimeter });
+              // Alert.alert('Success', 'Fence deleted successfully.');
+              navigation.navigate('Fence', { id: id, Area: Area, Perimeter: Perimeter,item: item });
             } catch (error) {
               // Show detailed error message
               const errorMessage = error.response ? error.response.data.message : error.message;

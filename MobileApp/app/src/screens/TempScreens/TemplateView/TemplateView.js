@@ -100,7 +100,7 @@ const TemplateView = ({ route, navigation }) => {
       const response = await AxiosInstance.get(`/api/fence/check-id/${id}`);
       if (response.data.exists) {
         console.log('ID exists');
-        navigation.navigate('FenceDetails', { id: item._id });
+        navigation.navigate('FenceDetails', { id: item._id ,item: item});
       } else {
         console.log('ID does not exist');
       }
@@ -108,7 +108,7 @@ const TemplateView = ({ route, navigation }) => {
       // Handle error, maybe show a message to the user
 if (error.response.status === 404) {
       console.log('ID not found');
-      navigation.navigate('Fence', { id: item._id, Area: item.area, Perimeter: item.perimeter });
+      navigation.navigate('Fence', { id: item._id, Area: item.area, Perimeter: item.perimeter, item: item });
     } else {
       console.error('Error checking ID:', error);
       // Handle other errors

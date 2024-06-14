@@ -13,6 +13,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
+import { Appbar } from 'react-native-paper';
 
 import {styles} from './FenceStyles';
 import Headersection from "../../../components/Headersection";
@@ -22,7 +23,7 @@ import AxiosInstance from "../../../AxiosInstance";
 export default function Fence({route}) {
   const navigation = useNavigation();
 
-  const{id,Area,Perimeter} =  route.params;
+  const{id,Area,Perimeter,item} =  route.params;
   const [FenceTypeselectedValue, setFenceTypeSelectedValue] = useState(null);
   const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] =useState(null);
   const [inputValueFenceLength, setinputValueFenceLength] = useState("");
@@ -177,6 +178,7 @@ export default function Fence({route}) {
       // If backend response is successful, navigate to detail page
       navigation.navigate("FenceDetails", {
         id: id,
+        item:item,
       });
     })
    .catch((error) => {
@@ -195,7 +197,17 @@ export default function Fence({route}) {
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
       {/*Header section*/}
-      <Headersection navigation={navigation} title="Fence" />
+      <View>
+      <Appbar.Header style={styles.header}>
+        <Appbar.BackAction
+          onPress={() => navigation.navigate("TemplateView",{item : item})}
+          color="white"
+        />
+        <View style={{marginTop:40,left:10,width:"70%"}}>
+        <Text style={styles.headerText}>Fence</Text>
+        </View>
+      </Appbar.Header>
+    </View>
 
       {/* Scrollable content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
