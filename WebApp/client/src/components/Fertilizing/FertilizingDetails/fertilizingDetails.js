@@ -19,9 +19,10 @@ export default function FertilizingDetails({
   textFertilizationType,
   textFertilizationAmount,
   textFertilizationNUmberoftime,
-  selectedFrequency
+  selectedFrequency,
+  numberOfPlants
 }) {
-  const [numberOfPlants, setNumberOfPlants] = useState(null);
+  //const [numberOfPlants, setNumberOfPlants] = useState(null);
   const [PlantDensity, setPlantDensity] = useState(null);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
@@ -99,7 +100,7 @@ export default function FertilizingDetails({
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        setNumberOfPlants(data.data);
+        //setNumberOfPlants(data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -132,7 +133,7 @@ export default function FertilizingDetails({
                 <SlChemistry color="gray" size={30} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Plantation</p>
-                  <p style={styles.propertyValue}>{calculateFertilizerAmountForPlantation} {FertilizerAmountUnitselectedValue}</p>
+                  <p style={styles.propertyValue}>{totalAmount*numberOfPlants} {FertilizerAmountUnitselectedValue}</p>
                 </div>
               </div>
               <div className="property" style={styles.property}>
@@ -161,7 +162,7 @@ export default function FertilizingDetails({
                 <PiSquareDuotone color="gray" size={40} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
-                  <p style={styles.propertyValue}>100 acres</p>
+                  <p style={styles.propertyValue}>1 acres</p>
                 </div>
               </div>
             </div>

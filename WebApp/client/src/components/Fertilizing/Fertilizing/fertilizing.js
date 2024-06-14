@@ -25,7 +25,7 @@ export default function Fertilizing(
     numberOfPlants
   }) {
   const [perimeter, setPerimeter] = useState("1.5");
-  const [area, setArea] = useState("100");
+  const [area, setArea] = useState("10");
 
   const [textFertilizationType, setTextFertilizationType] =
     useState("");
@@ -147,7 +147,7 @@ const handleFrequencyChange = (selectedFrequency) => {
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} m<sup>2</sup>
+                    {/* {area} m<sup>2</sup> */}{area} Acres
                   </p>
                 </div>
               </div>
@@ -231,6 +231,15 @@ const handleFrequencyChange = (selectedFrequency) => {
               onClick={() => handleFrequencyChange('quarterly')}
             >
               Quarterly
+            </button>
+            <button
+              style={{
+                ...styles.frequencyButton,
+                ...(selectedFrequency === 'yearly' && styles.selectedFrequencyButton)
+              }}
+              onClick={() => handleFrequencyChange('yearly')}
+            >
+              Yearly
             </button>
           </div>
         </div>

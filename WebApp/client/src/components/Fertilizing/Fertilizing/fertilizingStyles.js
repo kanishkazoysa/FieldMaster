@@ -420,7 +420,7 @@ frequencyButton: {
   justifyContent: "center",
   backgroundColor: "white",
   color: "black",
-  width: "58px", // Adjust width as needed
+  width: "48px", // Adjust width as needed
   height: "23px", // Adjust height as needed
   borderRadius: "7px",
   borderColor:"grey",
