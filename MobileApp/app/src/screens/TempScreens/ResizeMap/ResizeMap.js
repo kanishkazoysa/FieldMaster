@@ -133,22 +133,22 @@ const ResizeMapScreen = ({ navigation, route }) => {
           latitude: point.latitude,
           longitude: point.longitude,
         }));
-        const response = await axios.put(
-          `${backendUrl}/api/mapTemplate/updateTemplate/${templateId}`,
+        const response = await AxiosInstance.put(
+          `/api/auth/mapTemplate/updateTemplate/${templateId}`,
           {
             locationPoints,
           }
         );
 
         if (response.status === 200) {
-          console.log("Location updated successfully");
+          console.log('Location updated successfully');
           setIsMarkerMoved(false);
-          navigation.navigate("SavedTemplatesScreen");
+          navigation.navigate('SavedTemplatesScreen');
         } else {
-          console.log("Failed to update location");
+          console.log('Failed to update location');
         }
       } catch (error) {
-        console.error("An error occurred while updating the location:", error);
+        console.error('An error occurred while updating the location:', error);
       }
     }
   };
