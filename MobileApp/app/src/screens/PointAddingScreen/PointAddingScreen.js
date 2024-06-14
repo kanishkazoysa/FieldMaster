@@ -3,7 +3,6 @@ import { Polygon } from 'react-native-maps';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
 import { TextInput, Alert } from 'react-native';
-import { Appbar } from 'react-native-paper';
 import { Polyline } from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { polygon, area, length } from '@turf/turf';
@@ -17,16 +16,12 @@ import MapView, { MAP_TYPES } from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import axios from 'axios';
-import AxiosInstance from '../../AxiosInstance';
-import { RFValue } from 'react-native-responsive-fontsize';
 import { responsiveFontSize } from 'react-native-responsive-dimensions';
 
 const PointAddingScreen = ({ navigation, route }) => {
   const [showUserLocation, setShowUserLocation] = useState(false);
   const [isPolygonComplete, setIsPolygonComplete] = useState(false);
   const [region, setRegion] = useState(null);
-  const [locationPoints, setLocationPoints] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [points, setPoints] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
