@@ -12,9 +12,7 @@ import { styles } from "./SavedTemplatesScreenStyles";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useFocusEffect } from "@react-navigation/native";
 import AxiosInstance from "../../../AxiosInstance";
-import {
-  responsiveFontSize,
-} from 'react-native-responsive-dimensions';
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 const CustomEditIcon = (props) => {
   <MaterialCommunityIcons
@@ -81,12 +79,15 @@ const SavedTemplatesScreen = ({ navigation }) => {
         {/* Static section at the top */}
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
-        <Appbar.Header style={styles.header} >
-        <Appbar.BackAction
-        onPress={() => navigation.navigate("Home")}
-        color="white"
-        />
-        <Appbar.Content title="Saved Templates" titleStyle={styles.title_text} />
+        <Appbar.Header style={styles.header}>
+          <Appbar.BackAction
+            onPress={() => navigation.navigate("Home")}
+            color="white"
+          />
+          <Appbar.Content
+            title="Saved Templates"
+            titleStyle={styles.title_text}
+          />
         </Appbar.Header>
       </View>
       <View style={styles.low_outer}>
@@ -129,6 +130,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
                     </TouchableOpacity>
                     <View style={styles.col_03}>
                       <TouchableOpacity
+                        style={styles.icon_style}
                         onPress={() => {
                           navigation.navigate("EditTemplate", { item: item });
                         }}
@@ -140,7 +142,9 @@ const SavedTemplatesScreen = ({ navigation }) => {
                         />
                       </TouchableOpacity>
 
-                      <CustomDeleteIcon onPress={() => handleDelete(item)} />
+                      <TouchableOpacity  style={styles.icon_style1} onPress={() => handleDelete(item)}>
+                        <CustomDeleteIcon />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </TouchableOpacity>

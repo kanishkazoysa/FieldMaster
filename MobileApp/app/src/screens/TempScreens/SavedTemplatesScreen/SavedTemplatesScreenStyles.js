@@ -22,6 +22,13 @@ export const styles = StyleSheet.create({
     backgroundColor: '#007BFF',
     color: 'white',
   },
+  icon_style: {
+    padding: 5,
+  },
+  icon_style1: {
+    padding: 5,
+    top: 10,
+  },
   title_text: {
     color: 'white',
     fontSize: responsiveFontSize(2.3),
@@ -37,7 +44,16 @@ export const styles = StyleSheet.create({
     marginHorizontal: responsiveWidth(3),
     borderRadius: 10,
     flexDirection: 'row',
-    paddingVertical: responsiveHeight(1),
+    paddingVertical: responsiveHeight(2),
+    //add shadow
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
   },
   image_style: {
     width: responsiveWidth(22),
