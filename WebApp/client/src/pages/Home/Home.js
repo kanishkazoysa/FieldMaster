@@ -73,6 +73,10 @@ export default function Home() {
         style: window.google.maps.MapTypeControlStyle.DROPDOWN_MENU,
         position: window.google.maps.ControlPosition.LEFT_BOTTOM,
       },
+      fullscreenControl: false,
+      fullscreenControlOptions: {
+        position: window.google.maps.ControlPosition.BOTTOM_LEFT,
+      },
       zoomControl: true,
       zoomControlOptions: {
         position: window.google.maps.ControlPosition.LEFT_BOTTOM,
