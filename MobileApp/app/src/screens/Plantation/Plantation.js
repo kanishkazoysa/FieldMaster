@@ -134,6 +134,9 @@ export default function Plantation({route}) {
         
       });
       console.log(response.data);
+      const numberOfPlants=response.data.numberOfPlants
+      const plantDensity=response.data.plantDensity
+      const textPlant=response.data.textPlant
       navigation.navigate("PlantationDetails", { area:area, perimeter:perimeter });
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
