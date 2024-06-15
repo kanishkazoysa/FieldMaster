@@ -37,7 +37,7 @@ import {
 
 export default function ClearLand({ route }) {
   const navigation = useNavigation();
-  const { id, Area, Perimeter } = route.params;
+  const { id,item } = route.params;
   const [text, setText] = React.useState("");
 
   const [pressed, setPressed] = useState(null);
@@ -202,13 +202,14 @@ export default function ClearLand({ route }) {
         }
         navigation.navigate("EffortOutput", {
           id: id,
-          data: displayValues,
-          data1: displayValues1,
-          data2: displayValues2,
-          weedType: pressed,
-          stonesCount: stonesCount,
-          laborCount: laborCount,
-          workHours: workHours,
+          item:item,
+          // data: displayValues,
+          // data1: displayValues1,
+          // data2: displayValues2,
+          // weedType: pressed,
+          // stonesCount: stonesCount,
+          // laborCount: laborCount,
+          // workHours: workHours,
         });
 
         setPressed(" ");
@@ -229,8 +230,20 @@ export default function ClearLand({ route }) {
       {/* Status bar section */}
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
-      <Headersection navigation={navigation} title="Clear Land"></Headersection>
+      {/* <Headersection navigation={navigation} title="Clear Land"></Headersection> */}
 
+      {/* Header section */}
+      <View>
+        <Appbar.Header style={styles.header}>
+            <Appbar.BackAction 
+              onPress={() => navigation.navigate("TemplateView",{item: item})}
+              color="white"
+            />
+        <View style={{marginTop:40,left:10,width:"70%"}}>
+          <Text style={styles.headerText}>Clear Land</Text>
+        </View>
+        </Appbar.Header>
+      </View>
       {/* ScrollView section */}
       <ScrollView>
         <View style={styles.container2}>
@@ -637,6 +650,26 @@ const styles = StyleSheet.create({
   container2: {
     alignItems: "center",
     flex: 1,
+  },
+  header: {
+    height: 45,
+    backgroundColor: "#007BFF",
+
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
+  },
+  headerText: {
+   
+    fontSize: 18,
+    textAlign: "center",
+    color: "white",
+    position: "absolute",
+    bottom: 7,
+    left: 0,
+    right: 0,
   },
 
   card1: {

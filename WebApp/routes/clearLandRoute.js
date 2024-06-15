@@ -169,7 +169,7 @@ router.get("/effortOutput/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const ClearLand = await clearLandModel.findOne({ Id: id });
-    const map = await MapTemplateSchema.findOne({ Id: id });
+    const map = await MapTemplateSchema.findOne({ _id: id });
     if (!ClearLand && !map) {
       return res
         .status(404)

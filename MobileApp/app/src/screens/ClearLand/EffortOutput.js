@@ -38,7 +38,7 @@ import { effortOutputPrint } from "./EffortOutputPrint";
 export default function EffortOutput({ route }) {
   const navigation = useNavigation();
 
-  const { id } = route.params;
+  const { id , item } = route.params;
   const [workHours, setworkHours] = useState(null);
   const [laborCount, setlaborCount] = useState(null);
   const [data1, setdata1] = useState([]);
@@ -105,11 +105,11 @@ export default function EffortOutput({ route }) {
           onPress: async () => {
             try {
               await ClearLandDelete(id);
-              Alert.alert("Success", "Clear land deleted successfully");
               navigation.navigate("Clearland", {
                 id: id,
                 Area: Area,
                 Perimeter: Perimeter,
+                item: item,
               });
             } catch (error) {
               const errorMessage = error.response
@@ -232,7 +232,7 @@ export default function EffortOutput({ route }) {
                 ></Image>
                 <View style={{ display: "flex", flexDirection: "column" }}>
                   <Text style={styles.card2Text1}>Perimeter</Text>
-                  <Text style={styles.card2Text2}>{Perimeter}</Text>
+                  <Text style={styles.card2Text2}>{Perimeter} km</Text>
                 </View>
               </View>
 
@@ -246,7 +246,7 @@ export default function EffortOutput({ route }) {
                 ></Image>
                 <View style={{ display: "flex", flexDirection: "column" }}>
                   <Text style={styles.card2Text3}>Area</Text>
-                  <Text style={styles.card2Text4}>{Area}</Text>
+                  <Text style={styles.card2Text4}>{Area} perches</Text>
                 </View>
               </View>
             </Card.Content>
@@ -399,6 +399,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     height: responsiveHeight(3),
     alignItems: "right",
+    marginLeft:responsiveWidth(-8)
   },
   card2Text1: {
     marginTop: responsiveHeight(3.8),

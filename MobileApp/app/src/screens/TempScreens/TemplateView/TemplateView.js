@@ -75,7 +75,7 @@ const TemplateView = ({ route, navigation }) => {
       const response = await AxiosInstance.get(`/api/clearLand/check-id/${id}`);
       if (response.data.exists) {
         console.log('ID exists');
-        navigation.navigate('EffortOutput', { id: item._id });
+        navigation.navigate('EffortOutput', { id: item._id, item:item });
       } else {
         console.log('ID does not exist');
       }
@@ -83,7 +83,7 @@ const TemplateView = ({ route, navigation }) => {
       // Handle error, maybe show a message to the user
 if (error.response.status === 404) {
       console.log('ID not found');
-      navigation.navigate('Clearland', { id: item._id,Area:item.Area,Perimeter:item.Perimeter });
+      navigation.navigate('Clearland', { id: item._id,Area:item.Area,Perimeter:item.Perimeter,item:item });
     } else {
       console.error('Error checking ID:', error);
       // Handle other errors
