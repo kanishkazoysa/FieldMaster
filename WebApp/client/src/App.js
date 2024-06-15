@@ -11,7 +11,7 @@ import Pricing from "./components/HomeComponents/Pricing";
 import Setup from "./components/HomeComponents/SetupCard";
 import ContactForm from "./components/HomeComponents/contact/contact";
 import "./index.css";
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home"
 import EmailVerified from "./pages/EmailVerified";
 import Managemap from "./pages/Managemap";
 import RegisterPage from "./pages/auth/Register/RegisterPage";

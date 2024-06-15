@@ -1,32 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { Polygon } from 'react-native-maps';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
-import { TextInput, Alert } from 'react-native';
-import { Appbar } from 'react-native-paper';
-import { Polyline } from 'react-native-maps';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { polygon, area, length } from '@turf/turf';
+import React, { useEffect, useState } from "react";
+import { Polygon } from "react-native-maps";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { View, Text, FlatList, TouchableOpacity, Modal } from "react-native";
+import { TextInput, Alert } from "react-native";
+import { Polyline } from "react-native-maps";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { polygon, area, length } from "@turf/turf";
 import {
   faLayerGroup,
   faLocationCrosshairs,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { styles } from './PointAddingScreenStyles';
-import MapView, { MAP_TYPES } from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-import * as Location from 'expo-location';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import axios from 'axios';
-import AxiosInstance from '../../AxiosInstance';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { responsiveFontSize } from 'react-native-responsive-dimensions';
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { styles } from "./PointAddingScreenStyles";
+import MapView, { MAP_TYPES } from "react-native-maps";
+import { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 const PointAddingScreen = ({ navigation, route }) => {
   const [showUserLocation, setShowUserLocation] = useState(false);
   const [isPolygonComplete, setIsPolygonComplete] = useState(false);
   const [region, setRegion] = useState(null);
-  const [locationPoints, setLocationPoints] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [points, setPoints] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -36,7 +31,7 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [searchedLocation, setSearchedLocation] = useState(null);
   const mapRef = React.useRef(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
   /* the closeModal function is used to close the modal */
@@ -69,8 +64,8 @@ const PointAddingScreen = ({ navigation, route }) => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access location was denied');
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
         return;
       }
       let location = await Location.getCurrentPositionAsync({
@@ -97,7 +92,7 @@ const PointAddingScreen = ({ navigation, route }) => {
     if (points.length > 2) {
       setIsPolygonComplete(true);
     } else {
-      alert('You need at least 3 points to complete a polygon');
+      alert("You need at least 3 points to complete a polygon");
     }
   };
   /* the handleUndoLastPoint function is used to undo the last point */
@@ -109,7 +104,7 @@ const PointAddingScreen = ({ navigation, route }) => {
   /* the handleSaveMap function is used to save the map */
   const handleSaveMap = async () => {
     if (points.length < 3) {
-      alert('You need at least 3 points to calculate area and perimeter');
+      alert("You need at least 3 points to calculate area and perimeter");
       return;
     }
     const formattedPoints = points.map((point) => [
@@ -120,23 +115,23 @@ const PointAddingScreen = ({ navigation, route }) => {
 
     const poly = polygon([formattedPoints]);
     const areaMeters = area(poly);
-    const perimeterMeters = length(poly, { units: 'meters' });
+    const perimeterMeters = length(poly, { units: "meters" });
     const areaPerches = areaMeters / 25.29285264;
     const perimeterKilometers = perimeterMeters / 1000;
 
     Alert.alert(
-      'Confirmation',
+      "Confirmation",
       `Area: ${areaPerches.toFixed(2)} perches, Perimeter: ${perimeterKilometers.toFixed(2)} kilometers`,
       [
         {
-          text: 'Cancel',
+          text: "Cancel",
           onPress: () => setPoints([]),
-          style: 'cancel',
+          style: "cancel",
         },
         {
-          text: 'OK',
+          text: "OK",
           onPress: () => {
-            navigation.navigate('SaveScreen', {
+            navigation.navigate("SaveScreen", {
               locationPoints: points,
               area: areaPerches,
               perimeter: perimeterKilometers,
@@ -156,13 +151,13 @@ const PointAddingScreen = ({ navigation, route }) => {
 
   /* the handleCancel function is used to navigate to the home screen */
   const handleCancel = () => {
-    navigation.navigate('Home');
+    navigation.navigate("Home");
   };
   const mapTypes = [
-    { name: 'Satellite', value: 'satellite' },
-    { name: 'Standard', value: 'standard' },
-    { name: 'Hybrid', value: 'hybrid' },
-    { name: 'Terrain', value: 'terrain' },
+    { name: "Satellite", value: "satellite" },
+    { name: "Standard", value: "standard" },
+    { name: "Hybrid", value: "hybrid" },
+    { name: "Terrain", value: "terrain" },
   ];
 
   /* the toggleMapType function is used to toggle the map type */
@@ -199,17 +194,17 @@ const PointAddingScreen = ({ navigation, route }) => {
             });
           }
         } else {
-          console.error('Location not found');
+          console.error("Location not found");
         }
       } catch (error) {
-        console.error('Error searching for location:', error);
+        console.error("Error searching for location:", error);
       }
     }
   };
 
   /* the clearSearchQuery function is used to clear the search query */
   const clearSearchQuery = () => {
-    setSearchQuery('');
+    setSearchQuery("");
   };
 
   return (
@@ -217,14 +212,14 @@ const PointAddingScreen = ({ navigation, route }) => {
       <View style={styles.searchbar}>
         <View style={styles.locationIconContainer}>
           <MaterialIcons
-            name='location-on'
+            name="location-on"
             size={responsiveFontSize(2.5)}
-            color='#007BFF'
+            color="#007BFF"
           />
         </View>
         <TextInput
-          placeholder='Search Location'
-          placeholderTextColor='rgba(0, 0, 0, 0.5)'
+          placeholder="Search Location"
+          placeholderTextColor="rgba(0, 0, 0, 0.5)"
           onFocus={onFocus}
           onBlur={onBlur}
           style={[
@@ -235,24 +230,21 @@ const PointAddingScreen = ({ navigation, route }) => {
           value={searchQuery}
           onSubmitEditing={searchLocation}
         />
-        {searchQuery !== '' && (
+        {searchQuery !== "" && (
           <TouchableOpacity
             onPress={clearSearchQuery}
             style={styles.clearIconContainer}
           >
             <MaterialIcons
-              name='cancel'
+              name="cancel"
               size={responsiveFontSize(2.5)}
-              color='#707070'
+              color="#707070"
             />
           </TouchableOpacity>
         )}
-        <View style={styles.innerViewStyle}>
-          <TouchableOpacity></TouchableOpacity>
-        </View>
       </View>
       <Modal
-        animationType='slide'
+        animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}
@@ -260,9 +252,9 @@ const PointAddingScreen = ({ navigation, route }) => {
         <View
           style={{
             flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
           }}
         >
           <View style={styles.centeredView}>
@@ -320,15 +312,15 @@ const PointAddingScreen = ({ navigation, route }) => {
             {!isPolygonComplete && points.length > 1 && (
               <Polyline
                 coordinates={points}
-                strokeColor='#000'
+                strokeColor="#000"
                 strokeWidth={1}
               />
             )}
             {isPolygonComplete && points.length > 2 && (
               <Polygon
                 coordinates={points}
-                strokeColor='#000'
-                fillColor='rgba(199, 192, 192, 0.5)'
+                strokeColor="#000"
+                fillColor="rgba(199, 192, 192, 0.5)"
                 strokeWidth={1}
               />
             )}
@@ -344,7 +336,7 @@ const PointAddingScreen = ({ navigation, route }) => {
             <FontAwesomeIcon
               icon={faLayerGroup}
               size={responsiveFontSize(3)}
-              color='#fff'
+              color="#fff"
             />
             {showDropdown && (
               <View style={styles.dropdownContainer}>
@@ -355,7 +347,7 @@ const PointAddingScreen = ({ navigation, route }) => {
                       style={styles.dropdownItem}
                       onPress={() => selectMapType(index)}
                     >
-                      <Text style={{ color: '#fff' }}>{item.name}</Text>
+                      <Text style={{ color: "#fff" }}>{item.name}</Text>
                     </TouchableOpacity>
                   )}
                   keyExtractor={(item) => item.value}
@@ -370,7 +362,7 @@ const PointAddingScreen = ({ navigation, route }) => {
             <FontAwesomeIcon
               icon={faLocationCrosshairs}
               size={responsiveFontSize(3)}
-              color='#fff'
+              color="#fff"
             />
           </TouchableOpacity>
           <View>
@@ -380,9 +372,9 @@ const PointAddingScreen = ({ navigation, route }) => {
                 onPressOut={() => setIsButtonPressed(false)}
               >
                 <MaterialCommunityIcons
-                  name='arrow-u-left-top'
+                  name="arrow-u-left-top"
                   size={responsiveFontSize(3)}
-                  color='white'
+                  color="white"
                   style={styles.sideIconStyle}
                   onPress={handleUndoLastPoint}
                 />
@@ -392,9 +384,9 @@ const PointAddingScreen = ({ navigation, route }) => {
                 onPressOut={() => setIsButtonPressed(false)}
               >
                 <MaterialCommunityIcons
-                  name='shape-polygon-plus'
+                  name="shape-polygon-plus"
                   size={responsiveFontSize(3)}
-                  color='white'
+                  color="white"
                   style={styles.sideIconStyle}
                   onPress={handleCompleteMap}
                 />
@@ -402,14 +394,14 @@ const PointAddingScreen = ({ navigation, route }) => {
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleSaveMap} style={styles.btnStyle}>
-              <Text style={styles.btmBtnStyle}>Save</Text>
-            </TouchableOpacity>
             <TouchableOpacity
               onPress={handleCancel}
               style={styles.cancelBtnStyle}
             >
               <Text style={styles.btmBtnStyle}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleSaveMap} style={styles.btnStyle}>
+              <Text style={styles.btmBtnStyle}>Save</Text>
             </TouchableOpacity>
           </View>
         </View>
