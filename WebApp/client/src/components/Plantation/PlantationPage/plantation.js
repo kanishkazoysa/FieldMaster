@@ -14,7 +14,7 @@ import PlantationDetails from "../PlantationDetails/plantationDetails";
 
 export default function Plantation({ onBackToSidebar }) {
   const [perimeter, setPerimeter] = useState("1.5");
-  const [area, setArea] = useState("100");
+  const [area, setArea] = useState("1");
   const [textPlant, settextPlant] = useState(null);
   const [PlantSpaceUnitselectedValue, setPlantSpaceUnitselectedValue] =
     useState("");
@@ -106,6 +106,43 @@ export default function Plantation({ onBackToSidebar }) {
     }, 300);
   };
 
+// calculating the number of plants and density
+function calculateNumberOfPlants(area, plantSpacing, rowSpacing) {
+  const areaInSquareMeters = parseFloat(area) * 4046.86;
+  const areaPerPlant = plantSpacing * rowSpacing;
+  const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
+  return numberOfPlants;
+}
+
+function RoundToTwoDecimals(number) {
+  return Math.round(number * 100) / 100;
+}
+function calculatePlantationDensity(area, plantSpacing, rowSpacing) {
+  const areaInSquareMeters = parseFloat(area) * 4046.86;
+
+  // const plantSpacing = parseFloat(plantSpacingInMeters);
+  // const rowSpacing = parseFloat(rowSpacingInMeters);
+
+  const areaPerPlant = plantSpacing * rowSpacing;
+  const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
+  const plantationDensity = RoundToTwoDecimals(numberOfPlants / areaInSquareMeters);
+
+  return plantationDensity;
+}
+function convertToCommonUnit(value, unit) {
+  if (unit === 'cm') {
+      return value / 100;
+  } else {
+      return value;
+  }
+}
+        const plantSpacing = convertToCommonUnit(textplantspace, PlantSpaceUnitselectedValue);
+        const rowSpacing = convertToCommonUnit(textRowspace,PlantSpaceUnitselectedValue );
+        const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
+        const calculatedPlantDensity = calculatePlantationDensity(area, plantSpacing, rowSpacing);
+
+
+
   return (
     <div>
       {!currentPage && (
@@ -136,7 +173,7 @@ export default function Plantation({ onBackToSidebar }) {
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} m<sup>2</sup>
+                    {/* {area} m<sup>2</sup> */}{area } Acres
                   </p>
                 </div>
               </div>
@@ -268,6 +305,7 @@ export default function Plantation({ onBackToSidebar }) {
             PlantSpaceUnitselectedValue={PlantSpaceUnitselectedValue}
             RowSpaceUnitselectedValue={RowSpaceUnitselectedValue}
             textPlant={textPlant}
+            numberOfPlants={numberOfPlants}
 
           />
         )}

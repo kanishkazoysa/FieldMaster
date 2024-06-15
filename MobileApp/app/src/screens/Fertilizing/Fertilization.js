@@ -22,7 +22,7 @@ import { useNavigation } from "@react-navigation/native";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import AxiosInstance from "../../AxiosInstance";
-import {styles} from "./FertilizingStyles";
+import { styles } from "./FertilizingStyles";
 
 export default function Fertilization({ route }) {
   const { params } = route;
@@ -39,20 +39,20 @@ export default function Fertilization({ route }) {
       return;
     }
 
-   
-      AxiosInstance.post("/api/fertilizer/fertilizer", {
-        numberOfPlants,
-        textFertilizationType,
-        textFertilizationNUmberoftime,
-        textFertilizationAmount,
-        selectedButton,
-        FertilizerAmountUnitselectedValue
-      })
-      .then(async(response)=>{
+
+    AxiosInstance.post("/api/fertilizer/fertilizer", {
+      numberOfPlants,
+      textFertilizationType,
+      textFertilizationNUmberoftime,
+      textFertilizationAmount,
+      selectedButton,
+      FertilizerAmountUnitselectedValue
+    })
+      .then(async (response) => {
         if (response.data.status === "ok") {
           const totalAmountForPlantation = response.data.data.totalAmountForPlantation;
-          const lmn=response.data.data.totalAmount
-  
+          const lmn = response.data.data.totalAmount
+
           navigation.navigate("FertilizationDetails", {
             plantcount: numberOfPlants,
             count: lmn,
@@ -66,9 +66,9 @@ export default function Fertilization({ route }) {
         } else {
           console.error(response.data.data);
         }
-      }).catch((err) =>{
+      }).catch((err) => {
         console.error(error);
-      Alert.alert("Error", "Something went wrong");
+        Alert.alert("Error", "Something went wrong");
       })
   };
 
@@ -208,7 +208,7 @@ export default function Fertilization({ route }) {
                       width: "80%",
                       height: "60%",
                       margin: responsiveHeight(0.5),
-                      
+
                     }}
                     key={index}
                     mode={isPressed(index) ? "contained-tonal" : "outlined"}

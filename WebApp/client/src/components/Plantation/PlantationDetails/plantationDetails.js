@@ -12,6 +12,7 @@ import { RxRowSpacing } from "react-icons/rx";
 import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
 
 export default function PlantationDetails({
+  numberOfPlants,
   onBackToSidebar,
   textplantspace,
   textRowspace,
@@ -20,7 +21,7 @@ export default function PlantationDetails({
   textPlant,
 }) {
 
-  const [numberOfPlants, setnumberOfPlants] = useState(null);
+  
   const [PlantDensity, setPlantDensity] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(null);
@@ -43,13 +44,13 @@ export default function PlantationDetails({
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await fetch('http://10.10.23.159:3000/api/plantation/numberOfPlants');
+            const response = await fetch('http://192.168.1.2:3000/api/plantation/numberOfPlants');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            setnumberOfPlants(data.data);
-            
+            //setnumberOfPlants(data.data);
+           
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -61,7 +62,7 @@ export default function PlantationDetails({
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await fetch('http://10.10.23.159:3000/api/plantation/plantDensity');
+            const response = await fetch('http://192.168.1.2:3000/api/plantation/plantDensity');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -90,7 +91,7 @@ export default function PlantationDetails({
       </div>
 
       {/* first box  */}
-      {/* to rotate - style={{ transform: "rotate(90deg)" }} */}
+
 
       <div style={styles.Box1}>
         <p style={styles.titleText}>Total Plants</p>
@@ -104,6 +105,7 @@ export default function PlantationDetails({
               <p style={styles.propertyValue}>{numberOfPlants} Plants</p>
             </div>
           </div>
+
           <div className="property" style={styles.property}>
             <GiGrassMushroom color="gray" size={30} />
             <div style={styles.propertyDetails}>
