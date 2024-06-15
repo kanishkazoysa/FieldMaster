@@ -7,6 +7,9 @@ import logo from "../../images/logo.png";
 import { IoBookmarks } from "react-icons/io5";
 import { RiWalkFill } from "react-icons/ri";
 import StartMeasurePage from '../MeasureOption/measureOption.js';
+import SavedTemplates from '../SavedTemplates/savedTemplates.js';
+// import Fence from "../Fence/Fence/fence";
+import ClearLand from "../ClearLand/ClearLand/clearLand";
 
 import Plantation from "../Plantation/PlantationPage/plantation";
 
@@ -39,7 +42,7 @@ export default function SideNavbar() {
   };
 
   const handleSavedTemplatesClick = () => {
-    setCurrentPage('Plantation'); 
+    setCurrentPage('ClearLand'); // Update this line
     setAnimatePage(true);
     if(collapsed){
       setCollapsed(false);
@@ -102,8 +105,8 @@ export default function SideNavbar() {
           overflow: 'auto', // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === 'StartMeasure' &&  <StartMeasurePage onBackToSidebar={handleBackClick} />}
-        {currentPage === 'Plantation' && <Plantation onBackToSidebar={handleBackClick} />}
+        {currentPage === 'StartMeasure' && <StartMeasurePage onBackToSidebar={handleBackClick} />}
+        {currentPage === 'ClearLand' && <ClearLand onBackToSidebar={handleBackClick} />}
       </div>
       </div>
     </Sidebar>

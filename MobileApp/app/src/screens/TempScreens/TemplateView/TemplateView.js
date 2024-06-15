@@ -81,7 +81,8 @@ const CustomEditIcon = ({ navigation, item }) => (
   />
 );
 
-const TemplateView = ({ route, navigation }) => {
+const TemplateView = ({ route, navigation }) => 
+{
   const { item } = route.params;
   const  id  = item._id
   useEffect(() => {
@@ -94,8 +95,8 @@ const TemplateView = ({ route, navigation }) => {
   };
 
   
-// check id exist in the databse
-  const checkId = async (id) => {
+ // check id exist in the databse
+  const checkIdFence = async (id) => {
     try {
       const response = await AxiosInstance.get(`/api/fence/check-id/${id}`);
       if (response.data.exists) {
@@ -106,9 +107,29 @@ const TemplateView = ({ route, navigation }) => {
       }
     } catch (error) {
       // Handle error, maybe show a message to the user
-if (error.response.status === 404) {
+ if (error.response.status === 404) {
       console.log('ID not found');
       navigation.navigate('Fence', { id: item._id, Area: item.area, Perimeter: item.perimeter, item: item });
+    } else {
+      console.error('Error checking ID:', error);
+      // Handle other errors
+    }    }
+  };
+
+  const checkIdClearLand = async (id) => {
+    try {
+      const response = await AxiosInstance.get(`/api/clearLand/check-id/${id}`);
+      if (response.data.exists) {
+        console.log('ID exists');
+        navigation.navigate('EffortOutput', { id: item._id, item:item });
+      } else {
+        console.log('ID does not exist');
+      }
+    } catch (error) {
+      // Handle error, maybe show a message to the user
+if (error.response.status === 404) {
+      console.log('ID not found');
+      navigation.navigate('Clearland', { id: item._id,Area:item.Area,Perimeter:item.Perimeter,item:item });
     } else {
       console.error('Error checking ID:', error);
       // Handle other errors
@@ -139,11 +160,12 @@ if (error.response.status === 404) {
         </View>
         {/* icons_block */}
         <View style={styles.iconBlockStyling}>
-          <View style={styles.iconBlockInner}>
-            <TouchableOpacity onPress={() => navigation.navigate('Clearland')}>
-              <View style={styles.iconOuter_01}>
-                <ClearLandIcon />
-              </View>
+  
+        <View style={styles.iconBlockInner}>
+          <TouchableOpacity onPress={() => checkIdClearLand(item._id)}>
+            <View style={styles.iconOuter_01}>
+              <ClearLandIcon />
+            </View>
             </TouchableOpacity>
             <Text>Clear land</Text>
           </View>
@@ -161,7 +183,7 @@ if (error.response.status === 404) {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => checkId(item._id)}>
+          <TouchableOpacity onPress={() => checkIdFence(item._id)}>
             <View style={styles.iconBlockInner}>
               <View style={styles.iconOuter_03}>
                 <FenceSetupIcon />

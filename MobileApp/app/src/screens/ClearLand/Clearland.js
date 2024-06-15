@@ -34,7 +34,9 @@ import {
   responsiveWidth,
 } from "react-native-responsive-dimensions";
 
-export default function ClearLand() {
+export default function ClearLand({ route }) {
+  const navigation = useNavigation();
+  const { id,item } = route.params;
   const [text, setText] = React.useState("");
 
   const [pressed, setPressed] = useState(null);
@@ -46,22 +48,15 @@ export default function ClearLand() {
   const [workHours, setWorkHours] = useState("");
   const [searchItem, setSearchItem] = useState("");
   const [machineCount, setMachineCount] = useState("");
-  const navigation = useNavigation();
-
   const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [suggestions, setSuggestions] = useState([
-    "Bulldozers",
     "Excavators",
     "Backhoes",
-    "Skid-steer loaders",
     "Chainsaws",
-    "Brush cutters",
-    "Tractors",
-    "Land clearing rakes",
+    "Excavator breakers"
   ]);
 
   const handleSearch = (query) => {
-
     if (query === "") {
       setSearchSuggestions([]);
       return;
@@ -76,7 +71,7 @@ export default function ClearLand() {
     setSearchItem(item);
     setSearchSuggestions([]);
   };
-  
+
   const handlePlantCountChange = (text) => {
     setPlantCount(text);
   };
@@ -94,9 +89,11 @@ export default function ClearLand() {
     setMachineCount(text);
   };
 
-  const handleEffortOutput = () => {
-    navigation.navigate("EffortOutput");
-  };
+  // const handleEffortOutput = () => {
+  //   navigation.navigate("EffortOutput",{
+  //     id:id,
+  //   });
+  // };
 
   const placeholder1 = {
     label: "Select Type",
@@ -127,35 +124,6 @@ export default function ClearLand() {
   const [displayValues, setDisplayValues] = useState([]);
 
   const handleAdd = () => {
-    //Validation plant count
-    let errorMessage = "";
-    let countInt = parseInt(plantCount, 10);
-
-  switch (plantTypeSelectedValue) {
-    case "Low":
-      if (!(countInt >=1  && countInt <= 3)) {
-        errorMessage = "Enter a number between 0 and 4";
-      }
-      break;
-    case "Medium":
-      if (!(countInt >3 && countInt <= 6)) {
-        errorMessage = "Enter a number between 3 and 7";
-      }
-      break;
-    case "High":
-      if (!(countInt > 6 && countInt <= 10)) {
-        errorMessage = "Enter a number between 6 and 11";
-      }
-      break;
-    default:
-      errorMessage = "Invalid plant type selection.";
-  }
-
-  if (errorMessage) {
-    alert(errorMessage);
-    return;
-  }
-
     //validation part Add button
     const combinedValue = plantCount + " x " + plantTypeSelectedValue;
     const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
@@ -173,37 +141,8 @@ export default function ClearLand() {
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
-    //Validation for stone count
-    let errorMessage = "";
-    let countInt = parseInt(stonesCount, 10);
-
-  switch (stoneTypeSelectedValue) {
-    case "Small":
-      if (!(countInt >=1  && countInt <= 3)) {
-        errorMessage = "Enter a number between 0 and 4";
-      }
-      break;
-    case "Medium":
-      if (!(countInt >3 && countInt <= 6)) {
-        errorMessage = "Enter a number between 3 and 7";
-      }
-      break;
-    case "High":
-      if (!(countInt > 6 && countInt <= 10)) {
-        errorMessage = "Enter a number between 6 and 11";
-      }
-      break;
-    default:
-      errorMessage = "Invalid plant type selection.";
-  }
-
-  if (errorMessage) {
-    alert(errorMessage);
-    return;
-  }
-    
-    //validation part Add button
-    const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
+  //validation part Add button
+    const combinedValue1 = stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
       Boolean
     );
@@ -222,7 +161,6 @@ export default function ClearLand() {
 
   const handleAdd2 = () => {
     //validation part Add button
-
     const combinedValue2 = searchItem + " x " + machineCount;
     const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
       Boolean
@@ -238,65 +176,52 @@ export default function ClearLand() {
     setDisplayValues2(newDisplayValues2);
   };
 
-  const postData = async () => {
-    try {
-      AxiosInstance.post(
-        "/api/clearLand/clearLand",
-        {
-          pressed,
-          plantTypeSelectedValue,
-          plantCount,
-          displayValues,
-          stoneTypeSelectedValue,
-          stonesCount,
-          displayValues1,
-          laborCount,
-          workHours,
-          searchItem,
-          machineCount,
-          displayValues2,
+  const handleClear = async () => {
+    AxiosInstance.post("/api/clearLand/clearLand", {
+      id,
+      pressed,
+      displayValues,
+      displayValues1,
+      laborCount,
+      workHours,
+      displayValues2,
+    })
+      .then((response) => {
+        if (
+          !pressed ||
+          !(displayValues.length > 0) ||
+          !(displayValues1.length > 0) ||
+          !laborCount ||
+          !workHours ||
+          !(displayValues2.length > 0)
+        ) {
+          // Display error message
+          Alert.alert("Error", "Please fill in all fields");
+          return; // Stop execution if fields are empty
         }
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "Something went wrong");
-    }
-  };
-  const handleClear = () => {
-    if (
-      !pressed ||
-      !(displayValues.length > 0) ||
-      !(displayValues1.length > 0) ||
-      !laborCount ||
-      !workHours ||
-      !(displayValues2.length > 0)
-    ) {
-      // Display error message
-      Alert.alert("Error", "Please fill in all fields");
-      return; // Stop execution if fields are empty
-    }
-    postData();
-    navigation.navigate("EffortOutput", {
-      data: displayValues,
-      data1: displayValues1,
-      data2: displayValues2,
-      weedType: pressed,
-      plantType: plantTypeSelectedValue,
-      plantCount: plantCount,
-      stoneType: stoneTypeSelectedValue,
-      stonesCount: stonesCount,
-      laborCount: laborCount,
-      workHours: workHours,
-      machineCount: machineCount,
-    });
+        navigation.navigate("EffortOutput", {
+          id: id,
+          item:item,
+          // data: displayValues,
+          // data1: displayValues1,
+          // data2: displayValues2,
+          // weedType: pressed,
+          // stonesCount: stonesCount,
+          // laborCount: laborCount,
+          // workHours: workHours,
+        });
 
-    setPressed(" ");
-    setLaborCount(" ");
-    setWorkHours(" ");
-    setDisplayValues([]);
-    setDisplayValues1([]);
-    setDisplayValues2([]);
+        setPressed(" ");
+        setLaborCount(" ");
+        setWorkHours(" ");
+        setDisplayValues([]);
+        setDisplayValues1([]);
+        setDisplayValues2([]);
+      })
+      .catch((error) => {
+        console.error("Error:", error.response.data);
+        Alert.alert("Error", "Something went wrong");
+      });
   };
 
   return (
@@ -304,8 +229,20 @@ export default function ClearLand() {
       {/* Status bar section */}
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
-      <Headersection navigation={navigation} title="Clear Land"></Headersection>
+      {/* <Headersection navigation={navigation} title="Clear Land"></Headersection> */}
 
+      {/* Header section */}
+      <View>
+        <Appbar.Header style={styles.header}>
+            <Appbar.BackAction 
+              onPress={() => navigation.navigate("TemplateView",{item: item})}
+              color="white"
+            />
+        <View style={{marginTop:40,left:10,width:"70%"}}>
+          <Text style={styles.headerText}>Clear Land</Text>
+        </View>
+        </Appbar.Header>
+      </View>
       {/* ScrollView section */}
       <ScrollView>
         <View style={styles.container2}>
@@ -325,42 +262,42 @@ export default function ClearLand() {
                   <Button
                     style={[
                       styles.button,
-                      pressed === "low" && styles.pressedButton,
+                      pressed === "Low" && styles.pressedButton,
                     ]}
                     labelStyle={[
                       styles.text,
-                      pressed === "low" && styles.pressedText,
+                      pressed === "Low" && styles.pressedText,
                     ]}
                     mode="contained-tonal"
-                    onPress={() => setPressed("low")}
+                    onPress={() => setPressed("Low")}
                   >
                     Low
                   </Button>
                   <Button
                     style={[
                       styles.button,
-                      pressed === "medium" && styles.pressedButton,
+                      pressed === "Medium" && styles.pressedButton,
                     ]}
                     labelStyle={[
                       styles.text,
-                      pressed === "medium" && styles.pressedText,
+                      pressed === "Medium" && styles.pressedText,
                     ]}
                     mode="contained-tonal"
-                    onPress={() => setPressed("medium")}
+                    onPress={() => setPressed("Medium")}
                   >
                     Medium
                   </Button>
                   <Button
                     style={[
                       styles.button,
-                      pressed === "high" && styles.pressedButton,
+                      pressed === "High" && styles.pressedButton,
                     ]}
                     labelStyle={[
                       styles.text,
-                      pressed === "high" && styles.pressedText,
+                      pressed === "High" && styles.pressedText,
                     ]}
                     mode="contained-tonal"
-                    onPress={() => setPressed("high")}
+                    onPress={() => setPressed("High")}
                   >
                     High
                   </Button>
@@ -372,7 +309,11 @@ export default function ClearLand() {
           {/* Plants box */}
           <Card style={styles.card1}>
             <Card.Content style={styles.cardContent}>
-              <MaterialCommunityIcons name="sprout" size={responsiveFontSize(3)} color="#65676B" />
+              <MaterialCommunityIcons
+                name="sprout"
+                size={responsiveFontSize(3)}
+                color="#65676B"
+              />
               <Text style={styles.cardTopText} variant="titleLarge">
                 Plants
               </Text>
@@ -709,6 +650,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
   },
+  header: {
+    height: 45,
+    backgroundColor: "#007BFF",
+
+    ...Platform.select({
+      android: {
+        marginTop: StatusBar.currentHeight,
+      },
+    }),
+  },
+  headerText: {
+   
+    fontSize: 18,
+    textAlign: "center",
+    color: "white",
+    position: "absolute",
+    bottom: 7,
+    left: 0,
+    right: 0,
+  },
 
   card1: {
     height: "max-content",
@@ -758,7 +719,7 @@ const styles = StyleSheet.create({
   },
   calButtton: {
     marginTop: responsiveHeight(4),
-    bottom:responsiveHeight(2),
+    bottom: responsiveHeight(2),
     alignItems: "center",
   },
   Searchbar: {

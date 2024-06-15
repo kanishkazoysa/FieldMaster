@@ -49,6 +49,7 @@ export default function App() {
 // MainContent component
 const MainContent = () => (
   <>
+    {/* <Managemap/> */}
     <Navbar />
     <div className="container">
       <Hero />
