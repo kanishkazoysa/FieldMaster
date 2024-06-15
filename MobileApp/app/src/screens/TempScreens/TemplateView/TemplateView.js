@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Appbar, ThemeProvider } from 'react-native-paper';
+import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { Appbar } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './TemplateViewStyles';
 import {
   responsiveFontSize,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
+
+import AxiosInstance from '../../../AxiosInstance';
 
 const ClearLandIcon = (props) => (
   <MaterialCommunityIcons
@@ -75,12 +77,13 @@ const CustomEditIcon = ({ navigation, item }) => (
     name="square-edit-outline"
     size={responsiveFontSize(2.8)}
     color={'white'}
-    style={{ marginRight: responsiveWidth(2) }}
+    style={{ marginRight: responsiveWidth(3) }}
   />
 );
 
 const TemplateView = ({ route, navigation }) => {
   const { item } = route.params;
+  const  id  = item._id
   useEffect(() => {
     console.log('template view screen ', item._id);
   }, []);
@@ -90,6 +93,29 @@ const TemplateView = ({ route, navigation }) => {
     navigation.navigate('ResizeMap', { templateId: item._id });
   };
 
+  
+// check id exist in the databse
+  const checkId = async (id) => {
+    try {
+      const response = await AxiosInstance.get(`/api/fence/check-id/${id}`);
+      if (response.data.exists) {
+        console.log('ID exists');
+        navigation.navigate('FenceDetails', { id: item._id ,item: item});
+      } else {
+        console.log('ID does not exist');
+      }
+    } catch (error) {
+      // Handle error, maybe show a message to the user
+if (error.response.status === 404) {
+      console.log('ID not found');
+      navigation.navigate('Fence', { id: item._id, Area: item.area, Perimeter: item.perimeter, item: item });
+    } else {
+      console.error('Error checking ID:', error);
+      // Handle other errors
+    }    }
+  };
+  
+
   return (
     <>
       <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
@@ -98,7 +124,7 @@ const TemplateView = ({ route, navigation }) => {
             navigation.navigate('SavedTemplatesScreen');
           }}
         />
-        <Appbar.Content title={item.templateName} />
+        <Appbar.Content title={item.templateName} titleStyle={styles.title_text} />
         {/* pencil/ pen icon  */}
         <TouchableOpacity onPress={() => handleEdit(item)}>
           <CustomEditIcon />
@@ -135,9 +161,7 @@ const TemplateView = ({ route, navigation }) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Fence', { id: item._id, Area:item.area, Perimeter:item.perimeter  })}
-          >
+          <TouchableOpacity onPress={() => checkId(item._id)}>
             <View style={styles.iconBlockInner}>
               <View style={styles.iconOuter_03}>
                 <FenceSetupIcon />
@@ -188,7 +212,7 @@ const TemplateView = ({ route, navigation }) => {
         </View>
         {/* Description block */}
         <View style={styles.descriptionBlock}>
-          <Text style={styles.text02Styling}>Description</Text>
+         <Text style={styles.text02Styling}>Description</Text>
           <View style={styles.subTextOuter}>
             <Text style={styles.subTextStyle}>{item.description}</Text>
           </View>

@@ -41,10 +41,10 @@ export default function Home() {
   const [calculatedArea, setCalculatedArea] = useState(0);
   const [polygonPerimeter, setPolygonPerimeter] = useState(0);
   const [isResizeButtonDisabled, setIsResizeButtonDisabled] = useState(true);
-  const [isStartPauseButtonDisabled, setIsStartPauseButtonDisabled] = useState(false);
+  const [isStartPauseButtonDisabled, setIsStartPauseButtonDisabled] =
+    useState(false);
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
   const [resizingMode, setResizingMode] = useState(false);
-  
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -204,41 +204,27 @@ export default function Home() {
       ],
     };
     const polygonArea = area(polygon);
-    setCalculatedArea(polygonArea*0.03954);
-  
+    setCalculatedArea(polygonArea * 0.03954);
+
     let perimeter = 0;
     for (let i = 0; i < pathCoordinates.length; i++) {
-      const start = [
-        pathCoordinates[i].longitude,
-        pathCoordinates[i].latitude,
-      ];
-      const end = i === pathCoordinates.length - 1
-        ? [pathCoordinates[0].longitude, pathCoordinates[0].latitude]
-        : [pathCoordinates[i + 1].longitude, pathCoordinates[i + 1].latitude];
+      const start = [pathCoordinates[i].longitude, pathCoordinates[i].latitude];
+      const end =
+        i === pathCoordinates.length - 1
+          ? [pathCoordinates[0].longitude, pathCoordinates[0].latitude]
+          : [pathCoordinates[i + 1].longitude, pathCoordinates[i + 1].latitude];
       perimeter += distance(start, end, { units: "kilometers" });
     }
-  
+
     setPolygonPerimeter(perimeter);
   };
 
   const saveMapData = async () => {
-    AxiosInstance.post("/api/auth/mapTemplate/saveTemplate", {
-      locationPoints: pathCoordinates,
+    navigation.navigate("SaveScreen", {
+     locationPoints: pathCoordinates,
       area: calculatedArea,
       perimeter: polygonPerimeter,
-    })
-      .then((response) => {
-        console.log(response.data._id);
-        navigation.navigate("SaveScreen", {
-          id: response.data._id,
-          area: calculatedArea,
-          perimeter: polygonPerimeter,
-          userId: response.data.userId,
-        });
-      })
-      .catch((error) => {
-        console.error(error.response.data);
-      });
+    });
   };
 
   return (
@@ -252,27 +238,31 @@ export default function Home() {
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity
-        onPress={saveMapData}
-        style={[styles.appbarButton, { marginLeft: "auto" }]}
-        disabled={isSaveButtonDisabled}
-      >
-        <Text style={[styles.buttonText, isSaveButtonDisabled && { color: "rgba(255, 255, 255, 0.5)" }]}>
-          Save
-        </Text>
-      </TouchableOpacity>
+          onPress={saveMapData}
+          style={[styles.appbarButton, { marginLeft: "auto" }]}
+          disabled={isSaveButtonDisabled}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              isSaveButtonDisabled && { color: "rgba(255, 255, 255, 0.5)" },
+            ]}
+          >
+            Save
+          </Text>
+        </TouchableOpacity>
       </Appbar.Header>
 
-      
-        <View style={styles.overlay}>
-          <Text style={styles.overlayText}>
-            Area: {calculatedArea.toFixed(2)} perches
-          </Text>
-          <Text style={styles.overlayText}>
-            Perimeter: {polygonPerimeter.toFixed(3)} km
-          </Text>
-        </View>
-     
-        <MapView
+      <View style={styles.overlay}>
+        <Text style={styles.overlayText}>
+          Area: {calculatedArea.toFixed(2)} perches
+        </Text>
+        <Text style={styles.overlayText}>
+          Perimeter: {polygonPerimeter.toFixed(3)} km
+        </Text>
+      </View>
+
+      <MapView
         ref={mapRef}
         style={styles.map}
         mapType={mapTypes[mapTypeIndex].value}
@@ -292,33 +282,41 @@ export default function Home() {
             strokeColor="white"
           />
         )}
-        {resizingMode && pathCoordinates.map((coordinate, index) => (
-          <Marker
-            key={index}
-            coordinate={coordinate}
-            pinColor="red"
-            draggable
-            onDragEnd={(event) => {
-              const { latitude, longitude } = event.nativeEvent.coordinate;
-              const updatedCoordinates = [...pathCoordinates];
-              updatedCoordinates[index] = { latitude, longitude };
-              if (index === 0) {
-                updatedCoordinates[updatedCoordinates.length - 1] = { latitude, longitude };
-              } else if (index === updatedCoordinates.length - 1) {
-                updatedCoordinates[0] = { latitude, longitude };
-              }
-              setPathCoordinates(updatedCoordinates);
-              handleResizeEnd(); // Call handleResizeEnd when a marker is dragged and dropped
-            }}
-          />
-        ))}
+        {resizingMode &&
+          pathCoordinates.map((coordinate, index) => (
+            <Marker
+              key={index}
+              coordinate={coordinate}
+              pinColor="red"
+              draggable
+              onDragEnd={(event) => {
+                const { latitude, longitude } = event.nativeEvent.coordinate;
+                const updatedCoordinates = [...pathCoordinates];
+                updatedCoordinates[index] = { latitude, longitude };
+                if (index === 0) {
+                  updatedCoordinates[updatedCoordinates.length - 1] = {
+                    latitude,
+                    longitude,
+                  };
+                } else if (index === updatedCoordinates.length - 1) {
+                  updatedCoordinates[0] = { latitude, longitude };
+                }
+                setPathCoordinates(updatedCoordinates);
+                handleResizeEnd(); // Call handleResizeEnd when a marker is dragged and dropped
+              }}
+            />
+          ))}
       </MapView>
 
       <TouchableOpacity
         style={styles.layerIconContainer}
         onPress={toggleMapType}
       >
-        <FontAwesomeIcon icon={faLayerGroup} size={responsiveFontSize(2.8)} color="#fff" />
+        <FontAwesomeIcon
+          icon={faLayerGroup}
+          size={responsiveFontSize(2.8)}
+          color="#fff"
+        />
         {showDropdown && (
           <View style={styles.dropdownContainer}>
             <FlatList
@@ -346,29 +344,37 @@ export default function Home() {
             disabled={isStartPauseButtonDisabled}
             style={[
               styles.button,
-              isStartPauseButtonDisabled && { backgroundColor: "rgba(131, 180, 255, 0.8)"},
+              isStartPauseButtonDisabled && {
+                backgroundColor: "rgba(131, 180, 255, 0.8)",
+              },
             ]}
-
-            labelStyle={isStartPauseButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }}
-          
+            labelStyle={
+              isStartPauseButtonDisabled && {
+                color: "rgba(255, 255, 255, 0.7)",
+              }
+            }
           >
             {trackingPaused ? "Pause" : "Start"}
           </Button>
         </View>
         <View style={styles.buttonWrapper}>
-        <Button
-        icon="resize"
-        mode="contained"
-        disabled={isResizeButtonDisabled}
-        style={[
-          styles.button,
-          isResizeButtonDisabled && { backgroundColor: "rgba(131, 180, 255, 0.8)" },
-        ]}
-        labelStyle={isResizeButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }}
-        onPress={() => setResizingMode(!resizingMode)}
-      >
-        {resizingMode ? "Done" : "Resize"}
-      </Button>
+          <Button
+            icon="resize"
+            mode="contained"
+            disabled={isResizeButtonDisabled}
+            style={[
+              styles.button,
+              isResizeButtonDisabled && {
+                backgroundColor: "rgba(131, 180, 255, 0.8)",
+              },
+            ]}
+            labelStyle={
+              isResizeButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }
+            }
+            onPress={() => setResizingMode(!resizingMode)}
+          >
+            {resizingMode ? "Done" : "Resize"}
+          </Button>
         </View>
       </View>
     </View>
@@ -406,7 +412,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     backgroundColor: "rgba(0,0,0, 0.7)",
-    justifyContent: "center", 
+    justifyContent: "center",
     alignItems: "center",
     padding: 5,
   },

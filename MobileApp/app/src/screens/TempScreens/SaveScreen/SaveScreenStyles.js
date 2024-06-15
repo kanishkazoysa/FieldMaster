@@ -22,14 +22,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: responsiveWidth(5),
-    marginTop: responsiveHeight(2),
   },
   top_Bar_Whole: {
     backgroundColor: '#0866FF',
     marginTop: 0,
-  },
-  inner_View: {
-    backgroundColor: '#ffffff8a',
   },
   inner_view_text_style: {
     fontSize: responsiveFontSize(2),
@@ -77,7 +73,6 @@ export const styles = StyleSheet.create({
   },
   low_outer: {
     flex: 0.5,
-    backgroundColor: 'lightgrey',
   },
   low_outer_02: {
     flex: 1,
@@ -107,19 +102,17 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexDirection: 'row',
     marginHorizontal: responsiveWidth(5),
-    borderRadius: 10,
-    justifyContent: 'space-around',
+    borderRadius: 7,
     marginVertical: responsiveHeight(1),
-    paddingVertical: 13,
     shadowColor: '#000',
+    paddingVertical: responsiveHeight(1.2),
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 6,
-    justifyContent: 'space-between',
     paddingHorizontal: responsiveWidth(3),
   },
   input_text: {
-    height: responsiveHeight(2),
+    height: responsiveHeight(4),
     width: responsiveWidth(56),
     backgroundColor: 'white',
   },

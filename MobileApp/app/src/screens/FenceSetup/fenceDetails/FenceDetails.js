@@ -1,141 +1,113 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback  } from "react";
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TouchableOpacity,
+  Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation,useFocusEffect  } from "@react-navigation/native";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
-import axios from "axios";
 
 import { styles } from "./FenceDetailsStyles";
 import Headersection from "../../../components/Headersection";
 import CustomButton from "../../../components/CustomButton";
 import AxiosInstance from "../../../AxiosInstance";
+import  {getFenceDetailsHtml}  from "./fenceDetailPrint";
 
 export default function FenceDetails({ route }) {
-  const navigation = useNavigation();
-  const { fenceType, postSpace, PostSpaceUnit, data,Area,Perimeter } = route.params;
-  const [numberOfSticks, setnumberOfSticks] = useState(null);
 
-  // get number of Sticks from  database
-  useEffect(() => {
-    const fetchData = async () => {
-      
-        AxiosInstance.get("/api/fence/numberOfSticks")
-        .then((response) => {
-          setnumberOfSticks(response.data.data);
-        })
-        
-      .catch((error) => {
+  const navigation = useNavigation();
+
+  const { id , item} = route.params;
+  const [numberOfSticks, setnumberOfSticks] = useState(null);
+  const [fenceType , setfenceType] = useState(null);
+  const [postSpace, setpostSpac] = useState(null);
+  const [PostSpaceUnit, setPostSpaceUnit] = useState(null);
+  const [Area, setArea] = useState(null);
+  const [Perimeter, setPerimeter] = useState(null);
+  const [data1 , setdata1] = useState([]);
+
+  //Fetch data from  database
+    const fetchData = async (id) => {
+      try {
+        const response = await AxiosInstance.get(`/api/fence/numberOfSticks/${id}`);
+        setnumberOfSticks(response.data.numberOfSticks);
+        setfenceType(response.data.fenceType);
+        setpostSpac(response.data.postSpace);
+        setPostSpaceUnit(response.data.postSpaceUnit);
+        setArea(response.data.Area);
+        setPerimeter(response.data.Perimeter);
+        setdata1(response.data.gateDetails);
+      } catch (error) {
         console.error(error);
-      })
+      }
     };
-    fetchData();
-  }, []);
+
+  //Refresh the screen
+    useFocusEffect(
+      useCallback(() => {
+        fetchData(id);
+      }, [id])
+    );
+
+  //delete Fence model from the database
+  const FenceDelete = async (id) => {
+    try {
+      const response = await AxiosInstance.delete(`/api/fence/deleteFence/${id}`);
+      console.log(response);
+      return response;
+    } catch (error) {
+      // Log the detailed error response
+      console.error('Error deleting fence:', error.response ? error.response.data : error.message);
+      throw error; // Re-throw the error to handle it in the caller function
+    }
+  };
+  
+  // edit button pressed function
+  const handleIconPress = () => {
+    Alert.alert(
+      'Update Data',
+      'Do you want to update data?',
+      [
+        {
+          text: 'No',
+          onPress: () => console.log('No pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: async () => {
+            try {
+              await FenceDelete(id);
+              // Alert.alert('Success', 'Fence deleted successfully.');
+              navigation.navigate('Fence', { id: id, Area: Area, Perimeter: Perimeter,item: item });
+            } catch (error) {
+              // Show detailed error message
+              const errorMessage = error.response ? error.response.data.message : error.message;
+              Alert.alert('Error', `Failed to delete fence: ${errorMessage}`);
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  //back to home function
+  const BackToHome = () => {
+    navigation.navigate('Home');
+  };
+  
 
 // html file to be printed
-const html = `
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>App Details</title>
-      <style>
-          body {
-              /* font-family: Arial, sans-serif; */
-              margin: 0;
-              padding: 0;
-          }
-          .container {
-              max-width: 800px;
-              margin: 10px auto;
-              padding: 20px;
-              border: 5px solid #ccc;
-          }
-  
-          .logo-container {
-              display: flex;
-              align-items: center;
-              background-color: #fff;
-          }
-  
-          .App-logo {
-              margin-left: 5px;
-          }
-  
-          .logo-text {
-              margin-left: 70px;
-              margin-top: 40px;
-              color: #007BFF;
-              font-size: 40px;
-              /* font-family: Product Sans; */ /* You need to import Product Sans if it's a custom font */
-              font-family: sans-serif; /* Fallback font */
-          }
+const html = getFenceDetailsHtml(fenceType, numberOfSticks, postSpace, PostSpaceUnit, data1);
 
-          Description-text1 {
-            margin-top: 50px;
-          }
-  
-          .Description-text {
-              width: 100%;
-              border-radius: 12px; /* Corrected typo */
-          }
-  
-          .logo {
-              max-width: 150px;
-              margin-bottom: 20px;
-          }
-          h1, p {
-              margin: 10px 0;
-        
-          }
-      </style>
-  </head>
-  <body>
-      <div class="container">
-          <div class="logo-container">
-              <img class="App-logo" src="https://s3-alpha-sig.figma.com/img/0402/a49c/79d6086f4997c8eeba9d160fa7b869ed?Expires=1708905600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=bT1vIy5S2dJUVkDABMFzScUJX5Iws21riRotOmacpZl1bhA8yPqJLJNeF5-wc8kBpk4jyD81fp-8bBYVTVwO6cplKgVuos2HMwvvf3vA5yh0td6H5z5AqoKTIcV8sy6pPF9DsiJmzHLRn5QjfYk~o8ow0bxsqErV5jJfH1S4~4yDdn6O54pXqPBjgydtWdDEhlCUXmzQo1ZozcGTapshAhnzm3YNdYd5leb1AwnPhuURNJ7YO80jOE3QN3pqNxv2XESHYnKDOilaPqvuVKVTyG3AV2mxdnyg-U8iEkRBgQJNDH0YjrWMKTRb3GatXSa5KVA9zQDL5JLoTn9DOvqa-Q__" alt="Your App Logo" class="logo" width="130">
-              <h1 class="logo-text">Field Master</h1>
-          </div>
-          <h2 class="Description-text1">Description</h2>
-          <div class="Description-text">
-              <p>Welcome to FieldMaster, your ultimate solution for accurately measuring, mapping, and managing land plots for various agricultural purposes. Our application is designed to assist plantation owners, farmers, and land surveyors in optimizing land utilization and planning agricultural activities with precision and ease.</p>
-          </div>
-          <h2>Map Information</h2>
-          <ul>
-              <li>Perimeter = 1.5 km</li>
-              <li>Area = 100 accres</li>
-          </ul>
-
-          <h2>Fence Details</h2>
-
-          <ul>
-          <li>Fence Typpe = ${fenceType}</li>
-          
-          <li> Total Stick Amount = ${numberOfSticks}</li>
-          <li> Post Space = ${postSpace} ${PostSpaceUnit}</li>
-          <!-- Loop through the 'data' array and generate list items -->
-          <li> Gate values  <ul>
-          ${data.map((value) => `<li>${value}</li>`).join("")}
-          </ul></li>
-          
-          </ul>
-
-      </div>
-  </body>
-  </html>
-  
-  
-
-`;
 
   /*print*/
   const [selectedPrinter, setSelectedPrinter] = React.useState();
@@ -145,6 +117,7 @@ const html = `
       html,
       printerUrl: selectedPrinter?.url, // iOS only
     });
+    
   };
 
   const printToFile = async () => {
@@ -157,6 +130,8 @@ const html = `
     const printer = await Print.selectPrinterAsync(); // iOS only
     setSelectedPrinter(printer);
   };
+
+  
 
   return (
     <KeyboardAvoidingView
@@ -172,7 +147,26 @@ const html = `
 
       {/* Top section */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
+
+
         <View style={styles.top}>
+          
+      <View style={styles.topSection}>
+      <TouchableOpacity style={styles.iconButton} onPress={BackToHome}>
+        <MaterialCommunityIcons
+          name="home"
+          size={26}
+          color="#007BFF"
+        />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.iconButton} onPress={handleIconPress}>
+        <MaterialCommunityIcons
+          name="square-edit-outline"
+          size={26}
+          color="#007BFF"
+        />
+      </TouchableOpacity>
+    </View>
           <View style={styles.box1}>
             <Text style={styles.titleText}>Total posts / Sticks</Text>
             <View style={styles.propertyBox}>
@@ -259,7 +253,7 @@ const html = `
                 <Text style={styles.perimeterText}>Gates           :</Text>
               </View>
               <View style={styles.innersquareright1}>
-                {data.map((value, index) => (
+                {data1.map((value, index) => (
                   <Text key={index}>{value}</Text>
                 ))}
               </View>

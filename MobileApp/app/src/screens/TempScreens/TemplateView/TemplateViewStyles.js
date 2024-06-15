@@ -1,4 +1,4 @@
-import { StyleSheet, StatusBar, Platform } from 'react-native';
+import { StyleSheet,Platform } from 'react-native';
 
 import {
   responsiveFontSize,
@@ -10,9 +10,13 @@ export const styles = StyleSheet.create({
   testingText: {
     color: 'red',
   },
+  title_text: {
+    fontSize: responsiveFontSize(2.3),
+    marginLeft: responsiveWidth(-5),
+  },
 
   top_Bar: {
-    height: responsiveHeight(5),
+    height: responsiveHeight(6.5),
     backgroundColor: '#007BFF',
 
     ...Platform.select({
