@@ -15,19 +15,13 @@ function calculateEffortOutput(
 ) {
 
   let area = 1000
-  //efficiencies for each type
-  // const weedEffortValues = { Low: 2, Medium: 4, High: 0 };
-  // const plantEffortValues = { Low: 1 / 12, Medium: 0.25, High: 0.5 };
-  // const stoneEffortValues = { High: 1 };
-  // const machineEfficiencies = { Backhoes: 0.714, Excavators: 0.0593 }; //efficiency in minutes
-  
-//calculate total effort
-  const effortCount = Math.ceil((weedEffort*laborsCount*area) + (plantEffort/chainsawCount) + (stoneEffort/breakerCount) + ((machineEffort*area)/60));
+  //calculate total effort
+  const effortCount = Math.ceil(((weedEffort/laborsCount)*area) + (plantEffort/chainsawCount) + (stoneEffort/breakerCount) + ((machineEffort*area)/60));
   return effortCount;
 }
 const calculateWeedEffort = (weedType) => {
   let weedEffort = 0;
-  const weedEffortValues = { Low: 2, Medium: 4, High: 0 };//hours per 1 square meter and per 1 labor
+  const weedEffortValues = { Low: 1, Medium: 1.5, High: 0 };//hours per 1 square meter and per 1 labor
   if(weedType){
       weedEffort = weedEffortValues[weedType];
     }
@@ -53,31 +47,51 @@ const calculateStoneEffort = (stoneType) => {
     });
   }
   return stoneEffort;
-}
+  }
 
-const calculateMachineEffort = (machineDetails) => {
-  let machineEffort = 0;
-  const machineEffortValues = { Backhoes: 0.714, Excavators: 0.0593 }; //effort in minutes to clear a 1 square meter land
-  if(machineDetails){
-      machineDetails.forEach(({type,count}) => {
-          if(type === "Backhoes"){
-              backhoeEffort = machineEffortValues[type] / parseInt(count);
-          }
-          if(type === "Excavators"){
-              excavatorEffort = machineEffortValues[type] / parseInt(count);
-          }
-      })
-      machineEffort = backhoeEffort + excavatorEffort;
+  const calculateMachineEffort = (machineDetails) => {
+    // Initialize machineEffort with Backhoes efficiency
+    const machineEffortValues = { Backhoes: 0.714, Excavators: 0.0593 }; // time in minutes to clear 1 square meter 
+    let machineEffort = machineEffortValues["Backhoes"];
+    let backhoeEffort = 0;
+    let excavatorEffort = 0;
+    // let hasBackhoeOrExcavator = false;
+    let backhoePresent = false;
+    let excavatorPresent = false;
+  
+    if (machineDetails) {
+        machineDetails.forEach(({type, count}) => {
+            if (type === "Backhoes") {
+                backhoeEffort = machineEffortValues[type] / parseInt(count);
+                backhoePresent = true;
+                // hasBackhoeOrExcavator = true;
+            }
+            if (type === "Excavators") {
+                excavatorEffort = machineEffortValues[type] / parseInt(count);
+                excavatorPresent = true;
+                // hasBackhoeOrExcavator = true;
+            }
+        });
+  
+        // If both Backhoes and Excavators are present, calculate the average effort
+        if (backhoePresent && excavatorPresent) {
+            machineEffort = (backhoeEffort + excavatorEffort) / 2;
+        } else if (backhoePresent) {
+            machineEffort = backhoeEffort;
+        } else if (excavatorPresent) {
+            machineEffort = excavatorEffort;
+        }
     }
-  return machineEffort;
-}
+    
+    return machineEffort;
+  };
 
 const getChainsawCount = (machineDetails) => {
-  let chainsawCount= 1;
+  let chainsawCount = 1;
   if(machineDetails){
     machineDetails.forEach(({type,count}) => {
-      if(type === "Chainsaw"){
-          chainsawCount = 0 + parseInt(count);
+      if(type === "Chainsaws"){
+          chainsawCount = parseInt(count);
       }
   })
   }
@@ -88,12 +102,16 @@ const getBreakerCount = (machineDetails) => {
   let breakerCount= 1;
   if(machineDetails){
     machineDetails.forEach(({type,count}) => {
-      if(type === "Chainsaw breakers"){
-          breakerCount = 0 + parseInt(count);
+      if(type === "Excavator breakers"){
+          breakerCount = parseInt(count);
       }
   })
   }
   return breakerCount;
+}
+
+const calculateWorkDays = (effort,workHours) => {
+
 }
 router.post("/clearLand", async (req, res) => {
   try {
@@ -102,8 +120,6 @@ router.post("/clearLand", async (req, res) => {
       pressed,
       laborCount,
       workHours,
-      machineTypeArray,
-      machineCountArray,
       displayValues,
       displayValues1,
       displayValues2,
@@ -121,7 +137,6 @@ router.post("/clearLand", async (req, res) => {
         const [type, count] = value.split(" x ");
         return { type: type.trim(), count};
       });
-      console.log(machineDetails);
     const weedEffort = calculateWeedEffort(weedType);
     const plantEffort = calculatePlantEffort(plantDetails);  
     const stoneEffort = calculateStoneEffort(stoneType);
@@ -137,8 +152,6 @@ router.post("/clearLand", async (req, res) => {
       StoneDetails: displayValues1,
       LaborsCOunt: laborCount,
       WorkHoursCount: workHours,
-      Machinetype: machineTypeArray,
-      MachineCount: machineCountArray,
       MachineDetails: displayValues2,
       EffortOutput: effort,
     });

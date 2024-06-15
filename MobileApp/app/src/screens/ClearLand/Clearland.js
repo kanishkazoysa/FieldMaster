@@ -49,14 +49,12 @@ export default function ClearLand({ route }) {
   const [workHours, setWorkHours] = useState("");
   const [searchItem, setSearchItem] = useState("");
   const [machineCount, setMachineCount] = useState("");
-  const [machineTypeArray, setMachinetypeArray] = useState([]);
-  const [machineCountArray, setMachineCountArray] = useState([]);
   const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [suggestions, setSuggestions] = useState([
     "Excavators",
     "Backhoes",
     "Chainsaws",
-    "Chainsaw breakers"
+    "Excavator breakers"
   ]);
 
   const handleSearch = (query) => {
@@ -163,11 +161,6 @@ export default function ClearLand({ route }) {
   const [displayValues2, setDisplayValues2] = useState([]);
 
   const handleAdd2 = () => {
-    //add machine type and machine count to arrays
-    setMachinetypeArray([...machineTypeArray, searchItem]);
-    setMachineCountArray([...machineCountArray, machineCount]);
-
-    
     //validation part Add button
     const combinedValue2 = searchItem + " x " + machineCount;
     const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
@@ -192,8 +185,6 @@ export default function ClearLand({ route }) {
       displayValues1,
       laborCount,
       workHours,
-      machineTypeArray,
-      machineCountArray,
       displayValues2,
     })
       .then((response) => {
@@ -218,8 +209,6 @@ export default function ClearLand({ route }) {
           stonesCount: stonesCount,
           laborCount: laborCount,
           workHours: workHours,
-          machinetype: machineTypeArray,
-          machineCount: machineCountArray,
         });
 
         setPressed(" ");

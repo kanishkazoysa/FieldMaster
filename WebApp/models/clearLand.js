@@ -21,12 +21,6 @@ const clearLandSchema = mongoose.Schema(
         WorkHoursCount: {
             type: String,
         },
-        Machinetype: [{
-            type: String,
-        }],
-        MachineCount: [{
-            type: String,
-        }],
         MachineDetails: [{
             type: String,
         }],
