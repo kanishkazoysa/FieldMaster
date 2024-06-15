@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,9 +7,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  TextInput,
-  TouchableOpacity,
 } from "react-native";
+
+
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -18,10 +18,48 @@ import { shareAsync } from 'expo-sharing';
 
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
-export default function FertilizationDetails({route}) {
+import {styles} from './FertilizingDetailsStyles';
+export default function FertilizationDetails({ route }) {
+
+
+  const { params } = route;
+  const { FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton,count,plantcount} = params;
+  const [factorValue, setFactor] = useState(1);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [Total,setTotal] = useState(0);
+
+  useEffect(() => {
+    console.log("in Fertilization details screen", FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton,plantcount);
+    let factorValue = 1;
+    switch (SelectedButton) {
+      case "Daily":
+        factorValue = 365;
+        break;
+      case "Weekly":
+        factorValue = 4; 
+        break;
+      case "Monthly":
+        factorValue = 12;
+        break;
+      case "Quarter":
+        factorValue = 4;
+        break;
+      case "Yearly":
+        factorValue = 1;
+        break;
+      default:
+        factorValue = 1;
+    }
+    setFactor(factorValue);
+    setTotalAmount(NumberOfTime * FertilizerAmount * factorValue);
 
     
-  const { FertilizerType, NumberOfTime,FertilizerAmount, FertilizerAmountUnit,SelectedButton } = route.params;
+  }, []);
+
+  useEffect(() =>{
+    setTotal((plantcount*totalAmount/1000));
+  })
+
 
 
   const html = `
@@ -101,10 +139,12 @@ export default function FertilizationDetails({route}) {
           <h2>Fertilizing Details</h2>
 
           <ul>
-          <li> Total Amount Of Fertilizer= ${FertilizerAmount} ${FertilizerAmountUnit}</li>
+          <li> Total Amount Of Fertilizer= ${totalAmount} ${FertilizerAmountUnit}</li>
           
           <li> Fertilizer Application Frequency = ${NumberOfTime} Times ${SelectedButton} </li>
           <li> Fertilizer Type = ${FertilizerType} </li>
+          <li> Fertilizer Amount Per Application = ${FertilizerAmount}${FertilizerAmountUnit}</li>
+          <li> How Often = ${SelectedButton} </li>
           
           </ul>
 
@@ -115,13 +155,13 @@ export default function FertilizationDetails({route}) {
 `;
 
 
-    const navigation = useNavigation();
-    const handleFertilizationDetails = () => {
-        navigation.navigate("Fence");
-      };
+  const navigation = useNavigation();
+  const handleFertilizationDetails = () => {
+    navigation.navigate("Fence");
+  };
 
 
-      /*print*/
+  /*print*/
 
   const [selectedPrinter, setSelectedPrinter] = React.useState();
 
@@ -152,16 +192,16 @@ export default function FertilizationDetails({route}) {
       behavior={Platform.OS === "ios" ? "padding" : "margin"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
     >
-    {/* Static section at the top */}
-    <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+      {/* Static section at the top */}
+      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
-      {/*Header section*/}  
+      {/*Header section*/}
       <Headersection navigation={navigation} title="Fertilizing Details" />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
 
-    <View style={styles.top}>
-        {/* Top section */}
+        <View style={styles.top}>
+          {/* Top section */}
           <View style={styles.box1}>
             <Text style={styles.titleText}>Total Amount of Fertilizing</Text>
             <View style={styles.propertyBox}>
@@ -172,56 +212,56 @@ export default function FertilizationDetails({route}) {
                   color="#65676B"
                 />
                 <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyLabel}>Total Amount</Text>
-                  <Text style={styles.propertyValue}>{FertilizerAmount} {FertilizerAmountUnit}</Text>
+                  <Text style={styles.propertyLabel}>Per plant</Text>
+                  <Text style={styles.propertyValue}>{totalAmount} {FertilizerAmountUnit} </Text>
                 </View>
               </View>
               <View style={styles.property}>
                 <MaterialCommunityIcons
-                  name="timer-sand"
-                  size={35}
+                  name="pine-tree"
+                  size={40}
                   color="#65676B"
                 />
                 <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyLabel}>{SelectedButton}</Text>
-                  <Text style={styles.propertyValue}>{NumberOfTime + ' Times'} </Text>
+                  <Text style={styles.propertyLabel}>For plantation</Text>
+                  <Text style={styles.propertyValue}>{Total} kg</Text>
                 </View>
               </View>
             </View>
           </View>
 
-        {/* Second section */}
+          {/* Second section */}
 
           <View style={styles.box2}>
-              <View style={styles.box2Property}>
-                <MaterialCommunityIcons
-                  name="vector-square"
-                  size={36}
-                  color="#65676B"
-                />
-                <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                  <Text style={styles.Box2PropertyValue}>1.5Km</Text>
-                </View>
+            <View style={styles.box2Property}>
+              <MaterialCommunityIcons
+                name="vector-square"
+                size={36}
+                color="#65676B"
+              />
+              <View style={styles.box2PropertyDetails}>
+                <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
+                <Text style={styles.Box2PropertyValue}>665m</Text>
               </View>
-              <View style={styles.box2Property}>
-                <MaterialCommunityIcons
-                  name="texture-box"
-                  size={36}
-                  color="#65676B"
-                />
-                <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Area</Text>
-                  <Text style={styles.Box2PropertyValue}>100 acres</Text>
-                </View>
+            </View>
+            <View style={styles.box2Property}>
+              <MaterialCommunityIcons
+                name="texture-box"
+                size={36}
+                color="#65676B"
+              />
+              <View style={styles.box2PropertyDetails}>
+                <Text style={styles.Box2PropertyLabel}>Area</Text>
+                <Text style={styles.Box2PropertyValue}>2 acres</Text>
               </View>
+            </View>
           </View>
 
-        {/* Third section */}
+          {/* Third section */}
 
           <View style={styles.box3}>
             <View style={styles.inner}>
-              <Text style={styles.innertopText}>Result based on</Text>
+              <Text style={styles.innertopText}>Results based on</Text>
 
               <View style={styles.center}>
                 <View style={styles.innercenter}>
@@ -235,6 +275,21 @@ export default function FertilizationDetails({route}) {
                   </View>
                   <View style={styles.innersquareright}>
                     <Text style={styles.RightText}>{FertilizerType}</Text>
+                  </View>
+                </View>
+
+             
+                <View style={styles.innercenter}>
+                  <View style={styles.innersquareleft}>
+                  <MaterialCommunityIcons
+                  name="timer-sand"
+                  size={30}
+                  color="#65676B"
+                />
+                    <Text style={styles.LeftText}>No Of Times   :</Text>
+                  </View>
+                  <View style={styles.innersquareright}>
+                    <Text style={styles.RightText}>{NumberOfTime +" Times"}</Text>
                   </View>
                 </View>
 
@@ -254,29 +309,29 @@ export default function FertilizationDetails({route}) {
               </View>
             </View>
           </View>
-          </View>
+        </View>
 
-         {/* Bottom section */}
+        {/* Bottom section */}
 
-          <View style={styles.bottom}>
-            
-            <CustomButton
-              onPress={print}
-              text="Save As PDF"
-              iconName="content-save-outline" // Change the icon name as needed
-              iconColor="white" // Change the color of the icon
-              buttonColor="#E41E3F" // Change the background color of the button
-            />
+        <View style={styles.bottom}>
 
-            <CustomButton
-              onPress={printToFile}
-              text="Share PDF"
-              iconName="share-variant" // Change the icon name as needed
-              iconColor="white" // Change the color of the icon
-              buttonColor="#007BFF" // Change the background color of the button
-            />
-          </View>
-       </ScrollView>
+          <CustomButton
+            onPress={print}
+            text="Save As PDF"
+            iconName="content-save-outline" 
+            iconColor="white" 
+            buttonColor="#E41E3F"
+          />
+
+          <CustomButton
+            onPress={printToFile}
+            text="Share PDF"
+            iconName="share-variant" 
+            iconColor="white" 
+            buttonColor="#007BFF" 
+          />
+        </View>
+      </ScrollView>
 
 
 
@@ -284,194 +339,3 @@ export default function FertilizationDetails({route}) {
   );
 }
 
-const styles = StyleSheet.create({
-
-    container: {
-        flex: 1,
-      },
-      
-      /*Top Section*/
-
-  scrollContent: {
-    flexDirection: "column",
-    justifyContent: "space-between",
-    height: "100%",
-  },
-
-  top: {
-    alignItems: "center",
-    width: "100%",
-   },
-
-  box1: {
-    flexDirection: "column",
-    backgroundColor: "white",
-    width: "87%",
-    height: 123,
-    marginTop: 40,
-    alignItems: "center",
-    borderRadius: 11,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-
-  titleText: {
-    fontSize: 15,
-    fontWeight: "bold",
-    marginTop: 10,
-  },
-
-  propertyBox: {
-    width: "98%",
-    height: "70%",
-    backgroundColor: "white",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  property: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center", // or remove it for default behavior
-    backgroundColor: "white",
-    width: "46%",
-    height: 50,
-    padding: 7,
-  },
-
-  propertyDetails: {
-    flexDirection: "column",
-    marginLeft: 5,
-    width: "70%",
-    height: 40,
-    backgroundColor: "white",
-  },
-
-  propertyLabel: {
-    fontSize: 15,
-  },
-
-  propertyValue: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-
-  /*Second Section*/
-
-  box2: {
-    width: "87%",
-    height: 80,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-    marginTop: 15,
-    borderRadius: 11,
-    padding: 5,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-
-  box2Property: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "left",
-    backgroundColor: "white",
-    width: "46%",
-    height: 50,
-  },
-  box2PropertyDetails: {
-    flexDirection: "column",
-    marginLeft: 5,
-    width: "50%",
-    height: 40,
-    backgroundColor: "white",
-  },
-  Box2PropertyLabel: {
-    fontSize: 14,
-  },
-  Box2PropertyValue: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-
-  /*Third Section*/
-
-  box3: {
-    width: "87%",
-    height: 160,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-    marginTop: 15,
-    borderRadius: 11,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-
-  inner: {
-    width: "80%",
-    height: "80%",
-    backgroundColor: "white",
-  },
-
-  innertopText: {
-    fontSize: 15,
-    fontWeight: "bold",
-  },
-
-  center: {
-    marginTop: 15,
-  },
-
-  innercenter: {
-    flexDirection: "row",
-    width: "100%",
-    height: 45,
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "white",
-    marginVertical: 1,
-  },
-
-  innersquareleft: {
-    width: "50%",
-    height: 40,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "white",
-  },
-
-  innersquareright: {
-    width: "45%",
-    height: 40,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "white",
-  },
-
-  RightText: {},
-
-  LeftText: {
-    backgroundColor: "white",
-    width: "70%",
-    textAlign: "right",
-  },
-
-   /* bottom section */
-
-   bottom: {
-    alignItems: "center",
-    bottom: 30,
-  },
-
-
-});

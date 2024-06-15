@@ -11,6 +11,8 @@ import SavedTemplates from '../SavedTemplates/savedTemplates.js';
 // import Fence from "../Fence/Fence/fence";
 import ClearLand from "../ClearLand/ClearLand/clearLand";
 
+import Plantation from "../Plantation/PlantationPage/plantation";
+import PlantationDetails from "../Plantation/PlantationDetails/plantationDetails.js";
 
 export default function SideNavbar() {
   const [collapsed, setCollapsed] = useState(true);
@@ -32,7 +34,7 @@ export default function SideNavbar() {
   };
 
   const handleStartMeasureClick = () => {
-    setCurrentPage('StartMeasure'); // Update this line
+    setCurrentPage('StartMeasure'); 
     setAnimatePage(true);
   };
 

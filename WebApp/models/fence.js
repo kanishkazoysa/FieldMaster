@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 
 const fenceSchema = mongoose.Schema(
-    {
+    {   Id: {
+            type: String,
+        },
         FenceType: {
             type: String,
         },
@@ -27,4 +29,4 @@ const fenceSchema = mongoose.Schema(
 ); 
 
 const fenceModel = mongoose.model("fence", fenceSchema);
-module.exports = fenceModel;       
+module.exports = fenceModel;

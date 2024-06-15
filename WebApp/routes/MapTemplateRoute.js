@@ -10,13 +10,27 @@ router.use(cors());
 /* this route is used to save map template */
 router.post('/saveTemplate', async (req, res) => {
   try {
-    let { locationPoints, area , perimeter} = req.body;
+    let {
+      perimeter,
+      area,
+      templateName,
+      measureName,
+      landType,
+      location,
+      description,
+      locationPoints,
+    } = req.body;
     area = parseFloat(area).toFixed(2);
     perimeter = parseFloat(perimeter).toFixed(2);
     const mapTemplate = new MapTemplateModel({
-      locationPoints,
       area,
       perimeter,
+      templateName,
+      measureName,
+      landType,
+      location,
+      description,
+      locationPoints,
       userId: req.userId,
     });
     const savedMapTemplate = await mapTemplate.save();
@@ -31,8 +45,7 @@ router.get('/getAllTemplates', async (req, res) => {
   try {
     const templates = await MapTemplateModel.find({ userId: req.userId });
     res.json(templates);
-  } catch (error)
-  {
+  } catch (error) {
     res.status(500).send('Error while getting templates.');
   }
 });
@@ -90,7 +103,6 @@ router.post('/saveMapPoints', async (req, res) => {
   try {
     const { locationPoints } = req.body;
     if (!locationPoints) {
-      
       return res.status(400).send('Error: locationPoints are required.');
     }
     const map = new MapModel({ points: locationPoints });

@@ -1,32 +1,84 @@
 import {
-    StyleSheet,
-    Text,
-    View,
-    StatusBar,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    TouchableOpacity,
-    Alert,
-  } from "react-native";
-  import React from "react";
-  import { MaterialCommunityIcons } from "@expo/vector-icons";
-  import { useNavigation } from "@react-navigation/native";
-  import * as Print from 'expo-print';
-  import { shareAsync } from 'expo-sharing';
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import * as Print from 'expo-print';
+import { shareAsync } from 'expo-sharing';
+import axios from "axios";
+import {styles} from "./PlantationDetailsStyles";
+
+
+import Headersection from "../../components/Headersection";
+import CustomButton from "../../components/CustomButton";
+import AlertButton from "../../components/AlertButton";
+import AxiosInstance from "../../AxiosInstance";
+
+export default function PlantationDetails({ route }) {
+
+  const { textPlant, selectedValue, textplantspace, textRowspace } = route.params;
+
+  const [numberOfPlants, setnumberOfPlants] = useState(null);
+  const [PlantationDensity, setPlantDensity] = useState(null);
+  const [PlantType, setplantType] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        AxiosInstance.get("/api/plantation/numberOfPlants",{
+        })
+        .then(async(response)=>{
+          setnumberOfPlants(response.data.data);
+        })
+      .catch ((error)=>{
+        console.error(error);
+      })
+    };
   
-  import Headersection from "../../components/Headersection";
-  import CustomButton from "../../components/CustomButton";
-  import AlertButton from "../../components/AlertButton";
-  
-  export default function PlantationDetails({ route }) {
-  
-  
-  
-    const { textPlant, selectedValue, textplantspace, textRowspace, selectedValue1 } = route.params;
-  
-  
-    const html = `
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        AxiosInstance.get("/api/plantation/plantDensity",{
+        })
+        .then(async(response)=>{
+          setPlantDensity(response.data.data);
+        })
+      .catch ((error)=>{
+        console.error(error);
+      })
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        AxiosInstance.get("/api/plantation/plantType",{
+        })
+        .then(async(response)=>{
+          setplantType(response.data.data);
+        })
+      .catch ((error)=>{
+        console.error(error);
+      })
+    };
+
+    fetchData();
+  }, []);
+
+  const html = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -108,6 +160,8 @@ import {
             <li> plat type = ${textPlant}</li>
             <li> Plant Space = ${textplantspace} </li>
             <li> Row Space = ${textRowspace} </li>
+            <li> Plant count = ${numberOfPlants}</li>
+            <li> Plant Density = ${PlantationDensity}</li>
             <ul>
             
             </ul></li>
@@ -121,400 +175,209 @@ import {
     
   
   `;
-    const handleIconPress = () => {
-      // Display an alert message when the icon is pressed
-      Alert.alert(
-        "Important",
-        "This is an estimated count for the given details , allowing for a variance of +/- 10 plants from the actual value for flexibility and potential contingencies. ou pressed the icon!",
-        [
-          {
-            text: "OK",
-            onPress: () => console.log("OK Pressed"),
-          },
-        ],
-        { cancelable: false }
-      );
-    };
-  
-    const navigation = useNavigation();
-    const handleFertilization = () => {
-      navigation.navigate("Fertilization");
-    };
-  
-  
-    const [selectedPrinter, setSelectedPrinter] = React.useState();
-  
-    const print = async () => {
-      // On iOS/android prints the given html. On web prints the HTML from the current page.
-      await Print.printAsync({
-        html,
-        printerUrl: selectedPrinter?.url, // iOS only
-      });
-    };
-  
-    const printToFile = async () => {
-      // On iOS/android prints the given html. On web prints the HTML from the current page.
-      const { uri } = await Print.printToFileAsync({ html });
-      console.log('File has been saved to:', uri);
-      await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
-    };
-  
-    const selectPrinter = async () => {
-      const printer = await Print.selectPrinterAsync(); // iOS only
-      setSelectedPrinter(printer);
-    };
-  
-    return (
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "margin"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
-      >
-        {/* Static section at the top */}
-        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-         
-         {/*Header section*/}
-         <Headersection navigation={navigation} title="Plantation Details" />
-   
-          
-        
-        <ScrollView contentContainerStyle={styles.scrollContent}>
+  const handleIconPress = () => {
+    // Display an alert message when the icon is pressed
+    Alert.alert(
+      "Important",
+      "This is an estimated count for the given details , allowing for a variance of +/- 10 plants from the actual value for flexibility and potential contingencies. ou pressed the icon!",
+      [
+        {
+          text: "OK",
+          onPress: () => console.log("OK Pressed"),
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const navigation = useNavigation();
+  const handleFertilization = () => {
+    navigation.navigate("Fertilization", {
+      numberOfPlants: numberOfPlants,
+      PlantationDensity: PlantationDensity,
+      plantType: textPlant
+    });
+    console.log("sending" + numberOfPlants + " " + PlantationDensity+" "+textPlant);
+    
+ 
+  };
+
+
+  const [selectedPrinter, setSelectedPrinter] = React.useState();
+
+  const print = async () => {
+    // On iOS/android prints the given html. On web prints the HTML from the current page.
+    await Print.printAsync({
+      html,
+      printerUrl: selectedPrinter?.url, // iOS only
+    });
+  };
+
+  const printToFile = async () => {
+    // On iOS/android prints the given html. On web prints the HTML from the current page.
+    const { uri } = await Print.printToFileAsync({ html });
+    console.log('File has been saved to:', uri);
+    await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+  };
+
+  const selectPrinter = async () => {
+    const printer = await Print.selectPrinterAsync(); // iOS only
+    setSelectedPrinter(printer);
+  };
+
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "margin"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
+    >
+      {/* Static section at the top */}
+      <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+
+      {/*Header section*/}
+      <Headersection navigation={navigation} title="Plantation Details" />
+
+
+
+      <ScrollView contentContainerStyle={styles.scrollContent}>
 
         <View style={styles.top}>
           <AlertButton></AlertButton>
-  
+
           {/* Top section */}
-            <View style={styles.box1}>
-              <Text style={styles.titleText}>Total Plants</Text>
-              <View style={styles.propertyBox}>
-                <View style={styles.property}>
-                  <MaterialCommunityIcons
-                    name="grass"
-                    size={40}
-                    color="#65676B"
-                  />
-                  <View style={styles.propertyDetails}>
-                    <Text style={styles.propertyLabel}>Total Plants</Text>
-                    <Text style={styles.propertyValue}>200</Text>
-                  </View>
-                </View>
-                <View style={styles.property}>
-                  <MaterialCommunityIcons
-                    name="square-opacity"
-                    size={40}
-                    color="#65676B"
-                  />
-                  <View style={styles.propertyDetails}>
-                    <Text style={styles.propertyLabel}>Density</Text>
-                    <Text style={styles.propertyValue}>30 Plants/m</Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-  
-          {/* Second section */}
-  
-            <View style={styles.box2}>
-              <View style={styles.box2Inner}>
-                <View style={styles.box2Property}>
-                  <MaterialCommunityIcons
-                    name="vector-square"
-                    size={36}
-                    color="#65676B"
-                  />
-                  <View style={styles.box2PropertyDetails}>
-                    <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                    <Text style={styles.Box2PropertyValue}>1.5Km</Text>
-                  </View>
-                </View>
-                <View style={styles.box2Property}>
-                  <MaterialCommunityIcons
-                    name="texture-box"
-                    size={36}
-                    color="#65676B"
-                  />
-                  <View style={styles.box2PropertyDetails}>
-                    <Text style={styles.Box2PropertyLabel}>Area</Text>
-                    <Text style={styles.Box2PropertyValue}>100 acres</Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-  
-          {/* Third section */}
-  
-            <View style={styles.box3}>
-              <View style={styles.inner}>
-                <Text style={styles.innertopText}>Result based on</Text>
-  
-                <View style={styles.center}>
-                  <View style={styles.innercenter}>
-                    <View style={styles.innersquareleft}>
-                      <MaterialCommunityIcons
-                        name="sprout"
-                        size={30}
-                        color="#65676B"
-                      />
-                      <Text style={styles.LeftText}>Plant               :</Text>
-                    </View>
-                    <View style={styles.innersquareright}>
-                      <Text style={styles.RightText}>{textPlant}</Text>
-                    </View>
-                  </View>
-  
-                  <View style={styles.innercenter}>
-                    <View style={styles.innersquareleft}>
-                      <MaterialCommunityIcons
-                        name="apps"
-                        size={30}
-                        color="#65676B"
-                      />
-                      <Text style={styles.LeftText}>Plant Spaing  :</Text>
-                    </View>
-                    <View style={styles.innersquareright}>
-                      <Text style={styles.RightText}>{textplantspace} {selectedValue}</Text>
-                    </View>
-                  </View>
-  
-                  <View style={styles.innercenter}>
-                    <View style={styles.innersquareleft}>
-                      <MaterialCommunityIcons
-                        name="format-line-spacing"
-                        size={30}
-                        color="#65676B"
-                      />
-                      <Text style={styles.LeftText}>Row Spaing    :</Text>
-                    </View>
-                    <View style={styles.innersquareright}>
-                      <Text style={styles.RightText}>{textRowspace} {selectedValue1}</Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </View>
-            </View>
-  
-          {/* Bottom section */}
-            <View style={styles.bottom}>
-  
-                <CustomButton
-                onPress={handleFertilization}
-                text="Fertilizing"
-                iconName="flask-outline" // Change the icon name as needed
-                iconColor="white" // Change the color of the icon
-                buttonColor="#15A49B" // Change the background color of the button
+          <View style={styles.box1}>
+            <Text style={styles.titleText}>Total Plants</Text>
+            <View style={styles.propertyBox}>
+              <View style={styles.property}>
+                <MaterialCommunityIcons
+                  name="grass"
+                  size={40}
+                  color="#65676B"
                 />
-  
-                <CustomButton
-                onPress={print}
-                text="Save As PDF"
-                iconName="content-save-outline" // Change the icon name as needed
-                iconColor="white" // Change the color of the icon
-                buttonColor="#E41E3F" // Change the background color of the button
-              />
-  
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyLabel}>Plants count</Text>
+                  <Text style={styles.propertyValue}>{numberOfPlants}</Text>
                 </View>
-        
-        </ScrollView>
-      </KeyboardAvoidingView>
-    );
-  }
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-  
-    /*Top Section*/
-  
-    scrollContent: {
-      flexDirection: "column",
-      justifyContent: "space-between",
-      height: "100%",
+              </View>
+              <View style={styles.property}>
+                <MaterialCommunityIcons
+                  name="square-opacity"
+                  size={40}
+                  color="#65676B"
+                />
+                <View style={styles.propertyDetails}>
+                  <Text style={styles.propertyLabel}>Density</Text>
+                  <Text style={styles.propertyValue}>{PlantationDensity}/m</Text>
+                </View>
+              </View>
+            </View>
+          </View>
 
-    },
+          {/* Second section */}
 
-    top: {
-      alignItems: "center",
-      width: "100%",
-  
-     },
-  
-    box1: {
-      flexDirection: "column",
-      backgroundColor: "white",
-      width: "87%",
-      height: 123,
-      marginTop: 20,
-      alignItems: "center",
-      borderRadius: 11,
-      shadowColor: "#000",
-      shadowOpacity: 0.1,
-      shadowRadius: 5,
-      elevation: 6,
-    },
-  
-    titleText: {
-      fontSize: 15,
-      fontWeight: "bold",
-      marginTop: 10,
-    },
-  
-    propertyBox: {
-      width: "95%",
-      height: "70%",
-      backgroundColor: "white",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-  
-    property: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center", // or remove it for default behavior
-      backgroundColor: "white",
-      width: "46%",
-      height: 50,
-      padding: 7,
-    },
-  
-    propertyDetails: {
-      flexDirection: "column",
-      marginLeft: 5,
-      width: "70%",
-      height: 40,
-      backgroundColor: "white",
-    },
-  
-    propertyLabel: {
-      fontSize: 15,
-    },
-  
-    propertyValue: {
-      fontSize: 16,
-      fontWeight: "bold",
-    },
-  
-    /*Second Section*/
-  
-    box2: {
-      width: "87%",
-      height: 80,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "white",
-      marginTop: 15,
-      borderRadius: 11,
-      shadowColor: "#000",
-      shadowOpacity: 0.1,
-      shadowRadius: 5,
-      elevation: 6,
-    },
-  
-    box2Inner: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      height: "80%",
-      width: "95%",
-      backgroundColor: "white",
-    },
-    box2Property: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "left",
-      backgroundColor: "white",
-      width: "46%",
-      height: 50,
-    },
-    box2PropertyDetails: {
-      flexDirection: "column",
-      marginLeft: 5,
-      width: "50%",
-      height: 40,
-      backgroundColor: "white",
-    },
-    Box2PropertyLabel: {
-      fontSize: 14,
-    },
-    Box2PropertyValue: {
-      fontSize: 16,
-      fontWeight: "bold",
-    },
-  
-    /*Third Section*/
-  
-    box3: {
-      width: "87%",
-      height: 230,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "white",
-      marginTop: 15,
-      borderRadius: 11,
-      shadowColor: "#000",
-      shadowOpacity: 0.1,
-      shadowRadius: 5,
-      elevation: 6,
-    },
-  
-    inner: {
-      width: "80%",
-      height: "80%",
-      backgroundColor: "white",
-    },
-  
-    innertopText: {
-      fontSize: 15,
-      fontWeight: "bold",
-    },
-  
-    center: {
-      marginTop: 15,
-    },
-  
-    innercenter: {
-      flexDirection: "row",
-      width: "100%",
-      height: 45,
-      alignItems: "center",
-      justifyContent: "space-between",
-      backgroundColor: "white",
-      marginVertical: 2,
-    },
-  
-    innersquareleft: {
-      width: "50%",
-      height: 40,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      backgroundColor: "white",
-    },
-  
-    innersquareright: {
-      width: "45%",
-      height: 40,
-      flexDirection: "row",
-      alignItems: "center",
-      backgroundColor: "white",
-    },
-  
-    RightText: {},
-  
-    LeftText: {
-      backgroundColor: "white",
-      width: "70%",
-      textAlign: "right",
-    },
-  
-    /* bottom section */
-  
-    bottom: {
-      alignItems: "center",
-      bottom: 30,
-    },
-  
-  });
-  
+          <View style={styles.box2}>
+            <View style={styles.box2Inner}>
+              <View style={styles.box2Property}>
+                <MaterialCommunityIcons
+                  name="vector-square"
+                  size={36}
+                  color="#65676B"
+                />
+                <View style={styles.box2PropertyDetails}>
+                  <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
+                  <Text style={styles.Box2PropertyValue}>665m</Text>
+                </View>
+              </View>
+              <View style={styles.box2Property}>
+                <MaterialCommunityIcons
+                  name="texture-box"
+                  size={36}
+                  color="#65676B"
+                />
+                <View style={styles.box2PropertyDetails}>
+                  <Text style={styles.Box2PropertyLabel}>Area</Text>
+                  <Text style={styles.Box2PropertyValue}>2 acres</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+
+          {/* Third section */}
+
+          <View style={styles.box3}>
+            <View style={styles.inner}>
+              <Text style={styles.innertopText}>Results based on</Text>
+
+              <View style={styles.center}>
+                <View style={styles.innercenter}>
+                  <View style={styles.innersquareleft}>
+                    <MaterialCommunityIcons
+                      name="sprout"
+                      size={30}
+                      color="#65676B"
+                    />
+                    <Text style={styles.LeftText}>Plant               :</Text>
+                  </View>
+                  <View style={styles.innersquareright}>
+                    <Text style={styles.RightText}>{textPlant}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.innercenter}>
+                  <View style={styles.innersquareleft}>
+                    <MaterialCommunityIcons
+                      name="apps"
+                      size={30}
+                      color="#65676B"
+                    />
+                    <Text style={styles.LeftText}>Plant Spaing  :</Text>
+                  </View>
+                  <View style={styles.innersquareright}>
+                    <Text style={styles.RightText}>{textplantspace} {selectedValue}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.innercenter}>
+                  <View style={styles.innersquareleft}>
+                    <MaterialCommunityIcons
+                      name="format-line-spacing"
+                      size={30}
+                      color="#65676B"
+                    />
+                    <Text style={styles.LeftText}>Row Spaing    :</Text>
+                  </View>
+                  <View style={styles.innersquareright}>
+                    <Text style={styles.RightText}>{textRowspace} {selectedValue}</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Bottom section */}
+        <View style={styles.bottom}>
+
+          <CustomButton
+            onPress={handleFertilization}
+            text="Fertilizing"
+            iconName="flask-outline" 
+            iconColor="white" 
+            buttonColor="#15A49B"
+          />
+
+          <CustomButton
+            onPress={print}
+            text="Save As PDF"
+            iconName="content-save-outline"
+            iconColor="white" 
+            buttonColor="#E41E3F"
+          />
+
+        </View>
+
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+}
+
