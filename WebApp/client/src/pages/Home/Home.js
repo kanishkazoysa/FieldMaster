@@ -5,6 +5,7 @@ import { MdLocationOn, MdSearch } from "react-icons/md";
 import ProfileModal from "../../components/profileManage/ProfileModal";
 import Avatar from "../../components/profileManage/Avatar";
 import { styles, containerStyle, center } from './HomeStyles';
+
 export default function Home() {
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
@@ -52,6 +53,36 @@ export default function Home() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const mapOptions = useCallback(() => {
+    if (!window.google || typeof window.google === 'undefined') return {};
+  
+    return {
+      minZoom: 2,
+      maxZoom: 40,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+      mapTypeControl: true,
+      mapTypeControlOptions: {
+        style: window.google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+        position: window.google.maps.ControlPosition.LEFT_BOTTOM,
+      },
+      zoomControl: true,
+      zoomControlOptions: {
+        position: window.google.maps.ControlPosition.LEFT_BOTTOM,
+      },
+      streetViewControl: true,
+      streetViewControlOptions: {
+        position: window.google.maps.ControlPosition.RIGHT_BOTTOM,
+      },
+    };
+  }, []);
 
   return (
     <div style={styles.container}>
@@ -64,19 +95,7 @@ export default function Home() {
           mapContainerStyle={containerStyle}
           center={center}
           zoom={2}
-          options={{
-            minZoom: 2,
-            maxZoom: 40,
-            restriction: {
-              latLngBounds: {
-                north: 85,
-                south: -85,
-                west: -180,
-                east: 180,
-              },
-              strictBounds: true,
-            },
-          }}
+          options={mapOptions()}
         >
           {selectedLocation && (
             <Marker
@@ -85,7 +104,7 @@ export default function Home() {
             />
           )}
           <MdLocationOn fontSize={27} style={{ marginLeft: '10px', marginTop: '10px' }} color="#fff" />
-          
+
           <StandaloneSearchBox
             onLoad={onSearchBoxLoad}
             onPlacesChanged={handlePlacesChanged}
@@ -97,11 +116,10 @@ export default function Home() {
                 placeholder="Search location"
                 style={styles.searchBox}
                 onKeyDown={handleKeyDown}
-                />
-                <Avatar onClick={handleAvatarClick} style={styles.avatar} />
+              />
+              <Avatar onClick={handleAvatarClick} style={styles.avatar} />
             </div>
           </StandaloneSearchBox>
-
 
           {isModalOpen && (
             <ProfileModal

@@ -36,7 +36,7 @@ export const styles = {
 
     '@media (max-width: 1024px)': {
       sidebar: {
-        width: '220px',
+        width: '300px',
       },
       searchContainer: {
         width: '85%',
