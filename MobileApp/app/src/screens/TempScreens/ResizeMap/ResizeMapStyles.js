@@ -80,8 +80,6 @@ export const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
   },
-  firstDouble: {},
-  secondDouble: {},
   rowView: {
     flexDirection: 'row',
     justifyContent: 'space-around',

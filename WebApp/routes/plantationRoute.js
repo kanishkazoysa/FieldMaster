@@ -185,7 +185,6 @@ router.get("/plantDensityFromManualCalculator", async (req, res) => {
         if (!plant) {
             return res.status(404).json({ status: "error", message: "No recently updated data found" });
         }
-
         const plantationDensity = plant.PlantDensity;
 
         res.json({ status: "success", data: plantationDensity });

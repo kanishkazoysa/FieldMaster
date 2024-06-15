@@ -1,5 +1,5 @@
 
-import { StyleSheet } from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
 import {
     responsiveHeight,
     responsiveWidth,
@@ -11,8 +11,16 @@ export const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
-  
-    /*Top Section*/
+  top_Bar: {
+    height: responsiveHeight(6.5),
+    backgroundColor: '#007BFF',
+
+    ...Platform.select({
+      android: {
+        marginTop: responsiveHeight(3),
+      },
+    }),
+  },
   
     scrollContent: {
       flexDirection: "column",
