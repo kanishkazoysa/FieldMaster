@@ -61,6 +61,7 @@ export default function PlantationDetails({ route }) {
     );
 
 
+
     const PlantationDelete = async (id) => {
       try {
         const response = await AxiosInstance.delete(`/api/plantation/deletePlantation/${id}`);
@@ -90,7 +91,7 @@ export default function PlantationDetails({ route }) {
               try {
                 await PlantationDelete(id);
                 Alert.alert('Success', 'Plantation deleted successfully.');
-                navigation.navigate('Plantation', { id: id, Area: area, Perimeter: perimeter });
+                navigation.navigate('TemplateView', { id: id, Area: area, Perimeter: perimeter });
               } catch (error) {
                 // Show detailed error message
                 const errorMessage = error.response ? error.response.data.message : error.message;
@@ -153,7 +154,7 @@ export default function PlantationDetails({ route }) {
     
             .Description-text {
                 width: 100%;
-                border-radius: 12px; /* Corrected typo */
+                border-radius: 12px; /*Corrected typo*/
             }
     
             .logo {
@@ -228,8 +229,6 @@ export default function PlantationDetails({ route }) {
       plantType: textPlant
     });
     console.log("sending" + numberOfPlants + " " + PlantationDensity+" "+textPlant);
-    
- 
   };
 
 
@@ -342,7 +341,7 @@ export default function PlantationDetails({ route }) {
                 />
                 <View style={styles.box2PropertyDetails}>
                   <Text style={styles.Box2PropertyLabel}>Area</Text>
-                  <Text style={styles.Box2PropertyValue}>{area} pr</Text>
+                  <Text style={styles.Box2PropertyValue}>{area} perches</Text>
                 </View>
               </View>
             </View>

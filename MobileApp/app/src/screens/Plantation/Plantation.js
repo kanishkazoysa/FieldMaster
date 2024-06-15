@@ -102,9 +102,8 @@ export default function Plantation({route}) {
         textplantspace,
         textRowspace,
         PlantSpaceUnitselectedValue,
-        id,
-      
-        
+        id ,
+
       });
       console.log(response.data);
       navigation.navigate("PlantationDetails", { id: id });
@@ -135,7 +134,7 @@ export default function Plantation({route}) {
         
       });
       console.log(response.data);
-      navigation.navigate("PlantationDetails", { id: id });
+      navigation.navigate("PlantationDetails", { area:area, perimeter:perimeter });
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
       Alert.alert("Error", "Something went wrong");
