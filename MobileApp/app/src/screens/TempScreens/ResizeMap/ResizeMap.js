@@ -20,12 +20,9 @@ import MapView, { MAP_TYPES } from "react-native-maps";
 import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import axios from "axios";
 import AxiosInstance from "../../../AxiosInstance";
 import Headersection from "../../../components/Headersection";
 import {
-  responsiveHeight,
-  responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 
@@ -151,8 +148,11 @@ const ResizeMapScreen = ({ navigation, route }) => {
             error
           );
         });
-    })();
+      }
+    })
   }, []);
+
+    
 
   //remove last point from the array
   //remove last point from the array
@@ -229,7 +229,6 @@ const ResizeMapScreen = ({ navigation, route }) => {
   return (
     <>
       <Modal
-        animationType="slide"
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -308,7 +307,6 @@ const ResizeMapScreen = ({ navigation, route }) => {
               <Polyline
                 coordinates={points}
                 strokeColor="#000"
-                strokeColor="#000"
                 strokeWidth={1}
               />
             )}
@@ -317,9 +315,6 @@ const ResizeMapScreen = ({ navigation, route }) => {
                 coordinates={points}
                 strokeColor="#000"
                 fillColor="rgba(199, 192, 192, 0.5)"
-                strokeColor="#000"
-                fillColor="rgba(199, 192, 192, 0.5)"
-                strokeWidth={1}
               />
             )}
           </MapView>
@@ -369,9 +364,6 @@ const ResizeMapScreen = ({ navigation, route }) => {
                 onPressOut={() => setIsButtonPressed(false)}
               >
                 <MaterialCommunityIcons
-                  name="arrow-u-left-top"
-                  size={24}
-                  color="white"
                   name="arrow-u-left-top"
                   size={responsiveFontSize(3)}
                   color="white"
