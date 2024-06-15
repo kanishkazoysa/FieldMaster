@@ -9,7 +9,7 @@ const App = ({onClick}) => (
       style={{
         backgroundColor: '#87d068',
         position: 'absolute',
-        right: '12%',
+        right: '0.5%',
         top: '2.5%',
       }}
       icon={<UserOutlined />}

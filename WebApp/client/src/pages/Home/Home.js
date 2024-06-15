@@ -1,10 +1,10 @@
 import React, { useRef, useState, useCallback } from "react";
 import { GoogleMap, LoadScript, StandaloneSearchBox, Marker } from "@react-google-maps/api";
-import SideNavbar from "../components/SideNavbar/sideNavbar";
+import SideNavbar from "../../components/SideNavbar/sideNavbar";
 import { MdLocationOn, MdSearch } from "react-icons/md";
-import ProfileModal from "../components/profileManage/ProfileModal";
-import Avatar from "../components/profileManage/Avatar";
-
+import ProfileModal from "../../components/profileManage/ProfileModal";
+import Avatar from "../../components/profileManage/Avatar";
+import { styles, containerStyle, center } from './HomeStyles';
 export default function Home() {
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
@@ -97,11 +97,11 @@ export default function Home() {
                 placeholder="Search location"
                 style={styles.searchBox}
                 onKeyDown={handleKeyDown}
-              />
+                />
+                <Avatar onClick={handleAvatarClick} style={styles.avatar} />
             </div>
           </StandaloneSearchBox>
 
-          <Avatar onClick={handleAvatarClick} style={styles.avatar} />
 
           {isModalOpen && (
             <ProfileModal
@@ -115,56 +115,3 @@ export default function Home() {
   );
 }
 
-const styles = {
-  container: {
-    display: "flex",
-    height: '100vh',
-  },
-  sidebar: {
-    height: "100vh",
-  },
-  searchContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    boxSizing: 'border-box',
-    border: '1px solid transparent',
-    width: '300px',
-    height: '35px',
-    padding: '0 12px',
-    borderRadius: '11px',
-    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
-    backgroundColor: '#fff',
-    position: 'absolute',
-    right: '15%',
-    top: '2%',
-  },
-  searchIcon: {
-    marginRight: '8px',
-    fontSize: '20px',
-    color: '#757575',
-  },
-  searchBox: {
-    flex: 1,
-    border: 'none',
-    outline: 'none',
-    fontSize: '14px',
-  },
-  avatar: {
-    position: 'absolute',
-    right: '12%',
-    top: '2%',
-    fontSize: '30px',
-    color: '#757575',
-    cursor: 'pointer',
-  },
-};
-
-const containerStyle = {
-  width: '100%',
-  height: '100vh',
-};
-
-const center = {
-  lat: 6.2667,
-  lng: 80.0333,
-};
