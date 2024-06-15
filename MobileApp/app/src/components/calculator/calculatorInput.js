@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import { IconButton, Button } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
@@ -39,6 +39,17 @@ const CalculatorSelectModel = ({
     setCalculatorSelectModalVisible(true);
     setCalculatorModalVisible(false);
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Reset state when the modal is reopened
+      setSelectedAreaUnit("sqm");
+      setSelectedPerimeterUnit("m");
+      setInputAreaValue("");
+      setInputPerimeterValue("");
+      setCalculatorSelectModalVisible(false);
+    }, [])
+  );
 
   return (
     <View>
@@ -227,7 +238,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalView: {
-   
     marginTop: responsiveHeight(40),
     alignSelf: "center",
     backgroundColor: "#fff",
