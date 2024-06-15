@@ -20,9 +20,12 @@ import MapView, { MAP_TYPES } from "react-native-maps";
 import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import axios from "axios";
 import AxiosInstance from "../../../AxiosInstance";
 import Headersection from "../../../components/Headersection";
 import {
+  responsiveHeight,
+  responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 
@@ -52,8 +55,6 @@ const ResizeMapScreen = ({ navigation, route }) => {
   };
 
   //focuses the map on the current location of the user
-
-  //focuses the map on the current location of the user
   const focusOnCurrentLocation = () => {
     setSearchedLocation(null);
     setShowCurrentLocation((prevShowCurrentLocation) => {
@@ -71,14 +72,10 @@ const ResizeMapScreen = ({ navigation, route }) => {
   };
 
   //handling location and fetching template data
-  //handling location and fetching template data
   useEffect(() => {
-    console.log("Template ID:", templateId);
     console.log("Template ID:", templateId);
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.error("Permission to access location was denied");
       if (status !== "granted") {
         console.error("Permission to access location was denied");
         return;
@@ -118,51 +115,15 @@ const ResizeMapScreen = ({ navigation, route }) => {
             error
           );
         });
-      AxiosInstance.get(`/api/auth/mapTemplate/getOneTemplate/${templateId}`)
-        .then((response) => {
-          setPoints(response.data.locationPoints);
-          console.log(response.data.locationPoints);
-
-          // Calculate the average latitude and longitude
-          const avgLatitude =
-            response.data.locationPoints.reduce(
-              (total, point) => total + point.latitude,
-              0
-            ) / response.data.locationPoints.length;
-          const avgLongitude =
-            response.data.locationPoints.reduce(
-              (total, point) => total + point.longitude,
-              0
-            ) / response.data.locationPoints.length;
-
-          setRegion({
-            latitude: avgLatitude,
-            longitude: avgLongitude,
-            latitudeDelta: 0.0005,
-            longitudeDelta: 0.0005,
-          });
-        })
-        .catch((error) => {
-          console.error(
-            "An error occurred while fetching the template:",
-            error
-          );
-        });
-      }
-    })
+    })();
   }, []);
 
-    
-
-  //remove last point from the array
   //remove last point from the array
   const handleUndoLastPoint = () => {
     if (points.length > 0) {
       setPoints(points.slice(0, -1));
     }
   };
-
-  //save the updates points to the backend is a marker was moved
 
   //save the updates points to the backend is a marker was moved
   const handleSaveMap = async () => {
@@ -180,19 +141,18 @@ const ResizeMapScreen = ({ navigation, route }) => {
         );
 
         if (response.status === 200) {
-          console.log("Location updated successfully");
+          console.log('Location updated successfully');
           setIsMarkerMoved(false);
-          navigation.navigate("SavedTemplatesScreen");
+          navigation.navigate('SavedTemplatesScreen');
         } else {
-          console.log("Failed to update location");
+          console.log('Failed to update location');
         }
       } catch (error) {
-        console.error("An error occurred while updating the location:", error);
+        console.error('An error occurred while updating the location:', error);
       }
     }
   };
 
-  //update the point's coordinates when a marker is dragged to a new location
   //update the point's coordinates when a marker is dragged to a new location
   const handleMarkerDragEnd = (event, index) => {
     const newPoints = [...points];
@@ -202,7 +162,6 @@ const ResizeMapScreen = ({ navigation, route }) => {
   };
 
   //select a map type
-  //select a map type
   const handleSetMapType = (type) => {
     selectMapType(type);
     setModalVisible(false);
@@ -210,13 +169,8 @@ const ResizeMapScreen = ({ navigation, route }) => {
 
   const handleCancel = () => {
     navigation.navigate("SavedTemplatesScreen");
-    navigation.navigate("SavedTemplatesScreen");
   };
   const mapTypes = [
-    { name: "Satellite", value: "satellite" },
-    { name: "Standard", value: "standard" },
-    { name: "Hybrid", value: "hybrid" },
-    { name: "Terrain", value: "terrain" },
     { name: "Satellite", value: "satellite" },
     { name: "Standard", value: "standard" },
     { name: "Hybrid", value: "hybrid" },
@@ -237,9 +191,6 @@ const ResizeMapScreen = ({ navigation, route }) => {
         <View
           style={{
             flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -270,11 +221,6 @@ const ResizeMapScreen = ({ navigation, route }) => {
         </View>
       </Modal>
       <View>
-        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-        <Headersection
-          navigation={navigation}
-          title="Resize Map"
-        ></Headersection>
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
         <Headersection
           navigation={navigation}
@@ -315,6 +261,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
                 coordinates={points}
                 strokeColor="#000"
                 fillColor="rgba(199, 192, 192, 0.5)"
+                strokeWidth={1}
               />
             )}
           </MapView>
@@ -326,7 +273,6 @@ const ResizeMapScreen = ({ navigation, route }) => {
               toggleMapType();
             }}
           >
-            <FontAwesomeIcon icon={faLayerGroup} size={25} color="#fff" />
             <FontAwesomeIcon icon={faLayerGroup} size={responsiveFontSize(3)} color="#fff" />
             {showDropdown && (
               <View style={styles.dropdownContainer}>
@@ -338,23 +284,12 @@ const ResizeMapScreen = ({ navigation, route }) => {
                       onPress={() => selectMapType(index)}
                     >
                       <Text style={{ color: "#fff" }}>{item.name}</Text>
-                      <Text style={{ color: "#fff" }}>{item.name}</Text>
                     </TouchableOpacity>
                   )}
                   keyExtractor={(item) => item.value}
                 />
               </View>
             )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button2}
-            onPress={focusOnCurrentLocation}
-          >
-            <FontAwesomeIcon
-              icon={faLocationCrosshairs}
-              size={25}
-              color="#fff"
-            />
           </TouchableOpacity>
           
           <View>
