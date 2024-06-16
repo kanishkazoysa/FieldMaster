@@ -86,7 +86,7 @@ export default function Plantation({ onBackToSidebar }) {
 
       // Make POST request to the backend
       const response = await axios.post(
-        "http://10.10.23.159:3000/api/plantation/plantation",
+        "http://192.168.1.2:3000/api/plantation/plantation",
         requestData
       );
 
@@ -175,9 +175,9 @@ export default function Plantation({ onBackToSidebar }) {
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="text"
+                  type="number"
                   style={styles.box3input}
-                  placeholder="00"
+                  placeholder="0"
                   value={textplantspace}
                   onChange={handleInput1Change}
                 />
@@ -214,9 +214,9 @@ export default function Plantation({ onBackToSidebar }) {
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="text"
+                  type="number"
                   style={styles.box3input}
-                  placeholder="00"
+                  placeholder="0"
                   value={textRowspace}
                   onChange={handleInput2Change}
                 />

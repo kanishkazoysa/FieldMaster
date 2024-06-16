@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
@@ -10,73 +9,100 @@ import {
   Alert,
 
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation ,useFocusEffect} from "@react-navigation/native";
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
-import axios from "axios";
 import {styles} from "./PlantationDetailsStyles";
-
-
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
-import AlertButton from "../../components/AlertButton";
 import AxiosInstance from "../../AxiosInstance";
 
 export default function PlantationDetails({ route }) {
 
-  const { textPlant, selectedValue, textplantspace, textRowspace } = route.params;
-
+  const { id , item } = route.params;
   const [numberOfPlants, setnumberOfPlants] = useState(null);
   const [PlantationDensity, setPlantDensity] = useState(null);
-  const [PlantType, setplantType] = useState(null);
+  const [textPlant, setTextPlant] = useState(textPlant);
+  const [selectedValue, setSelectedValue] = useState(null);
+  const [textplantspace, setTextPlantSpace] = useState(null);
+  const [textRowspace, setTextRowSpace] = useState(null);
+  const [area, setArea] = useState(null);
+  const [perimeter, setPerimeter] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-        AxiosInstance.get("/api/plantation/numberOfPlants",{
-        })
-        .then(async(response)=>{
-          setnumberOfPlants(response.data.data);
-        })
-      .catch ((error)=>{
-        console.error(error);
-      })
+ 
+    const fetchData = async (id) => {
+        try{
+          const response = await AxiosInstance.get(`/api/plantation/numberOfPlants/${id}`);
+          setnumberOfPlants(response.data.numberOfPlants);
+          setPlantDensity(response.data.PlantDensity);
+          setTextPlant(response.data.PlnatType);
+          setSelectedValue(response.data.Unit);
+          setTextPlantSpace(response.data.plantspace);
+          setTextRowSpace(response.data.rowSpace);
+          setArea(response.data.area);
+          setPerimeter(response.data.perimeter);
+          console.log('numberOfPlants:', response.data.numberOfPlants);
+          console.log('PlantDensity:', response.data.PlantDensity);
+        }
+        catch (error) {
+          console.error(error);
+        }
     };
   
+   //Refresh the screen
+   useFocusEffect(
+    useCallback(() => {
+      fetchData(id);
+    }, [id])
+  );
 
-    fetchData();
-  }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-        AxiosInstance.get("/api/plantation/plantDensity",{
-        })
-        .then(async(response)=>{
-          setPlantDensity(response.data.data);
-        })
-      .catch ((error)=>{
-        console.error(error);
-      })
+
+    const PlantationDelete = async (id) => {
+      try {
+        const response = await AxiosInstance.delete(`/api/plantation/deletePlantation/${id}`);
+        console.log(response);
+        return response;
+      } catch (error) {
+        // Log the detailed error response
+        console.error('Error deleting Plantation:', error.response ? error.response.data : error.message);
+        throw error; // Re-throw the error to handle it in the caller function
+      }
+    };
+    
+    // edit button pressed function
+    const handleEditIconPress = () => {
+      Alert.alert(
+        'Update Data',
+        'Do you want to update data?',
+        [
+          {
+            text: 'No',
+            onPress: () => console.log('No pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'Yes',
+            onPress: async () => {
+              try {
+                await PlantationDelete(id);
+                navigation.navigate('Plantation', { id: id, area: area, perimeter: perimeter,item: item  });
+              } catch (error) {
+                const errorMessage = error.response ? error.response.data.message : error.message;
+              }
+            },
+          },
+        ],
+        { cancelable: false }
+      );
     };
 
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-        AxiosInstance.get("/api/plantation/plantType",{
-        })
-        .then(async(response)=>{
-          setplantType(response.data.data);
-        })
-      .catch ((error)=>{
-        console.error(error);
-      })
+    const BackToHome = () => {
+      navigation.navigate('Home');
     };
 
-    fetchData();
-  }, []);
 
   const html = `
     <!DOCTYPE html>
@@ -123,7 +149,7 @@ export default function PlantationDetails({ route }) {
     
             .Description-text {
                 width: 100%;
-                border-radius: 12px; /* Corrected typo */
+                border-radius: 12px; /*Corrected typo*/
             }
     
             .logo {
@@ -175,20 +201,21 @@ export default function PlantationDetails({ route }) {
     
   
   `;
-  const handleIconPress = () => {
-    // Display an alert message when the icon is pressed
-    Alert.alert(
-      "Important",
-      "This is an estimated count for the given details , allowing for a variance of +/- 10 plants from the actual value for flexibility and potential contingencies. ou pressed the icon!",
-      [
-        {
-          text: "OK",
-          onPress: () => console.log("OK Pressed"),
-        },
-      ],
-      { cancelable: false }
-    );
-  };
+
+  // const handleIconPress = () => {
+  //   // Display an alert message when the icon is pressed
+  //   Alert.alert(
+  //     "Important",
+  //     "This is an estimated count for the given details , allowing for a variance of +/- 10 plants from the actual value for flexibility and potential contingencies. ou pressed the icon!",
+  //     [
+  //       {
+  //         text: "OK",
+  //         onPress: () => console.log("OK Pressed"),
+  //       },
+  //     ],
+  //     { cancelable: false }
+  //   );
+  // };
 
   const navigation = useNavigation();
   const handleFertilization = () => {
@@ -198,8 +225,6 @@ export default function PlantationDetails({ route }) {
       plantType: textPlant
     });
     console.log("sending" + numberOfPlants + " " + PlantationDensity+" "+textPlant);
-    
- 
   };
 
 
@@ -242,7 +267,23 @@ export default function PlantationDetails({ route }) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
 
         <View style={styles.top}>
-          <AlertButton></AlertButton>
+          {/* <AlertButton></AlertButton> */}
+          <View style={styles.topSection}>
+          <TouchableOpacity style={styles.iconButton} onPress={BackToHome}>
+          <MaterialCommunityIcons
+          name="home"
+          size={26}
+          color="#007BFF"
+        />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.iconButton} onPress={handleEditIconPress}>
+        <MaterialCommunityIcons
+          name="square-edit-outline"
+          size={26}
+          color="#007BFF"
+        />
+      </TouchableOpacity>
+    </View>  
 
           {/* Top section */}
           <View style={styles.box1}>
@@ -285,7 +326,7 @@ export default function PlantationDetails({ route }) {
                 />
                 <View style={styles.box2PropertyDetails}>
                   <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                  <Text style={styles.Box2PropertyValue}>665m</Text>
+                  <Text style={styles.Box2PropertyValue}>{perimeter}Km</Text>
                 </View>
               </View>
               <View style={styles.box2Property}>
@@ -296,7 +337,7 @@ export default function PlantationDetails({ route }) {
                 />
                 <View style={styles.box2PropertyDetails}>
                   <Text style={styles.Box2PropertyLabel}>Area</Text>
-                  <Text style={styles.Box2PropertyValue}>2 acres</Text>
+                  <Text style={styles.Box2PropertyValue}>{area} perches</Text>
                 </View>
               </View>
             </View>

@@ -15,8 +15,6 @@ import Select from "react-select";
 import axios from "axios";
 import { FaTree } from "react-icons/fa";
 import FertilizingDetails from "../FertilizingDetails/fertilizingDetails";
-import { GiHourglass } from "react-icons/gi";
-import { FaHourglass } from 'react-icons/fa'; // Importing Hourglass icon from react-icons/fa
 
 
 export default function Fertilizing(
@@ -27,7 +25,7 @@ export default function Fertilizing(
     numberOfPlants
   }) {
   const [perimeter, setPerimeter] = useState("1.5");
-  const [area, setArea] = useState("100");
+  const [area, setArea] = useState("10");
 
   const [textFertilizationType, setTextFertilizationType] =
     useState("");
@@ -53,15 +51,20 @@ export default function Fertilizing(
     setTextFertilizationAmount(event.target.value);
   };
 
+  const [frequency, setFrequency] = useState(''); 
 
+  const [selectedFrequency, setSelectedFrequency] = useState(null);
+
+const handleFrequencyChange = (selectedFrequency) => {
+  setSelectedFrequency(selectedFrequency);
+};
 
   const handleAmountUnitChange = (selectedOption) => {
     setFertilizerAmountUnitselectedValue1(selectedOption);
     setFertilizerAmountUnitselectedValue(selectedOption.value);
   };
 
-
-
+ 
   const handleFertilizingDetails = async (e) => {
 
     try {
@@ -84,13 +87,17 @@ export default function Fertilizing(
       // Prepare data for the request
       const requestData = {
         textPlant,
+        textFertilizationNUmberoftime,
+        textFertilizationAmount,
+        textFertilizationType,
+        FertilizerAmountUnitselectedValue
 
 
       };
 
       // Make POST request to the backend
       const response = await axios.post(
-        "http://10.10.23.159:3000/api/fertilizers/fertilizers",
+        "http://192.168.1.2:3000/api/fertilizers/fertilizers",
         requestData
       );
 
@@ -140,7 +147,7 @@ export default function Fertilizing(
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} m<sup>2</sup>
+                    {/* {area} m<sup>2</sup> */}{area} Acres
                   </p>
                 </div>
               </div>
@@ -184,6 +191,59 @@ export default function Fertilizing(
 
             </div>
           </div>
+
+
+          <div style={styles.BoxFrequency}>
+          <p style={styles.titleText}>Frequency</p>
+          <div style={styles.frequencyButtonContainer}>
+            <button
+              style={{
+                ...styles.frequencyButton,
+                ...(selectedFrequency === 'daily' && styles.selectedFrequencyButton)
+              }}
+              onClick={() => handleFrequencyChange('daily')}
+            >
+              Daily
+            </button>
+            <button
+              style={{
+                ...styles.frequencyButton,
+                ...(selectedFrequency === 'weekly' && styles.selectedFrequencyButton)
+              }}
+              onClick={() => handleFrequencyChange('weekly')}
+            >
+              Weekly
+            </button>
+            <button
+              style={{
+                ...styles.frequencyButton,
+                ...(selectedFrequency === 'monthly' && styles.selectedFrequencyButton)
+              }}
+              onClick={() => handleFrequencyChange('monthly')}
+            >
+              Monthly
+            </button>
+            <button
+              style={{
+                ...styles.frequencyButton,
+                ...(selectedFrequency === 'quarterly' && styles.selectedFrequencyButton)
+              }}
+              onClick={() => handleFrequencyChange('quarterly')}
+            >
+              Quarterly
+            </button>
+            <button
+              style={{
+                ...styles.frequencyButton,
+                ...(selectedFrequency === 'yearly' && styles.selectedFrequencyButton)
+              }}
+              onClick={() => handleFrequencyChange('yearly')}
+            >
+              Yearly
+            </button>
+          </div>
+        </div>
+
           {/* box 3 */}
           <div style={styles.box3}>
             <div style={styles.box3Property}>
@@ -197,7 +257,7 @@ export default function Fertilizing(
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="text"
+                  type="number"
                   style={styles.box3input}
                   placeholder="00"
                   value={textFertilizationNUmberoftime}
@@ -206,6 +266,11 @@ export default function Fertilizing(
               </div>
             </div>
           </div>
+
+
+
+
+
           {/* box 4 */}
           <div style={styles.box3}>
             <div style={styles.box3Property}>
@@ -219,7 +284,7 @@ export default function Fertilizing(
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="text"
+                  type="number"
                   style={styles.box3input}
                   placeholder="100"
                   value={textFertilizationAmount}
@@ -247,8 +312,6 @@ export default function Fertilizing(
             </div>
           </div>
 
-
-
           {/* calculate button */}
           <div style={styles.bottom}>
             <button style={styles.Button1} onClick={handleFertilizingDetails}>
@@ -266,7 +329,19 @@ export default function Fertilizing(
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === "fertilizingDetails" && (<FertilizingDetails onBackToSidebar={handleBackClick}/>)}
+        {currentPage === "fertilizingDetails" 
+        && (<FertilizingDetails 
+        onBackToSidebar={handleBackClick}
+        textPlant={textPlant}
+        FertilizerAmountUnitselectedValue={FertilizerAmountUnitselectedValue}
+        textFertilizationNUmberoftime={textFertilizationNUmberoftime}
+        textFertilizationAmount={textFertilizationAmount}
+        textFertilizationType={textFertilizationType}
+        selectedFrequency={selectedFrequency}
+        PlantDensity={PlantDensity}
+        numberOfPlants={numberOfPlants}
+        
+        />)}
       </div>
     </div>
   );

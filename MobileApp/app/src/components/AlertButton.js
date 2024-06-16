@@ -23,7 +23,7 @@ export default function AlertButton() {
       <TouchableOpacity style={styles.iconButton} onPress={handleIconPress}>
         <MaterialCommunityIcons
           name="alert-circle-outline"
-          size={24}
+          size={18}
           color="#007BFF"
         />
       </TouchableOpacity>
@@ -34,11 +34,15 @@ export default function AlertButton() {
 const styles = StyleSheet.create({
   topSection: {
     flexDirection: "row",
+    marginLeft: 15,
     width: "100%",
     alignItems: "flex-end",
-    justifyContent: "flex-end", // Align the items to the right
+    justifyContent: "flex-end",
+    marginBottom: 0,
+    marginTop: -30,
   },
   iconButton: {
     padding: 6,
+    paddingLeft: -10,
   },
 });
