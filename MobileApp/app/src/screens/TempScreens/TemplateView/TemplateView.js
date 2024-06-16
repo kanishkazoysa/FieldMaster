@@ -98,7 +98,7 @@ const TemplateView = ({ route, navigation }) => {
       const response = await AxiosInstance.get(`/api/plantation/check-id/${id}`);
       if (response.data.exists) {
         console.log('ID exists');
-        navigation.navigate('PlantationDetails', { id: item._id });
+        navigation.navigate('PlantationDetails', { id: item._id, item: item});
       } else {
         console.log('ID does not exist');
       }

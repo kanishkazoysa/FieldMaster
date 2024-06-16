@@ -15,19 +15,14 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation ,useFocusEffect} from "@react-navigation/native";
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
-import axios from "axios";
 import {styles} from "./PlantationDetailsStyles";
-
-
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
-import AlertButton from "../../components/AlertButton";
 import AxiosInstance from "../../AxiosInstance";
 
 export default function PlantationDetails({ route }) {
 
   const { id , item } = route.params;
-  console.log('id:', id);
   const [numberOfPlants, setnumberOfPlants] = useState(null);
   const [PlantationDensity, setPlantDensity] = useState(null);
   const [textPlant, setTextPlant] = useState(textPlant);
