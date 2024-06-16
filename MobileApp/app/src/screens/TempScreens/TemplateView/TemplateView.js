@@ -106,7 +106,7 @@ const TemplateView = ({ route, navigation }) => {
       // Handle error, maybe show a message to the user
 if (error.response.status === 404) {
       console.log('ID not found');
-      navigation.navigate('Plantation', { id: item._id, area: item.area, perimeter: item.perimeter });
+      navigation.navigate('Plantation', { id: item._id, area: item.area, perimeter: item.perimeter, item: item });
     } else {
       console.error('Error checking ID:', error);
       // Handle other errors

@@ -26,7 +26,7 @@ import AxiosInstance from "../../AxiosInstance";
 
 export default function PlantationDetails({ route }) {
 
-  const { id } = route.params;
+  const { id , item } = route.params;
   console.log('id:', id);
   const [numberOfPlants, setnumberOfPlants] = useState(null);
   const [PlantationDensity, setPlantDensity] = useState(null);
@@ -94,7 +94,7 @@ export default function PlantationDetails({ route }) {
             onPress: async () => {
               try {
                 await PlantationDelete(id);
-                navigation.navigate('Plantation', { id: id, area: area, perimeter: perimeter });
+                navigation.navigate('Plantation', { id: id, area: area, perimeter: perimeter,item: item  });
               } catch (error) {
                 const errorMessage = error.response ? error.response.data.message : error.message;
               }

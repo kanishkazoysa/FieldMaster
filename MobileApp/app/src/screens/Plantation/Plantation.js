@@ -123,7 +123,17 @@ return (
     <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
     {/*Header section*/}
-    <Headersection navigation={navigation} title="Plantation" />
+    <View>
+      <Appbar.Header style={styles.header}>
+        <Appbar.BackAction
+          onPress={() => navigation.navigate("TemplateView",{item : item})}
+          color="white"
+        />
+        <View style={{marginTop:40,left:10,width:"70%"}}>
+        <Text style={styles.headerText}>Plantation</Text>
+        </View>
+      </Appbar.Header>
+    </View>
 
     <ScrollView contentContainerStyle={styles.scrollContent}>
       {/* Top section */}
