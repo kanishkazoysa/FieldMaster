@@ -26,10 +26,10 @@ const CalculatorSelectModel = ({
 }) => {
   const [calculatorSelectModalVisible, setCalculatorSelectModalVisible] =
     useState(false);
-  const [selectedAreaUnit, setSelectedAreaUnit] = useState("sqm");
-  const [selectedPerimeterUnit, setSelectedPerimeterUnit] = useState("m");
-  const [inputAreaValue, setInputAreaValue] = useState(""); // State for Area input
-  const [inputPerimeterValue, setInputPerimeterValue] = useState(""); // State for Perimeter input
+  const [selectedValue, setSelectedValue] = useState("sqm");
+  const [area, setArea] = useState(""); // New state variable for area
+  const [perimeter, setPerimeter] = useState(""); // New state variable for perimeter
+
 
   const closeModal = () => {
     setCalculatorModalVisible(false);
@@ -100,8 +100,7 @@ const CalculatorSelectModel = ({
                       style={styles.input}
                       placeholder={"00.00"}
                       keyboardType="numeric"
-                      value={inputAreaValue}
-                      onChangeText={setInputAreaValue}
+                      onChangeText={text => setArea(text)} // Update area state variable
                     />
 
                     <View style={styles.dropdown}>
@@ -146,8 +145,7 @@ const CalculatorSelectModel = ({
                       style={styles.input}
                       placeholder={"00.00"}
                       keyboardType="numeric"
-                      value={inputPerimeterValue}
-                      onChangeText={setInputPerimeterValue}
+                      onChangeText={text => setPerimeter(text)} // Update perimeter state variable
                     />
 
                     <View style={styles.dropdown}>
@@ -185,8 +183,8 @@ const CalculatorSelectModel = ({
       <CalculatorSelect
         calculatorSelectModalVisible={calculatorSelectModalVisible}
         setCalculatorSelectModalVisible={setCalculatorSelectModalVisible}
-        area={inputAreaValue}
-        perimeter={inputPerimeterValue}
+        area={area} // Pass area as prop
+        perimeter={perimeter} // Pass perimeter as prop
       />
     </View>
   );

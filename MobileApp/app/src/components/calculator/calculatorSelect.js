@@ -8,6 +8,7 @@ import {
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 const CalculatorModel = ({
   calculatorSelectModalVisible,
@@ -15,9 +16,17 @@ const CalculatorModel = ({
   //get area and perimeter from previous page
   area, 
   perimeter,
+  //get area and perimeter from previous page
+  area, 
+  perimeter,
 }) => {
   const closeModal = () => {
     setCalculatorSelectModalVisible(false);
+  };
+  const navigation = useNavigation();
+  // navigate to different pages with area and perimeter
+  const navigateToPage = (page) => {
+    navigation.navigate(page, { area, perimeter });
   };
   const navigation = useNavigation();
   // navigate to different pages with area and perimeter
@@ -55,6 +64,7 @@ const CalculatorModel = ({
               <View style={styles.button}>
                 <TouchableOpacity
                   style={styles.selectButton}
+                  onPress={() => navigateToPage('Clearland')} // navigate to ClearLand page
                   onPress={() => navigateToPage('Clearland')} // navigate to ClearLand page
                 >
                   <View style={styles.icon}>
