@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
@@ -203,20 +202,20 @@ export default function PlantationDetails({ route }) {
   
   `;
 
-  const handleIconPress = () => {
-    // Display an alert message when the icon is pressed
-    Alert.alert(
-      "Important",
-      "This is an estimated count for the given details , allowing for a variance of +/- 10 plants from the actual value for flexibility and potential contingencies. ou pressed the icon!",
-      [
-        {
-          text: "OK",
-          onPress: () => console.log("OK Pressed"),
-        },
-      ],
-      { cancelable: false }
-    );
-  };
+  // const handleIconPress = () => {
+  //   // Display an alert message when the icon is pressed
+  //   Alert.alert(
+  //     "Important",
+  //     "This is an estimated count for the given details , allowing for a variance of +/- 10 plants from the actual value for flexibility and potential contingencies. ou pressed the icon!",
+  //     [
+  //       {
+  //         text: "OK",
+  //         onPress: () => console.log("OK Pressed"),
+  //       },
+  //     ],
+  //     { cancelable: false }
+  //   );
+  // };
 
   const navigation = useNavigation();
   const handleFertilization = () => {
