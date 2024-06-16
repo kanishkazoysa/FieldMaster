@@ -5,7 +5,6 @@ import { CommonActions } from "@react-navigation/native";
 import {
   responsiveHeight,
   responsiveWidth,
-  responsiveFontSize,
 } from "react-native-responsive-dimensions";
 
 const SplashScreen = ({ navigation }) => {

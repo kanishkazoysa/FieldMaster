@@ -32,8 +32,9 @@ import Plantation from "./src/screens/Plantation/Plantation";
 import Clearland from './src/screens/ClearLand/Clearland';
 import EffortOutput from './src/screens/ClearLand/EffortOutput';
 import ResizeMap from './src/screens/TempScreens/ResizeMap/ResizeMap';
-
 import PointAddingScreen from './src/screens/PointAddingScreen/PointAddingScreen';
+
+import ProfileManagement from "./src/screens/ProfileManagement";
 
 
 
@@ -84,6 +85,7 @@ const App = () => {
        
 
         <Stack.Screen name='PointAddingScreen' component={PointAddingScreen} />
+        <Stack.Screen name="ProfileManagement" component={ProfileManagement} />
       </Stack.Navigator>
     </NavigationContainer>
   );

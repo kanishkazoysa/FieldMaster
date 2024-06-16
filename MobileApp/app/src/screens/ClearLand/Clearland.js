@@ -26,7 +26,6 @@ import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
-import axios from "axios";
 import AxiosInstance from "../../AxiosInstance";
 import {
   responsiveFontSize,

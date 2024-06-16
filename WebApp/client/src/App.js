@@ -11,30 +11,40 @@ import Pricing from "./components/HomeComponents/Pricing";
 import Setup from "./components/HomeComponents/SetupCard";
 import ContactForm from "./components/HomeComponents/contact/contact";
 import "./index.css";
-import Home from "./pages/Home";
-import EmailVerified from "./pages/EmailVerified"
-import Managemap from "./pages/Managemap"
+import Home from "./pages/Home/Home"
+import EmailVerified from "./pages/EmailVerified";
+import Managemap from "./pages/Managemap";
+import RegisterPage from "./pages/auth/Register/RegisterPage";
+import AuthLayout from "./pages/auth/AuthLayout";
 
 export default function App() {
   return (
     <Router>
-  
       <Routes>
+      <Route
+          path="/register"
+          element={
+            <div className="main-container">
+              <div className="page-container">
+                <RegisterPage />
+              </div>
+              <div className="auth-layout">
+                <AuthLayout />
+              </div>
+            </div>
+          }
+        />
+
+        
+        {/* Route for the main content */}
         <Route path="/" element={<MainContent />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/emailVerification" element={<EmailVerified />} />
-        {/* <Route path="/Managemap" element={<Managemap />}/> */}
+        <Route path="/managemap" element={<Managemap />} />
       </Routes>
     </Router>
   );
 }
-
-
-
-
-
-
-
 
 // MainContent component
 const MainContent = () => (

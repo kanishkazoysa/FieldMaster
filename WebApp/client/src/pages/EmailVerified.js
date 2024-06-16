@@ -1,4 +1,4 @@
-// /* eslint-disable react-hooks/exhaustive-deps */
+
 import { React, useEffect } from "react";
 import { useState } from "react";
 import {
@@ -6,7 +6,6 @@ import {
   Container,
   Stack,
   Typography,
-  ThemeProvider,
   Button,
 } from "@mui/material";
 

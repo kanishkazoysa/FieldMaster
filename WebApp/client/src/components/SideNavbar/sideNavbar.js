@@ -11,6 +11,7 @@ import SavedTemplates from '../SavedTemplates/savedTemplates.js';
 // import Fence from "../Fence/Fence/fence";
 import ClearLand from "../ClearLand/ClearLand/clearLand";
 
+import Plantation from "../Plantation/PlantationPage/plantation";
 
 export default function SideNavbar() {
   const [collapsed, setCollapsed] = useState(true);
@@ -29,16 +30,23 @@ export default function SideNavbar() {
 
   const handleToggleSidebar = () => {
     setCollapsed(!collapsed);
+    setCurrentPage(null);
   };
 
   const handleStartMeasureClick = () => {
-    setCurrentPage('StartMeasure'); // Update this line
+    setCurrentPage('StartMeasure'); 
     setAnimatePage(true);
+    if(collapsed){
+      setCollapsed(false);
+    }
   };
 
   const handleSavedTemplatesClick = () => {
     setCurrentPage('ClearLand'); // Update this line
     setAnimatePage(true);
+    if(collapsed){
+      setCollapsed(false);
+    }
   };
 
   const handleBackClick = () => {
@@ -51,7 +59,7 @@ export default function SideNavbar() {
   return (
     <Sidebar collapsed={collapsed} style={{ height: "100vh", width: collapsed ? '50px' : '300px' }}>
       <div style={styles.head}>
-        <div style={{cursor:"pointer"}} onClick={handleToggleSidebar}>
+        <div style={{cursor:"pointer", marginLeft:"10px"}} onClick={handleToggleSidebar}>
           <FaBars color="#65676b"/>
         </div>
         <div style={styles.logoContainer}>
@@ -59,7 +67,7 @@ export default function SideNavbar() {
         </div>
       </div>
       <div style={styles.content}>
-        { !currentPage     && (
+        { !currentPage   &&  (
           <Menu>
             <MenuItem
               onClick={handleStartMeasureClick}
@@ -70,8 +78,8 @@ export default function SideNavbar() {
                 ...(hoveredMenuItem === 'startmeasure' ? styles.hoveredMenuItem : {}),
               }}
             >
-              <RiWalkFill fontSize={25} style={{ marginRight: '10px' }} />
-              {!collapsed && 'Start measure'}
+            <RiWalkFill fontSize={25} style={{ marginRight: '10px' }} /> 
+              {!collapsed  && 'Start measure' }
             </MenuItem>
             <MenuItem
               onClick={handleSavedTemplatesClick}

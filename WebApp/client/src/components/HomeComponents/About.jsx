@@ -2,10 +2,11 @@ import React from 'react';
 import { MDBListGroup, MDBListGroupItem, MDBContainer } from "mdbreact";
 import { List, ListItem, Typography } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
+import video1 from "../../assets/key_features_video.mp4";
 
 const About = () => {
   return (
-    <section id="about" className='about'>
+    <section id="about" className='about' style={{alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column'}}>
         <div>
         <h2 style={{ textAlign: 'center' ,color: '#007BFF',padding: '1rem'}}>Our Vision</h2>
             <p style={{ textAlign: 'center',fontSize:'1.3rem',padding: '2rem'}}>
@@ -30,47 +31,26 @@ const About = () => {
     <h2 style={{ textAlign: 'center' ,color: '#007BFF',padding: '1rem'}}>How we Stand Out</h2>
     <p style={{ textAlign: 'center',fontSize:'1.3rem'}}>We aim to exceed expectations by continuously enhancing the application's accuracy, usability, and functionalities. Our commitment to early validation against known fields ensures reliability and accuracy from the initial stages of your project.</p>
     <div style={{alignContent: 'center' , textAlign: 'center'}}>
-    <img style={{width:'50%',height:'auto'}} src='https://t3.ftcdn.net/jpg/04/47/51/22/360_F_447512287_bRkW2GaFN5Z38AIAZZLTTZHZBGY5TDFL.jpg' className='img-fluid shadow-4' alt='...' />
+    
    
     </div>
 
         </div>
-         
 
-      <List style={styles.keyFeaturesContainer}>
+    <div className="hero-video" style={{
+        alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column', 
+    }}>
         
-      <Typography variant="h4" style={styles.heading}>
-          &nbsp; &nbsp;Key Features
-      </Typography>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Efficient Mapping: Walk around land boundaries or paths to map areas or routes accurately.</div>
-        </ListItem>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Customization and Organization: Name, label, group, and subgroup mapped areas for easy management.</div>
-        </ListItem>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Web and Mobile Accessibility: Access and edit features seamlessly on both mobile and web platforms.</div>
-        </ListItem>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Enhanced Accuracy: Utilize advanced technologies like GIS for superior accuracy beyond standard GPS.</div>
-        </ListItem>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Google Maps Integration: Overlay land plots onto Google Maps for enhanced visualization.</div>
-        </ListItem>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Third-party Sharing: Share measured information easily with third parties for viewing without the app.</div>
-        </ListItem>
-        <ListItem className="key-feature">
-          <CheckIcon style={styles.icon} />
-          <div className="feature-text">Manual Adjustment Tools: Correct or modify mapped perimeters manually for improved accuracy.</div>
-        </ListItem>
-      </List>
+       <div style={{alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column'
+          }}>
+       <video width="100%" height="100%"  autoPlay loop muted>
+        <source src={video1} type="video/mp4" />
+        </video>
+      
+       </div>
+
+    
+    </div>
     
     </section>
  
@@ -98,14 +78,14 @@ const styles = {
   heading: {
     color: "black",
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 5,
     textAlign: "left",
     
   },
   paragraph: {
     color: "#333",
     fontSize: 16,
-    marginBottom: 20,
+    marginBottom: 10,
     textAlign: "center",
   },
   visionContainer: {
@@ -116,15 +96,14 @@ const styles = {
     boxShadow: "0px 0px 10px rgba(0, 123, 255, 0.3)",
     padding: "20px",
     borderRadius: 5,
-    marginBottom: 20,
+    marginBottom: 10,
     display: "flex",
     flexDirection: "column",
     alignItems:"space-between"
   },
   visionHeading: {
     color: "#007BFF",
-    fontWeight: "bold",
-    marginBottom: 20,
+
     textAlign: "center",
   },
   mobileAppImage: {

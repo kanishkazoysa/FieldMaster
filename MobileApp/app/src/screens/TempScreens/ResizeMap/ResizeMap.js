@@ -9,9 +9,7 @@ import {
   Modal,
   StatusBar,
 } from "react-native";
-import { Appbar } from "react-native-paper";
 import { Polyline } from "react-native-maps";
-
 import {
   faLayerGroup,
   faLocationCrosshairs,
@@ -25,6 +23,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
 import AxiosInstance from "../../../AxiosInstance";
 import Headersection from "../../../components/Headersection";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
+
 
 const ResizeMapScreen = ({ navigation, route }) => {
   const { templateId } = route.params;
@@ -129,22 +133,22 @@ const ResizeMapScreen = ({ navigation, route }) => {
           latitude: point.latitude,
           longitude: point.longitude,
         }));
-        const response = await axios.put(
-          `${backendUrl}/api/mapTemplate/updateTemplate/${templateId}`,
+        const response = await AxiosInstance.put(
+          `/api/auth/mapTemplate/updateTemplate/${templateId}`,
           {
             locationPoints,
           }
         );
 
         if (response.status === 200) {
-          console.log("Location updated successfully");
+          console.log('Location updated successfully');
           setIsMarkerMoved(false);
-          navigation.navigate("SavedTemplatesScreen");
+          navigation.navigate('SavedTemplatesScreen');
         } else {
-          console.log("Failed to update location");
+          console.log('Failed to update location');
         }
       } catch (error) {
-        console.error("An error occurred while updating the location:", error);
+        console.error('An error occurred while updating the location:', error);
       }
     }
   };
@@ -229,7 +233,6 @@ const ResizeMapScreen = ({ navigation, route }) => {
             ref={mapRef}
             style={{ flex: 1, paddingTop: 100 }}
             region={region}
-            showsUserLocation={true}
             mapType={mapTypes[mapTypeIndex].value}
             onPress={(event) => {
               if (!isButtonPressed) {
@@ -270,7 +273,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
               toggleMapType();
             }}
           >
-            <FontAwesomeIcon icon={faLayerGroup} size={25} color="#fff" />
+            <FontAwesomeIcon icon={faLayerGroup} size={responsiveFontSize(3)} color="#fff" />
             {showDropdown && (
               <View style={styles.dropdownContainer}>
                 <FlatList
@@ -288,16 +291,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
               </View>
             )}
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button2}
-            onPress={focusOnCurrentLocation}
-          >
-            <FontAwesomeIcon
-              icon={faLocationCrosshairs}
-              size={25}
-              color="#fff"
-            />
-          </TouchableOpacity>
+          
           <View>
             <View style={styles.sideIconWrap}>
               <TouchableWithoutFeedback
@@ -306,7 +300,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
               >
                 <MaterialCommunityIcons
                   name="arrow-u-left-top"
-                  size={24}
+                  size={responsiveFontSize(3)}
                   color="white"
                   style={styles.sideIconStyle}
                   onPress={handleUndoLastPoint}
