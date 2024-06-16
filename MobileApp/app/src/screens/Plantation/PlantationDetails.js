@@ -94,12 +94,9 @@ export default function PlantationDetails({ route }) {
             onPress: async () => {
               try {
                 await PlantationDelete(id);
-                Alert.alert('Success', 'Plantation deleted successfully.');
-                navigation.navigate('TemplateView', { id: id, area: area, perimeter: perimeter });
+                navigation.navigate('Plantation', { id: id, area: area, perimeter: perimeter });
               } catch (error) {
-                // Show detailed error message
                 const errorMessage = error.response ? error.response.data.message : error.message;
-                Alert.alert('Error', `Failed to delete fence: ${errorMessage}`);
               }
             },
           },
@@ -210,6 +207,7 @@ export default function PlantationDetails({ route }) {
     
   
   `;
+
   const handleIconPress = () => {
     // Display an alert message when the icon is pressed
     Alert.alert(
