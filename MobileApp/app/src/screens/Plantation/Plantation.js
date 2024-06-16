@@ -51,7 +51,6 @@ export default function Plantation({route}) {
 
   const navigation = useNavigation();
   const route = useRoute(); // get route
-  const { area, perimeter } = route.params; // get area and perimeter from previous page
 
   //print area and perimeter
   console.log(area, perimeter);

@@ -28,11 +28,6 @@ const CalculatorModel = ({
   const navigateToPage = (page) => {
     navigation.navigate(page, { area, perimeter });
   };
-  const navigation = useNavigation();
-  // navigate to different pages with area and perimeter
-  const navigateToPage = (page) => {
-    navigation.navigate(page, { area, perimeter });
-  };
 
   return (
     <Modal
@@ -64,7 +59,6 @@ const CalculatorModel = ({
               <View style={styles.button}>
                 <TouchableOpacity
                   style={styles.selectButton}
-                  onPress={() => navigateToPage('Clearland')} // navigate to ClearLand page
                   onPress={() => navigateToPage('Clearland')} // navigate to ClearLand page
                 >
                   <View style={styles.icon}>
