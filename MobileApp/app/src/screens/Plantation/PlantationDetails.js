@@ -27,6 +27,7 @@ import AxiosInstance from "../../AxiosInstance";
 export default function PlantationDetails({ route }) {
 
   const { id } = route.params;
+  console.log('id:', id);
   const [numberOfPlants, setnumberOfPlants] = useState(null);
   const [PlantationDensity, setPlantDensity] = useState(null);
   const [textPlant, setTextPlant] = useState(textPlant);
@@ -48,17 +49,20 @@ export default function PlantationDetails({ route }) {
           setTextRowSpace(response.data.rowSpace);
           setArea(response.data.area);
           setPerimeter(response.data.perimeter);
+          console.log('numberOfPlants:', response.data.numberOfPlants);
+          console.log('PlantDensity:', response.data.PlantDensity);
         }
         catch (error) {
           console.error(error);
         }
     };
   
-    useFocusEffect(
-      useCallback(() => {
-        fetchData(id);
-      }, [id])
-    );
+   //Refresh the screen
+   useFocusEffect(
+    useCallback(() => {
+      fetchData(id);
+    }, [id])
+  );
 
 
 
@@ -91,7 +95,7 @@ export default function PlantationDetails({ route }) {
               try {
                 await PlantationDelete(id);
                 Alert.alert('Success', 'Plantation deleted successfully.');
-                navigation.navigate('TemplateView', { id: id, Area: area, Perimeter: perimeter });
+                navigation.navigate('TemplateView', { id: id, area: area, perimeter: perimeter });
               } catch (error) {
                 // Show detailed error message
                 const errorMessage = error.response ? error.response.data.message : error.message;
