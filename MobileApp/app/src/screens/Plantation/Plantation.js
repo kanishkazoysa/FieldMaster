@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
@@ -13,10 +12,8 @@ import React, { useState, useEffect } from "react";
 import { Keyboard } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
-import { useNavigation ,useRoute} from "@react-navigation/native";
+import { useNavigation} from "@react-navigation/native";
 import {styles} from "./PlantationStyles";
-
-import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import AxiosInstance from "../../AxiosInstance";
 import { Appbar } from "react-native-paper";
@@ -56,9 +53,6 @@ export default function Plantation({route}) {
 
   const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] =
     useState(null);
-  const [RowSpacingUnitselectedValue, RowSpacingUnitSetSelectedValue] =
-    useState(null);
-
   const PlantSpaceUnitPlaceholder = {
     label: "M",
     value: null,
