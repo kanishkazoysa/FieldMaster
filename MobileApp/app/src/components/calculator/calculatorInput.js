@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import { IconButton, Button } from "react-native-paper";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
@@ -40,16 +40,7 @@ const CalculatorSelectModel = ({
     setCalculatorModalVisible(false);
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // Reset state when the modal is reopened
-      setSelectedAreaUnit("sqm");
-      setSelectedPerimeterUnit("m");
-      setInputAreaValue("");
-      setInputPerimeterValue("");
-      setCalculatorSelectModalVisible(false);
-    }, [])
-  );
+  const navigation = useNavigation();
 
   return (
     <View>
@@ -105,17 +96,17 @@ const CalculatorSelectModel = ({
 
                     <View style={styles.dropdown}>
                       <Picker
-                        selectedValue={selectedAreaUnit}
+                        selectedValue={selectedValue}
                         style={{
                           height: responsiveHeight(6),
                           width: responsiveWidth(30),
                         }}
-                        onValueChange={(itemValue) =>
-                          setSelectedAreaUnit(itemValue)
+                        onValueChange={(itemValue, itemIndex) =>
+                          setSelectedValue(itemValue)
                         }
                       >
-                        {/* <Picker.Item label="Square Meters" value="sqm" />
-                        <Picker.Item label="Square Feet" value="sqft" /> */}
+                        <Picker.Item label="Square Meters" value="sqm" />
+                        <Picker.Item label="Square Feet" value="sqft" />
                         <Picker.Item label="Acres" value="acres" />
                         {/* Add more items as needed */}
                       </Picker>
@@ -150,17 +141,18 @@ const CalculatorSelectModel = ({
 
                     <View style={styles.dropdown}>
                       <Picker
-                        selectedValue={selectedPerimeterUnit}
+                        selectedValue={selectedValue}
                         style={{
                           height: responsiveHeight(6),
                           width: responsiveWidth(30),
                         }}
-                        onValueChange={(itemValue) =>
-                          setSelectedPerimeterUnit(itemValue)
+                        onValueChange={(itemValue, itemIndex) =>
+                          setSelectedValue(itemValue)
                         }
                       >
                         <Picker.Item label="m" value="m" />
-                        {/* <Picker.Item label="Km" value="km" /> */}
+                        <Picker.Item label="Km" value="km" />
+
                         {/* Add more items as needed */}
                       </Picker>
                     </View>

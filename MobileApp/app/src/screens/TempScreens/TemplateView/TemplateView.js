@@ -10,8 +10,6 @@ import {
 
 import AxiosInstance from '../../../AxiosInstance';
 
-import AxiosInstance from '../../../AxiosInstance';
-
 const ClearLandIcon = (props) => (
   <MaterialCommunityIcons
     {...props}

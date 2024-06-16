@@ -50,10 +50,6 @@ export default function Plantation({route}) {
   const [textRowspace, setTextRowSpace] = useState("");
 
   const navigation = useNavigation();
-  const route = useRoute(); // get route
-
-  //print area and perimeter
-  console.log(area, perimeter);
 
   const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] =
     useState(null);

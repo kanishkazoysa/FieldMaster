@@ -8,14 +8,10 @@ import {
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 import { useNavigation } from '@react-navigation/native';
-import { useNavigation } from '@react-navigation/native';
 
 const CalculatorModel = ({
   calculatorSelectModalVisible,
   setCalculatorSelectModalVisible,
-  //get area and perimeter from previous page
-  area, 
-  perimeter,
   //get area and perimeter from previous page
   area, 
   perimeter,
