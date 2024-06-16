@@ -211,7 +211,7 @@ export default function EffortOutput({ route }) {
                 ></Image>
                 <View style={{ display: "flex", flexDirection: "column" }}>
                   <Text style={styles.card1Text4}>{workHours} hrs per day</Text>
-                  <Text style={styles.card1Text5}>432 days</Text>
+                  <Text style={styles.card1Text5}>days</Text>
                 </View>
               </View>
             </Card.Content>

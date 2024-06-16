@@ -37,7 +37,7 @@ import {
 
 export default function ClearLand({ route }) {
   const navigation = useNavigation();
-  const { id,item } = route.params;
+  const { id,item,Area} = route.params;
   const [text, setText] = React.useState("");
 
   const [pressed, setPressed] = useState(null);
@@ -186,6 +186,7 @@ export default function ClearLand({ route }) {
       laborCount,
       workHours,
       displayValues2,
+      Area,
     })
       .then((response) => {
         if (
@@ -643,6 +644,7 @@ export default function ClearLand({ route }) {
         </View>
       </ScrollView>
     </PaperProvider>
+
   );
 }
 
