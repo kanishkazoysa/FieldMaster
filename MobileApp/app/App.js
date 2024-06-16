@@ -36,8 +36,8 @@ import PointAddingScreen from './src/screens/PointAddingScreen/PointAddingScreen
 
 import ProfileManagement from "./src/screens/ProfileManagement";
 
-
-
+import PlantationFromManualCalculator from "./src/screens/PlantationManual/PlantationFromManualCalculator.js";
+import PlantationDetailsFromManualCalculator from "./src/screens/PlantationDetailsManual/PlantationDetailsFromManualCalculator.js";
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -86,6 +86,10 @@ const App = () => {
 
         <Stack.Screen name='PointAddingScreen' component={PointAddingScreen} />
         <Stack.Screen name="ProfileManagement" component={ProfileManagement} />
+
+
+        <Stack.Screen name="PlantationFromManualCalculator" component={PlantationFromManualCalculator}/>
+        <Stack.Screen name="PlantationDetailsFromManualCalculator" component={PlantationDetailsFromManualCalculator}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
