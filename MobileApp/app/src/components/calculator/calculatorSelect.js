@@ -80,7 +80,7 @@ const CalculatorModel = ({
               <View style={styles.button}>
                 <TouchableOpacity
                   style={styles.selectButton}
-                  onPress={() => navigateToPage('PlantationFromManualCalculator')} // navigate to Plantation page
+                  onPress={() => navigateToPage('Plantation')} // navigate to Plantation page
                 >
                   <View style={styles.icon}>
                     <MaterialCommunityIcons
