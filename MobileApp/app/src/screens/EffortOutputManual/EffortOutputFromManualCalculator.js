@@ -46,6 +46,7 @@ import {
         displayValues2,
     } = route.params;
     const navigation = useNavigation();
+    console.log("Area", area, "Perimeter", perimeter, "Effort", effort, "WorkHours", workHours, "WorkDays", workDays, "LaborCount", laborCount, "DisplayValues2", displayValues2);
   
     //back to home function
     const BackToHome = () => {
