@@ -99,7 +99,6 @@ export const styles = {
     borderRadius: 11,
     padding: 0,
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    
   },
   box2InnerTop: {
     display: "flex",
@@ -403,23 +402,23 @@ export const styles = {
     color: "white",
     fontSize: 14,
   },
-  searchbar:{
+  searchbar: {
     width: 200,
-                    borderRadius: 50,
-                    marginLeft: 35,
-                    marginTop: 10,
-                    padding: -10,
-                    borderColor: "grey",
+    borderRadius: 50,
+    marginLeft: 35,
+    marginTop: 10,
+    padding: -10,
+    borderColor: "grey",
   },
-  searchbarList:{
+  searchbarList: {
     width: 200,
-                    borderRadius: 11,
-                    marginLeft: 35,
-                    marginTop: -1, //To align the dropdown with the search box
+    borderRadius: 11,
+    marginLeft: 35,
+    marginTop: -1, //To align the dropdown with the search box
   },
-  searchbarListItems:{
+  searchbarListItems: {
     cursor: "pointer",
-                        padding: "5px 20px",
-                        borderRadius: 11,
-  }
+    padding: "5px 20px",
+    borderRadius: 11,
+  },
 };

@@ -19,6 +19,7 @@ import { styles } from "./clearLandStyles";
 import { FiSearch } from "react-icons/fi";
 import { Input, Space, List, AutoComplete } from "antd";
 import { CloseSquareFilled } from "@ant-design/icons";
+import EffortOutput from "../EffortOutput/effortOutput";
 export default function ClearLand({ onBackToSidebar }) {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
@@ -38,14 +39,10 @@ export default function ClearLand({ onBackToSidebar }) {
   // const { Search } = Input;
 
   const machineryList = [
-    "Bulldozers",
     "Excavators",
     "Backhoes",
-    "Skid-steer loaders",
     "Chainsaws",
-    "Brush cutters",
-    "Tractors",
-    "Land clearing rakes",
+    "Excavator breakers",
   ];
 
   const prefix = <FiSearch style={{ fontSize: 16, color: "#d3d3d3" }} />;
@@ -98,7 +95,7 @@ export default function ClearLand({ onBackToSidebar }) {
 
   const handleAdd1 = () => {
     //validation part Add button
-    const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
+    const combinedValue1 = stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
       Boolean
     );
@@ -171,17 +168,12 @@ export default function ClearLand({ onBackToSidebar }) {
 
       // Prepare data for the request
       const requestData = {
+        pressed,
+        laborCount,
+        workHours,
         displayValues,
         displayValues1,
         displayValues2,
-        pressed,
-        plantTypeSelectedValue,
-        plantCount,
-        stoneTypeSelectedValue,
-        stonesCount,
-        laborCount,
-        workHours,
-        machineCount,
       };
 
       // Make POST request to the backend
@@ -487,7 +479,7 @@ export default function ClearLand({ onBackToSidebar }) {
               </div>
             </div>
 
-            <Space direction="vertical" style={{ width: "100%"}}>
+            <Space direction="vertical" style={{ width: "100%" }}>
               <AutoComplete
                 option={filteredMachinery.map((item) => ({ value: item }))}
                 value={searchValue}
@@ -540,12 +532,15 @@ export default function ClearLand({ onBackToSidebar }) {
               />
             </div>
             <div style={styles.box7addButtonContainer}>
-                <button style={{...styles.addButton,width:"100%"}} onClick={handleAdd2}>
-                  <p style={styles.addButtonText}>Add</p>
-                </button>
-              </div>
+              <button
+                style={{ ...styles.addButton, width: "100%" }}
+                onClick={handleAdd2}
+              >
+                <p style={styles.addButtonText}>Add</p>
+              </button>
+            </div>
 
-              <div style={styles.displayValuesContainer}>
+            <div style={styles.displayValuesContainer}>
               {displayValues2.map((value, index) => (
                 <div key={index} style={styles.displayValueContainer}>
                   <div style={styles.displayValueText}>{value}</div>
@@ -580,15 +575,14 @@ export default function ClearLand({ onBackToSidebar }) {
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {/* {currentPage === "FenceDetails" && (
-          <FenceDetails
+        {currentPage === "EffortOutput" && (
+          <EffortOutput
             onBackToSidebar={handleBackClick}
-            inputValuePostspace={inputValuePostspace}
-            displayValues={displayValues}
-            PostSpaceUnitselectedValue={PostSpaceUnitselectedValue}
-            FenceTypeselectedValue={FenceTypeselectedValue}
+            laborCount={laborCount}
+            workHours={workHours}
+            displayValues2={displayValues2}
           />
-        )} */}
+        )}
       </div>
     </div>
   );

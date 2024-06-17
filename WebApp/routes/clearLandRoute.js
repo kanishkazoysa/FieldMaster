@@ -5,7 +5,7 @@ const MapTemplateSchema = require("../models/MapTemplateModel");
 
 //calculate the effort output function
 function calculateEffortOutput(
-  area,
+  // area,
   weedEffort,
   laborsCount,
   plantEffort,
@@ -14,14 +14,14 @@ function calculateEffortOutput(
   chainsawCount,
   breakerCount
 ) {
-
+  let area = 1000;
   //calculate total effort
   const effortCount = Math.ceil(((weedEffort/laborsCount)*area) + (plantEffort/chainsawCount) + (stoneEffort/breakerCount) + ((machineEffort*area)/60));
   return effortCount;
 }
 const calculateWeedEffort = (weedType) => {
   let weedEffort = 0;
-  const weedEffortValues = { Low: 0.25, Medium: 0.5, High: 0 };//hours per 1 square meter and per 1 labor
+  const weedEffortValues = { Low: 0.036, Medium: 0.042, High: 0 };//hours per 1 square meter and per 1 labor
   if(weedType){
       weedEffort = weedEffortValues[weedType];
     }
@@ -123,10 +123,10 @@ router.post("/clearLand", async (req, res) => {
       displayValues,
       displayValues1,
       displayValues2,
-      Area,
+      // Area,
     } = req.body;
 
-    const area = Area * 25.2929;
+    // const area = Area * 25.2929;
     const laborsCount = parseInt(laborCount);
     const weedType = pressed;
     const plantDetails = displayValues.map((value) => {
@@ -145,7 +145,7 @@ router.post("/clearLand", async (req, res) => {
     const machineEffort = calculateMachineEffort(machineDetails);
     const chainsawCount = getChainsawCount(machineDetails);
     const breakerCount = getBreakerCount(machineDetails);
-    const effort = calculateEffortOutput(area,weedEffort,laborsCount,plantEffort,stoneEffort,machineEffort,chainsawCount,breakerCount);
+    const effort = calculateEffortOutput(weedEffort, laborsCount, plantEffort, stoneEffort, machineEffort, chainsawCount, breakerCount);
 
     const newclearLand = new clearLandModel({
       Id: id,
@@ -160,9 +160,19 @@ router.post("/clearLand", async (req, res) => {
 
     await newclearLand.save();
 
-    res.send({ status: "ok", data: "Clear Land Created" });
+    res.json({ 
+      status: "ok", 
+      data: "Clear Land Created",
+      weedEffort,
+      plantEffort,
+      stoneEffort,
+      machineEffort,
+      chainsawCount,
+      breakerCount,
+      effort,
+    });
   } catch (error) {
-    res.send({ status: "error", data: error });
+    res.status(500).json({ status: "error", data: error.messager });
   }
 });
 
