@@ -176,7 +176,7 @@ router.post("/clearLand", async (req, res) => {
 });
 
 //for clearLand manual calculator
-router.post("clearLandFromManualCalculator", async (req, res) => {
+router.post("/clearLandFromManualCalculator", async (req, res) => {
   try {
     const{
       pressed,
