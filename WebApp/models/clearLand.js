@@ -27,6 +27,9 @@ const clearLandSchema = mongoose.Schema(
         EffortOutput: {
             type: Number,
         },
+        WorkDays : {
+            type: Number,
+        },
     }
     );
 

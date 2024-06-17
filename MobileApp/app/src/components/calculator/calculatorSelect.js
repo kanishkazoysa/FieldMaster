@@ -55,7 +55,7 @@ const CalculatorModel = ({
               <View style={styles.button}>
                 <TouchableOpacity
                   style={styles.selectButton}
-                  onPress={() => navigateToPage('Clearland')} // navigate to ClearLand page
+                  onPress={() => navigateToPage('ClearLandFromManualCalculator')} // navigate to ClearLand page
                 >
                   <View style={styles.icon}>
                     <MaterialCommunityIcons

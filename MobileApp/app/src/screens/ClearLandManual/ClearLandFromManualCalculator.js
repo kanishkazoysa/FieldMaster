@@ -16,24 +16,26 @@ import {
   Searchbar,
   TextInput,
 } from "react-native-paper";
-import {
-  responsiveHeight,
-  responsiveFontSize,
-} from "react-native-responsive-dimensions";
-
 import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { styles } from "./ClearLandStyles";
+import { useNavigation ,useRoute} from "@react-navigation/native";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import AxiosInstance from "../../AxiosInstance";
+import {styles} from "./ClearLandFromManualCalculatorStyles";
+import { 
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
 
-export default function ClearLand({ route }) {
+export default function ClearLandFromManualCalculator({ route }) {
   const navigation = useNavigation();
-  const { id, Area ,item } = route.params;
+  const { area , perimeter } = route.params;
   const [text, setText] = React.useState("");
+  
+  
   const [pressed, setPressed] = useState(null);
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
   const [plantCount, setPlantCount] = useState("");
@@ -48,7 +50,7 @@ export default function ClearLand({ route }) {
     "Excavators",
     "Backhoes",
     "Chainsaws",
-    "Excavator breakers",
+    "Excavator breakers"
   ]);
 
   const handleSearch = (query) => {
@@ -83,12 +85,6 @@ export default function ClearLand({ route }) {
   const handleMachineCountChange = (text) => {
     setMachineCount(text);
   };
-
-  // const handleEffortOutput = () => {
-  //   navigation.navigate("EffortOutput",{
-  //     id:id,
-  //   });
-  // };
 
   const placeholder1 = {
     label: "Select Type",
@@ -136,7 +132,7 @@ export default function ClearLand({ route }) {
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
-    //validation part Add button
+  //validation part Add button
     const combinedValue1 = stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
       Boolean
@@ -172,16 +168,6 @@ export default function ClearLand({ route }) {
   };
 
   const handleClear = async () => {
-    AxiosInstance.post("/api/clearLand/clearLand", {
-      id,
-      pressed,
-      displayValues,
-      displayValues1,
-      laborCount,
-      workHours,
-      displayValues2,
-    })
-      .then((response) => {
         if (
           !pressed ||
           !(displayValues.length > 0) ||
@@ -190,33 +176,40 @@ export default function ClearLand({ route }) {
           !workHours ||
           !(displayValues2.length > 0)
         ) {
-          // Display error message
           Alert.alert("Error", "Please fill in all fields");
-          return; // Stop execution if fields are empty
+          return; 
         }
-        navigation.navigate("EffortOutput", {
-          id: id,
-          item: item,
-          // data: displayValues,
-          // data1: displayValues1,
-          // data2: displayValues2,
-          // weedType: pressed,
-          // stonesCount: stonesCount,
-          // laborCount: laborCount,
-          // workHours: workHours,
-        });
-
-        setPressed(" ");
-        setLaborCount(" ");
-        setWorkHours(" ");
-        setDisplayValues([]);
-        setDisplayValues1([]);
-        setDisplayValues2([]);
-      })
-      .catch((error) => {
-        console.error("Error:", error.response.data);
-        Alert.alert("Error", "Something went wrong");
-      });
+        try{
+            const response = await AxiosInstance.post(
+              "/api/clearLand/clearLandFromManualCalculator",
+              {
+                pressed,
+                laborCount,
+                workHours,
+                displayValues,
+                displayValues1,
+                displayValues2,
+                area,
+              }
+            );
+            if(response.data.status==="ok"){
+                const {effort,workDays} = response.data.data;
+                console.log(effort,workDays);
+                navigation.navigate("EffortOutputFromManualCalculator", {
+                    area,
+                    perimeter,
+                    effort,
+                    workHours,
+                    workDays,
+                    laborCount,
+                    displayValues2,
+                });
+            } else {
+                Alert.alert("Error", response.data.data);}
+        } catch (error){
+            console.error("Error:", error.response?.data || error.message);
+            Alert.alert("Error", "Something went wrong");
+        }
   };
 
   return (
@@ -229,13 +222,13 @@ export default function ClearLand({ route }) {
       {/* Header section */}
       <View>
         <Appbar.Header style={styles.header}>
-          <Appbar.BackAction
-            onPress={() => navigation.navigate("TemplateView", { item: item })}
-            color="white"
-          />
-          <View style={{ marginTop: 40, left: 10, width: "70%" }}>
-            <Text style={styles.headerText}>Clear Land</Text>
-          </View>
+            <Appbar.BackAction 
+              onPress={() => navigation.navigate("Home")}
+              color="white"
+            />
+        <View style={{marginTop:40,left:10,width:"70%"}}>
+          <Text style={styles.headerText}>Clear Land</Text>
+        </View>
         </Appbar.Header>
       </View>
       {/* ScrollView section */}
@@ -639,3 +632,5 @@ export default function ClearLand({ route }) {
     </PaperProvider>
   );
 }
+
+
