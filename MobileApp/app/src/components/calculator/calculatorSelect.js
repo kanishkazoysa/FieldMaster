@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import { IconButton } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -15,7 +15,15 @@ const CalculatorModel = ({
   //get area and perimeter from previous page
   area, 
   perimeter,
-}) => {
+   }) => {
+
+    useEffect(() => {
+      // Reset the calculatorSelectModalVisible state when the component is unmounted
+      return () => {
+        setCalculatorSelectModalVisible(false);
+      };
+    }, [setCalculatorSelectModalVisible]);
+    
   const closeModal = () => {
     setCalculatorSelectModalVisible(false);
   };
