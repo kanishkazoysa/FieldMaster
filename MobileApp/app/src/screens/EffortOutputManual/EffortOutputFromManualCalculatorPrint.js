@@ -68,8 +68,8 @@ export const effortOutputManualPrint = (perimeter,area,laborCount,workHours,disp
         </div>
         <h2>Map Information</h2>
         <ul>
-            <li>Perimeter = ${Perimeter}</li>
-            <li>Area = ${Area}</li>
+            <li>Perimeter = ${perimeter}</li>
+            <li>Area = ${area}</li>
         </ul>
 
         <h2>Clear land Details</h2>
