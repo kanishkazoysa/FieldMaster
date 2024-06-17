@@ -24,10 +24,15 @@ import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import AxiosInstance from "../../AxiosInstance";
 import {styles} from "./ClearLandFromManualCalculatorStyles";
+import { 
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
 
 export default function ClearLandFromManualCalculator({ route }) {
   const navigation = useNavigation();
-  const { id,item } = route.params;
+  const { area , perimeter } = route.params;
   const [text, setText] = React.useState("");
   
   
@@ -218,7 +223,7 @@ export default function ClearLandFromManualCalculator({ route }) {
       <View>
         <Appbar.Header style={styles.header}>
             <Appbar.BackAction 
-              onPress={() => navigation.navigate("TemplateView",{item: item})}
+              onPress={() => navigation.navigate("Home")}
               color="white"
             />
         <View style={{marginTop:40,left:10,width:"70%"}}>
