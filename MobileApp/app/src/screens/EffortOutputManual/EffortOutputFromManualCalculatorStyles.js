@@ -25,6 +25,8 @@ export const styles = StyleSheet.create({
     card1: {
       height: responsiveHeight(15),
       width: "87%",
+      marginTop: responsiveHeight(3.5),
+      marginBottom: responsiveHeight(3.5),
       borderRadius: 11,
       backgroundColor: "#fff",
     },
