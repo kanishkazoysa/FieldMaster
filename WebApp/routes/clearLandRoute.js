@@ -5,7 +5,7 @@ const MapTemplateSchema = require("../models/MapTemplateModel");
 
 //calculate the effort output function
 function calculateEffortOutput(
-  // area,
+  area,
   weedEffort,
   laborsCount,
   plantEffort,
@@ -14,7 +14,8 @@ function calculateEffortOutput(
   chainsawCount,
   breakerCount
 ) {
-  let area = 1000;
+
+  // let area = 1000
   //calculate total effort
   const effortCount = Math.ceil(((weedEffort/laborsCount)*area) + (plantEffort/chainsawCount) + (stoneEffort/breakerCount) + ((machineEffort*area)/60));
   return effortCount;
@@ -110,9 +111,12 @@ const getBreakerCount = (machineDetails) => {
   return breakerCount;
 }
 
-// const calculateWorkDays = (effort,workHours) => {
-
-// }
+const calculateWorkDays = (effort,workHours) => {
+  const fulldays = Math.floor(effort / workHours);
+  const remainingHours = effort % workHours;
+  const totalDays = remainingHours === 0 ? fulldays : fulldays + 1;
+  return totalDays;
+}
 router.post("/clearLand", async (req, res) => {
   try {
     const {
@@ -123,10 +127,13 @@ router.post("/clearLand", async (req, res) => {
       displayValues,
       displayValues1,
       displayValues2,
-      // Area,
     } = req.body;
 
-    // const area = Area * 25.2929;
+     // Fetch area from MapTemplateSchema
+     const mapData = await MapTemplateSchema.findOne({ _id: id });
+     const area = parseInt(mapData.area * 25.2929);
+     console.log(area);
+    
     const laborsCount = parseInt(laborCount);
     const weedType = pressed;
     const plantDetails = displayValues.map((value) => {
@@ -145,7 +152,8 @@ router.post("/clearLand", async (req, res) => {
     const machineEffort = calculateMachineEffort(machineDetails);
     const chainsawCount = getChainsawCount(machineDetails);
     const breakerCount = getBreakerCount(machineDetails);
-    const effort = calculateEffortOutput(weedEffort, laborsCount, plantEffort, stoneEffort, machineEffort, chainsawCount, breakerCount);
+    const effort = calculateEffortOutput(area,weedEffort,laborsCount,plantEffort,stoneEffort,machineEffort,chainsawCount,breakerCount);
+    const workDays = calculateWorkDays(effort,workHours);
 
     const newclearLand = new clearLandModel({
       Id: id,
@@ -156,23 +164,61 @@ router.post("/clearLand", async (req, res) => {
       WorkHoursCount: workHours,
       MachineDetails: displayValues2,
       EffortOutput: effort,
+      WorkDays : workDays,
     });
 
     await newclearLand.save();
 
-    res.json({ 
-      status: "ok", 
-      data: "Clear Land Created",
-      weedEffort,
-      plantEffort,
-      stoneEffort,
-      machineEffort,
-      chainsawCount,
-      breakerCount,
-      effort,
-    });
+    res.send({ status: "ok", data: "Clear Land Created" });
   } catch (error) {
-    res.status(500).json({ status: "error", data: error.messager });
+    res.send({ status: "error", data: error });
+  }
+});
+
+//for clearLand manual calculator
+router.post("/clearLandFromManualCalculator", async (req, res) => {
+  try {
+    const{
+      pressed,
+      laborCount,
+      workHours,
+      displayValues,
+      displayValues1,
+      displayValues2,
+      area,
+    } = req.body
+
+    const laborsCount = parseInt(laborCount);
+    const weedType = pressed;
+    const plantDetails = displayValues.map((value) => {
+      const [count, type] = value.split(" x ");
+      return {count, type: type.trim() };
+    });
+     
+    const stoneType = displayValues1;
+    const machineDetails = displayValues2.map((value) => {
+        const [type, count] = value.split(" x ");
+        return { type: type.trim(), count};
+      });
+    const weedEffort = calculateWeedEffort(weedType);
+    const plantEffort = calculatePlantEffort(plantDetails);  
+    const stoneEffort = calculateStoneEffort(stoneType);
+    const machineEffort = calculateMachineEffort(machineDetails);
+    const chainsawCount = getChainsawCount(machineDetails);
+    const breakerCount = getBreakerCount(machineDetails);
+    const effort = calculateEffortOutput(area,weedEffort,laborsCount,plantEffort,stoneEffort,machineEffort,chainsawCount,breakerCount);
+    const workDays = calculateWorkDays(effort,workHours);
+
+    res.json({
+      status: "ok",
+      data: {
+        effort,
+         workDays,
+      },
+    })
+
+  } catch (error) {
+    res.status(500).json({ status: "error", data: error.message });
   }
 });
 
@@ -188,6 +234,7 @@ router.get("/effortOutput/:id", async (req, res) => {
         .json({ status: "error", message: "No recently updated data found" });
     }
     const effortOutput = ClearLand.EffortOutput;
+    const workDays = ClearLand.WorkDays;
     const weedsType = ClearLand.WeedType;
     const workHours = ClearLand.WorkHoursCount;
     const laborCount = ClearLand.LaborsCOunt;
@@ -200,6 +247,7 @@ router.get("/effortOutput/:id", async (req, res) => {
     res.json({
       status: "success",
       effortOutput,
+      workDays,
       weedsType,
       workHours,
       laborCount,
