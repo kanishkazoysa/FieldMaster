@@ -3,8 +3,9 @@ import { GoogleMap, LoadScript, StandaloneSearchBox, Marker } from "@react-googl
 import SideNavbar from "../../components/SideNavbar/sideNavbar";
 import { MdLocationOn, MdSearch } from "react-icons/md";
 import ProfileModal from "../../components/profileManage/ProfileModal";
-import Avatar from "../../components/profileManage/Avatar";
+// import Avatar from "../../components/profileManage/Avatar";
 import { styles, containerStyle, center } from './HomeStyles';
+import { Avatar } from "antd";
 
 export default function Home() {
   const mapRef = useRef(null);
