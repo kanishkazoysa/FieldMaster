@@ -12,9 +12,9 @@ export default function CalculatorSelect({ onBackToSidebar, area, perimeter, Per
     const [isHovered2, setIsHovered2] = useState(false);
     const [isHovered3, setIsHovered3] = useState(false);
 
+    //for plantation 
     const [currentPage, setCurrentPage] = useState(null);
     const [animatePage, setAnimatePage] = useState(false);
-    
     const handleBackClick = () => {
         setAnimatePage(false);
         setTimeout(() => {
@@ -29,6 +29,9 @@ export default function CalculatorSelect({ onBackToSidebar, area, perimeter, Per
         }, 300);
     };
 
+    
+
+    //ui
     return (
         <div>
             {!currentPage && (

@@ -315,6 +315,10 @@ const handleFrequencyChange = (selectedFrequency) => {
         selectedFrequency={selectedFrequency}
         calculatedPlantDensity={calculatedPlantDensity}
         numberOfPlants={numberOfPlants}
+        area={area}
+        perimeter={perimeter}
+        AreaUnitselectedValue={AreaUnitselectedValue}
+        PerimeterUnitselectedValue={PerimeterUnitselectedValue}
         
         />)}
       </div>

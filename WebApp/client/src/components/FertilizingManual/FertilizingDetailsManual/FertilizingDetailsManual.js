@@ -13,6 +13,10 @@ import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
 
 export default function FertilizingDetails({
   route,
+  area,
+  perimeter,
+  AreaUnitselectedValue,
+  PerimeterUnitselectedValue,
   onBackToSidebar,
   textPlant,
   FertilizerAmountUnitselectedValue,
@@ -155,14 +159,14 @@ export default function FertilizingDetails({
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>1.5Km</p>
+                  <p style={styles.propertyValue}>{perimeter} {PerimeterUnitselectedValue}</p>
                 </div>
               </div>
               <div className="property" style={styles.property}>
                 <PiSquareDuotone color="gray" size={40} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
-                  <p style={styles.propertyValue}>1 acres</p>
+                  <p style={styles.propertyValue}>{area} {AreaUnitselectedValue}</p>
                 </div>
               </div>
             </div>
