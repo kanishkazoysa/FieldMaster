@@ -2,7 +2,7 @@ import React, { useRef, useState, useCallback } from "react";
 import { GoogleMap, LoadScript, StandaloneSearchBox, Marker } from "@react-google-maps/api";
 import SideNavbar from "../../components/SideNavbar/sideNavbar";
 import { MdLocationOn, MdSearch } from "react-icons/md";
-import ProfileModal from "../../components/profileManage/ProfileModal";
+import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
 // import Avatar from "../../components/profileManage/Avatar";
 import { styles, containerStyle, center } from './HomeStyles';
 import { Avatar } from "antd";
