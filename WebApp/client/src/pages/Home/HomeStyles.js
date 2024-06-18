@@ -72,9 +72,11 @@ export const styles = {
         padding: '0 8px',
       },
       avatar: {
-        right: '2%',
-        top: '4%',
         fontSize: '24px',
+        backgroundColor: '#87d068',
+        position: 'absolute',
+        right: '0.5%',
+        top: '2.5%',
       },
     },
     '@media (max-width: 320px)': {
