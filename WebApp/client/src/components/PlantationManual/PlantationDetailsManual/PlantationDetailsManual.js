@@ -9,10 +9,15 @@ import { MdGrass,MdFormatLineSpacing } from "react-icons/md";
 import { GiGrassMushroom } from "react-icons/gi";
 import { FaTree } from "react-icons/fa";
 import { RxRowSpacing } from "react-icons/rx";
-import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
+import FertilizingManual from "../../FertilizingManual/FertilizingPageManual/FertilizingManual";
 
 export default function PlantationDetails({
+  area,
+  perimeter,
+  PerimeterUnitselectedValue,
+  AreaUnitselectedValue,
   numberOfPlants,
+  calculatedPlantDensity,
   onBackToSidebar,
   textplantspace,
   textRowspace,
@@ -22,13 +27,13 @@ export default function PlantationDetails({
 }) {
 
   
-  const [PlantDensity, setPlantDensity] = useState(null);
+
 
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
 
   const handleFertilization = () => {
-      setCurrentPage("Fertilizing");
+      setCurrentPage("FertilizingManual");
       setAnimatePage(true);
   };
 
@@ -67,7 +72,7 @@ export default function PlantationDetails({
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            setPlantDensity(data.data);
+            //setPlantDensity(data.data);
             
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -111,7 +116,7 @@ export default function PlantationDetails({
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Plant Density</p>
               <p style={styles.propertyValue}>
-                {PlantDensity} / m<sup>2</sup>
+                {calculatedPlantDensity} / m<sup>2</sup>
               </p>
             </div>
           </div>
@@ -126,14 +131,14 @@ export default function PlantationDetails({
             <BsBoundingBox color="gray" size={28} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>1.5Km</p>
+              <p style={styles.propertyValue}>{perimeter} {PerimeterUnitselectedValue}</p>
             </div>
           </div>
           <div className="property" style={styles.property}>
             <PiSquareDuotone color="gray" size={40} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
-              <p style={styles.propertyValue}>100 acres</p>
+              <p style={styles.propertyValue}>{area} {AreaUnitselectedValue}</p>
             </div>
           </div>
         </div>
@@ -205,13 +210,16 @@ export default function PlantationDetails({
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === "Fertilizing" && (
-          <Fertilizing
+        {currentPage === "FertilizingManual" && (
+          <FertilizingManual
             onBackToSidebar={handleBackClick}
             textPlant={textPlant}
-            PlantDensity={PlantDensity}
+            
             numberOfPlants={numberOfPlants}
-
+            area={area}
+            perimeter={perimeter}
+            AreaUnitselectedValue={AreaUnitselectedValue}
+            PerimeterUnitselectedValue={PerimeterUnitselectedValue}
 
 
           />

@@ -10,11 +10,10 @@ import { styles } from "./PlantationManualStyles";
 import Select from "react-select";
 // import AxiosInstance from "../../../AxiosInstance";
 import axios from "axios";
-import PlantationDetails from "../PlantationDetails/plantationDetails";
+import PlantationDetailsManual from "../PlantationDetailsManual/PlantationDetailsManual";
 
-export default function Plantation({ onBackToSidebar }) {
-  const [perimeter, setPerimeter] = useState("1.5");
-  const [area, setArea] = useState("1");
+export default function Plantation({ onBackToSidebar,area,perimeter,PerimeterUnitselectedValue,AreaUnitselectedValue }) {
+ 
   const [textPlant, settextPlant] = useState(null);
   const [PlantSpaceUnitselectedValue, setPlantSpaceUnitselectedValue] =
     useState("");
@@ -70,7 +69,7 @@ export default function Plantation({ onBackToSidebar }) {
         throw new Error("Please fill in all fields");
       }
 
-      setCurrentPage("plantationDetails");
+      setCurrentPage("PlantationDetailsManual");
       setAnimatePage(true);
       e.preventDefault();
 
@@ -86,7 +85,7 @@ export default function Plantation({ onBackToSidebar }) {
 
       // Make POST request to the backend
       const response = await axios.post(
-        "http://192.168.1.2:3000/api/plantation/plantation",
+        "http://192.168.1.2:3000/api/plantation/plantationFromManualCalculator",
         requestData
       );
 
@@ -165,7 +164,7 @@ function convertToCommonUnit(value, unit) {
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{perimeter}Km</p>
+                  <p style={styles.propertyValue}>{perimeter} {PerimeterUnitselectedValue}</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -173,7 +172,7 @@ function convertToCommonUnit(value, unit) {
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {/* {area} m<sup>2</sup> */}{area } Acres
+                    {/* {area} m<sup>2</sup> */}{area } {AreaUnitselectedValue}
                   </p>
                 </div>
               </div>
@@ -297,8 +296,8 @@ function convertToCommonUnit(value, unit) {
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === "plantationDetails" && (
-          <PlantationDetails
+        {currentPage === "PlantationDetailsManual" && (
+          <PlantationDetailsManual
             onBackToSidebar={handleBackClick}
             textplantspace={textplantspace}
             textRowspace={textRowspace}
@@ -306,6 +305,11 @@ function convertToCommonUnit(value, unit) {
             RowSpaceUnitselectedValue={RowSpaceUnitselectedValue}
             textPlant={textPlant}
             numberOfPlants={numberOfPlants}
+            calculatedPlantDensity={calculatedPlantDensity}
+            area={area}
+            perimeter={perimeter}
+            AreaUnitselectedValue={AreaUnitselectedValue}
+            PerimeterUnitselectedValue={PerimeterUnitselectedValue}
 
           />
         )}

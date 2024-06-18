@@ -2,7 +2,6 @@
 import React, { useState, useRef } from "react";
 import { MdArrowBack } from "react-icons/md";
 import { GiWeight } from "react-icons/gi";
-
 import { PiSquareDuotone } from "react-icons/pi";
 import { MdGrass } from "react-icons/md";
 import { GiGrassMushroom } from "react-icons/gi";
@@ -14,18 +13,21 @@ import Select from "react-select";
 // import AxiosInstance from "../../../AxiosInstance";
 import axios from "axios";
 import { FaTree } from "react-icons/fa";
-import FertilizingDetails from "../FertilizingDetails/fertilizingDetails";
+import FertilizingDetailsManual from "../FertilizingDetailsManual/FertilizingDetailsManual";
 
 
 export default function Fertilizing(
   {
+    area,
+    perimeter,
+    AreaUnitselectedValue,
+    PerimeterUnitselectedValue,
     onBackToSidebar,
     textPlant,
     PlantDensity,
     numberOfPlants
   }) {
-  const [perimeter, setPerimeter] = useState("1.5");
-  const [area, setArea] = useState("10");
+ 
 
   const [textFertilizationType, setTextFertilizationType] =
     useState("");
@@ -147,7 +149,7 @@ const handleFrequencyChange = (selectedFrequency) => {
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {/* {area} m<sup>2</sup> */}{area} Acres
+                    {area} {AreaUnitselectedValue}
                   </p>
                 </div>
               </div>
@@ -329,8 +331,8 @@ const handleFrequencyChange = (selectedFrequency) => {
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === "fertilizingDetails" 
-        && (<FertilizingDetails 
+        {currentPage === "FertilizingDetailsManual" 
+        && (<FertilizingDetailsManual 
         onBackToSidebar={handleBackClick}
         textPlant={textPlant}
         FertilizerAmountUnitselectedValue={FertilizerAmountUnitselectedValue}
