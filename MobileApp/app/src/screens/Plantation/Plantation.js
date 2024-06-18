@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
@@ -13,22 +12,18 @@ import React, { useState, useEffect } from "react";
 import { Keyboard } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
-import { useNavigation ,useRoute} from "@react-navigation/native";
+import { useNavigation} from "@react-navigation/native";
 import {styles} from "./PlantationStyles";
-
-import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
-//Data submission to the backend API is implemented using axios
-import axios from "axios";
 import AxiosInstance from "../../AxiosInstance";
+import { Appbar } from "react-native-paper";
 
 
 
 export default function Plantation({route}) {
-  const{id,area,perimeter} =  route.params;
+  const{id,area,perimeter,item} =  route.params;
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  route = useRoute(); // get route
-  console.log(area, perimeter);
+  console.log(id,area, perimeter);
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -58,9 +53,6 @@ export default function Plantation({route}) {
 
   const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] =
     useState(null);
-  const [RowSpacingUnitselectedValue, RowSpacingUnitSetSelectedValue] =
-    useState(null);
-
   const PlantSpaceUnitPlaceholder = {
     label: "M",
     value: null,
@@ -105,45 +97,15 @@ export default function Plantation({route}) {
         id ,
 
       });
-      console.log(response.data);
-      navigation.navigate("PlantationDetails", { id: id });
+      console.log(id);
+      navigation.navigate("PlantationDetails", { id: id ,item: item});
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
       Alert.alert("Error", "Something went wrong");
     }
   };
   
-  const handlePlantationDetailsFromManualCalculator = async () => {
-    if (
-      !textPlant ||
-      !textplantspace ||
-      !textRowspace ||
-      !PlantSpaceUnitselectedValue
-    ) {
-      Alert.alert("Error", "Please fill in all fields");
-      return;
-    }
-  
-    try {
-      const response = await AxiosInstance.post("/api/plantation/plantationFromManualCalculator", {
-        textPlant,
-        textplantspace,
-        textRowspace,
-        PlantSpaceUnitselectedValue,
-        area
-        
-      });
-      console.log(response.data);
-      const numberOfPlants=response.data.numberOfPlants
-      const plantDensity=response.data.plantDensity
-      const textPlant=response.data.textPlant
-      navigation.navigate("PlantationDetails", { area:area, perimeter:perimeter });
-    } catch (error) {
-      console.error("Error:", error.response?.data || error.message);
-      Alert.alert("Error", "Something went wrong");
-    }
-  };
-//navigating to the "PlantationDetails" screen while passing some data as route parameters
+ 
   
 
 return (
@@ -156,7 +118,17 @@ return (
     <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
     {/*Header section*/}
-    <Headersection navigation={navigation} title="Plantation" />
+    <View>
+      <Appbar.Header style={styles.header}>
+        <Appbar.BackAction
+          onPress={() => navigation.navigate("TemplateView",{item : item})}
+          color="white"
+        />
+        <View style={{marginTop:40,left:10,width:"70%"}}>
+        <Text style={styles.headerText}>Plantation</Text>
+        </View>
+      </Appbar.Header>
+    </View>
 
     <ScrollView contentContainerStyle={styles.scrollContent}>
       {/* Top section */}

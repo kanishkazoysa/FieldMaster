@@ -97,7 +97,7 @@ router.get("/numberOfPlants/:id", async (req, res) => {
     const id = req.params.id;
     try {
         const plant = await plantationModel.findOne({ Id: id });
-        const map = await MapTemplateModel.findOne({ userId: id });
+        const map = await MapTemplateModel.findOne({ _id: id });
 
         if (!plant && !map) {
             return res.status(404).json({ status: "error", message: "No recently updated data found" });
@@ -185,7 +185,6 @@ router.get("/plantDensityFromManualCalculator", async (req, res) => {
         if (!plant) {
             return res.status(404).json({ status: "error", message: "No recently updated data found" });
         }
-
         const plantationDensity = plant.PlantDensity;
 
         res.json({ status: "success", data: plantationDensity });

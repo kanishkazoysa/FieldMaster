@@ -1,165 +1,124 @@
 import {
-    StyleSheet,
-    Text,
-    View,
-    StatusBar,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    TextInput,
-    Alert,
-  } from "react-native";
-  import React, { useState, useEffect } from "react";
-  import { Keyboard } from "react-native";
-  import { MaterialCommunityIcons } from "@expo/vector-icons";
-  import RNPickerSelect from "react-native-picker-select";
-  import { useNavigation ,useRoute} from "@react-navigation/native";
-  import {styles} from "./PlantationFromManualCalculatorStyles";
-  
-  import Headersection from "../../components/Headersection";
-  import CustomButton from "../../components/CustomButton";
-  //Data submission to the backend API is implemented using axios
-  import axios from "axios";
-  import AxiosInstance from "../../AxiosInstance";
-  
-  
-  
-  export default function plantationFromManualCalculator({route}) {
-    const{area,perimeter,plantDensity,numberOfPlants} =  route.params;
-    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-    route = useRoute(); // get route
-    console.log(area, perimeter);
-    useEffect(() => {
-      const keyboardDidShowListener = Keyboard.addListener(
-        "keyboardDidShow",
-        () => {
-          setKeyboardVisible(true);
-        }
-      );
-      const keyboardDidHideListener = Keyboard.addListener(
-        "keyboardDidHide",
-        () => {
-          setKeyboardVisible(false);
-        }
-      );
-  
-      return () => {
-        keyboardDidShowListener.remove();
-        keyboardDidHideListener.remove();
-      };
-    }, []);
-  
-    
-    const [textPlant, setTextPlant] = useState("");
-    const [textplantspace, setTextPlantSpace] = useState("");
-    const [textRowspace, setTextRowSpace] = useState("");
-  
-    const navigation = useNavigation();
-  
-    const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] =
-      useState(null);
-    const [RowSpacingUnitselectedValue, RowSpacingUnitSetSelectedValue] =
-      useState(null);
-  
-    const PlantSpaceUnitPlaceholder = {
-      label: "M",
-      value: null,
-      color: "blue",
-    };
-  
-    const PlantSpaceUnitOptions = [
-      // { label: "cm", value: "cm" },
-      { label: "m", value: "m" },
-  
-    ];
-  
-    const RowSpacingUnitplaceholder = {
-      label: "M",
-      value: null,
-      color: "blue",
-    };
-  
-    const RowSpacingUnitOptions = [
-      //{ label: "cm", value: "cm" },
-      { label: "m", value: "m" },
-    ];
-  
-    //handles submission of plantation details and navigation to PlantationDetails
-    const handlePlantationDetails = async () => {
-      if (
-        !textPlant ||
-        !textplantspace ||
-        !textRowspace ||
-        !PlantSpaceUnitselectedValue
-      ) {
-        Alert.alert("Error", "Please fill in all fields");
-        return;
+  Text,
+  View,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TextInput,
+  Alert,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import { Keyboard } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import RNPickerSelect from "react-native-picker-select";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { styles } from "./PlantationFromManualCalculatorStyles";
+import Headersection from "../../components/Headersection";
+import CustomButton from "../../components/CustomButton";
+import AxiosInstance from "../../AxiosInstance";
+
+export default function PlantationFromManualCalculator({ route }) {
+  const { area, perimeter } = route.params;
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  route = useRoute(); // get route
+  console.log(area, perimeter);
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true);
       }
-    
-      try {
-        const response = await AxiosInstance.post("/api/plantation/plantation", {
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const [textPlant, setTextPlant] = useState("");
+  const [textplantspace, setTextPlantSpace] = useState("");
+  const [textRowspace, setTextRowSpace] = useState("");
+
+  const navigation = useNavigation();
+
+  const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] =
+    useState(null);
+  const PlantSpaceUnitPlaceholder = {
+    label: "M",
+    value: null,
+    color: "blue",
+  };
+
+  const PlantSpaceUnitOptions = [
+    // { label: "cm", value: "cm" },
+    { label: "m", value: "m" },
+  ];
+
+  const RowSpacingUnitplaceholder = {
+    label: "M",
+    value: null,
+    color: "blue",
+  };
+
+  const RowSpacingUnitOptions = [
+    //{ label: "cm", value: "cm" },
+    { label: "m", value: "m" },
+  ];
+
+  const handlePlantationDetailsFromManualCalculator = async () => {
+    if (
+      !textPlant ||
+      !textplantspace ||
+      !textRowspace ||
+      !PlantSpaceUnitselectedValue
+    ) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
+    }
+
+    try {
+      const response = await AxiosInstance.post(
+        "/api/plantation/plantationFromManualCalculator",
+        {
           textPlant,
           textplantspace,
           textRowspace,
           PlantSpaceUnitselectedValue,
-        
-  
-        });
-        console.log(response.data);
-        const numberOfPlants=response.data.numberOfPlants
-        const plantDensity=response.data.plantDensity
-      
-        navigation.navigate("PlantationDetails", { 
-          area:area,
-          perimeter:perimeter,
-          numberOfPlants:numberOfPlants,
-          plantDensity:plantDensity 
-        });
-      } catch (error) {
-        console.error("Error:", error.response?.data || error.message);
-        Alert.alert("Error", "Something went wrong");
-      }
-    };
-    
-    const handlePlantationDetailsFromManualCalculator = async () => {
-      if (
-        !textPlant ||
-        !textplantspace ||
-        !textRowspace ||
-        !PlantSpaceUnitselectedValue
-      ) {
-        Alert.alert("Error", "Please fill in all fields");
-        return;
-      }
-    
-      try {
-        const response = await AxiosInstance.post("/api/plantation/plantationFromManualCalculator", {
+          area,
+        }
+      );
+
+      if (response.data.status === "ok") {
+        const { numberOfPlants, calculatedPlantDensity, textPlant } =
+          response.data.data;
+        console.log(numberOfPlants, calculatedPlantDensity, textPlant);
+        navigation.navigate("PlantationDetailsFromManualCalculator", {
+          area,
+          perimeter,
+          numberOfPlants,
+          plantDensity: calculatedPlantDensity,
           textPlant,
           textplantspace,
           textRowspace,
           PlantSpaceUnitselectedValue,
-          area
-          
         });
-        console.log(response.data);
-        const numberOfPlants=response.data.numberOfPlants
-        const plantDensity=response.data.plantDensity
-        const textPlant=response.data.textPlant
-        navigation.navigate("PlantationDetailsFromManualCalculator", { 
-          area:area, 
-          perimeter:perimeter,
-          textPlant:textPlant,
-          textplantspace:textplantspace,
-          textRowspace:textRowspace,
-          PlantSpaceUnitSetSelectedValue:PlantSpaceUnitSetSelectedValue });
-      } catch (error) {
-        console.error("Error:", error.response?.data || error.message);
-        Alert.alert("Error", "Something went wrong");
+      } else {
+        Alert.alert("Error", response.data.data);
       }
-    };
-  //navigating to the "PlantationDetails" screen while passing some data as route parameters
-    
-  
+    } catch (error) {
+      console.error("Error:", error.response?.data || error.message);
+      Alert.alert("Error", "Something went wrong");
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -168,16 +127,14 @@ import {
     >
       {/* Static section at the top */}
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-  
+
       {/*Header section*/}
       <Headersection navigation={navigation} title="Plantation" />
-  
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Top section */}
         <View style={styles.top}>
-  
           <View style={styles.Box1}>
-  
             <Text style={styles.titleText}>Land Info</Text>
             <View style={styles.propertyBox}>
               <View style={styles.property}>
@@ -200,11 +157,9 @@ import {
               </View>
             </View>
           </View>
-  
-  
-  
+
           {/* Second section */}
-  
+
           <View style={styles.Box2}>
             <View style={styles.TopText}>
               <MaterialCommunityIcons name="sprout" size={20} color="gray" />
@@ -223,9 +178,9 @@ import {
               marginTop={12}
             />
           </View>
-  
+
           {/* Third section */}
-  
+
           <View style={styles.Box2}>
             <View style={styles.TopText}>
               <MaterialCommunityIcons name="apps" size={20} color="gray" />
@@ -263,9 +218,9 @@ import {
               </View>
             </View>
           </View>
-  
+
           {/* Forth section */}
-  
+
           <View style={styles.Box2}>
             <View style={styles.TopText}>
               <MaterialCommunityIcons
@@ -308,13 +263,13 @@ import {
             </View>
           </View>
         </View>
-  
+
         {/* Bottom section */}
-  
+
         {!isKeyboardVisible && (
           <View style={styles.bottom}>
             <CustomButton
-              onPress={id ? handlePlantationDetails : handlePlantationDetailsFromManualCalculator}
+              onPress={handlePlantationDetailsFromManualCalculator}
               text="Calculate Plantation"
               iconName="calculator"
               iconColor="white"
@@ -325,4 +280,4 @@ import {
       </ScrollView>
     </KeyboardAvoidingView>
   );
-  }
+}

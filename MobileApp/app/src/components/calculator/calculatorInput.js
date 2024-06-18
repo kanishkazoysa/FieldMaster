@@ -26,10 +26,10 @@ const CalculatorSelectModel = ({
 }) => {
   const [calculatorSelectModalVisible, setCalculatorSelectModalVisible] =
     useState(false);
-  const [selectedAreaUnit, setSelectedAreaUnit] = useState("sqm");
-  const [selectedPerimeterUnit, setSelectedPerimeterUnit] = useState("m");
-  const [inputAreaValue, setInputAreaValue] = useState(""); // State for Area input
-  const [inputPerimeterValue, setInputPerimeterValue] = useState(""); // State for Perimeter input
+  const [selectedValue, setSelectedValue] = useState("sqm");
+  const [area, setArea] = useState(""); // New state variable for area
+  const [perimeter, setPerimeter] = useState(""); // New state variable for perimeter
+
 
   const closeModal = () => {
     setCalculatorModalVisible(false);
@@ -39,6 +39,8 @@ const CalculatorSelectModel = ({
     setCalculatorSelectModalVisible(true);
     setCalculatorModalVisible(false);
   };
+
+  const navigation = useNavigation();
 
   return (
     <View>
@@ -89,23 +91,22 @@ const CalculatorSelectModel = ({
                       style={styles.input}
                       placeholder={"00.00"}
                       keyboardType="numeric"
-                      value={inputAreaValue}
-                      onChangeText={setInputAreaValue}
+                      onChangeText={text => setArea(text)} // Update area state variable
                     />
 
                     <View style={styles.dropdown}>
                       <Picker
-                        selectedValue={selectedAreaUnit}
+                        selectedValue={selectedValue}
                         style={{
                           height: responsiveHeight(6),
                           width: responsiveWidth(30),
                         }}
-                        onValueChange={(itemValue) =>
-                          setSelectedAreaUnit(itemValue)
+                        onValueChange={(itemValue, itemIndex) =>
+                          setSelectedValue(itemValue)
                         }
                       >
-                        {/* <Picker.Item label="Square Meters" value="sqm" />
-                        <Picker.Item label="Square Feet" value="sqft" /> */}
+                        <Picker.Item label="Square Meters" value="sqm" />
+                        <Picker.Item label="Square Feet" value="sqft" />
                         <Picker.Item label="Acres" value="acres" />
                         {/* Add more items as needed */}
                       </Picker>
@@ -135,23 +136,23 @@ const CalculatorSelectModel = ({
                       style={styles.input}
                       placeholder={"00.00"}
                       keyboardType="numeric"
-                      value={inputPerimeterValue}
-                      onChangeText={setInputPerimeterValue}
+                      onChangeText={text => setPerimeter(text)} // Update perimeter state variable
                     />
 
                     <View style={styles.dropdown}>
                       <Picker
-                        selectedValue={selectedPerimeterUnit}
+                        selectedValue={selectedValue}
                         style={{
                           height: responsiveHeight(6),
                           width: responsiveWidth(30),
                         }}
-                        onValueChange={(itemValue) =>
-                          setSelectedPerimeterUnit(itemValue)
+                        onValueChange={(itemValue, itemIndex) =>
+                          setSelectedValue(itemValue)
                         }
                       >
                         <Picker.Item label="m" value="m" />
-                        {/* <Picker.Item label="Km" value="km" /> */}
+                        <Picker.Item label="Km" value="km" />
+
                         {/* Add more items as needed */}
                       </Picker>
                     </View>
@@ -174,8 +175,8 @@ const CalculatorSelectModel = ({
       <CalculatorSelect
         calculatorSelectModalVisible={calculatorSelectModalVisible}
         setCalculatorSelectModalVisible={setCalculatorSelectModalVisible}
-        area={inputAreaValue}
-        perimeter={inputPerimeterValue}
+        area={area} // Pass area as prop
+        perimeter={perimeter} // Pass perimeter as prop
       />
     </View>
   );
@@ -227,7 +228,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalView: {
-   
     marginTop: responsiveHeight(40),
     alignSelf: "center",
     backgroundColor: "#fff",

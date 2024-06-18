@@ -1,50 +1,62 @@
 // SelectionModal.js
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Modal
-} from "react-native";
-import { IconButton, Avatar, Button, } from "react-native-paper";
-import { useNavigation, } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
+import { IconButton, Button } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ProfileAvatar from "../components/ProfileAvatar";
+import AxiosInstance from "../AxiosInstance";
 
 const SelectionModal = ({
   profileModalVisible,
   setProfileModalVisible,
-  email,
+  
 }) => {
   const [loading, setLoading] = useState(false);
+  const [manageLoading, setManageLoading] = useState(false); // New state for manage button loading
+  const [user, setUser] = useState({});
   const closeModal = () => {
     setProfileModalVisible(false);
   };
   const navigation = useNavigation();
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const response = await AxiosInstance.get("/api/users/details");
+      setUser(response.data.user);
+    };
+
+    if (profileModalVisible) {
+      fetchUser();
+    }
+  }, [profileModalVisible]);
+
   const handleManageAccount = () => {
+    setManageLoading(true); // Set loading state to true when manage account is clicked
+   
+      setManageLoading(false); // Set loading state to false after navigating to the profile management page
     setProfileModalVisible(false);
     navigation.navigate("ProfileManagement");
+  
   };
 
-  const  handleSignOut = async () => {
+  const handleSignOut = async () => {
     setLoading(true);
-    await  AsyncStorage.removeItem('token');
-  
-     // Wait for 2 seconds before navigating to the login page
-     setTimeout(() => {
+    await AsyncStorage.removeItem("token");
+    // Wait for 2 seconds before navigating to the login page
+    setTimeout(() => {
       setLoading(false);
       setProfileModalVisible(false);
       navigation.navigate("Login");
     }, 2000);
+  };
 
-
-  }
+ 
 
   return (
     <Modal
@@ -70,17 +82,14 @@ const SelectionModal = ({
               style={styles.cancelButton}
             />
 
-            <Text style={styles.headerText}>example@gmail.com</Text>
+            <Text style={styles.headerText}>{user.email}</Text>
             <View>
-              <Avatar.Image
-                size={responsiveFontSize(10)}
-                source={require("../images/profilePhoto.png")}
-              />
+              <ProfileAvatar userData={user} textSize={responsiveFontSize(1.4)} />
             </View>
 
             <View style={styles.nameContainer}>
               <Text style={styles.nameText}>Hi ,</Text>
-              <Text style={styles.nameText}>Jhon</Text>
+              <Text style={styles.nameText}>{user.fname}</Text>
             </View>
 
             <Button
@@ -88,6 +97,7 @@ const SelectionModal = ({
               onPress={handleManageAccount}
               style={styles.ManageButton}
               textColor="#007BFF"
+              loading={manageLoading} // Add loading prop to Button
             >
               Manage your account
             </Button>
@@ -109,13 +119,7 @@ const SelectionModal = ({
 };
 
 const styles = StyleSheet.create({
-  bottomContainer: {
-    flexDirection: "row",
-    marginTop: responsiveHeight(3),
-  },
-  dot: {
-    top: responsiveHeight(-0.6),
-  },
+  
   bottomText: {
     color: "#65676B",
     fontSize: responsiveFontSize(1.5),
@@ -125,19 +129,13 @@ const styles = StyleSheet.create({
     borderColor: "#007BFF",
     marginTop: responsiveHeight(1.7),
     width: responsiveWidth(60),
-    padding: 1,
+    padding: responsiveHeight(0.1),
   },
 
   signoutButton: {
-    marginTop: responsiveHeight(1.7),
+    marginTop: responsiveHeight(1.9),
     width: responsiveWidth(40),
-    padding: 1,
-  },
-
-  settingButton: {
-    marginTop: responsiveHeight(1.7),
-    width: responsiveWidth(40),
-    padding: 1,
+    padding: responsiveHeight(0.1),
   },
   nameText: {
     fontSize: responsiveFontSize(2.3),
@@ -149,7 +147,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   headerText: {
-    fontSize: responsiveFontSize(1.9),
+    fontSize: responsiveFontSize(1.5),
     marginBottom: responsiveHeight(2.5),
   },
   container: {
@@ -163,7 +161,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalView: {
-    margin: 20,
+    margin: responsiveHeight(2),
     backgroundColor: "#fff",
     borderRadius: 20,
     padding: responsiveHeight(1),
@@ -171,14 +169,13 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 5,
-      height: 9,
+      height: responsiveHeight(2),
     },
     shadowOpacity: 0.4,
     shadowRadius: 4,
     width: responsiveWidth(80),
-    height: responsiveHeight(43),
+    height: responsiveHeight(40),
   },
-
   cancelButton: {
     position: "absolute",
     top: 0,
@@ -197,11 +194,9 @@ export default SelectionModal;
 // Setting
 // </Button>
 
-
 // <View style={styles.bottomContainer}>
 // <Text style={styles.bottomText}>Privacy Policy</Text>
 
 // <IconButton icon="circle" size={5} style={styles.dot} />
 // <Text style={styles.bottomText}>Terms of Service</Text>
 // </View>
-

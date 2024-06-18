@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
@@ -15,18 +14,14 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation ,useFocusEffect} from "@react-navigation/native";
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
-import axios from "axios";
 import {styles} from "./PlantationDetailsStyles";
-
-
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
-import AlertButton from "../../components/AlertButton";
 import AxiosInstance from "../../AxiosInstance";
 
 export default function PlantationDetails({ route }) {
 
-  const { id } = route.params;
+  const { id , item } = route.params;
   const [numberOfPlants, setnumberOfPlants] = useState(null);
   const [PlantationDensity, setPlantDensity] = useState(null);
   const [textPlant, setTextPlant] = useState(textPlant);
@@ -48,17 +43,20 @@ export default function PlantationDetails({ route }) {
           setTextRowSpace(response.data.rowSpace);
           setArea(response.data.area);
           setPerimeter(response.data.perimeter);
+          console.log('numberOfPlants:', response.data.numberOfPlants);
+          console.log('PlantDensity:', response.data.PlantDensity);
         }
         catch (error) {
           console.error(error);
         }
     };
   
-    useFocusEffect(
-      useCallback(() => {
-        fetchData(id);
-      }, [id])
-    );
+   //Refresh the screen
+   useFocusEffect(
+    useCallback(() => {
+      fetchData(id);
+    }, [id])
+  );
 
 
 
@@ -90,12 +88,9 @@ export default function PlantationDetails({ route }) {
             onPress: async () => {
               try {
                 await PlantationDelete(id);
-                Alert.alert('Success', 'Plantation deleted successfully.');
-                navigation.navigate('TemplateView', { id: id, Area: area, Perimeter: perimeter });
+                navigation.navigate('Plantation', { id: id, area: area, perimeter: perimeter,item: item  });
               } catch (error) {
-                // Show detailed error message
                 const errorMessage = error.response ? error.response.data.message : error.message;
-                Alert.alert('Error', `Failed to delete fence: ${errorMessage}`);
               }
             },
           },
@@ -206,20 +201,21 @@ export default function PlantationDetails({ route }) {
     
   
   `;
-  const handleIconPress = () => {
-    // Display an alert message when the icon is pressed
-    Alert.alert(
-      "Important",
-      "This is an estimated count for the given details , allowing for a variance of +/- 10 plants from the actual value for flexibility and potential contingencies. ou pressed the icon!",
-      [
-        {
-          text: "OK",
-          onPress: () => console.log("OK Pressed"),
-        },
-      ],
-      { cancelable: false }
-    );
-  };
+
+  // const handleIconPress = () => {
+  //   // Display an alert message when the icon is pressed
+  //   Alert.alert(
+  //     "Important",
+  //     "This is an estimated count for the given details , allowing for a variance of +/- 10 plants from the actual value for flexibility and potential contingencies. ou pressed the icon!",
+  //     [
+  //       {
+  //         text: "OK",
+  //         onPress: () => console.log("OK Pressed"),
+  //       },
+  //     ],
+  //     { cancelable: false }
+  //   );
+  // };
 
   const navigation = useNavigation();
   const handleFertilization = () => {

@@ -1,4 +1,4 @@
-import { StyleSheet, StatusBar, Platform } from 'react-native';
+import { StyleSheet,Platform } from 'react-native';
 
 import {
   responsiveFontSize,
@@ -10,9 +10,13 @@ export const styles = StyleSheet.create({
   testingText: {
     color: 'red',
   },
+  title_text: {
+    fontSize: responsiveFontSize(2.3),
+    marginLeft: responsiveWidth(-5),
+  },
 
   top_Bar: {
-    height: responsiveHeight(5),
+    height: responsiveHeight(6.5),
     backgroundColor: '#007BFF',
 
     ...Platform.select({
@@ -43,7 +47,7 @@ export const styles = StyleSheet.create({
     marginTop: responsiveHeight(2),
   },
   imageStyling: {
-    width: responsiveWidth(70),
+    width: responsiveWidth(82),
     height: responsiveHeight(35),
     borderRadius: 20,
   },
@@ -77,7 +81,7 @@ export const styles = StyleSheet.create({
   infoBlock: {
     backgroundColor: 'white',
     marginTop: responsiveHeight(2),
-    marginHorizontal: responsiveWidth(12),
+    marginHorizontal: responsiveWidth(9),
     borderRadius: 10,
     padding: responsiveWidth(3),
   },
