@@ -24,7 +24,7 @@ export default function Fertilizing(
     PerimeterUnitselectedValue,
     onBackToSidebar,
     textPlant,
-    PlantDensity,
+    calculatedPlantDensity,
     numberOfPlants
   }) {
  
@@ -67,52 +67,25 @@ const handleFrequencyChange = (selectedFrequency) => {
   };
 
  
-  const handleFertilizingDetails = async (e) => {
-
-    try {
-      // Validate required fields
-      if (
-
-        !textFertilizationNUmberoftime ||
-        !textFertilizationAmount ||
-        !textFertilizationType ||
-        !FertilizerAmountUnitselectedValue
-
-      ) {
-        throw new Error("Please fill in all fields");
-      }
-
-      setCurrentPage("fertilizingDetails");
-      setAnimatePage(true);
-      e.preventDefault();
-
-      // Prepare data for the request
-      const requestData = {
-        textPlant,
-        textFertilizationNUmberoftime,
-        textFertilizationAmount,
-        textFertilizationType,
-        FertilizerAmountUnitselectedValue
-
-
-      };
-
-      // Make POST request to the backend
-      const response = await axios.post(
-        "http://192.168.1.2:3000/api/fertilizers/fertilizers",
-        requestData
-      );
-
-      // Handle successful response
-      console.log("Response:", response.data);
-    } catch (error) {
-      // Handle errors
-      console.error("Error:", error.message);
-      alert("Error: " + error.message);
+  const handleFertilizingDetails = (e) => {
+    e.preventDefault();
+  
+    // Validate required fields
+    if (
+      !textFertilizationNUmberoftime ||
+      !textFertilizationAmount ||
+      !textFertilizationType ||
+      !FertilizerAmountUnitselectedValue
+    ) {
+      alert("Please fill in all fields");
+      return;
     }
+  
+    // Transition to the next page or section
+    setCurrentPage("FertilizingDetailsManual");
+    setAnimatePage(true);
   };
-
-  const handleBackClick = () => {
+    const handleBackClick = () => {
     setAnimatePage(false);
     setTimeout(() => {
       setCurrentPage(null);
@@ -159,7 +132,7 @@ const handleFrequencyChange = (selectedFrequency) => {
                 <GiGrassMushroom color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Density</p>
-                  <p style={styles.propertyValue}>{PlantDensity}/m<sup>2</sup></p>
+                  <p style={styles.propertyValue}>{calculatedPlantDensity}/m<sup>2</sup></p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -340,7 +313,7 @@ const handleFrequencyChange = (selectedFrequency) => {
         textFertilizationAmount={textFertilizationAmount}
         textFertilizationType={textFertilizationType}
         selectedFrequency={selectedFrequency}
-        PlantDensity={PlantDensity}
+        calculatedPlantDensity={calculatedPlantDensity}
         numberOfPlants={numberOfPlants}
         
         />)}

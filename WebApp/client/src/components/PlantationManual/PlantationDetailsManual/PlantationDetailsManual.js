@@ -214,7 +214,7 @@ export default function PlantationDetails({
           <FertilizingManual
             onBackToSidebar={handleBackClick}
             textPlant={textPlant}
-            
+            calculatedPlantDensity={calculatedPlantDensity}
             numberOfPlants={numberOfPlants}
             area={area}
             perimeter={perimeter}
