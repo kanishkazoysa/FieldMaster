@@ -3,7 +3,7 @@ import { MdArrowBack } from 'react-icons/md';
 import '../SavedTemplates/SavedTemplatesWeb.css';
 import Card from './Card';
 import { FaSearch } from 'react-icons/fa';
-import templatesList from './TemplatesList.js'; // import the templatesList
+import templatesList from './TemplatesList.js';
 
 const SavedTemplatesWeb = ({ onBackToSidebar, onCardClick }) => {
   return (
