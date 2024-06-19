@@ -4,8 +4,9 @@
 
 .innerDiv {
   margin: 5px;
+  height: 100%;
+  overflow: auto;
 }
-
 @media (min-width: 768px) {
   .card-image {
     width: 128px;
