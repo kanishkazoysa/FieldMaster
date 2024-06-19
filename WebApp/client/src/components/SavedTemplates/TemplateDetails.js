@@ -4,6 +4,7 @@ import { BiEdit } from 'react-icons/bi';
 import { PiPlantFill } from 'react-icons/pi';
 import { GiAxeInStump, GiWoodenFence } from 'react-icons/gi';
 import './TemplateDetails.css';
+import { TbContainer } from 'react-icons/tb';
 
 const TemplateDetails = ({ onBackToSidebar, template }) => {
   return (
@@ -55,6 +56,36 @@ const TemplateDetails = ({ onBackToSidebar, template }) => {
           <hr className='breaker' />
           <div className='div-04'>
             <p className='bold-text'>Land Info</p>
+            <div className='info-grid'>
+              <div className='info-container'>
+                <TbContainer className='info-icon' />
+                <div>
+                  <p>Line 1</p>
+                  <p>Line 2</p>
+                </div>
+              </div>
+              <div className='info-container'>
+                <BiEdit className='info-icon' />
+                <div>
+                  <p>Line 1</p>
+                  <p>Line 2</p>
+                </div>
+              </div>
+              <div className='info-container'>
+                <BiEdit className='info-icon' />
+                <div>
+                  <p>Line 1</p>
+                  <p>Line 2</p>
+                </div>
+              </div>
+              <div className='info-container'>
+                <BiEdit className='info-icon' />
+                <div>
+                  <p>Line 1</p>
+                  <p>Line 2</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -110,5 +110,22 @@ p {
 }
 
 .bold-text {
-  font-weight: 500px;
+  font-weight: 500;
+}
+
+.info-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.info-container {
+  display: flex;
+  width: 45%;
+  margin-bottom: 10px;
+}
+
+.info-icon {
+  margin-right: 10px;
 }
