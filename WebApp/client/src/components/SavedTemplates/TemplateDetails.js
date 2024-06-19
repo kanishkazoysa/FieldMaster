@@ -5,6 +5,9 @@ import { PiPlantFill } from 'react-icons/pi';
 import { GiAxeInStump, GiWoodenFence } from 'react-icons/gi';
 import './TemplateDetails.css';
 import { TbContainer } from 'react-icons/tb';
+import { HiChartPie } from 'react-icons/hi2';
+import { TbVector } from 'react-icons/tb';
+import { ImLocation2 } from 'react-icons/im';
 
 const TemplateDetails = ({ onBackToSidebar, template }) => {
   return (
@@ -60,31 +63,35 @@ const TemplateDetails = ({ onBackToSidebar, template }) => {
               <div className='info-container'>
                 <TbContainer className='info-icon' />
                 <div>
-                  <p>Line 1</p>
-                  <p>Line 2</p>
+                  <p>Type</p>
+                  <p className='bold-text'>{template.landType}</p>
                 </div>
               </div>
               <div className='info-container'>
-                <BiEdit className='info-icon' />
+                <HiChartPie className='info-icon' />
                 <div>
-                  <p>Line 1</p>
-                  <p>Line 2</p>
+                  <p>Area</p>
+                  <p className='bold-text'>{template.area}</p>
                 </div>
               </div>
               <div className='info-container'>
-                <BiEdit className='info-icon' />
+                <TbVector className='info-icon' />
                 <div>
-                  <p>Line 1</p>
-                  <p>Line 2</p>
+                  <p>Perimeter</p>
+                  <p className='bold-text'>{template.perimeter}</p>
                 </div>
               </div>
               <div className='info-container'>
-                <BiEdit className='info-icon' />
+                <ImLocation2 className='info-icon' />
                 <div>
-                  <p>Line 1</p>
-                  <p>Line 2</p>
+                  <p>Location</p>
+                  <p className='bold-text'>{template.location}</p>
                 </div>
               </div>
+            </div>
+            <div className='description-div'>
+              <p className='bold-text'>Description</p>
+              <p className='description-text'>{template.description}</p>
             </div>
           </div>
         </div>

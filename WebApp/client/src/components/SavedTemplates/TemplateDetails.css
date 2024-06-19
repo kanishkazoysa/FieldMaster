@@ -128,4 +128,18 @@ p {
 
 .info-icon {
   margin-right: 10px;
+  font-size: 25px;
+  margin-top: 5px;
+}
+
+.bold-text {
+  font-weight: 500;
+}
+
+.description-div {
+  margin-top: 10px;
+}
+
+.description-text {
+  margin-top: 10px;
 }
