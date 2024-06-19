@@ -5,7 +5,7 @@ import Card from './Card';
 import { FaSearch } from 'react-icons/fa';
 import templatesList from './TemplatesList.js'; // import the templatesList
 
-const SavedTemplatesWeb = ({ onBackToSidebar }) => {
+const SavedTemplatesWeb = ({ onBackToSidebar, onCardClick }) => {
   return (
     <>
       <div className='innerDiv'>
@@ -27,6 +27,7 @@ const SavedTemplatesWeb = ({ onBackToSidebar }) => {
                 templateName={template.templateName}
                 location={template.location}
                 date={template.date}
+                onClick={() => onCardClick(template)}
               />
             ))}
           </div>

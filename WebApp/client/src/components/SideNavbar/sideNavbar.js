@@ -11,12 +11,14 @@ import SavedTemplatesWeb from '../SavedTemplates/SavedTemplatesWeb.js';
 // import Fence from "../Fence/Fence/fence";
 import ClearLand from '../ClearLand/ClearLand/clearLand';
 import Plantation from '../Plantation/PlantationPage/plantation';
+import TemplateDetails from '../SavedTemplates/TemplateDetails.js';
 
 export default function SideNavbar() {
   const [collapsed, setCollapsed] = useState(true);
   const [hoveredMenuItem, setHoveredMenuItem] = useState(null);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
 
   const handleMouseEnter = (item) => {
     setHoveredMenuItem(item);
@@ -52,6 +54,11 @@ export default function SideNavbar() {
     setTimeout(() => {
       setCurrentPage(null);
     }, 300);
+  };
+
+  const handleCardClick = (template) => {
+    setSelectedTemplate(template);
+    setCurrentPage('TemplateDetails');
   };
 
   return (
@@ -123,7 +130,16 @@ export default function SideNavbar() {
             <Plantation onBackToSidebar={handleBackClick} />
           )}
           {currentPage === 'SavedTemplates' && (
-            <SavedTemplatesWeb onBackToSidebar={handleBackClick} />
+            <SavedTemplatesWeb
+              onBackToSidebar={handleBackClick}
+              onCardClick={handleCardClick}
+            />
+          )}
+          {currentPage === 'TemplateDetails' && (
+            <TemplateDetails
+              onBackToSidebar={handleBackClick}
+              template={selectedTemplate}
+            />
           )}
         </div>
       </div>
