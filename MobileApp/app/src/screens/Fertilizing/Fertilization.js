@@ -4,7 +4,6 @@ import {
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
