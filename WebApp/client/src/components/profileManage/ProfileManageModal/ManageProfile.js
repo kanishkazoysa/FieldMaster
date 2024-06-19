@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Avatar, Button, Box, TextField } from '@mui/material';
 
 const ManageProfileModal = ({ isOpen, onRequestClose, onBack }) => {
-  const [editProfilePhoto, setEditProfilePhoto] = useState(false);
+  const [setEditProfilePhoto] = useState(false);
 
   const handleEditProfilePhoto = () => {
     setEditProfilePhoto(true);
