@@ -61,6 +61,10 @@ export default function SideNavbar() {
     setCurrentPage('TemplateDetails');
   };
 
+  const handleBackFromTemplateDetails = () => {
+    setCurrentPage('SavedTemplates');
+  };
+
   return (
     <Sidebar
       collapsed={collapsed}
@@ -137,7 +141,7 @@ export default function SideNavbar() {
           )}
           {currentPage === 'TemplateDetails' && (
             <TemplateDetails
-              onBackToSidebar={handleBackClick}
+              onBackToSidebar={handleBackFromTemplateDetails}
               template={selectedTemplate}
             />
           )}
