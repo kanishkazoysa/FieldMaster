@@ -1,44 +1,100 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Avatar, Button, Box, TextField } from '@mui/material';
 
-const ManageProfileModal = ({ isOpen, onRequestClose }) => {
+const ManageProfileModal = ({ isOpen, onRequestClose, onBack }) => {
+  const [editProfilePhoto, setEditProfilePhoto] = useState(false);
+
+  const handleEditProfilePhoto = () => {
+    setEditProfilePhoto(true);
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div style={styles.modalOverlay}>
-      <div style={styles.modal}>
-        <button style={styles.closeButton} onClick={onRequestClose}>
-          &times;
-        </button>
-        {/* Render the new modal content here */}
-        <div>Manage Profile Modal Content</div>
+    <div style={styles.modalContent}>
+      <button style={styles.closeButton} onClick={onRequestClose}>
+        ×
+      </button>
+      <div style={styles.content}>
+        <div style={styles.avatarContainer}>
+          <Avatar
+            sx={{ width: 150, height: 150 }}
+            src="https://th.bing.com/th/id/OIP.pWAz6MVBo5svuJ09ahjN7gHaEK?rs=1&pid=ImgDetMain"
+          />
+          <Button variant="text" onClick={handleEditProfilePhoto}>
+            Edit Profile Photo
+          </Button>
+        </div>
+        <div style={styles.userInfo}>
+          <p>Kanishka Zoysa</p>
+          <p>kanishkazoysa1234@gmail.com</p>
+        </div>
+        <Box component="form" style={styles.form}>
+          <TextField
+            label="First Name"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            InputProps={{
+              inputProps: {
+                style: { height: '20px', padding: '-10px' },
+              },
+            }}
+          />
+          <TextField
+            label="Last Name"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            InputProps={{
+              inputProps: {
+                style: { height: '50px', padding: '10px' },
+              },
+            }}
+          />
+          <TextField
+            label="Email"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            InputProps={{
+              inputProps: {
+                style: { height: '50px', padding: '10px' },
+              },
+            }}
+          />
+          <TextField
+            label="Password"
+            type="password"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            InputProps={{
+              inputProps: {
+                style: { height: '50px', padding: '10px' },
+              },
+            }}
+          />
+          <Button variant="contained" color="primary" style={{ marginTop: '16px' }}>
+            Update
+          </Button>
+        </Box>
+        <Button variant="contained" color="primary" onClick={onBack} style={{ marginTop: '16px' }}>
+          Back
+        </Button>
       </div>
     </div>
   );
 };
 
 const styles = {
-  modalOverlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
+  modalContent: {
     width: '100%',
     height: '100%',
-    background: 'rgba(0, 0, 0, 0.5)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1000,
-  },
-  modal: {
-    background: "white",
-    borderRadius: "10px",
-    boxShadow: "0 0 10px rgba(0, 0, 0, 0.25)",
-    width: "25%",
-    height: "80%",
-    padding: "20px",
-    position: "relative",
-    transform: "scale(1)",
-    transition: "transform 3s ease-in-out",
+    flexDirection: 'column',
   },
   closeButton: {
     background: 'transparent',
@@ -48,6 +104,25 @@ const styles = {
     position: 'absolute',
     top: '10px',
     right: '10px',
+  },
+  content: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  avatarContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: '20px',
+  },
+  userInfo: {
+    marginBottom: '20px',
+    textAlign: 'center',
+  },
+  form: {
+    width: '60%',
   },
 };
 
