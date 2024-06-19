@@ -12,7 +12,6 @@ import {
 import { Polyline } from "react-native-maps";
 import {
   faLayerGroup,
-  faLocationCrosshairs,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { styles } from "./ResizeMapStyles";
@@ -20,12 +19,9 @@ import MapView, { MAP_TYPES } from "react-native-maps";
 import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import axios from "axios";
 import AxiosInstance from "../../../AxiosInstance";
 import Headersection from "../../../components/Headersection";
 import {
-  responsiveHeight,
-  responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 
