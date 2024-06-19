@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { View, Image, Text, ScrollView, StatusBar } from "react-native";
 import {
   responsiveFontSize,
-  responsiveHeight,
-  responsiveWidth,
 } from "react-native-responsive-dimensions";
 import { Appbar, ThemeProvider, TextInput } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
