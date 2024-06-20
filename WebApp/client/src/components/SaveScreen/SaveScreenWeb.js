@@ -53,7 +53,7 @@ const SaveScreenWeb = ({ onBackToSidebar }) => {
         <div className='save-button-div'>
           <button className='save-button'>
             <FaRegSave />
-            <p>save</p>
+            <p>Save</p>
           </button>
         </div>
       </div>

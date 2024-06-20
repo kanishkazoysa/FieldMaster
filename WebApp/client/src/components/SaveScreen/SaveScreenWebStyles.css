@@ -10,13 +10,14 @@
   justify-content: space-between;
   margin-top: 10px;
   margin-bottom: 10px;
+  padding: 0 10px;
 }
 
 .info-block {
   display: flex;
   align-items: center;
+  margin: 0 10px;
 }
-
 .info-icon {
   margin-right: 10px;
   top: 0;
@@ -53,6 +54,7 @@ p {
   border-bottom: 2px solid rgb(162, 162, 162);
   background: transparent;
   outline: none;
+  font-size: 12px;
 }
 
 .desc-block {
@@ -69,6 +71,8 @@ p {
   background: white;
   outline: none;
   margin-top: 10px;
+  width: 100%;
+  font-size: 12px;
 }
 
 .save-button-div {
