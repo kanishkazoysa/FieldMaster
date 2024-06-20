@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
@@ -8,20 +7,16 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-
-
-
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
-
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import {styles} from './FertilizingDetailsStyles';
+
+
 export default function FertilizationDetails({ route }) {
-
-
   const { params } = route;
   const { FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton,count,plantcount} = params;
   const [factorValue, setFactor] = useState(1);

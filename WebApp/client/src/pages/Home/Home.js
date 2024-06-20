@@ -2,9 +2,9 @@ import React, { useRef, useState, useCallback } from "react";
 import { GoogleMap, LoadScript, StandaloneSearchBox, Marker } from "@react-google-maps/api";
 import SideNavbar from "../../components/SideNavbar/sideNavbar";
 import { MdLocationOn, MdSearch } from "react-icons/md";
-import ProfileModal from "../../components/profileManage/ProfileModal";
-import Avatar from "../../components/profileManage/Avatar";
+import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
 import { styles, containerStyle, center } from './HomeStyles';
+import { Avatar } from "antd";
 
 export default function Home() {
   const mapRef = useRef(null);
