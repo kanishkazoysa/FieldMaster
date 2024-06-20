@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Avatar, Box } from "@mui/material";
 import { Divider, Form, Input, Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import logo from "../../../images/logo.png";
 
 const ManageProfileModal = ({ isOpen, onRequestClose, onBack }) => {
   const [setEditProfilePhoto] = useState(false);
@@ -18,8 +19,12 @@ const ManageProfileModal = ({ isOpen, onRequestClose, onBack }) => {
         ×
       </button>
       <div style={styles.headerContainer}>
-      <ArrowLeftOutlined style={styles.backicon} />
-      <p style={styles.headtxt}>Manage Your Profile</p>
+        <ArrowLeftOutlined style={styles.backicon} onClick={onBack} />
+        <img
+          src={logo}
+          alt="profile"
+          style={{ width: "100px", height: "40px", marginBottom: "-20px"}}
+        />
       </div>
       <Divider style={styles.divider} />
       <div style={styles.content}>
@@ -34,10 +39,7 @@ const ManageProfileModal = ({ isOpen, onRequestClose, onBack }) => {
           <p style={styles.emailtxt}>kanishkazoysa1234@gmail.com</p>
         </div>
         <Box component="form" style={styles.form}>
-          <Form
-            layout="vertical"
-            style={{ width: "100%",}}
-          >
+          <Form layout="vertical" style={{ width: "100%" }}>
             <Form.Item label="First Name" style={styles.formfeild}>
               <Input placeholder="First Name" style={styles.input} />
             </Form.Item>
@@ -65,7 +67,6 @@ const ManageProfileModal = ({ isOpen, onRequestClose, onBack }) => {
   );
 };
 
-
 const styles = {
   modalContent: {
     width: "100%",
@@ -92,8 +93,8 @@ const styles = {
   backicon: {
     position: "absolute",
     left: "10px",
-    alignItems: "center",
     fontSize: "17px",
+    top: "30px",
     cursor: "pointer",
   },
   headtxt: {
@@ -132,7 +133,7 @@ const styles = {
   },
   form: {
     width: "180%",
-    marginTop: "120px",
+    marginTop: "110px",
   },
   input: {
     height: "35px",
