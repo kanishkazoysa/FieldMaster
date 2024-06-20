@@ -9,7 +9,11 @@ import { HiChartPie } from 'react-icons/hi2';
 import { TbVector } from 'react-icons/tb';
 import { ImLocation2 } from 'react-icons/im';
 
-const TemplateDetails = ({ onBackToSidebar, template }) => {
+const TemplateDetails = ({
+  onBackToSidebar,
+  template,
+  onEditTemplateClick,
+}) => {
   return (
     <>
       <div className='main-div'>
@@ -22,7 +26,7 @@ const TemplateDetails = ({ onBackToSidebar, template }) => {
               <p>{template.date}</p>
             </div>
             <div className='column edit-icon-container'>
-              <BiEdit className='edit-icon' />
+              <BiEdit className='edit-icon' onClick={onEditTemplateClick} />
             </div>
           </div>
           <div className='div-02'>

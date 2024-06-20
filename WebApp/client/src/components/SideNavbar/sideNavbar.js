@@ -13,6 +13,7 @@ import ClearLand from '../ClearLand/ClearLand/clearLand';
 import Plantation from '../Plantation/PlantationPage/plantation';
 import TemplateDetails from '../SavedTemplates/TemplateDetails.js';
 import SaveScreenWeb from '../SaveScreen/SaveScreenWeb.js';
+import EditTemplateWeb from '../SavedTemplates/EditTemplateWeb.js';
 
 export default function SideNavbar() {
   const [collapsed, setCollapsed] = useState(true);
@@ -20,6 +21,7 @@ export default function SideNavbar() {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [isEditingTemplate, setIsEditingTemplate] = useState(false);
 
   const handleMouseEnter = (item) => {
     setHoveredMenuItem(item);
@@ -73,6 +75,10 @@ export default function SideNavbar() {
 
   const handleBackFromTemplateDetails = () => {
     setCurrentPage('SavedTemplates');
+  };
+
+  const handleEditTemplateClick = () => {
+    setCurrentPage('EditTemplateWeb');
   };
 
   return (
@@ -168,10 +174,19 @@ export default function SideNavbar() {
             <TemplateDetails
               onBackToSidebar={handleBackFromTemplateDetails}
               template={selectedTemplate}
+              onEditTemplateClick={handleEditTemplateClick}
             />
           )}
           {currentPage === 'SaveScreen' && (
             <SaveScreenWeb onBackToSidebar={handleBackClick} />
+          )}
+          {currentPage === 'EditTemplateWeb' && (
+            <EditTemplateWeb
+              onBackToSidebar={() => {
+                setCurrentPage('TemplateDetails');
+              }}
+              template={selectedTemplate}
+            />
           )}
         </div>
       </div>

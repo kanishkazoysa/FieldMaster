@@ -26,6 +26,7 @@
 
 .edit-icon {
   font-size: 20px;
+  cursor: pointer;
 }
 .templateName-text {
   font-weight: 500;
