@@ -1,24 +1,30 @@
-/* new resize map */
-
-import React, { useEffect, useState } from 'react';
-import { Polygon } from 'react-native-maps';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
-import { Appbar } from 'react-native-paper';
-import { Polyline } from 'react-native-maps';
-
+import React, { useEffect, useState } from "react";
+import { Polygon } from "react-native-maps";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+  StatusBar,
+} from "react-native";
+import { Polyline } from "react-native-maps";
 import {
   faLayerGroup,
-  faLocationCrosshairs,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { styles } from './ResizeMapStyles';
-import MapView, { MAP_TYPES } from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-import * as Location from 'expo-location';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import axios from 'axios';
-import AxiosInstance from '../../../AxiosInstance';
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { styles } from "./ResizeMapStyles";
+import MapView, { MAP_TYPES } from "react-native-maps";
+import { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AxiosInstance from "../../../AxiosInstance";
+import Headersection from "../../../components/Headersection";
+import {
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
+
 
 const ResizeMapScreen = ({ navigation, route }) => {
   const { templateId } = route.params;
@@ -35,7 +41,6 @@ const ResizeMapScreen = ({ navigation, route }) => {
   const mapRef = React.useRef(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
   const [isMarkerMoved, setIsMarkerMoved] = useState(false);
-  const [lastEnteredPoint, setLastEnteredPoint] = useState(null);
 
   const closeModal = () => {
     setModalVisible(false);
@@ -44,6 +49,8 @@ const ResizeMapScreen = ({ navigation, route }) => {
     setMapTypeIndex(index);
     setShowDropdown(false);
   };
+
+  //focuses the map on the current location of the user
   const focusOnCurrentLocation = () => {
     setSearchedLocation(null);
     setShowCurrentLocation((prevShowCurrentLocation) => {
@@ -60,12 +67,13 @@ const ResizeMapScreen = ({ navigation, route }) => {
     });
   };
 
+  //handling location and fetching template data
   useEffect(() => {
-    console.log('Template ID:', templateId);
+    console.log("Template ID:", templateId);
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access location was denied');
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
         return;
       }
       let location = await Location.getCurrentPositionAsync({
@@ -99,24 +107,21 @@ const ResizeMapScreen = ({ navigation, route }) => {
         })
         .catch((error) => {
           console.error(
-            'An error occurred while fetching the template:',
+            "An error occurred while fetching the template:",
             error
           );
         });
     })();
   }, []);
 
+  //remove last point from the array
   const handleUndoLastPoint = () => {
-    if (points.length > 0 && lastEnteredPoint) {
-      const newPoints = points.filter(
-        (point) =>
-          point.latitude !== lastEnteredPoint.latitude ||
-          point.longitude !== lastEnteredPoint.longitude
-      );
-      setPoints(newPoints);
-      setLastEnteredPoint(null); // Reset last entered point
+    if (points.length > 0) {
+      setPoints(points.slice(0, -1));
     }
   };
+
+  //save the updates points to the backend is a marker was moved
   const handleSaveMap = async () => {
     if (isMarkerMoved) {
       try {
@@ -144,6 +149,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
     }
   };
 
+  //update the point's coordinates when a marker is dragged to a new location
   const handleMarkerDragEnd = (event, index) => {
     const newPoints = [...points];
     newPoints[index] = event.nativeEvent.coordinate;
@@ -151,62 +157,24 @@ const ResizeMapScreen = ({ navigation, route }) => {
     setIsMarkerMoved(true);
   };
 
+  //select a map type
   const handleSetMapType = (type) => {
     selectMapType(type);
     setModalVisible(false);
   };
 
   const handleCancel = () => {
-    navigation.goBack();
+    navigation.navigate("SavedTemplatesScreen");
   };
   const mapTypes = [
-    { name: 'Satellite', value: 'satellite' },
-    { name: 'Standard', value: 'standard' },
-    { name: 'Hybrid', value: 'hybrid' },
-    { name: 'Terrain', value: 'terrain' },
+    { name: "Satellite", value: "satellite" },
+    { name: "Standard", value: "standard" },
+    { name: "Hybrid", value: "hybrid" },
+    { name: "Terrain", value: "terrain" },
   ];
 
   const toggleMapType = () => {
     setShowDropdown(!showDropdown);
-  };
-
-  const handleMapPress = (event) => {
-    if (!isButtonPressed) {
-      const newPoint = event.nativeEvent.coordinate;
-      setLastEnteredPoint(newPoint);
-      const newPoints = [...points, newPoint];
-      setPoints(newPoints);
-
-      if (newPoints.length > 3) {
-        let minDistance = Infinity;
-        let insertIndex = 0;
-
-        for (let i = 0; i < newPoints.length - 1; i++) {
-          const point1 = newPoints[i];
-          const point2 = newPoints[i + 1];
-
-          const dx1 = point1.latitude - newPoint.latitude;
-          const dy1 = point1.longitude - newPoint.longitude;
-          const dx2 = point2.latitude - newPoint.latitude;
-          const dy2 = point2.longitude - newPoint.longitude;
-
-          const distance = dx1 * dx1 + dy1 * dy1 + dx2 * dx2 + dy2 * dy2;
-
-          if (distance < minDistance) {
-            minDistance = distance;
-            insertIndex = i + 1;
-          }
-        }
-
-        // insert newPoint at insertIndex in the newPoints array
-        newPoints.splice(insertIndex, 0, newPoint);
-        newPoints.pop(); // remove the duplicate newPoint at the end
-        setPoints(newPoints);
-      } else {
-        setPoints(newPoints);
-      }
-    }
-    setIsMarkerMoved(true);
   };
   return (
     <>
@@ -219,9 +187,9 @@ const ResizeMapScreen = ({ navigation, route }) => {
         <View
           style={{
             flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
           }}
         >
           <View style={styles.centeredView}>
@@ -249,21 +217,24 @@ const ResizeMapScreen = ({ navigation, route }) => {
         </View>
       </Modal>
       <View>
-        <Appbar.Header style={{ backgroundColor: '#007BFF' }}>
-          <Appbar.BackAction color="#ffffff" onPress={handleCancel} />
-          <Appbar.Content title="Resize Map" color="#ffffff" />
-        </Appbar.Header>
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <Headersection
+          navigation={navigation}
+          title="Resize Map"
+        ></Headersection>
       </View>
-      {/* including map view */}
       {region && (
         <View style={{ flex: 1 }}>
           <MapView
             ref={mapRef}
             style={{ flex: 1, paddingTop: 100 }}
             region={region}
-            showsUserLocation={false}
             mapType={mapTypes[mapTypeIndex].value}
-            onPress={handleMapPress}
+            onPress={(event) => {
+              if (!isButtonPressed) {
+                setPoints([...points, event.nativeEvent.coordinate]);
+              }
+            }}
             mapPadding={{ top: 0, right: -100, bottom: 0, left: 0 }}
           >
             {points.map((point, index) => (
@@ -272,9 +243,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
                 coordinate={point}
                 draggable
                 onDragEnd={(e) => handleMarkerDragEnd(e, index)}
-              >
-                <View style={styles.markerStyle} />
-              </Marker>
+              />
             ))}
             {!isPolygonComplete && points.length > 1 && (
               <Polyline
@@ -300,7 +269,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
               toggleMapType();
             }}
           >
-            <FontAwesomeIcon icon={faLayerGroup} size={25} color="#fff" />
+            <FontAwesomeIcon icon={faLayerGroup} size={responsiveFontSize(3)} color="#fff" />
             {showDropdown && (
               <View style={styles.dropdownContainer}>
                 <FlatList
@@ -310,7 +279,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
                       style={styles.dropdownItem}
                       onPress={() => selectMapType(index)}
                     >
-                      <Text style={{ color: '#fff' }}>{item.name}</Text>
+                      <Text style={{ color: "#fff" }}>{item.name}</Text>
                     </TouchableOpacity>
                   )}
                   keyExtractor={(item) => item.value}
@@ -318,16 +287,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
               </View>
             )}
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button2}
-            onPress={focusOnCurrentLocation}
-          >
-            <FontAwesomeIcon
-              icon={faLocationCrosshairs}
-              size={25}
-              color="#fff"
-            />
-          </TouchableOpacity>
+          
           <View>
             <View style={styles.sideIconWrap}>
               <TouchableWithoutFeedback
@@ -336,7 +296,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
               >
                 <MaterialCommunityIcons
                   name="arrow-u-left-top"
-                  size={24}
+                  size={responsiveFontSize(3)}
                   color="white"
                   style={styles.sideIconStyle}
                   onPress={handleUndoLastPoint}

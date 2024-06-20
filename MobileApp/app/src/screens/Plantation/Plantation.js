@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
@@ -9,26 +8,22 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-
-
 import React, { useState, useEffect } from "react";
 import { Keyboard } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
-import { useNavigation ,useRoute } from "@react-navigation/native";//
+import { useNavigation} from "@react-navigation/native";
 import {styles} from "./PlantationStyles";
-
-import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
-
-//Data submission to the backend API is implemented using axios
-import axios from "axios";
 import AxiosInstance from "../../AxiosInstance";
+import { Appbar } from "react-native-paper";
 
-export default function Plantation() {
 
+
+export default function Plantation({route}) {
+  const{id,area,perimeter,item} =  route.params;
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
+  console.log(id,area, perimeter);
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -49,23 +44,15 @@ export default function Plantation() {
     };
   }, []);
 
-
+  
   const [textPlant, setTextPlant] = useState("");
   const [textplantspace, setTextPlantSpace] = useState("");
   const [textRowspace, setTextRowSpace] = useState("");
 
   const navigation = useNavigation();
-  const route = useRoute(); // get route
-  const { area, perimeter } = route.params; // get area and perimeter from previous page
-
-  //print area and perimeter
-  console.log(area, perimeter);
 
   const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] =
     useState(null);
-  const [RowSpacingUnitselectedValue, RowSpacingUnitSetSelectedValue] =
-    useState(null);
-
   const PlantSpaceUnitPlaceholder = {
     label: "M",
     value: null,
@@ -90,45 +77,35 @@ export default function Plantation() {
   ];
 
   //handles submission of plantation details and navigation to PlantationDetails
-  const handlePlantationDetails = () => {
+  const handlePlantationDetails = async () => {
     if (
       !textPlant ||
       !textplantspace ||
       !textRowspace ||
       !PlantSpaceUnitselectedValue
-
     ) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
-    AxiosInstance.post("/api/plantation/plantation", {
-      textPlant,
-      textplantspace,
-      textRowspace,
-      PlantSpaceUnitselectedValue
-    })
-      .then(async (response) => {
-        console.log(response.data);
+  
+    try {
+      const response = await AxiosInstance.post("/api/plantation/plantation", {
+        textPlant,
+        textplantspace,
+        textRowspace,
+        PlantSpaceUnitselectedValue,
+        id ,
 
-      })
-      .catch((error) => {
-        console.error(error);
-        Alert.alert("Error", "Something went wrong");
-
-      })
-      navigation.navigate("PlantationDetails", {
-        textPlant: textPlant,
-        selectedValue: PlantSpaceUnitselectedValue,
-        textplantspace: textplantspace,
-        textRowspace: textRowspace,
-        selectedValue1: RowSpacingUnitselectedValue,
       });
-
-  }
-
-
-
-//navigating to the "PlantationDetails" screen while passing some data as route parameters
+      console.log(id);
+      navigation.navigate("PlantationDetails", { id: id ,item: item});
+    } catch (error) {
+      console.error("Error:", error.response?.data || error.message);
+      Alert.alert("Error", "Something went wrong");
+    }
+  };
+  
+ 
   
 
 return (
@@ -141,7 +118,17 @@ return (
     <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
     {/*Header section*/}
-    <Headersection navigation={navigation} title="Plantation" />
+    <View>
+      <Appbar.Header style={styles.header}>
+        <Appbar.BackAction
+          onPress={() => navigation.navigate("TemplateView",{item : item})}
+          color="white"
+        />
+        <View style={{marginTop:40,left:10,width:"70%"}}>
+        <Text style={styles.headerText}>Plantation</Text>
+        </View>
+      </Appbar.Header>
+    </View>
 
     <ScrollView contentContainerStyle={styles.scrollContent}>
       {/* Top section */}
@@ -166,7 +153,7 @@ return (
               />
               <View style={styles.propertyDetails}>
                 <Text style={styles.propertyLabel}>Area</Text>
-                <Text style={styles.propertyValue}>2 acres</Text>
+                <Text style={styles.propertyValue}>{area} acres</Text>
               </View>
             </View>
           </View>
@@ -285,7 +272,7 @@ return (
       {!isKeyboardVisible && (
         <View style={styles.bottom}>
           <CustomButton
-            onPress={handlePlantationDetails}
+            onPress={id ? handlePlantationDetails : handlePlantationDetailsFromManualCalculator}
             text="Calculate Plantation"
             iconName="calculator"
             iconColor="white"
@@ -297,4 +284,3 @@ return (
   </KeyboardAvoidingView>
 );
 }
-

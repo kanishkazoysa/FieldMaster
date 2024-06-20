@@ -12,13 +12,13 @@ import { styles } from "./SavedTemplatesScreenStyles";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useFocusEffect } from "@react-navigation/native";
 import AxiosInstance from "../../../AxiosInstance";
-import Headersection from "../../../components/Headersection";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 const CustomEditIcon = (props) => {
   <MaterialCommunityIcons
     {...props}
     name="square-edit-outline"
-    size={25}
+    size={responsiveFontSize(3.5)}
     color="#65676B"
   />;
 };
@@ -26,7 +26,7 @@ const CustomDeleteIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
     name="trash-can-outline"
-    size={25}
+    size={responsiveFontSize(3)}
     color="#65676B"
   />
 );
@@ -79,8 +79,16 @@ const SavedTemplatesScreen = ({ navigation }) => {
         {/* Static section at the top */}
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
-        {/*Header section*/}
-        <Headersection navigation={navigation} title="Saved Templates" />
+        <Appbar.Header style={styles.header}>
+          <Appbar.BackAction
+            onPress={() => navigation.navigate("Home")}
+            color="white"
+          />
+          <Appbar.Content
+            title="Saved Templates"
+            titleStyle={styles.title_text}
+          />
+        </Appbar.Header>
       </View>
       <View style={styles.low_outer}>
         {/* template */}
@@ -122,18 +130,21 @@ const SavedTemplatesScreen = ({ navigation }) => {
                     </TouchableOpacity>
                     <View style={styles.col_03}>
                       <TouchableOpacity
+                        style={styles.icon_style}
                         onPress={() => {
                           navigation.navigate("EditTemplate", { item: item });
                         }}
                       >
                         <MaterialCommunityIcons
                           name="square-edit-outline"
-                          size={25}
+                          size={responsiveFontSize(2.7)}
                           color="#65676B"
                         />
                       </TouchableOpacity>
 
-                      <CustomDeleteIcon onPress={() => handleDelete(item)} />
+                      <TouchableOpacity  style={styles.icon_style1} onPress={() => handleDelete(item)}>
+                        <CustomDeleteIcon />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </TouchableOpacity>

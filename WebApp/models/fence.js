@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 
 const fenceSchema = mongoose.Schema(
-    {
+    {   Id: {
+            type: String,
+        },
         FenceType: {
             type: String,
         },
