@@ -1,15 +1,36 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
 import { Link } from "react-router-dom";
-
+import axios from "axios";
+import "./RegisterStyle.css";
 
 const RegisterForm = () => {
   const onFinish = (values) => {
-    console.log("Received values of form:", values);
+    const { firstName, lastName, email, password } = values;
+
+    axios
+      .post("/api/users/register", {
+        fName: firstName,
+        lName: lastName,
+        email,
+        password,
+      })
+      .then(() => {
+        window.location.href = "/login";
+      })
+      .catch((error) => {
+        console.error("There was an error registering the user!", error);
+      });
   };
 
   return (
     <div className="register-form-container">
+      <div className="form-header">
+        <h3>Sign Up</h3>
+        <p>Welcome back! Please enter your details</p>
+      </div>
+      <br />
+
       <Form
         name="register"
         initialValues={{
@@ -18,6 +39,7 @@ const RegisterForm = () => {
         onFinish={onFinish}
         autoComplete="off"
       >
+        <label>First Name</label>
         <Form.Item
           name="firstName"
           rules={[
@@ -30,6 +52,7 @@ const RegisterForm = () => {
           <Input placeholder="First Name" />
         </Form.Item>
 
+        <label>Last Name</label>
         <Form.Item
           name="lastName"
           rules={[
@@ -42,6 +65,7 @@ const RegisterForm = () => {
           <Input placeholder="Last Name" />
         </Form.Item>
 
+        <label>Email</label>
         <Form.Item
           name="email"
           rules={[
@@ -57,7 +81,7 @@ const RegisterForm = () => {
         >
           <Input placeholder="Email" />
         </Form.Item>
-
+        <label>Password</label>
         <Form.Item
           name="password"
           rules={[
@@ -69,7 +93,7 @@ const RegisterForm = () => {
         >
           <Input.Password placeholder="Password" />
         </Form.Item>
-
+        <label>Confirm Password</label>
         <Form.Item
           name="confirmPassword"
           rules={[
@@ -94,7 +118,7 @@ const RegisterForm = () => {
 
         <Form.Item>
           <Button type="primary" htmlType="submit" className="register-button">
-            Register
+            Sign Up
           </Button>
         </Form.Item>
 
