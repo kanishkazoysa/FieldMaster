@@ -33,6 +33,12 @@ export const styles = {
       outline: 'none',
       fontSize: '14px',
     },
+    avatar: {
+      backgroundColor: '#87d068',
+      position: 'absolute',
+      right: '0.5%',
+      top: '2.5%',
+    },
 
     '@media (max-width: 1024px)': {
       sidebar: {
@@ -42,9 +48,6 @@ export const styles = {
         width: '85%',
         right: '10%',
       },
-      avatar: {
-        right: '10%',
-      },
     },
     '@media (max-width: 768px)': {
       sidebar: {
@@ -52,10 +55,6 @@ export const styles = {
       },
       searchContainer: {
         width: '90%',
-        right: '5%',
-        top: '4%',
-      },
-      avatar: {
         right: '5%',
         top: '4%',
       },
@@ -71,11 +70,6 @@ export const styles = {
         top: '4%',
         padding: '0 8px',
       },
-      avatar: {
-        right: '2%',
-        top: '4%',
-        fontSize: '24px',
-      },
     },
     '@media (max-width: 320px)': {
       sidebar: {
@@ -87,11 +81,6 @@ export const styles = {
         right: '2%',
         top: '4%',
         padding: '0 5px',
-      },
-      avatar: {
-        right: '2%',
-        top: '4%',
-        fontSize: '20px',
       },
     },
   };

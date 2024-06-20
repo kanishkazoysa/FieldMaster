@@ -11,12 +11,6 @@ import {
 
 import { Link, useSearchParams } from "react-router-dom";
 
-// // import theme from "../../HomlyTheme";
-// import "./UserStyle.css";
-
-// import errEmailImg from '../../Assets/images/error-email.jpg'
-// import verifiedEmailImg from '../../Assets/images/verified-email.jpg'
-
 const EmailVerified = () => {
   const [queryParameters] = useSearchParams();
   const [details, setDetails] = useState({
