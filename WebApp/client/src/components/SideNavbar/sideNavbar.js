@@ -12,6 +12,7 @@ import SavedTemplatesWeb from '../SavedTemplates/SavedTemplatesWeb.js';
 import ClearLand from '../ClearLand/ClearLand/clearLand';
 import Plantation from '../Plantation/PlantationPage/plantation';
 import TemplateDetails from '../SavedTemplates/TemplateDetails.js';
+import SaveScreenWeb from '../SaveScreen/SaveScreenWeb.js';
 
 export default function SideNavbar() {
   const [collapsed, setCollapsed] = useState(true);
@@ -43,6 +44,15 @@ export default function SideNavbar() {
 
   const handleSavedTemplatesClick = () => {
     setCurrentPage('SavedTemplates');
+    setAnimatePage(true);
+    if (collapsed) {
+      setCollapsed(false);
+    }
+  };
+
+  const handleSaveScreenClick = () => {
+    setCurrentPage('SaveScreen');
+    console.log('clicked save screen');
     setAnimatePage(true);
     if (collapsed) {
       setCollapsed(false);
@@ -112,6 +122,21 @@ export default function SideNavbar() {
               <IoBookmarks fontSize={18} style={{ marginRight: '15px' }} />
               {!collapsed && 'Templates'}
             </MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleSaveScreenClick();
+              }}
+              onMouseEnter={() => handleMouseEnter('SaveScreen')}
+              onMouseLeave={handleMouseLeave}
+              style={{
+                ...styles.menuItem,
+                ...(hoveredMenuItem === 'SaveScreen'
+                  ? styles.hoveredMenuItem
+                  : {}),
+              }}
+            >
+              {!collapsed && 'SaveScreen'}
+            </MenuItem>
           </Menu>
         )}
         <div
@@ -144,6 +169,9 @@ export default function SideNavbar() {
               onBackToSidebar={handleBackFromTemplateDetails}
               template={selectedTemplate}
             />
+          )}
+          {currentPage === 'SaveScreen' && (
+            <SaveScreenWeb onBackToSidebar={handleBackClick} />
           )}
         </div>
       </div>
