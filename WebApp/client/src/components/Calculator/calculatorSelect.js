@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { MdArrowBack } from "react-icons/md";
-import { PiTreeEvergreenFill } from "react-icons/pi";
 import { PiTreePalmFill } from "react-icons/pi";
 import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
