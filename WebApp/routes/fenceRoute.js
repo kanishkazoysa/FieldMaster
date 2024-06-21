@@ -152,7 +152,7 @@ router.post("/fenceFromManualcal", async (req, res) => {
       inputValuePostspace,
       PostSpaceUnitselectedValue,
       displayValues,
-      fenceAmountsArray,
+      fenceAmountsArray, 
       fenceLengthsArray,
       Perimeter,
     } = req.body;

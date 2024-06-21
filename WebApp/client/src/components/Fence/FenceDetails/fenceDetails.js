@@ -80,7 +80,7 @@ export default function FenceDetails({
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Update it!"
+      confirmButtonText: "Yes"
     }).then((result) => {
       if (result.isConfirmed) {
         try {
