@@ -7,11 +7,7 @@ import logo from "../../images/logo.png";
 import { IoBookmarks } from "react-icons/io5";
 import { RiWalkFill } from "react-icons/ri";
 import StartMeasurePage from '../MeasureOption/measureOption.js';
-import SavedTemplates from '../SavedTemplates/savedTemplates.js';
-// import Fence from "../Fence/Fence/fence";
 import ClearLand from "../ClearLand/ClearLand/clearLand";
-
-import Plantation from "../Plantation/PlantationPage/plantation";
 
 export default function SideNavbar() {
   const [collapsed, setCollapsed] = useState(true);
