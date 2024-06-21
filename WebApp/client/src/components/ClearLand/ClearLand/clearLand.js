@@ -23,9 +23,7 @@ export default function ClearLand({ onBackToSidebar }) {
   const [perimeter, setPerimeter] = useState("1.5");
   const [area, setArea] = useState("100");
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
-  const [plantTypeSelectedValue1, setPlantTypeSelectedValue1] = useState(null);
   const [stoneTypeSelectedValue, setStoneTypeSelectedValue] = useState(null);
-  const [stoneTypeSelectedValue1, setStoneTypeSelectedValue1] = useState(null);
   const [pressed, setPressed] = useState(null);
   const [plantCount, setPlantCount] = useState("");
   const [stonesCount, setStonesCount] = useState("");
