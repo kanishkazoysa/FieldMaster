@@ -1,8 +1,6 @@
 // SideNavbar.js
-import React, { useState, useRef } from "react";
-import { FaBars } from "react-icons/fa";
+import React, { useState} from "react";
 import { MdArrowBack } from "react-icons/md";
-import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { BsBoundingBox } from "react-icons/bs";
 import {
