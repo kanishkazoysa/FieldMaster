@@ -4,7 +4,7 @@ import Logo from '../../../images/logo.png';
 
 const RegisterPage = () => {
   return (
-    <div className='left-container'>
+    <div className='register-page'>
     <div className='logo'>
     <img
       alt="logo"
@@ -12,7 +12,9 @@ const RegisterPage = () => {
     src={Logo}
     />
     </div>
-    <RegisterForm />
+    <div className="left-container">
+      <RegisterForm />
+    </div>
     </div>
   )
 }

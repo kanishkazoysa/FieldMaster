@@ -79,3 +79,42 @@ code {
     display: none;
   }
 }
+
+
+
+/* fonts */
+
+@font-face {
+  font-family: "SF Pro Display-Regular";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./fonts/SFPro-Display-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "SF Pro Display-Medium";
+  font-style: normal;
+  font-weight: 500;
+  src: url("./fonts/SFPro-Medium.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "SF Pro Display-Bold";
+  font-style: normal;
+  font-weight: 500;
+  src: url("./fonts/SFPro-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "SF Pro Display-Italic";
+  font-style: normal;
+  src: url("./fonts/SF\ Pro\ Display\ Italic.ttf") format("truetype");
+}
+
+/* headers */
+
+h3 {
+  font-family: "SF Pro Display-Medium";
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
