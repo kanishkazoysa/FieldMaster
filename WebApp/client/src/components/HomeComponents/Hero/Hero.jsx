@@ -1,6 +1,5 @@
 import React from "react";
 import "./Hero.css";
-import { Button } from "@mui/material";
 import video1 from "../../../assets/home_video.mp4";
 import GetStarted from "../../GetStarted"; // Renamed to avoid collision
 
