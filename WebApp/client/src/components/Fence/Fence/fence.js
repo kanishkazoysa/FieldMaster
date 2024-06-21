@@ -6,15 +6,18 @@ import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import {  BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
+import Swal from 'sweetalert2'
 
 import { styles } from "./fenceStyles";
 import Select from "react-select";
 // import AxiosInstance from "../../../AxiosInstance";
 import axios from "axios";
 import FenceDetails from "../FenceDetails/fenceDetails";
+import AxiosInstance from "../../../AxiosInstance";
 
 export default function Fence({ onBackToSidebar }) {
-  const [perimeter, setPerimeter] = useState("1.5");
+  const [id , setId] = useState("666e8ac30a184824d6a03eaa");
+  const [Perimeter, setPerimeter] = useState("1.5");
   const [area, setArea] = useState("100");
   const [FenceTypeselectedValue, setFenceTypeselectedValue] = useState(null);
   const [FenceTypeselectedValue1, setFenceTypeselectedValue1] = useState(null);
@@ -56,9 +59,42 @@ export default function Fence({ onBackToSidebar }) {
 
   const handleAdd = () => {
     if (!inputValueFenceLength.trim() || !inputValueFenceAmount.trim()) {
-      alert("Please fill both input fields");
+      Swal.fire("Please fill both input fields");
       return;
     }
+
+    if (inputValueFenceLength === null || inputValueFenceLength === '') {
+      Swal.fire("Error: Please enter a valid Length");  
+      return;
+    }
+
+    if (inputValueFenceLength.includes(".") && inputValueFenceLength.split(".").length > 2) {
+      Swal.fire("Error: Invalid float number");      
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(inputValueFenceLength)) {
+      Swal.fire("Error: Length must be a float or decimal number");      
+      return;
+    }
+
+    if (inputValueFenceAmount === null || inputValueFenceAmount === '') {
+      Swal.fire("Error: Please enter a valid Count");      
+      return;
+    }
+
+    if (inputValueFenceAmount.includes(".") && inputValueFenceAmount.split(".").length > 2) {
+      Swal.fire("Error: Invalid decimal number");      
+      return;
+    }
+
+    const regex2 = /^\d+$/; // allow only decimal numbers
+    if (!regex2.test(inputValueFenceAmount)) {
+      Swal.fire("Error: Count must be a decimal number");      
+      return;
+    }
+
     const length = parseFloat(inputValueFenceLength);
     const amount = parseInt(inputValueFenceAmount);
     setFenceLengthsArray([...fenceLengthsArray, length]);
@@ -86,46 +122,50 @@ export default function Fence({ onBackToSidebar }) {
   };
 
   const handleFenceDetails = async (e) => {
-    
-    try {
 
-      
-      // Validate required fields
-      if (
-        !PostSpaceUnitselectedValue ||
-        !FenceTypeselectedValue ||
-        !inputValuePostspace
-      ) {
-        throw new Error("Please fill in all fields");
-      }
+       // Validate the data
+    if (!PostSpaceUnitselectedValue || !FenceTypeselectedValue || !inputValuePostspace) {
+      Swal.fire("Error: Please fill in all fields");
+      return;
+    }
 
+    if (inputValuePostspace === null || inputValuePostspace === '') {
+      Swal.fire("Error: Please enter a valid Post Space");
+      return;
+    }
+
+    if (inputValuePostspace.includes(".") && inputValuePostspace.split(".").length > 2) {
+      Swal.fire("Error: Invalid float number");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow decimal and float numbers
+    if (!regex.test(inputValuePostspace)) {
+      Swal.fire("Error: Please enter a valid Post Space");
+      return;
+    }
+
+    AxiosInstance.post("/api/fence/fence", {
+      id,
+      FenceTypeselectedValue,
+      inputValuePostspace,
+      PostSpaceUnitselectedValue,
+      displayValues,
+      fenceAmountsArray,
+      fenceLengthsArray,
+      Perimeter,
+    })
+     .then((response) => {
+        // If backend response is successful, navigate to detail page
       setCurrentPage("FenceDetails"); // Update this line
       setAnimatePage(true);
       e.preventDefault();
 
-      // Prepare data for the request
-      const requestData = {
-        FenceTypeselectedValue,
-        inputValuePostspace,
-        PostSpaceUnitselectedValue,
-        displayValues,
-        fenceAmountsArray,
-        fenceLengthsArray,
-      };
-
-      // Make POST request to the backend
-      const response = await axios.post(
-        "http://192.168.52.237:3000/api/fence/fence",
-        requestData
-      );
-
-      // Handle successful response
-      console.log("Response:", response.data);
-    } catch (error) {
-      // Handle errors
-      console.error("Error:", error.message);
-      alert("Error: " + error.message);
-    }
+      })
+     .catch((error) => {
+        console.error("Error:", error.response.data);
+        alert("Error", "Failed to create fence. Please try again.");
+      });
   };
 
   const handleBackClick = () => {
@@ -149,6 +189,7 @@ export default function Fence({ onBackToSidebar }) {
           </div>
 
           {/* first box */}
+          
 
           <div style={styles.Box1}>
             <p style={styles.titleText}>Land Info</p>
@@ -157,7 +198,7 @@ export default function Fence({ onBackToSidebar }) {
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{perimeter}Km</p>
+                  <p style={styles.propertyValue}>{Perimeter}Km</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -314,6 +355,7 @@ export default function Fence({ onBackToSidebar }) {
         {currentPage === "FenceDetails" && (
           <FenceDetails
             onBackToSidebar={handleBackClick}
+            id={id}
             inputValuePostspace={inputValuePostspace}
             displayValues={displayValues}
             PostSpaceUnitselectedValue={PostSpaceUnitselectedValue}

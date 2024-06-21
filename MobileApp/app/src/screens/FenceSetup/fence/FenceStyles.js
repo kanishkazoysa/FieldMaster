@@ -276,7 +276,7 @@ export const styles = StyleSheet.create({
     },
   
     linetextinput: {
-      width: responsiveWidth(32),
+      width: responsiveWidth(35),
     },
   
     Box4InnerBottom: {

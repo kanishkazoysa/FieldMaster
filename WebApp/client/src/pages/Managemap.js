@@ -77,7 +77,7 @@ const Managemap = () => {
       <div style={{ height: "100vh" }}>
         <SideNavbar />
       </div>
-      <LoadScript googleMapsApiKey="YOUR_API_KEY" libraries={["places"]}>
+      <LoadScript googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U" libraries={["places"]}>
         <GoogleMap
           ref={mapRef}
           mapContainerStyle={{ width: "100%", height: "100vh" }}
