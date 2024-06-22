@@ -1,23 +1,34 @@
 import React from "react";
-import { Form, Input, Button } from "antd";
-import { Link } from "react-router-dom";
+import { Form, Input, Button, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../Register/RegisterStyle.css";
 
 const LoginForm = () => {
+  const navigate = useNavigate(); // Use useNavigate hook
+
   const onFinish = (values) => {
     const { email, password } = values;
-
+    
     axios
       .post("/api/users/login", {
         email,
         password,
       })
       .then(() => {
-        window.location.href = "/Home";
+        // Use navigate for redirection after successful login
+        navigate('/Home', { replace: true, state: { loginSuccess: true } });
+        // No need to show message here, it will be handled in Home component
       })
       .catch((error) => {
-        console.error("There was an error login !", error);
+        if (error.response && error.response.data && error.response.data.error) {
+          // Displaying the error message using antd message component
+          message.error(error.response.data.error);
+        } else {
+          // Fallback error message if the expected structure is not found
+          message.error("An unexpected error occurred. Please try again.");
+        }
+        console.error("There was an error during login!", error);
       });
   };
 
