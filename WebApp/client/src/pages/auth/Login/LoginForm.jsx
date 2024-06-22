@@ -57,6 +57,7 @@ const LoginForm = () => {
       >
         <label>Email</label>
         <Form.Item
+      hasFeedback
           name="email"
           rules={[
             {
@@ -73,6 +74,7 @@ const LoginForm = () => {
         </Form.Item>
         <label>Password</label>
         <Form.Item
+        hasFeedback
           name="password"
           rules={[
             {
