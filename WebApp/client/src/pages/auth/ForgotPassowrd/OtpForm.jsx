@@ -1,7 +1,6 @@
 import React from "react";
-
-import { Form, Input, Button, message } from "antd";
-import { useParams,useNavigate, Link } from "react-router-dom";
+import { Form, Input, Button } from "antd";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../Register/RegisterStyle.css";
 
@@ -22,13 +21,6 @@ const FPForm = () => {
         navigate(`/change-password/${email}`);
       })
       .catch((error) => {
-        if (error.response && error.response.data && error.response.data.error) {
-          // Displaying the error message using antd message component
-          message.error(error.response.data.error);
-        } else {
-          // Fallback error message if the expected structure is not found
-          message.error("An unexpected error occurred. Please try again.");
-        }
         console.error("There was an error in otp process !", error);
       });
   };
