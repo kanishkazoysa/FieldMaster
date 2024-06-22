@@ -39,7 +39,7 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
             </button>
             <div style={styles.content}>
               <p>kanishkazoysa1234@gmail.com</p>
-              <Divider />
+              <Divider style={styles.divider} />
               <Avatar
                 size={150}
                 style={styles.avatar}
@@ -124,6 +124,10 @@ const styles = {
   },
   modalSlideOut: {
     transform: 'translateX(100vw)',
+  },
+  divider: {
+    marginTop: '10px',
+    borderColor: '#777',
   },
   manageModal: {
     background: 'white',
