@@ -38,6 +38,7 @@ const FPForm = () => {
       >
         <label>Email</label>
         <Form.Item
+        hasFeedback
           name="email"
           rules={[
             {

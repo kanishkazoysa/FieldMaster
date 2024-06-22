@@ -42,6 +42,7 @@ const FPForm = () => {
       >
         <label>OTP</label>
         <Form.Item
+        hasFeedback
           name="enteredOTP"
           rules={[
             {
