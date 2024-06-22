@@ -1,27 +1,28 @@
 import React from "react";
-import { Form, Input, Button } from "antd";
-import { useParams, useNavigate } from "react-router-dom";
+import { Form, Input, Button, Row, Col } from "antd";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import "../Register/RegisterStyle.css";
+import "./RegisterStyle.css";
 
-const CPForm = () => {
-    let params = useParams();
-    const { email: email } = params;
-    const navigate = useNavigate();
-
+const RegisterForm = () => {
     const onFinish = (values) => {
-        const { password } = values;
+        const { firstName, lastName, email, password } = values;
 
         axios
-            .post("/api/users/change-password", {
+            .post("/api/users/register", {
+                fName: firstName,
+                lName: lastName,
                 email,
-                newPassword: password,
+                password,
             })
             .then(() => {
-                navigate("/login");
+                window.location.href = "/login";
             })
             .catch((error) => {
-                console.error("There was an error login !", error);
+                console.error(
+                    "There was an error registering the user!",
+                    error
+                );
             });
     };
 
@@ -46,7 +47,7 @@ const CPForm = () => {
         ) {
             return Promise.reject(
                 new Error(
-                    "Password must be 8+ character with uppercase, lowercase, digit, and special character."
+                  "Password must be 8+ character with uppercase, lowercase, digit, and special character."
                 )
             );
         }
@@ -57,8 +58,8 @@ const CPForm = () => {
     return (
         <div className="register-form-container">
             <div className="form-header">
-                <h3>Forgot Password</h3>
-                <p>No worries. We’ll send you instructions to reset </p>
+                <h3>Sign Up</h3>
+                <p>Welcome back! Please enter your details</p>
             </div>
             <br />
 
@@ -70,7 +71,66 @@ const CPForm = () => {
                 onFinish={onFinish}
                 autoComplete="off"
             >
-                <label>New Password</label>
+                <Row gutter={{ xs: 8, sm: 16 }}>
+                    <Col
+                        className="gutter-row"
+                        xs={{ span: 24 }}
+                        md={{ span: 12 }}
+                    >
+                        <label>First Name</label>
+                        <Form.Item
+                            hasFeedback
+                            name="firstName"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please input your first name!",
+                                },
+                            ]}
+                        >
+                            <Input placeholder="First Name" />
+                        </Form.Item>
+                    </Col>
+
+                    <Col
+                        className="gutter-row"
+                        xs={{ span: 24 }}
+                        md={{ span: 12 }}
+                    >
+                        <label>Last Name</label>
+                        <Form.Item
+                            hasFeedback
+                            name="lastName"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please input your last name!",
+                                },
+                            ]}
+                        >
+                            <Input placeholder="Last Name" />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <label>Email</label>
+                <Form.Item
+                    hasFeedback
+                    name="email"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your email!",
+                        },
+                        {
+                            type: "email",
+                            message: "Please enter a valid email!",
+                        },
+                    ]}
+                >
+                    <Input placeholder="Email" />
+                </Form.Item>
+                <label>Password</label>
                 <Form.Item
                     hasFeedback
                     name="password"
@@ -119,14 +179,18 @@ const CPForm = () => {
                     <Button
                         type="primary"
                         htmlType="submit"
-                        className="register-button1"
+                        className="register-button"
                     >
-                        Change Password
+                        Sign Up
                     </Button>
                 </Form.Item>
+
+                <div className="already-have-account">
+                    Already have an account? <Link to="/login">Login</Link>
+                </div>
             </Form>
         </div>
     );
 };
 
-export default CPForm;
+export default RegisterForm;

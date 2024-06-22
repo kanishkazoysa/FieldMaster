@@ -1,8 +1,7 @@
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const AxiosInstance = axios.create({
-  baseURL: "http://192.168.1.105:3000",
   headers: {
     "Content-Type": "application/json",
   },
@@ -10,7 +9,7 @@ const AxiosInstance = axios.create({
 
 AxiosInstance.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem("token");
+    const token = localStorage.getItem("UserToken");
     if (token) {
       config.headers.authorization = `${token}`;
     }

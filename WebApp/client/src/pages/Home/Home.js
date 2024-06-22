@@ -1,16 +1,33 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import { GoogleMap, LoadScript, StandaloneSearchBox, Marker } from "@react-google-maps/api";
 import SideNavbar from "../../components/SideNavbar/sideNavbar";
 import { MdLocationOn, MdSearch } from "react-icons/md";
 import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
 import { styles, containerStyle, center } from './HomeStyles';
-import { Avatar } from "antd";
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Avatar, message } from "antd";
 
 export default function Home() {
+  const location = useLocation();
+  const navigate = useNavigate(); // Use useNavigate hook
+  const messageShownRef = useRef(false); // Ref to track if the message has been shown
+
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+ useEffect(() => {
+    // Check if we navigated here after a successful login and if the message hasn't been shown yet
+    if (location.state?.loginSuccess && !messageShownRef.current) {
+      message.success('User logged in successfully!');
+      // Mark that the message has been shown
+      messageShownRef.current = true;
+
+      // Use navigate to replace the current entry in the history stack
+      navigate(location.pathname, { state: {}, replace: true });
+    }
+  }, [location, navigate]); // Dependency array
 
   const handlePlacesChanged = useCallback(() => {
     if (!searchBoxRef.current) return;

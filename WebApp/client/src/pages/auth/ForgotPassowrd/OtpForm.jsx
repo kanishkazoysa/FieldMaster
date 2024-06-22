@@ -1,12 +1,14 @@
 import React from "react";
-import { Form, Input, Button } from "antd";
-import { useParams, Link } from "react-router-dom";
+
+import { Form, Input, Button, message } from "antd";
+import { useParams,useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "../Register/RegisterStyle.css";
 
 const FPForm = () => {
   let params = useParams();
   const { email: email } = params;
+  const navigate = useNavigate();
 
   const onFinish = (values) => {
     const { enteredOTP } = values;
@@ -17,9 +19,16 @@ const FPForm = () => {
         email,
       })
       .then(() => {
-        window.location.href = `/change-password/${email}`;
+        navigate(`/change-password/${email}`);
       })
       .catch((error) => {
+        if (error.response && error.response.data && error.response.data.error) {
+          // Displaying the error message using antd message component
+          message.error(error.response.data.error);
+        } else {
+          // Fallback error message if the expected structure is not found
+          message.error("An unexpected error occurred. Please try again.");
+        }
         console.error("There was an error in otp process !", error);
       });
   };
@@ -39,9 +48,11 @@ const FPForm = () => {
         }}
         onFinish={onFinish}
         autoComplete="off"
+        
       >
         <label>OTP</label>
         <Form.Item
+        hasFeedback
           name="enteredOTP"
           rules={[
             {
@@ -50,7 +61,7 @@ const FPForm = () => {
             },
           ]}
         >
-          <Input placeholder="Enter your OTP" />
+          <Input.OTP length={6} />
         </Form.Item>
 
         <Form.Item>
@@ -62,7 +73,7 @@ const FPForm = () => {
             type="primary"
             className="register-button2"
             onClick={() => {
-              window.location.href = "/forgot-password";
+              navigate("/forgot-password");
             }}
           >
             Back
