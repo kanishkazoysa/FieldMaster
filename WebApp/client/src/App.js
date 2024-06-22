@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,6 +21,25 @@ import FPPage from "./pages/auth/ForgotPassowrd/FPPage";
 import OtpPage from "./pages/auth/ForgotPassowrd/OtpPage";
 import CPPage from "./pages/auth/ForgotPassowrd/CPPage";
 
+const UserRouteGuard = ({ children }) => {
+  const token = localStorage.getItem('UserToken');
+
+  if (token) {
+    return children;
+  } else {
+    return <Navigate to="/login" />;
+  }
+};
+
+const AuthRouteGuard = ({ children }) => {
+  const token = localStorage.getItem('UserToken');
+  if (token) {
+    return <Navigate to="/home" />;
+  } else {
+    return children;
+  }
+};
+
 export default function App() {
   return (
     <Router>
@@ -28,6 +47,7 @@ export default function App() {
         <Route
           path="/register"
           element={
+            <AuthRouteGuard>
             <div className="main-container">
               <div className="page-container">
                 <RegisterPage />
@@ -36,12 +56,14 @@ export default function App() {
                 <AuthLayout />
               </div>
             </div>
+            </AuthRouteGuard>
           }
         />
 
         <Route
           path="/login"
           element={
+            <AuthRouteGuard>
             <div className="main-container">
               <div className="page-container">
                 <LoginPage />
@@ -50,12 +72,14 @@ export default function App() {
                 <AuthLayout />
               </div>
             </div>
+            </AuthRouteGuard>
           }
         />
 
         <Route
           path="/forgot-password"
           element={
+            <AuthRouteGuard>
             <div className="main-container">
               <div className="page-container">
                 <FPPage />
@@ -64,6 +88,7 @@ export default function App() {
                 <AuthLayout />
               </div>
             </div>
+            </AuthRouteGuard>
           }
         />
 
@@ -97,7 +122,8 @@ export default function App() {
 
         {/* Route for the main content */}
         <Route path="/" element={<MainContent />} />
-        <Route path="/Home" element={<Home />} />
+
+        <Route path="/Home" element={<UserRouteGuard><Home /></UserRouteGuard>} />
         <Route path="/emailVerification" element={<EmailVerified />} />
         <Route path="/managemap" element={<Managemap />} />
       </Routes>
