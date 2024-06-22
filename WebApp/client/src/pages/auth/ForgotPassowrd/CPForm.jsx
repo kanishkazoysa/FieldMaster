@@ -1,12 +1,13 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../Register/RegisterStyle.css";
 
 const CPForm = () => {
     let params = useParams();
     const { email: email } = params;
+    const navigate = useNavigate();
 
     const onFinish = (values) => {
         const { password } = values;
@@ -17,7 +18,7 @@ const CPForm = () => {
                 newPassword: password,
             })
             .then(() => {
-                window.location.href = "/login";
+                navigate("/login");
             })
             .catch((error) => {
                 console.error("There was an error login !", error);

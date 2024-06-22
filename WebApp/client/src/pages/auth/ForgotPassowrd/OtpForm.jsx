@@ -1,12 +1,13 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../Register/RegisterStyle.css";
 
 const FPForm = () => {
   let params = useParams();
   const { email: email } = params;
+  const navigate = useNavigate();
 
   const onFinish = (values) => {
     const { enteredOTP } = values;
@@ -17,7 +18,7 @@ const FPForm = () => {
         email,
       })
       .then(() => {
-        window.location.href = `/change-password/${email}`;
+        navigate(`/change-password/${email}`);
       })
       .catch((error) => {
         console.error("There was an error in otp process !", error);
@@ -39,6 +40,7 @@ const FPForm = () => {
         }}
         onFinish={onFinish}
         autoComplete="off"
+        
       >
         <label>OTP</label>
         <Form.Item
@@ -51,7 +53,7 @@ const FPForm = () => {
             },
           ]}
         >
-          <Input placeholder="Enter your OTP" />
+          <Input.OTP length={6} />
         </Form.Item>
 
         <Form.Item>
@@ -63,7 +65,7 @@ const FPForm = () => {
             type="primary"
             className="register-button2"
             onClick={() => {
-              window.location.href = "/forgot-password";
+              navigate("/forgot-password");
             }}
           >
             Back
