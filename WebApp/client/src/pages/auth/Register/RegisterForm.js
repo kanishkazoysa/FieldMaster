@@ -1,10 +1,12 @@
 import React from "react";
-import { Form, Input, Button } from "antd";
-import { Link } from "react-router-dom";
+import { Form, Input, Button, message } from "antd";
+import { Link,useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./RegisterStyle.css";
 
+
 const RegisterForm = () => {
+  const navigate = useNavigate(); // Use useNavigate hook
   const onFinish = (values) => {
     const { firstName, lastName, email, password } = values;
 
@@ -16,9 +18,17 @@ const RegisterForm = () => {
         password,
       })
       .then(() => {
-        window.location.href = "/login";
+        navigate('/login');
+        message.success("User registered successfully! please verify your email to login.");
       })
       .catch((error) => {
+        if (error.response && error.response.data && error.response.data.error) {
+          // Displaying the error message using antd message component
+          message.error(error.response.data.error);
+        } else {
+          // Fallback error message if the expected structure is not found
+          message.error("An unexpected error occurred. Please try again.");
+        }
         console.error("There was an error registering the user!", error);
       });
   };
