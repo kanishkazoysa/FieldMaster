@@ -4,8 +4,11 @@ import { Divider, Form, Input, Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import logo from "../../../images/logo.png";
 
-const ManageProfileModal = ({ isOpen, onRequestClose, onBack }) => {
+const ManageProfileModal = ({ isOpen, onRequestClose, onBack, user }) => {
   const [setEditProfilePhoto] = useState(false);
+  const [fname, setFname] = useState(user.fname);
+  const [lname, setLname] = useState(user.lname);
+  const [email, setEmail] = useState(user.email);
 
   const handleEditProfilePhoto = () => {
     setEditProfilePhoto(true);
@@ -23,7 +26,7 @@ const ManageProfileModal = ({ isOpen, onRequestClose, onBack }) => {
         <img
           src={logo}
           alt="profile"
-          style={{ width: "100px", height: "40px", marginBottom: "-20px"}}
+          style={{ width: "100px", height: "40px", marginBottom: "-20px" }}
         />
       </div>
       <Divider style={styles.divider} />
@@ -35,19 +38,36 @@ const ManageProfileModal = ({ isOpen, onRequestClose, onBack }) => {
           />
         </div>
         <div style={styles.userInfo}>
-          <h5>Kanishka Zoysa</h5>
-          <p style={styles.emailtxt}>kanishkazoysa1234@gmail.com</p>
+          <h5>
+            {user.fname} {user.lname}
+          </h5>
+          <p style={styles.emailtxt}>{user.email}</p>
         </div>
         <Box component="form" style={styles.form}>
           <Form layout="vertical" style={{ width: "100%" }}>
             <Form.Item label="First Name" style={styles.formfeild}>
-              <Input placeholder="First Name" style={styles.input} />
+              <Input
+                placeholder="First Name"
+                onChange={(e) => setFname(e.target.value)}
+                value={fname}
+                style={styles.input}
+              />
             </Form.Item>
             <Form.Item label="Last Name" style={styles.formfeild}>
-              <Input placeholder="Last Name" style={styles.input} />
+              <Input
+                placeholder="Last Name"
+                onChange={(e) => setLname(e.target.value)}
+                value={lname}
+                style={styles.input}
+              />
             </Form.Item>
             <Form.Item label="Email" style={styles.formfeild}>
-              <Input placeholder="Email" style={styles.input} />
+              <Input
+                placeholder="Email"
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                style={styles.input}
+              />
             </Form.Item>
           </Form>
         </Box>
