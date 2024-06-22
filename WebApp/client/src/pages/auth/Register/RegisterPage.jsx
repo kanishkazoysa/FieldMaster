@@ -1,9 +1,9 @@
-import "../Register/RegisterStyle.css";
-import CPForm from "./CPForm";
+import "./RegisterStyle.css";
+import RegisterForm from "./RegisterForm";
 import Logo from "../../../images/logo.png";
 import { Link } from "react-router-dom";
 
-const CPPage = () => {
+const RegisterPage = () => {
     return (
         <div className="register-page">
             <Link to="/" style={{ textDecoration: "none" }}>
@@ -12,9 +12,9 @@ const CPPage = () => {
                 </div>
             </Link>
             <div className="left-container">
-                <CPForm />
+                <RegisterForm />
             </div>
         </div>
     );
 };
-export default CPPage;
+export default RegisterPage;

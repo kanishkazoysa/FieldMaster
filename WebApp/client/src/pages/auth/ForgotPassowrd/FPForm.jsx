@@ -1,10 +1,12 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../Register/RegisterStyle.css";
 
 const FPForm = () => {
+  const navigate = useNavigate();
+
   const onFinish = (values) => {
     const { email } = values;
 
@@ -13,7 +15,7 @@ const FPForm = () => {
         email,
       })
       .then(() => {
-        window.location.href = `/enter-otp/${email}`;
+        navigate(`/enter-otp/${email}`);
       })
       .catch((error) => {
         console.error("There was an error login !", error);
@@ -38,6 +40,7 @@ const FPForm = () => {
       >
         <label>Email</label>
         <Form.Item
+        hasFeedback
           name="email"
           rules={[
             {
@@ -61,7 +64,7 @@ const FPForm = () => {
             type="primary"
             className="register-button2"
             onClick={() => {
-              window.location.href = "/login";
+              navigate("/login");
             }}
           >
             Back
