@@ -4,6 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../Register/RegisterStyle.css";
 
+
+
+
 const LoginForm = () => {
   const navigate = useNavigate(); // Use useNavigate hook
 
@@ -15,7 +18,11 @@ const LoginForm = () => {
         email,
         password,
       })
-      .then(() => {
+      .then((response) => {
+        //get token and store it on local storage
+        const token= response.data.token; 
+        localStorage.setItem("UserToken", token);
+
         // Use navigate for redirection after successful login
         navigate('/Home', { replace: true, state: { loginSuccess: true } });
         // No need to show message here, it will be handled in Home component
