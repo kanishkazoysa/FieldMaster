@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import { IconButton } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -15,7 +15,15 @@ const CalculatorModel = ({
   //get area and perimeter from previous page
   area, 
   perimeter,
-}) => {
+   }) => {
+
+    useEffect(() => {
+      // Reset the calculatorSelectModalVisible state when the component is unmounted
+      return () => {
+        setCalculatorSelectModalVisible(false);
+      };
+    }, [setCalculatorSelectModalVisible]);
+    
   const closeModal = () => {
     setCalculatorSelectModalVisible(false);
   };
@@ -55,7 +63,7 @@ const CalculatorModel = ({
               <View style={styles.button}>
                 <TouchableOpacity
                   style={styles.selectButton}
-                  onPress={() => navigateToPage('Clearland')} // navigate to ClearLand page
+                  onPress={() => navigateToPage('ClearLandFromManualCalculator')} // navigate to ClearLand page
                 >
                   <View style={styles.icon}>
                     <MaterialCommunityIcons
@@ -80,7 +88,7 @@ const CalculatorModel = ({
               <View style={styles.button}>
                 <TouchableOpacity
                   style={styles.selectButton}
-                  onPress={() => navigateToPage('Plantation')} // navigate to Plantation page
+                  onPress={() => navigateToPage('PlantationFromManualCalculator')} // navigate to Plantation page
                 >
                   <View style={styles.icon}>
                     <MaterialCommunityIcons

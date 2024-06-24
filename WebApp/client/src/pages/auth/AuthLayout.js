@@ -1,7 +1,7 @@
-import React from 'react';
 import { Carousel } from 'antd';
+import React from 'react';
+import sideImg from '../../images/img1.png';
 import './AuthLayout.css';
-import sideImg from '../../images/img1.png'
 
 const contentStyle = {
   height: '97vh',

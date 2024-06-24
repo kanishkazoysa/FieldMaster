@@ -1,7 +1,5 @@
 import React from 'react';
 import { MDBListGroup, MDBListGroupItem, MDBContainer } from "mdbreact";
-import { List, ListItem, Typography } from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
 import video1 from "../../assets/key_features_video.mp4";
 
 const About = () => {
