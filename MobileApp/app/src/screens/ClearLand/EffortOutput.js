@@ -17,20 +17,20 @@ import {
   Searchbar,
   placeholderStyle,
 } from "react-native-paper";
+import {
+  responsiveHeight,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
+
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
+import { styles } from "./EffortOutputStyles";
 import Headersection from "../../components/Headersection";
 import AlertButton from "../../components/AlertButton";
 import CustomButton from "../../components/CustomButton";
-import {
-  responsiveFontSize,
-  responsiveHeight,
-  responsiveScreenFontSize,
-  responsiveWidth,
-} from "react-native-responsive-dimensions";
 import axios from "axios";
 import AxiosInstance from "../../AxiosInstance";
 import { effortOutputPrint } from "./EffortOutputPrint";
@@ -38,31 +38,32 @@ import { effortOutputPrint } from "./EffortOutputPrint";
 export default function EffortOutput({ route }) {
   const navigation = useNavigation();
 
-  const { id , item } = route.params;
+  const { id, item } = route.params;
   const [workHours, setworkHours] = useState(null);
   const [laborCount, setlaborCount] = useState(null);
   const [data1, setdata1] = useState([]);
   const [Area, setArea] = useState(null);
   const [Perimeter, setPerimeter] = useState(null);
   const [effortOutput, setEffortOutput] = useState(null);
+  const [workDays, setWorkDays] = useState(null);
 
   //Fetch data from database
- const fetchData = async (id) => {
-      try {
-        const response = await AxiosInstance.get(
-          `/api/clearLand/effortOutput/${id}`
-        );
-        setworkHours(response.data.workHours);
-        setlaborCount(response.data.laborCount);
-        setdata1(response.data.machineDetails);
-        setArea(response.data.Area);
-        setPerimeter(response.data.Perimeter);
-        setEffortOutput(response.data.effortOutput);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    
+  const fetchData = async (id) => {
+    try {
+      const response = await AxiosInstance.get(
+        `/api/clearLand/effortOutput/${id}`
+      );
+      setworkHours(response.data.workHours);
+      setlaborCount(response.data.laborCount);
+      setdata1(response.data.machineDetails);
+      setArea(response.data.Area);
+      setPerimeter(response.data.Perimeter);
+      setEffortOutput(response.data.effortOutput);
+      setWorkDays(response.data.workDays);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   //Refresh the screen
   useFocusEffect(
@@ -133,7 +134,7 @@ export default function EffortOutput({ route }) {
   };
 
   //Generate pdf
-  const html = effortOutputPrint(Perimeter,Area,laborCount,workHours);
+  const html = effortOutputPrint(Perimeter, Area, laborCount, workHours);
 
   // Print
   const [selectedPrinter, setSelectedPrinter] = React.useState();
@@ -166,7 +167,6 @@ export default function EffortOutput({ route }) {
       ></Headersection>
 
       <ScrollView>
-      
         <View style={styles.topSection}>
           <TouchableOpacity style={styles.iconButton} onPress={BackToHome}>
             <MaterialCommunityIcons name="home" size={26} color="#007BFF" />
@@ -180,10 +180,7 @@ export default function EffortOutput({ route }) {
           </TouchableOpacity>
         </View>
         <View style={styles.container2}>
-        
-       
-
-       <Card style={styles.card1}>
+          <Card style={styles.card1}>
             <Card.Content style={styles.card1Content}>
               <Text style={styles.card1Text1}>Total Effort Cout</Text>
               <AlertButton></AlertButton>
@@ -211,14 +208,11 @@ export default function EffortOutput({ route }) {
                 ></Image>
                 <View style={{ display: "flex", flexDirection: "column" }}>
                   <Text style={styles.card1Text4}>{workHours} hrs per day</Text>
-                  <Text style={styles.card1Text5}>432 days</Text>
+                  <Text style={styles.card1Text5}>{workDays} days</Text>
                 </View>
               </View>
             </Card.Content>
-            
           </Card>
-   
-          
 
           <Card style={styles.card2}>
             <Card.Content style={styles.card2Content}>
@@ -317,143 +311,3 @@ export default function EffortOutput({ route }) {
     </PaperProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  topSection: {
-    flexDirection: "row",
-    marginTop: responsiveHeight(0.5),
-    padding:responsiveWidth(0),
-    width: "100%",
-    justifyContent: "space-between",
-  },
-  iconButton: {
-    padding: 6,
-  },
-
-  container2: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  card1: {
-    height: responsiveHeight(15),
-    width: "87%",
-    borderRadius: 11,
-    backgroundColor: "#fff",
-  },
-  card1Content: {
-    display: "flex",
-    flexDirection: "column",
-    marginTop: responsiveHeight(0.1),
-  },
-  card1Text1: {
-    fontWeight: "bold",
-    fontSize: responsiveFontSize(2.2),
-    marginTop: responsiveHeight(-1),
-    textAlign: "center",
-  },
-  card1Text2: {
-    fontSize: responsiveFontSize(2),
-    marginLeft: responsiveWidth(1),
-  },
-  card1Text3: {
-    fontSize: responsiveFontSize(2),
-    marginLeft: responsiveWidth(1),
-    fontWeight: "bold",
-  },
-  card1Text4: {
-    marginTop: responsiveHeight(-5.9),
-    fontSize: responsiveFontSize(2),
-    marginLeft: responsiveWidth(0),
-  },
-  card1Text5: {
-    fontSize: responsiveFontSize(2),
-    marginLeft: responsiveWidth(1.2),
-    fontWeight: "bold",
-  },
-  card1Left: {
-    display: "flex",
-    flexDirection: "row",
-    marginTop: responsiveHeight(3),
-  },
-  card1Right: {
-    display: "flex",
-    flexDirection: "row",
-    height: responsiveHeight(2.9),
-  },
-  card2: {
-    height: responsiveHeight(10),
-    marginTop: responsiveHeight(1.5),
-    backgroundColor: "#fff",
-    width: "93%",
-    borderRadius: 11,
-  },
-  card2Content: {
-    display: "flex",
-    flexDirection: "column",
-    marginTop: responsiveHeight(-3.6),
-  },
-  card2Left: { display: "flex", flexDirection: "row" },
-  card2Right: {
-    display: "flex",
-    flexDirection: "row",
-    height: responsiveHeight(3),
-    alignItems: "right",
-    marginLeft:responsiveWidth(-8)
-  },
-  card2Text1: {
-    marginTop: responsiveHeight(3.8),
-    fontSize: responsiveFontSize(2),
-    marginLeft: responsiveWidth(1),
-  },
-  card2Text2: {
-    fontSize: responsiveFontSize(2),
-    marginLeft: responsiveWidth(1),
-    fontWeight: "bold",
-  },
-  card2Text3: {
-    marginTop: responsiveHeight(-5.7),
-    fontSize: responsiveFontSize(2),
-    marginLeft: responsiveWidth(1),
-  },
-  card2Text4: {
-    fontSize: responsiveFontSize(2),
-    marginLeft: responsiveWidth(1),
-    fontWeight: "bold",
-  },
-  card3: {
-    height: "max-content",
-    width: "87%",
-    borderRadius: 11,
-    backgroundColor: "#fff",
-    marginTop: responsiveHeight(1.5),
-  },
-  card3Text1: {
-    fontWeight: "bold",
-    fontSize: responsiveFontSize(2.2),
-    marginTop: responsiveHeight(0),
-    marginLeft: responsiveWidth(3),
-  },
-  card3Text2: {
-    marginTop: responsiveHeight(3),
-    fontSize: responsiveFontSize(2),
-    marginLeft: responsiveWidth(1),
-    fontWeight: "bold",
-  },
-  card3Text3: {
-    fontSize: responsiveFontSize(2),
-    marginLeft: responsiveWidth(2),
-    marginTop: responsiveHeight(3),
-  },
-  card3Text4: {
-    fontSize: responsiveFontSize(2),
-    marginLeft: responsiveWidth(1),
-    fontWeight: "bold",
-  },
-  customButtons: {
-    display: "flex",
-    flexDirection: "column",
-    marginTop: responsiveHeight(10),
-    justifyContent: "space-between",
-  },
-});

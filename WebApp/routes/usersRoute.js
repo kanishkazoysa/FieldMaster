@@ -52,7 +52,7 @@ router.post("/register", async (req, res) => {
     `,
   };
   const createdAt = new Date();
-  const expiredAt = new Date(createdAt.getTime() + 1 * 60000);
+  const expiredAt = new Date(createdAt.getTime() + 5 * 60000);
   const newUser = new userEmailVerificationModel({
     email,
     VerifyId,
