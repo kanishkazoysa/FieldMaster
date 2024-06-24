@@ -25,11 +25,22 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert("Please fill in all fields");
       return;
     }
+
+    if (!validateEmail(email)) {
+      Alert.alert("Please enter a valid email address");
+      return;
+    }
+
     try {
       const response = await AxiosInstance.post("/api/users/login", { email, password });
       if (response.status === 200) {
@@ -44,17 +55,18 @@ export default function LoginScreen() {
     }
   };
   
-//navigate to the ForgotPassword screen
+  // Navigate to the ForgotPassword screen
   const handleForgotPassword = () => {
     console.log("Forgot Password");
     navigation.navigate("Forgot");
   };
-//navigate to the Register screen
+
+  // Navigate to the Register screen
   const handleSignUp = () => {
     navigation.navigate("Register");
   };
 
-  //clear the email and password fields when the screen is focused
+  // Clear the email and password fields when the screen is focused
   useFocusEffect(
     useCallback(() => {
       setEmail("");
@@ -69,13 +81,13 @@ export default function LoginScreen() {
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
-          <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-          <Appbar.Header style={styles.header}>
-            <Appbar.BackAction
-              onPress={() => navigation.goBack()}
-              color="white"
-            />
-          </Appbar.Header>
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <Appbar.Header style={styles.header}>
+          <Appbar.BackAction
+            onPress={() => navigation.goBack()}
+            color="white"
+          />
+        </Appbar.Header>
 
         <View style={styles.textSection}>
           <Text style={styles.welcomeText}>Welcome </Text>
@@ -92,7 +104,7 @@ export default function LoginScreen() {
               theme={{ roundness: 10 }}
               style={{
                 width: responsiveWidth(87),
-                height: responsiveHeight(6),
+                height: responsiveHeight(6.5),
                 fontSize: responsiveFontSize(1.9),
               }}
               value={email}
@@ -109,7 +121,7 @@ export default function LoginScreen() {
               activeOutlineColor="#007BFF"
               style={{
                 width: responsiveWidth(87),
-                height: responsiveHeight(6),
+                height: responsiveHeight(6.5),
                 fontSize: responsiveFontSize(1.9),
               }}
               secureTextEntry
