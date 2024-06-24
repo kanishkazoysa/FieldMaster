@@ -82,7 +82,7 @@ export default function ForgotPassword() {
               theme={{ roundness: 10 }}
               style={{
                 width: responsiveWidth(87),
-                height: responsiveHeight(6),
+                height: responsiveHeight(6.5),
                 fontSize: responsiveFontSize(1.9),
               }}
               value={email}
