@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MdArrowBack } from 'react-icons/md';
 import '../SavedTemplates/SavedTemplatesWeb.css';
 import Card from './Card';
 import { FaSearch } from 'react-icons/fa';
-import templatesList from './TemplatesList.js';
+import AxiosInstance from '../../AxiosInstance';
 
 const SavedTemplatesWeb = ({ onBackToSidebar, onCardClick }) => {
+  const [templates, setTemplates] = useState([]);
+
+  useEffect(() => {
+    AxiosInstance.get(`/api/auth/mapTemplate/getAllTemplates`)
+      .then((response) => {
+        setTemplates(response.data);
+        console.log('Templates fetched successfully');
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch templates:', error);
+      });
+  }, []);
+
   return (
     <>
       <div className='innerDiv'>
@@ -21,7 +35,7 @@ const SavedTemplatesWeb = ({ onBackToSidebar, onCardClick }) => {
           </div>
 
           <div className='cardsDiv'>
-            {templatesList.map((template, index) => (
+            {templates.map((template, index) => (
               <Card
                 key={index}
                 templateName={template.templateName}

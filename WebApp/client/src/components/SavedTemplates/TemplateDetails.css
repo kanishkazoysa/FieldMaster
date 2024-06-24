@@ -144,3 +144,8 @@ p {
 .description-text {
   margin-top: 10px;
 }
+
+.icon,
+.edit-icon {
+  cursor: pointer;
+}
