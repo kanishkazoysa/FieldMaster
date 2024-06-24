@@ -113,7 +113,7 @@ const CalculatorModel = ({
               <View style={styles.button}>
                 <TouchableOpacity
                   style={styles.selectButton}
-                  onPress={() => navigateToPage('Fence')} // navigate to FenceSetup page
+                  onPress={() => navigateToPage('FenceFromManualCal', { area, perimeter })} // navigate to FenceSetup page
                 >
                   <View
                     style={{ ...styles.icon, left: responsiveWidth(-26.6) }}
