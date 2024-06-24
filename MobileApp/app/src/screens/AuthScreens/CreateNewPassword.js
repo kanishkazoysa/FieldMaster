@@ -26,20 +26,30 @@ export default function ForgotPassword({ route }) {
   const { email } = route.params;
   const [passwordError, setPasswordError] = useState("");
 
+  const validatePassword = (password) => {
+    const re =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return re.test(password);
+  };
+
   const handleChangePassword = async () => {
     if (!newPassword || !confirmPassword) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
+
+    if (!validatePassword(password)) {
+      setPasswordError(
+        "Password must be 8+ character with uppercase, lowercase, digit, and special character."
+      );
+      return;
+    }
+
     if (!(newPassword === confirmPassword)) {
       Alert.alert("Error", "Passwords do not match");
       return;
     }
 
-    if (newPassword.length < 8 && confirmPassword.length < 8) {
-      setPasswordError("Password must be at least 8 characters long");
-      return;
-    }
 
     const token = await AsyncStorage.getItem("token");
     

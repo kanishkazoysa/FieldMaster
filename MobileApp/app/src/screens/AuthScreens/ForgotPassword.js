@@ -22,9 +22,19 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
 
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
   const handleForgotPassword = async () => {
     if (!email) {
       Alert.alert("Please fill in all fields");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert("Invalid email address");
       return;
     }
 

@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -31,14 +31,16 @@ export default function RegisterScreen() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigation = useNavigation();
   const [passwordError, setPasswordError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
   };
-  
+
   const validatePassword = (password) => {
-    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const re =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return re.test(password);
   };
 
@@ -48,14 +50,14 @@ export default function RegisterScreen() {
       return;
     }
 
-    
     if (password !== confirmPassword) {
       Alert.alert("Passwords do not match");
       return;
     }
     if (!validatePassword(password)) {
-      // setPasswordError("Password must be 8+ character with uppercase, lowercase, digit, and special character.");
-      Alert.alert("Password must be 8+ character with uppercase, lowercase, digit, and special character.");
+      setPasswordError(
+        "Password must be 8+ character with uppercase, lowercase, digit, and special character."
+      );
       return;
     }
 
@@ -64,7 +66,7 @@ export default function RegisterScreen() {
       return;
     }
 
-    AxiosInstance.post("/api/users/register", { email, password ,fName, lName })
+    AxiosInstance.post("/api/users/register", { email, password, fName, lName })
       .then((response) => {
         if (response.data.success) {
           Alert.alert(
@@ -102,13 +104,11 @@ export default function RegisterScreen() {
   };
 
   return (
-  
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === "ios" ? "padding" : " height"} 
-      style={styles.container}
-    >
-      
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : " height"}
+        style={styles.container}
+      >
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
         <Appbar.Header style={styles.header}>
           <Appbar.BackAction
@@ -116,135 +116,127 @@ export default function RegisterScreen() {
             color="white"
           />
         </Appbar.Header>
-<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View style={styles.textSection}>
-          <Text style={styles.head}>Hi!</Text>
-          <Text style={styles.text}>Create a new account</Text>
-        </View>
-
-        <View style={styles.field}>
-          <View style={{ marginBottom: 10 }}>
-            <TextInput
-              label="First Name"
-              mode="outlined"
-              outlineColor="#d9d7d2"
-              activeOutlineColor="#007BFF"
-              style={styles.inputButton}
-              value={fName}
-              theme={{ roundness: 10 }}
-              onChangeText={(text) => setFName(text)}
-            />
-            <TextInput
-              label="Last Name"
-              mode="outlined"
-              outlineColor="#d9d7d2"
-              activeOutlineColor="#007BFF"
-              style={styles.inputButton}
-              value={lName}
-              theme={{ roundness: 10 }}
-              onChangeText={(text) => setLName(text)}
-            />
-            <TextInput
-              label="Email"
-              mode="outlined"
-              outlineColor="#d9d7d2"
-              activeOutlineColor="#007BFF"
-              style={styles.inputButton}
-              value={email}
-              theme={{ roundness: 10 }}
-              onChangeText={(text) => setEmail(text)}
-            />
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={styles.textSection}>
+            <Text style={styles.head}>Hi!</Text>
+            <Text style={styles.text}>Create a new account</Text>
           </View>
 
-          <View style={{ marginBottom: 10 }}>
-            <TextInput
-              label="Password"
-              mode="outlined"
-              outlineColor="#d9d7d2"
-              activeOutlineColor="#007BFF"
-              style={{
-                width: responsiveWidth(87),
-                height: responsiveHeight(6),
-                fontSize: responsiveFontSize(1.9),
-              }}
-              theme={{ roundness: 10 }}
-              value={password}
-              onChangeText={(text) => {
-                setPassword(text);
-                setPasswordError("");
-              }}
-              secureTextEntry={!showPassword}
-              right={
-                <TextInput.Icon
-                  icon={showPassword ? "eye" : "eye-off"}
-                  onPress={() => setShowPassword(!showPassword)}
-                />
-              }
-            />
-            {passwordError ? (
-              <Text style={styles.errorText}>{passwordError}</Text>
-            ) : null}
+          <View style={styles.field}>
+            <View style={{ marginBottom: 10 }}>
+              <TextInput
+                label="First Name"
+                mode="outlined"
+                outlineColor="#d9d7d2"
+                activeOutlineColor="#007BFF"
+                style={styles.inputButton}
+                value={fName}
+                theme={{ roundness: 10 }}
+                onChangeText={(text) => setFName(text)}
+              />
+              <TextInput
+                label="Last Name"
+                mode="outlined"
+                outlineColor="#d9d7d2"
+                activeOutlineColor="#007BFF"
+                style={styles.inputButton}
+                value={lName}
+                theme={{ roundness: 10 }}
+                onChangeText={(text) => setLName(text)}
+              />
+              <TextInput
+                label="Email"
+                mode="outlined"
+                outlineColor="#d9d7d2"
+                activeOutlineColor="#007BFF"
+                style={styles.inputButton}
+                value={email}
+                theme={{ roundness: 10 }}
+                onChangeText={(text) => setEmail(text)}
+              />
+            </View>
+
+            <View style={{ marginBottom: 10 }}>
+              <TextInput
+                label="Password"
+                mode="outlined"
+                outlineColor="#d9d7d2"
+                activeOutlineColor="#007BFF"
+                style={{
+                  width: responsiveWidth(87),
+                  height: responsiveHeight(6),
+                  fontSize: responsiveFontSize(1.9),
+                }}
+                theme={{ roundness: 10 }}
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  setPasswordError("");
+                }}
+                secureTextEntry={!showPassword}
+                right={
+                  <TextInput.Icon
+                    icon={showPassword ? "eye" : "eye-off"}
+                    onPress={() => setShowPassword(!showPassword)}
+                  />
+                }
+              />
+              {passwordError ? (
+                <Text style={styles.errorText}>{passwordError}</Text>
+              ) : null}
+            </View>
+
+            <View style={{ marginBottom: 10 }}>
+              <TextInput
+                label="Confirm Password"
+                mode="outlined"
+                outlineColor="#d9d7d2"
+                activeOutlineColor="#007BFF"
+                theme={{ roundness: 10 }}
+                style={{
+                  width: responsiveWidth(87),
+                  height: responsiveHeight(6),
+                  fontSize: responsiveFontSize(1.9),
+                }}
+                value={confirmPassword}
+                onChangeText={(text) => setConfirmPassword(text)}
+                secureTextEntry={!showConfirmPassword}
+              />
+            </View>
+
+            <Button
+              mode="contained"
+              onPress={handleSignUp}
+              style={styles.button}
+            >
+              SIGN UP
+            </Button>
           </View>
 
-          <View style={{ marginBottom: 10 }}>
-            <TextInput
-              label="Confirm Password"
-              mode="outlined"
-              outlineColor="#d9d7d2"
-              activeOutlineColor="#007BFF"
-              theme={{ roundness: 10 }}
-              style={{
-                width: responsiveWidth(87),
-                height: responsiveHeight(6),
-                fontSize: responsiveFontSize(1.9),
-              }}
-              value={confirmPassword}
-              onChangeText={(text) => setConfirmPassword(text)}
-              secureTextEntry={!showConfirmPassword}
-              // right={
-              //   <TextInput.Icon
-              //     icon={showConfirmPassword ? "eye" : "eye-off"}
-              //     onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-              //   />
-              // }
-            />
-            {passwordError ? (
-              <Text style={styles.errorText}>{passwordError}</Text>
-            ) : null}
-          </View>
-
-          <Button mode="contained" onPress={handleSignUp} style={styles.button}>
-            SIGN UP
-          </Button>
-        </View>
-
-        <View style={styles.loginTextContainer}>
-          <Text style={styles.signupText}>Have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={[styles.signupText, styles.signupLink]}>Log in</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.privacyTermsContainer}>
-          <Text style={styles.privacyText}>
-            By clicking "Sign up" you agree to our
-          </Text>
-          <View style={styles.linksContainer}>
-            <TouchableOpacity onPress={() => {}}>
-              <Text style={styles.link}>Terms of Service</Text>
-            </TouchableOpacity>
-            <Text style={styles.andText}> and </Text>
-            <TouchableOpacity onPress={() => {}}>
-              <Text style={styles.link}>Privacy Policy</Text>
+          <View style={styles.loginTextContainer}>
+            <Text style={styles.signupText}>Have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={[styles.signupText, styles.signupLink]}>Log in</Text>
             </TouchableOpacity>
           </View>
-        </View>
-    
-     
-      </ScrollView>
+
+          <View style={styles.privacyTermsContainer}>
+            <Text style={styles.privacyText}>
+              By clicking "Sign up" you agree to our
+            </Text>
+            <View style={styles.linksContainer}>
+              <TouchableOpacity onPress={() => {}}>
+                <Text style={styles.link}>Terms of Service</Text>
+              </TouchableOpacity>
+              <Text style={styles.andText}> and </Text>
+              <TouchableOpacity onPress={() => {}}>
+                <Text style={styles.link}>Privacy Policy</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
       </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
-   
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -282,7 +274,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
 
   textSection: {
@@ -313,11 +305,10 @@ const styles = StyleSheet.create({
 
   privacyTermsContainer: {
     marginBottom: 10,
-  flex:1,
-  justifyContent: "flex-end",
+    flex: 1,
+    justifyContent: "flex-end",
     width: "100%",
     alignItems: "center",
-    
   },
 
   privacyText: {
@@ -340,7 +331,8 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: "red",
-    marginLeft: 10,
+    fontSize: responsiveFontSize(1.5),
+    width: responsiveWidth(87),
   },
   inputButton: {
     width: responsiveWidth(87),
@@ -348,6 +340,4 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(1.9),
     marginBottom: 10,
   },
-  
 });
- 
