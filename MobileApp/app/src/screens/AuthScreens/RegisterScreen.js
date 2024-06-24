@@ -31,7 +31,16 @@ export default function RegisterScreen() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigation = useNavigation();
   const [passwordError, setPasswordError] = useState("");
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
   
+  const validatePassword = (password) => {
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return re.test(password);
+  };
 
   const handleSignUp = async () => {
     if (!fName || !lName || !email || !password || !confirmPassword) {
@@ -39,13 +48,19 @@ export default function RegisterScreen() {
       return;
     }
 
+    
     if (password !== confirmPassword) {
       Alert.alert("Passwords do not match");
       return;
     }
+    if (!validatePassword(password)) {
+      // setPasswordError("Password must be 8+ character with uppercase, lowercase, digit, and special character.");
+      Alert.alert("Password must be 8+ character with uppercase, lowercase, digit, and special character.");
+      return;
+    }
 
-    if (password.length < 8) {
-      setPasswordError("Password must be at least 8 characters long");
+    if (!validateEmail(email)) {
+      Alert.alert("Please enter a valid email address");
       return;
     }
 
@@ -140,10 +155,6 @@ export default function RegisterScreen() {
               onChangeText={(text) => setEmail(text)}
             />
           </View>
-
-          <Text style={{marginTop:30,marginBottom:10}}>
-          Create a password that is at least 8 characters long
-          </Text>
 
           <View style={{ marginBottom: 10 }}>
             <TextInput
