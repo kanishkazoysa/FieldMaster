@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
-const ContactSubmission = require('../models/ContactSubmission'); // Import your ContactSubmission model
+const ContactSubmission = require('../models/ContactSubmission');
 
 // Configure transporter with your email service and credentials
 const transporter = nodemailer.createTransport({
