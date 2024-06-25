@@ -16,7 +16,6 @@ import { useNavigation } from "@react-navigation/native";
 import { Appbar } from 'react-native-paper';
 
 import {styles} from './FenceFromManualCalStyle';
-import Headersection from "../../../components/Headersection";
 import CustomButton from "../../../components/CustomButton";
 import AxiosInstance from "../../../AxiosInstance";
 
