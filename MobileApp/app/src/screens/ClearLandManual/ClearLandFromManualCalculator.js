@@ -16,10 +16,10 @@ import {
   Searchbar,
   TextInput,
 } from "react-native-paper";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
-import { useNavigation ,useRoute} from "@react-navigation/native";
+import { useNavigation} from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import AxiosInstance from "../../AxiosInstance";
 import {styles} from "./ClearLandFromManualCalculatorStyles";
