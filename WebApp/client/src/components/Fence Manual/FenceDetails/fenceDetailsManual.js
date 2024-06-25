@@ -1,6 +1,5 @@
 // SideNavbar.js
 import React from "react";
-import { useState, useEffect } from "react";
 import { HiMiniBars4 } from "react-icons/hi2";
 import { TbArrowBarBoth, TbBarrierBlock, TbFence } from "react-icons/tb";
 import { MdArrowBack } from "react-icons/md";
