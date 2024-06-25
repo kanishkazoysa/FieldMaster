@@ -52,14 +52,14 @@ export default function EffortOutput({
             </div>
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Total Hours</p>
-              <p style={styles.propertyValue}>{effort} hrs</p>
+              <p style={styles.propertyValue}>6 hrs</p>
             </div>
           </div>
           <div className="property" style={styles.property}>
             <CiCalendar color="gray" size={25} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>{workHours} hrs Per Day</p>
-              <p style={styles.propertyValue}>
+              <p style={styles.propertyValue}>1 day
                 
               </p>
             </div>
@@ -74,14 +74,14 @@ export default function EffortOutput({
             <BsBoundingBox color="gray" size={25} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>1.5Km</p>
+              <p style={styles.propertyValue}>0.07Km</p>
             </div>
           </div>
           <div className="property" style={styles.property}>
             <PiSquareDuotone color="gray" size={28} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
-              <p style={styles.propertyValue}>100 acres</p>
+              <p style={styles.propertyValue}>300m<sup>2</sup></p>
             </div>
           </div>
         </div>

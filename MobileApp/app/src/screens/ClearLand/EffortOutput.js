@@ -45,6 +45,7 @@ export default function EffortOutput({ route }) {
   const [Area, setArea] = useState(null);
   const [Perimeter, setPerimeter] = useState(null);
   const [effortOutput, setEffortOutput] = useState(null);
+  const [workDays, setWorkDays] = useState(null);
 
   //Fetch data from database
  const fetchData = async (id) => {
@@ -58,6 +59,7 @@ export default function EffortOutput({ route }) {
         setArea(response.data.Area);
         setPerimeter(response.data.Perimeter);
         setEffortOutput(response.data.effortOutput);
+        setWorkDays(response.data.workDays);
       } catch (error) {
         console.error(error);
       }
@@ -211,7 +213,7 @@ export default function EffortOutput({ route }) {
                 ></Image>
                 <View style={{ display: "flex", flexDirection: "column" }}>
                   <Text style={styles.card1Text4}>{workHours} hrs per day</Text>
-                  <Text style={styles.card1Text5}>days</Text>
+                  <Text style={styles.card1Text5}>{workDays}days</Text>
                 </View>
               </View>
             </Card.Content>

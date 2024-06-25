@@ -16,6 +16,7 @@ import EmailVerified from "./pages/EmailVerified";
 import Managemap from "./pages/Managemap";
 import RegisterPage from "./pages/auth/Register/RegisterPage";
 import AuthLayout from "./pages/auth/AuthLayout";
+import ResizeMap from "./pages/ResizeMap";
 
 export default function App() {
   return (
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="/Home" element={<Home />} />
         <Route path="/emailVerification" element={<EmailVerified />} />
         <Route path="/managemap" element={<Managemap />} />
+        <Route path="/resizemap" element={<ResizeMap />} />
       </Routes>
     </Router>
   );
