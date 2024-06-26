@@ -11,7 +11,9 @@ import { GiWeight, GiChemicalDrop } from "react-icons/gi";
 import { Tb24Hours } from "react-icons/tb";
 import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
+import { getFertilizerDetailsHtml } from "./FertilizerDetailsTemplate.js";
 export default function FertilizingDetails({
+
   route,
   onBackToSidebar,
   onEditTemplateClick,
@@ -124,6 +126,14 @@ export default function FertilizingDetails({
       setCurrentPage(null);
     }, 300);
   };
+  const handleSave = () => {
+    const htmlContent = getFertilizerDetailsHtml(selectedFrequency,FertilizerAmountUnitselectedValue,textFertilizationAmount,textFertilizationNUmberoftime,textFertilizationType,Perimeter,area);
+    const newWindow = window.open();
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
+    newWindow.print();
+  };
+
   return (
     <div>
       {!currentPage && (
@@ -234,7 +244,7 @@ export default function FertilizingDetails({
           </div>
 
           <div style={styles.bottom2}>
-            <button style={styles.Button2}>
+            <button style={styles.Button2}onClick={handleSave}>
               <p style={styles.Box4ButtonText}>Save as PDF</p>
             </button>
             {/* <button style={styles.Button3} onClick={handleback}>
