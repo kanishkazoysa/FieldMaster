@@ -23,7 +23,6 @@ const TemplateDetails = ({
             <div className='column details'>
               <p className='templateName-text'>{template.templateName}</p>
               <p>{template.location}</p>
-              <p>{template.date}</p>
             </div>
             <div className='column edit-icon-container'>
               <BiEdit className='edit-icon' onClick={onEditTemplateClick} />
