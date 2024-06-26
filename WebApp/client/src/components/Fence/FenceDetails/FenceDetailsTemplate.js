@@ -1,6 +1,4 @@
-// FenceDetailsTemplate.js
-
-export const getFenceDetailsHtml = (fenceType, numberOfSticks, postSpace, PostSpaceUnit, data1,Area,Perimeter) => `
+export const getFenceDetailsHtml = (fenceType, numberOfSticks, postSpace, PostSpaceUnit, data1, Area, Perimeter) => `
   <!DOCTYPE html>
   <html lang="en">
   <head>
