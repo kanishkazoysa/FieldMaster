@@ -5,7 +5,11 @@ import Card from './Card';
 import { FaSearch } from 'react-icons/fa';
 import AxiosInstance from '../../AxiosInstance';
 
-const SavedTemplatesWeb = ({ onBackToSidebar, onCardClick }) => {
+const SavedTemplatesWeb = ({
+  onBackToSidebar,
+  onCardClick,
+  handleEditTemplateClick,
+}) => {
   const [templates, setTemplates] = useState([]);
 
   const getAllTemplates = () => {
@@ -62,6 +66,7 @@ const SavedTemplatesWeb = ({ onBackToSidebar, onCardClick }) => {
                 date={template.date}
                 onClick={() => onCardClick(template)}
                 onDelete={() => handleDelete(template)}
+                onEdit={() => handleEditTemplateClick(template)}
               />
             ))}
           </div>
