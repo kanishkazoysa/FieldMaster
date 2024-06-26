@@ -144,4 +144,40 @@ router.delete("/deleteFence/:id", async (req, res) => {
   }
 });
 
+
+router.post("/fenceFromManualcal", async (req, res) => {
+  try {
+    const {
+      FenceTypeselectedValue,
+      inputValuePostspace,
+      PostSpaceUnitselectedValue,
+      displayValues,
+      fenceAmountsArray, 
+      fenceLengthsArray,
+      Perimeter,
+    } = req.body;
+
+    const perimeter = Perimeter*1000;
+    const gapBetweenSticks = inputValuePostspace;
+    const gapUnit = PostSpaceUnitselectedValue;
+    const gateLength = fenceLengthsArray;
+    const numberOfGates = fenceAmountsArray;
+    const gateCount = calculateSum(numberOfGates);
+
+    const totalGateLengths = calculateTotalGateLengths(numberOfGates,gateLength);
+    const numberOfSticks = calculateNumberOfSticks(perimeter,gapBetweenSticks,gapUnit,totalGateLengths,gateCount);
+
+    res.json({
+      status: "ok",
+      data: "Fence Created",
+      totalGateLengths,
+      gateCount,
+      numberOfSticks,
+    });
+  } catch (error) {
+    res.status(500).json({ status: "error", data: error.message });
+  }
+});
+
+
 module.exports = router;

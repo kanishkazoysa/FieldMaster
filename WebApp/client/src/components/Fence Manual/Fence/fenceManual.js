@@ -7,24 +7,17 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import {  BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
 import Swal from 'sweetalert2'
-
-import { styles } from "./fenceStyles";
+import { styles } from "./fenceManualStyles";
 import Select from "react-select";
-// import AxiosInstance from "../../../AxiosInstance";
-import axios from "axios";
-import FenceDetails from "../FenceDetails/fenceDetails";
+import FenceDetailsManual from "../FenceDetails/fenceDetailsManual";
 import AxiosInstance from "../../../AxiosInstance";
 
-export default function Fence({ onBackToSidebar }) {
-  const [id , setId] = useState("666e8ac30a184824d6a03eaa");
-  const [Perimeter, setPerimeter] = useState("1.5");
-  const [area, setArea] = useState("100");
+export default function FenceManual({ onBackToSidebar,area,Perimeter,AreaUnitselectedValue,PerimeterUnitselectedValue }) {
+  
   const [FenceTypeselectedValue, setFenceTypeselectedValue] = useState(null);
   const [FenceTypeselectedValue1, setFenceTypeselectedValue1] = useState(null);
-  const [PostSpaceUnitselectedValue, setPostSpaceUnitselectedValue] =
-    useState("");
-  const [PostSpaceUnitselectedValue1, setPostSpaceUnitselectedValue1] =
-    useState("");
+  const [PostSpaceUnitselectedValue, setPostSpaceUnitselectedValue] = useState("");
+  const [PostSpaceUnitselectedValue1, setPostSpaceUnitselectedValue1] = useState("");
   const [inputValuePostspace, setInputValuePostspace] = useState("");
   const [inputValueFenceLength, setInputValueFenceLength] = useState("");
   const [inputValueFenceAmount, setInputValueFenceAmount] = useState("");
@@ -32,9 +25,12 @@ export default function Fence({ onBackToSidebar }) {
   const [fenceAmountsArray, setFenceAmountsArray] = useState([]);
   const [displayValues, setDisplayValues] = useState([]);
   const inputValueFenceAmountRef = useRef(null);
+  const [NumberOfSticks, setNumberOfSticks] = useState(0);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
+ 
 
+  
   const handleFenceLengthChange = (event) => {
     setInputValueFenceLength(event.target.value);
   };
@@ -71,7 +67,7 @@ export default function Fence({ onBackToSidebar }) {
 
     const regex2 = /^\d+$/; // allow only decimal numbers
     if (!regex2.test(inputValueFenceAmount)) {
-      Swal.fire("Error: Please enter a valid Count");      
+      Swal.fire("Error: Please enter a valid count");      
       return;
     }
 
@@ -102,6 +98,7 @@ export default function Fence({ onBackToSidebar }) {
   };
 
   const handleFenceDetails = async (e) => {
+    e.preventDefault();
 
        // Validate the data
     if (!PostSpaceUnitselectedValue || !FenceTypeselectedValue || !inputValuePostspace) {
@@ -115,8 +112,7 @@ export default function Fence({ onBackToSidebar }) {
       return;
     }
 
-    AxiosInstance.post("/api/fence/fence", {
-      id,
+    AxiosInstance.post("/api/fence/fenceFromManualcal", {
       FenceTypeselectedValue,
       inputValuePostspace,
       PostSpaceUnitselectedValue,
@@ -126,10 +122,9 @@ export default function Fence({ onBackToSidebar }) {
       Perimeter,
     })
      .then((response) => {
-        // If backend response is successful, navigate to detail page
-      setCurrentPage("FenceDetails"); // Update this line
+      setNumberOfSticks(response.data.numberOfSticks);
+      setCurrentPage("FenceDetailsManual"); // Update this line
       setAnimatePage(true);
-      e.preventDefault();
 
       })
      .catch((error) => {
@@ -159,7 +154,6 @@ export default function Fence({ onBackToSidebar }) {
           </div>
 
           {/* first box */}
-          
 
           <div style={styles.Box1}>
             <p style={styles.titleText}>Land Info</p>
@@ -168,7 +162,7 @@ export default function Fence({ onBackToSidebar }) {
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{Perimeter}Km</p>
+                  <p style={styles.propertyValue}>{Perimeter}{PerimeterUnitselectedValue}</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -176,7 +170,7 @@ export default function Fence({ onBackToSidebar }) {
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} m<sup>2</sup>
+                    {area} {AreaUnitselectedValue}
                   </p>
                 </div>
               </div>
@@ -322,14 +316,18 @@ export default function Fence({ onBackToSidebar }) {
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === "FenceDetails" && (
-          <FenceDetails
+        {currentPage === "FenceDetailsManual" && (
+          <FenceDetailsManual
             onBackToSidebar={handleBackClick}
-            id={id}
             inputValuePostspace={inputValuePostspace}
             displayValues={displayValues}
             PostSpaceUnitselectedValue={PostSpaceUnitselectedValue}
             FenceTypeselectedValue={FenceTypeselectedValue}
+            NumberOfSticks={NumberOfSticks}
+            area = {area}
+            Perimeter = {Perimeter}
+            AreaUnitselectedValue = {AreaUnitselectedValue}
+            PerimeterUnitselectedValue = {PerimeterUnitselectedValue}
           />
         )}
       </div>

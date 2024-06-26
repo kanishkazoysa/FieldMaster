@@ -9,7 +9,6 @@ import { SlChemistry } from "react-icons/sl";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import { styles } from "./fertilizingStyles.js";
 import Select from "react-select";
-// import AxiosInstance from "../../../AxiosInstance";
 import axios from "axios";
 import { FaTree } from "react-icons/fa";
 import FertilizingDetails from "../FertilizingDetails/fertilizingDetails";

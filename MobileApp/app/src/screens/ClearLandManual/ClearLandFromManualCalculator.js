@@ -16,24 +16,21 @@ import {
   Searchbar,
   TextInput,
 } from "react-native-paper";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
-import { useNavigation ,useRoute} from "@react-navigation/native";
-import Headersection from "../../components/Headersection";
+import { useNavigation} from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import AxiosInstance from "../../AxiosInstance";
 import {styles} from "./ClearLandFromManualCalculatorStyles";
 import { 
   responsiveFontSize,
-  responsiveHeight,
-  responsiveWidth,
+  responsiveHeight
 } from "react-native-responsive-dimensions";
 
 export default function ClearLandFromManualCalculator({ route }) {
   const navigation = useNavigation();
   const { area , perimeter } = route.params;
-  const [text, setText] = React.useState("");
   
   
   const [pressed, setPressed] = useState(null);
@@ -216,8 +213,6 @@ export default function ClearLandFromManualCalculator({ route }) {
     <PaperProvider>
       {/* Status bar section */}
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
-
-      {/* <Headersection navigation={navigation} title="Clear Land"></Headersection> */}
 
       {/* Header section */}
       <View>
