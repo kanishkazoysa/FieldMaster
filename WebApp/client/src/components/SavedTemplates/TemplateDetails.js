@@ -50,6 +50,8 @@ const TemplateDetails = ({
     }
   };
 
+  
+
   return (
     <div>
       {!currentPage && (
