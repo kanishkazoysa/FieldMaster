@@ -28,19 +28,17 @@ import {
 
 const ResizeMapScreen = ({ navigation, route }) => {
   const { templateId } = route.params;
-
   const [isPolygonComplete, setIsPolygonComplete] = useState(true);
   const [region, setRegion] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [points, setPoints] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
-  const [showCurrentLocation, setShowCurrentLocation] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
-  const [searchedLocation, setSearchedLocation] = useState(null);
   const mapRef = React.useRef(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
   const [isMarkerMoved, setIsMarkerMoved] = useState(false);
+  const [undoStack, setUndoStack] = useState([]);
 
   const closeModal = () => {
     setModalVisible(false);
@@ -50,22 +48,22 @@ const ResizeMapScreen = ({ navigation, route }) => {
     setShowDropdown(false);
   };
 
-  //focuses the map on the current location of the user
-  const focusOnCurrentLocation = () => {
-    setSearchedLocation(null);
-    setShowCurrentLocation((prevShowCurrentLocation) => {
-      const newShowCurrentLocation = !prevShowCurrentLocation;
-      if (newShowCurrentLocation && currentLocation && mapRef.current) {
-        mapRef.current.animateToRegion({
-          latitude: currentLocation.coords.latitude,
-          longitude: currentLocation.coords.longitude,
-          latitudeDelta: 0.0005,
-          longitudeDelta: 0.0005,
-        });
-      }
-      return newShowCurrentLocation;
-    });
-  };
+  // //focuses the map on the current location of the user
+  // const focusOnCurrentLocation = () => {
+  //   setSearchedLocation(null);
+  //   setShowCurrentLocation((prevShowCurrentLocation) => {
+  //     const newShowCurrentLocation = !prevShowCurrentLocation;
+  //     if (newShowCurrentLocation && currentLocation && mapRef.current) {
+  //       mapRef.current.animateToRegion({
+  //         latitude: currentLocation.coords.latitude,
+  //         longitude: currentLocation.coords.longitude,
+  //         latitudeDelta: 0.0005,
+  //         longitudeDelta: 0.0005,
+  //       });
+  //     }
+  //     return newShowCurrentLocation;
+  //   });
+  // };
 
   //handling location and fetching template data
   useEffect(() => {
@@ -116,14 +114,24 @@ const ResizeMapScreen = ({ navigation, route }) => {
 
   //remove last point from the array
   const handleUndoLastPoint = () => {
-    if (points.length > 0) {
-      setPoints(points.slice(0, -1));
+    if (undoStack.length > 0) {
+      const newUndoStack = [...undoStack];
+      const lastAction = newUndoStack.pop();
+      setUndoStack(newUndoStack);
+      
+      const newPoints = [...points];
+      newPoints[lastAction.index] = lastAction.point;
+      setPoints(newPoints);
+      
+      if (newUndoStack.length === 0) {
+        setIsMarkerMoved(false);
+      }
     }
   };
 
   //save the updates points to the backend is a marker was moved
   const handleSaveMap = async () => {
-    if (isMarkerMoved) {
+    if (isMarkerMoved || undoStack.length > 0) {
       try {
         const locationPoints = points.map((point) => ({
           latitude: point.latitude,
@@ -135,10 +143,11 @@ const ResizeMapScreen = ({ navigation, route }) => {
             locationPoints,
           }
         );
-
+  
         if (response.status === 200) {
           console.log('Location updated successfully');
           setIsMarkerMoved(false);
+          setUndoStack([]); // Reset the undo stack after saving
           navigation.navigate('SavedTemplatesScreen');
         } else {
           console.log('Failed to update location');
@@ -146,12 +155,16 @@ const ResizeMapScreen = ({ navigation, route }) => {
       } catch (error) {
         console.error('An error occurred while updating the location:', error);
       }
+    } else {
+      navigation.navigate('SavedTemplatesScreen');
     }
   };
 
   //update the point's coordinates when a marker is dragged to a new location
   const handleMarkerDragEnd = (event, index) => {
     const newPoints = [...points];
+    const originalPoint = {...newPoints[index]};
+    setUndoStack(prevStack => [...prevStack, {index, point: originalPoint}]);
     newPoints[index] = event.nativeEvent.coordinate;
     setPoints(newPoints);
     setIsMarkerMoved(true);
@@ -288,9 +301,10 @@ const ResizeMapScreen = ({ navigation, route }) => {
             )}
           </TouchableOpacity>
           
-          <View>
-            <View style={styles.sideIconWrap}>
-              <TouchableWithoutFeedback
+          
+          {(undoStack.length > 0 || isMarkerMoved) && (
+              <TouchableOpacity
+              style={styles.sideIconWrap}
                 onPressIn={() => setIsButtonPressed(true)}
                 onPressOut={() => setIsButtonPressed(false)}
               >
@@ -301,9 +315,10 @@ const ResizeMapScreen = ({ navigation, route }) => {
                   style={styles.sideIconStyle}
                   onPress={handleUndoLastPoint}
                 />
-              </TouchableWithoutFeedback>
-            </View>
-          </View>
+              </TouchableOpacity>
+           
+          )}
+          
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={handleSaveMap} style={styles.btnStyle}>
               <Text style={styles.btmBtnStyle}>Save</Text>

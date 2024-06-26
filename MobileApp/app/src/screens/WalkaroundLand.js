@@ -31,7 +31,7 @@ import { faUndo } from "@fortawesome/free-solid-svg-icons";
 
 const BACKGROUND_LOCATION_TASK = "background-location-task";
 
-export default function Home() {
+export default function WalkaroundLand() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [initialLocation, setInitialLocation] = useState(null);
   const [pathCoordinates, setPathCoordinates] = useState([]);
