@@ -13,7 +13,8 @@
 }
 .search-bar {
   flex-grow: 1;
-  padding: 10px;
+  padding: 5px;
+  padding-left: 10px;
   margin-right: 10px;
   border-radius: 500px;
   border: 1px solid #ccc;
@@ -24,6 +25,11 @@
     width: 100%;
     margin: 20px auto;
   }
+}
+
+.search-bar:focus {
+  border-color: #ccc;
+  outline: none;
 }
 
 .headingDiv {
@@ -38,11 +44,11 @@
   justify-content: space-between;
   width: 100%;
   margin: auto;
-  position: relative; /* Add this */
+  position: relative;
 }
 
 .search-icon {
   color: #adacac;
-  position: absolute; /* Add this */
-  right: 20px; /* Add this */
+  position: absolute;
+  right: 20px;
 }

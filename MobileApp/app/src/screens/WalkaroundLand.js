@@ -8,7 +8,12 @@ import {
   Text,
   FlatList,
 } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from "react-native-maps";
+import MapView, {
+  PROVIDER_GOOGLE,
+  Polyline,
+  Marker,
+  Polygon,
+} from "react-native-maps";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import { useNavigation } from "@react-navigation/native";
@@ -16,14 +21,13 @@ import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import area from "@turf/area";
-import { convertArea } from "@turf/helpers";
-import AxiosInstance from "../AxiosInstance";
 import { distance } from "@turf/turf";
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
+import { faUndo } from "@fortawesome/free-solid-svg-icons";
 
 const BACKGROUND_LOCATION_TASK = "background-location-task";
 
@@ -31,6 +35,7 @@ export default function Home() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [initialLocation, setInitialLocation] = useState(null);
   const [pathCoordinates, setPathCoordinates] = useState([]);
+  const [undoStack, setUndoStack] = useState([]);
   const [trackingStarted, setTrackingStarted] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -45,6 +50,8 @@ export default function Home() {
     useState(false);
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
   const [resizingMode, setResizingMode] = useState(false);
+  const [showUndoButton, setShowUndoButton] = useState(true);
+  const [showFillColor, setShowFillColor] = useState(false);
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -88,11 +95,13 @@ export default function Home() {
       setDrawPolyline(true);
       setPathCoordinates([initialLocation]);
       setIsSaveButtonDisabled(true);
+      setShowFillColor(false);
     } else {
       setTrackingStarted(false);
       setIsResizeButtonDisabled(false);
       setIsStartPauseButtonDisabled(true);
       setIsSaveButtonDisabled(false);
+      setShowFillColor(true);
       if (currentLocation) {
         const lineCoordinates = [currentLocation, initialLocation];
         setPathCoordinates((prevCoordinates) => [
@@ -101,9 +110,10 @@ export default function Home() {
         ]);
       }
       stopLocationUpdates();
-      calculateAreaAndPerimeter(); // Call calculateAreaAndPerimeter when tracking is paused
+      calculateAreaAndPerimeter();
     }
   };
+
   const handleResizeEnd = () => {
     calculateAreaAndPerimeter();
   };
@@ -221,10 +231,57 @@ export default function Home() {
 
   const saveMapData = async () => {
     navigation.navigate("SaveScreen", {
-     locationPoints: pathCoordinates,
+      locationPoints: pathCoordinates,
       area: calculatedArea,
       perimeter: polygonPerimeter,
     });
+  };
+
+  const handleResize = () => {
+    const newResizingMode = !resizingMode;
+    setResizingMode(newResizingMode);
+    if (newResizingMode) {
+      // Entering resize mode
+      setShowUndoButton(true);
+    } else {
+      // Exiting resize mode (pressing Done)
+      setShowUndoButton(false);
+    }
+  };
+
+  const handleDragEnd = (event, index) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    const updatedCoordinates = [...pathCoordinates];
+    updatedCoordinates[index] = { latitude, longitude };
+    if (index === 0) {
+      updatedCoordinates[updatedCoordinates.length - 1] = {
+        latitude,
+        longitude,
+      };
+    } else if (index === updatedCoordinates.length - 1) {
+      updatedCoordinates[0] = { latitude, longitude };
+    }
+    setUndoStack((prevStack) => [...prevStack, [...pathCoordinates]]);
+    setPathCoordinates(updatedCoordinates);
+    setShowUndoButton(true);
+    handleResizeEnd();
+    // Ensure fill color is shown after resizing
+    setShowFillColor(true);
+  };
+
+  const handleUndo = () => {
+    if (undoStack.length > 0) {
+      const newUndoStack = [...undoStack];
+      const previousState = newUndoStack.pop();
+      setUndoStack(newUndoStack);
+      setPathCoordinates(previousState);
+      calculateAreaAndPerimeter();
+
+      // Hide undo icon if stack is empty
+      if (newUndoStack.length === 0) {
+        setShowUndoButton(false);
+      }
+    }
   };
 
   return (
@@ -271,16 +328,26 @@ export default function Home() {
         initialRegion={{
           latitude: 6.2427,
           longitude: 80.0607,
-          latitudeDelta: 0.0922 / Math.pow(2, 20), // Adjust the zoom level here
-          longitudeDelta: 0.0421 / Math.pow(2, 20), // Adjust the zoom level here
+          latitudeDelta: 5, // Adjust the zoom level here
+          longitudeDelta: 5, // Adjust the zoom level here
         }}
       >
         {drawPolyline && pathCoordinates.length > 0 && (
-          <Polyline
-            coordinates={pathCoordinates}
-            strokeWidth={2.3}
-            strokeColor="white"
-          />
+          <>
+            <Polyline
+              coordinates={pathCoordinates}
+              strokeWidth={2.3}
+              strokeColor="white"
+            />
+            {showFillColor && (
+              <Polygon
+                coordinates={pathCoordinates}
+                fillColor="rgba(0, 123, 255, 0.3)"
+                strokeColor="white"
+                strokeWidth={2.3}
+              />
+            )}
+          </>
         )}
         {resizingMode &&
           pathCoordinates.map((coordinate, index) => (
@@ -289,21 +356,7 @@ export default function Home() {
               coordinate={coordinate}
               pinColor="red"
               draggable
-              onDragEnd={(event) => {
-                const { latitude, longitude } = event.nativeEvent.coordinate;
-                const updatedCoordinates = [...pathCoordinates];
-                updatedCoordinates[index] = { latitude, longitude };
-                if (index === 0) {
-                  updatedCoordinates[updatedCoordinates.length - 1] = {
-                    latitude,
-                    longitude,
-                  };
-                } else if (index === updatedCoordinates.length - 1) {
-                  updatedCoordinates[0] = { latitude, longitude };
-                }
-                setPathCoordinates(updatedCoordinates);
-                handleResizeEnd(); // Call handleResizeEnd when a marker is dragged and dropped
-              }}
+              onDragEnd={(event) => handleDragEnd(event, index)}
             />
           ))}
       </MapView>
@@ -354,7 +407,7 @@ export default function Home() {
               }
             }
           >
-            {trackingPaused ? "Pause" : "Start"}
+            {trackingPaused ? "Finish" : "Start"}
           </Button>
         </View>
         <View style={styles.buttonWrapper}>
@@ -371,11 +424,20 @@ export default function Home() {
             labelStyle={
               isResizeButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }
             }
-            onPress={() => setResizingMode(!resizingMode)}
+            onPress={handleResize}
           >
             {resizingMode ? "Done" : "Resize"}
           </Button>
         </View>
+        {undoStack.length > 0 && showUndoButton && resizingMode && (
+          <TouchableOpacity style={styles.undoIcon} onPress={handleUndo}>
+            <FontAwesomeIcon
+              icon={faUndo}
+              size={responsiveFontSize(2.5)}
+              color="#fff"
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -387,7 +449,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0, 0.7)",
     padding: responsiveHeight(1),
     borderRadius: 5,
-    left: responsiveWidth(5),
+    right: responsiveWidth(4),
     top: responsiveHeight(78),
     zIndex: 1,
     flexDirection: "row",
@@ -396,7 +458,7 @@ const styles = StyleSheet.create({
   dropdownContainer: {
     position: "absolute",
     top: responsiveHeight(-16.5),
-    left: responsiveWidth(12),
+    right: responsiveWidth(12),
     backgroundColor: "rgba(0,0,0, 0.7)",
     borderRadius: 5,
     elevation: 3,
@@ -464,5 +526,13 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#007BFF",
     flex: 1,
+  },
+  undoIcon: {
+    position: "absolute",
+    top: -responsiveHeight(17),
+    right: responsiveWidth(1),
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    borderRadius: responsiveWidth(1),
+    padding: responsiveWidth(2.1),
   },
 });
