@@ -24,6 +24,7 @@ export const styles = {
       height: "45px",
       backgroundColor: "#007BFF",
       alignItems: "center",
+      justifyContent: "space-between"
     
     },
   
@@ -32,23 +33,23 @@ export const styles = {
       fontWeight: "bold",
       marginBottom: 0,
       color: "white",
-      marginLeft: "70px",
+      marginLeft: "0px",
     },
   
 
-    topSection: {
-      display: "flex",
-      flexDirection: "row",
-      marginTop: "15px",
-      width: "100%",
-      justifyContent: "flex-end",
-      marginRight: "20px", // Align the items to the right
-    },
+    // topSection: {
+    //   display: "flex",
+    //   flexDirection: "row",
+    //   marginTop: "15px",
+    //   width: "100%",
+    //   justifyContent: "flex-end",
+    //   marginRight: "20px", // Align the items to the right
+    // },
 
     editbutton: {
-      marginLeft: "10px",
+      marginRight: "10px",
       cursor: "pointer",
-      color: "#007BFF",
+      color: "white",
     },
 
     /*first section*/
@@ -60,7 +61,7 @@ export const styles = {
       flexDirection: "column",
       alignItems: "center",
       backgroundColor: "white",
-      marginTop: "15px",
+      marginTop: "35px",
       borderRadius: "11px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
       padding: "6px",

@@ -1,6 +1,5 @@
-// SideNavbar.js
 import React from "react";
-import { useState, useEffect,useCallback } from "react";
+import { useState, useEffect } from "react";
 import { HiMiniBars4 } from "react-icons/hi2";
 import { TbArrowBarBoth, TbBarrierBlock, TbFence } from "react-icons/tb";
 import { MdArrowBack } from "react-icons/md";
@@ -9,17 +8,18 @@ import { PiSquareDuotone } from "react-icons/pi";
 import { styles } from "./fenceDetailsStyles";
 import { FaEdit } from "react-icons/fa";
 import AxiosInstance from "../../../AxiosInstance";
-import Swal from 'sweetalert2'
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Modal } from "antd";
 import Fence from "../Fence/fence";
+import TemplateDetails from "../../SavedTemplates/TemplateDetails";
 
-
+const { confirm } = Modal;
 
 export default function FenceDetails({
   onBackToSidebar,
-  inputValuePostspace,
-  displayValues,
-  PostSpaceUnitselectedValue,
-  FenceTypeselectedValue,
+  onEditTemplateClick,
+  template,
+  onback,
   id,
 }) {
 
@@ -73,50 +73,44 @@ export default function FenceDetails({
   };
 
   const handleIconPress = (e) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you Want to Update Fence?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes"
-    }).then((result) => {
-      if (result.isConfirmed) {
+    confirm({
+      title: 'Are you sure?',
+      content: 'Do you want to update Fence?',
+      icon: <ExclamationCircleOutlined />,
+      okText: 'Yes',
+      okType: 'primary',
+      cancelText: 'No',
+      onOk() {
         try {
           FenceDelete(id)
             .then(() => {
-              // Swal.fire({
-              //   title: "Deleted!",
-              //   text: "Your file has been deleted.",
-              //   icon: "success"
-              // });
               // Navigate to the desired screen
-              setCurrentPage("Fence");
+              setCurrentPage('Fence');
               setAnimatePage(true);
               e.preventDefault();
             })
             .catch((error) => {
               // Show detailed error message
               const errorMessage = error.response ? error.response.data.message : error.message;
-              Swal.fire({
-                title: "Failed to delete fence",
-                text: errorMessage,
-                icon: "error"
+              Modal.error({
+                title: 'Failed to delete fence',
+                content: errorMessage,
               });
             });
         } catch (error) {
           console.error('Error:', error);
         }
-      }
+      },
+      onCancel() {
+        console.log('Cancelled');
+      },
     });
   };
 
-  const handleBackClick = () => {
-    setAnimatePage(false);
-    setTimeout(() => {
-      setCurrentPage(null);
-    }, 300);
+ 
+  const handleSave = () => {
+    setCurrentPage("TemplateDetails");
+    setAnimatePage(true);
   };
   
   return (
@@ -125,22 +119,27 @@ export default function FenceDetails({
     <div style={styles.content}>
       <div style={styles.header}>
         <MdArrowBack
-          onClick={onBackToSidebar}
+          onClick={onback}
           style={styles.backButton}
           fontSize={20}
         />
         <p style={styles.titleText1}>Fence Details</p>
+        <FaEdit
+          onClick={handleIconPress}
+          style={styles.editbutton}
+          fontSize={20}
+        />
       </div>
 
       {/* first box */}
 
-      <div style={styles.topSection}>
+      {/* <div style={styles.topSection}>
       <FaEdit
           onClick={handleIconPress}
           style={styles.editbutton}
           fontSize={20}
         />
-    </div>
+    </div> */}
 
       <div style={styles.Box1}>
         <p style={styles.titleText}>Total Posts / Sticks</p>
@@ -211,7 +210,7 @@ export default function FenceDetails({
             </p>
           </div>
           <div style={styles.innersquareright1}>
-            {displayValues.length === 0 ? (
+            {data1.length === 0 ? (
               <div>No Gate</div>
             ) : (
               data1.map((value, index) => (
@@ -223,7 +222,7 @@ export default function FenceDetails({
       </div>
 
       <div style={styles.bottom}>
-        <button style={styles.Button1}>
+        <button style={styles.Button1} onClick = {handleSave}>
           <p style={styles.Box4ButtonText}>Save Data</p>
         </button>
       </div>
@@ -240,9 +239,21 @@ export default function FenceDetails({
     >
       {currentPage === "Fence" && (
         <Fence
-          onBackToSidebar={handleBackClick}
+          onBackToSidebar={onBackToSidebar}
           id={id}
+          area={Area}
+          Perimeter={Perimeter}
+          onEditTemplateClick = {onEditTemplateClick}
+          template = {template}
         />
+      )}
+
+     {currentPage === "TemplateDetails" && (
+        <TemplateDetails
+        onBackToSidebar={onBackToSidebar}
+        id={id}
+        onEditTemplateClick = {onEditTemplateClick}
+        template = {template}        />
       )}
     </div>
   </div>
