@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Modal,
   StatusBar,
+  Alert,
 } from "react-native";
 import { Polyline } from "react-native-maps";
 import {
@@ -28,6 +29,9 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
+import { polygon as turfPolygon } from '@turf/helpers';
+import area from '@turf/area';
+import length from '@turf/length';
 
 
 const ResizeMapScreen = ({ navigation, route }) => {
@@ -126,30 +130,98 @@ const ResizeMapScreen = ({ navigation, route }) => {
   };
 
   //save the updates points to the backend is a marker was moved
+  // const handleSaveMap = async () => {
+  //   console.log("Template ID:", templateId);
+  //   if (isMarkerMoved) {
+  //     try {
+  //       const locationPoints = points.map((point) => ({
+  //         latitude: point.latitude,
+  //         longitude: point.longitude,
+  //       }));
+  //       const response = await AxiosInstance.put(
+  //         `/api/auth/mapTemplate/updateTemplate/${templateId}`,
+  //         {
+  //           locationPoints,
+  //         }
+  //       );
+        
+  //       if (response.status === 200) {
+  //         console.log('Location updated successfully');
+  //         setIsMarkerMoved(false);
+  //         navigation.navigate('SavedTemplatesScreen');
+  //       } else {
+  //         console.log('Failed to update location');
+  //       }
+  //     } catch (error) {
+  //       console.error('An error occurred while updating the location:', error);
+  //     }
+  //   }
+  // };
   const handleSaveMap = async () => {
+    console.log("Template ID:", templateId);
+
     if (isMarkerMoved) {
       try {
         const locationPoints = points.map((point) => ({
           latitude: point.latitude,
           longitude: point.longitude,
         }));
-        const response = await AxiosInstance.put(
-          `/api/auth/mapTemplate/updateTemplate/${templateId}`,
-          {
-            locationPoints,
-          }
-        );
 
-        if (response.status === 200) {
-          console.log('Location updated successfully');
-          setIsMarkerMoved(false);
-          navigation.navigate('SavedTemplatesScreen');
-        } else {
-          console.log('Failed to update location');
-        }
+        // Calculate the area and perimeter
+        const formattedPoints = points.map((point) => [
+          point.longitude,
+          point.latitude,
+        ]);
+        formattedPoints.push(formattedPoints[0]);
+
+        const poly = turfPolygon([formattedPoints]);
+        const areaMeters = area(poly);
+        const perimeterMeters = length(poly, { units: "meters" });
+        const areaPerches = (areaMeters / 25.29285264).toFixed(2);
+        const perimeterKilometers = (perimeterMeters / 1000).toFixed(2);
+
+        Alert.alert(
+          "Confirmation",
+          `Area: ${areaPerches} perches, Perimeter: ${perimeterKilometers} kilometers`,
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Save canceled"),
+              style: "cancel",
+            },
+            {
+              text: "OK",
+              onPress: async () => {
+                try {
+                  const response = await AxiosInstance.put(
+                    `/api/auth/mapTemplate/updateTemplate/${templateId}`,
+                    {
+                      locationPoints,
+                      area: parseFloat(areaPerches),
+                      perimeter: parseFloat(perimeterKilometers),
+                    }
+                  );
+
+                  if (response.status === 200) {
+                    console.log('Location, area, and perimeter updated successfully');
+                    setIsMarkerMoved(false);
+                    navigation.navigate('SavedTemplatesScreen');
+                  } else {
+                    console.log('Failed to update location, area, and perimeter');
+                  }
+                } catch (error) {
+                  console.error('An error occurred while updating the location, area, and perimeter:', error);
+                }
+              },
+            },
+          ],
+          { cancelable: false }
+        );
       } catch (error) {
-        console.error('An error occurred while updating the location:', error);
+        console.error('An error occurred while calculating the area and perimeter:', error);
       }
+    } else {
+      Alert.alert("No changes detected", "Please move a marker to update the map.");
     }
   };
 
