@@ -1,4 +1,3 @@
-// SideNavbar.js
 import React, { useState, useRef } from "react";
 import { FaBars} from "react-icons/fa";
 import { MdArrowBack, MdFence } from "react-icons/md";
@@ -6,19 +5,17 @@ import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import {  BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
-import Swal from 'sweetalert2'
-
+import { message } from "antd";
 import { styles } from "./fenceStyles";
 import Select from "react-select";
-// import AxiosInstance from "../../../AxiosInstance";
-import axios from "axios";
 import FenceDetails from "../FenceDetails/fenceDetails";
+import TemplateDetails from "../../SavedTemplates/TemplateDetails";
 import AxiosInstance from "../../../AxiosInstance";
 
-export default function Fence({ onBackToSidebar }) {
-  const [id , setId] = useState("666e8ac30a184824d6a03eaa");
-  const [Perimeter, setPerimeter] = useState("1.5");
-  const [area, setArea] = useState("100");
+export default function Fence({ onBackToSidebar , id , area,Perimeter,onEditTemplateClick,template}) {
+  //const [id , setId] = useState("666e8ac30a184824d6a03eaa");
+  //const [Perimeter, setPerimeter] = useState("1.5");
+  //const [area, setArea] = useState("100");
   const [FenceTypeselectedValue, setFenceTypeselectedValue] = useState(null);
   const [FenceTypeselectedValue1, setFenceTypeselectedValue1] = useState(null);
   const [PostSpaceUnitselectedValue, setPostSpaceUnitselectedValue] =
@@ -59,19 +56,19 @@ export default function Fence({ onBackToSidebar }) {
 
   const handleAdd = () => {
     if (!inputValueFenceLength.trim() || !inputValueFenceAmount.trim()) {
-      Swal.fire("Please fill both input fields");
+      message.error("Please fill both input fields")
       return;
     }
 
     const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
     if (!regex.test(inputValueFenceLength)) {
-      Swal.fire("Error: Please enter a valid Length");      
+      message.error("Error: Please enter a valid Length")
       return;
     }
 
     const regex2 = /^\d+$/; // allow only decimal numbers
     if (!regex2.test(inputValueFenceAmount)) {
-      Swal.fire("Error: Please enter a valid Count");      
+      message.error("Error: Please enter a valid Count")
       return;
     }
 
@@ -105,13 +102,13 @@ export default function Fence({ onBackToSidebar }) {
 
        // Validate the data
     if (!PostSpaceUnitselectedValue || !FenceTypeselectedValue || !inputValuePostspace) {
-      Swal.fire("Error: Please fill in all fields");
+      message.error("Error: Please fill in all fields");
       return;
     }
 
     const regex = /^\d+(\.\d+)?$/; // allow decimal and float numbers
     if (!regex.test(inputValuePostspace)) {
-      Swal.fire("Error: Please enter a valid Post Space");
+      message.error("Error: Please enter a valid Post Space");
       return;
     }
 
@@ -134,6 +131,7 @@ export default function Fence({ onBackToSidebar }) {
       })
      .catch((error) => {
         console.error("Error:", error.response.data);
+        message.error("Error", "Failed to create fence. Please try again.")
         alert("Error", "Failed to create fence. Please try again.");
       });
   };
@@ -145,13 +143,18 @@ export default function Fence({ onBackToSidebar }) {
     }, 300);
   };
 
+  const backtotemp = () =>{
+    setCurrentPage("TemplateDetails"); // Update this line
+    setAnimatePage(true);
+  }
+
   return (
     <div>
       {!currentPage && (
         <div style={styles.content}>
           <div style={styles.header}>
             <MdArrowBack
-              onClick={onBackToSidebar}
+              onClick={backtotemp}
               style={styles.backButton}
               fontSize={20}
             />
@@ -324,12 +327,20 @@ export default function Fence({ onBackToSidebar }) {
       >
         {currentPage === "FenceDetails" && (
           <FenceDetails
-            onBackToSidebar={handleBackClick}
+            onBackToSidebar={onBackToSidebar}
+            onback = {handleBackClick}
             id={id}
-            inputValuePostspace={inputValuePostspace}
-            displayValues={displayValues}
-            PostSpaceUnitselectedValue={PostSpaceUnitselectedValue}
-            FenceTypeselectedValue={FenceTypeselectedValue}
+            onEditTemplateClick = {onEditTemplateClick}
+            template = {template}
+          />
+        )}
+
+        {currentPage === "TemplateDetails" && (
+          <TemplateDetails
+            onBackToSidebar={onBackToSidebar}
+            id={id}
+            onEditTemplateClick = {onEditTemplateClick}
+            template = {template}
           />
         )}
       </div>
