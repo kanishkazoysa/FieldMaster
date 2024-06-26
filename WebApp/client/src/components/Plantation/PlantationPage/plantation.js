@@ -5,14 +5,14 @@ import { RxRowSpacing } from "react-icons/rx";
 import { PiTreeEvergreenFill } from "react-icons/pi";
 import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
-
+import Swal from 'sweetalert2'
 import { styles } from "./plantationStyles.js";
 import Select from "react-select";
-// import AxiosInstance from "../../../AxiosInstance";
 import axios from "axios";
 import PlantationDetails from "../PlantationDetails/plantationDetails";
-
+import AxiosInstance from "../../../AxiosInstance";
 export default function Plantation({ onBackToSidebar }) {
+  const [id , setId] = useState("66535b3c8eee9adc32c0488c");
   const [perimeter, setPerimeter] = useState("1.5");
   const [area, setArea] = useState("1");
   const [textPlant, settextPlant] = useState(null);
@@ -55,48 +55,51 @@ export default function Plantation({ onBackToSidebar }) {
     setRowSpaceUnitselectedValue(selectedOption.value);
   };
 
+
+
+
   const handlePlantationDetails = async (e) => {
-
-    try {
-      // Validate required fields
-      if (
-
-        !PlantSpaceUnitselectedValue ||
-        !RowSpaceUnitselectedValue||
-        !textPlant ||
-        !textplantspace ||
-        !textRowspace
-      ) {
-        throw new Error("Please fill in all fields");
-      }
-
-      setCurrentPage("plantationDetails");
-      setAnimatePage(true);
-      e.preventDefault();
-
-      // Prepare data for the request
-      const requestData = {
-        textPlant,
-        textplantspace,
-        textRowspace,
-        PlantSpaceUnitselectedValue,
-        RowSpaceUnitselectedValue
-
-      };
-
-      // Make POST request to the backend
-      const response = await axios.post(
-        "http://192.168.1.2:3000/api/plantation/plantation",
-        requestData
-      );
-
-      // Handle successful response
-      console.log("Response:", response.data);
-    } catch (error) {
-      // Handle errors
-      console.error("Error:", error.message);
-      alert("Error: " + error.message);
+    // Validate the data
+    if (
+      !PlantSpaceUnitselectedValue ||
+      !RowSpaceUnitselectedValue ||
+      !textPlant ||
+      !textplantspace ||
+      !textRowspace
+    ) {
+      Swal.fire("Error: Please fill in all fields");
+      return;
     }
+  
+    const regex = /^\d+(\.\d+)?$/; // allow decimal and float numbers
+    if (
+      !regex.test(textplantspace) ||
+      !regex.test(textRowspace)
+    ) {
+      Swal.fire("Error: Please enter valid values for Plant Space and Row Space");
+      return;
+    }
+  
+    AxiosInstance.post("/api/plantation/plantation", {
+      id,
+      area,
+      textPlant,
+      textplantspace,
+      textRowspace,
+      PlantSpaceUnitselectedValue,
+      RowSpaceUnitselectedValue,
+    })
+      .then((response) => {
+        // If backend response is successful, navigate to detail page
+        setCurrentPage("plantationDetails");
+        setAnimatePage(true);
+        e.preventDefault();
+        console.log("Response:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error.response ? error.response.data : error.message);
+        Swal.fire("Error", "Failed to create plantation. Please try again.");
+      });
   };
 
   const handleBackClick = () => {
@@ -165,7 +168,7 @@ function convertToCommonUnit(value, unit) {
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{perimeter}Km</p>
+                  <p style={styles.propertyValue}>{perimeter} Km</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -300,13 +303,14 @@ function convertToCommonUnit(value, unit) {
         {currentPage === "plantationDetails" && (
           <PlantationDetails
             onBackToSidebar={handleBackClick}
+            id={id}
             textplantspace={textplantspace}
             textRowspace={textRowspace}
             PlantSpaceUnitselectedValue={PlantSpaceUnitselectedValue}
             RowSpaceUnitselectedValue={RowSpaceUnitselectedValue}
             textPlant={textPlant}
             numberOfPlants={numberOfPlants}
-
+            calculatedPlantDensity={calculatedPlantDensity}
           />
         )}
       </div>

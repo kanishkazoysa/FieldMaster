@@ -232,5 +232,17 @@ export const styles = {
       borderWidth: 0,
    
     },
+
+
+    topSection: {
+      flexDirection: "row",
+      marginTop: 3,
+      padding:1,
+      width: "100%",
+      justifyContent: "space-between", // Align the items to the right
+    },
+    editbutton: {
+      padding: 6,
+    },
   };
   

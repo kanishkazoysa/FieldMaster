@@ -42,7 +42,7 @@ export default function SideNavbar() {
   };
 
   const handleSavedTemplatesClick = () => {
-    setCurrentPage('ClearLand'); // Update this line
+    setCurrentPage('Plantation'); // Update this line
     setAnimatePage(true);
     if(collapsed){
       setCollapsed(false);
@@ -106,7 +106,7 @@ export default function SideNavbar() {
         }}
       >
         {currentPage === 'StartMeasure' && <StartMeasurePage onBackToSidebar={handleBackClick} />}
-        {currentPage === 'ClearLand' && <ClearLand onBackToSidebar={handleBackClick} />}
+        {currentPage === 'Plantation' && <Plantation onBackToSidebar={handleBackClick} />}
       </div>
       </div>
     </Sidebar>
