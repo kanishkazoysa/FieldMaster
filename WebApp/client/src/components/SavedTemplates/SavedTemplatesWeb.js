@@ -8,7 +8,7 @@ import AxiosInstance from '../../AxiosInstance';
 const SavedTemplatesWeb = ({ onBackToSidebar, onCardClick }) => {
   const [templates, setTemplates] = useState([]);
 
-  useEffect(() => {
+  const getAllTemplates = () => {
     AxiosInstance.get(`/api/auth/mapTemplate/getAllTemplates`)
       .then((response) => {
         setTemplates(response.data);
@@ -18,6 +18,25 @@ const SavedTemplatesWeb = ({ onBackToSidebar, onCardClick }) => {
       .catch((error) => {
         console.error('Failed to fetch templates:', error);
       });
+  };
+
+  const handleDelete = (deletingTemplate) => {
+    AxiosInstance.delete(
+      `/api/auth/mapTemplate/deleteTemplate/${deletingTemplate._id}`
+    )
+      .then(() => {
+        alert('Template deleted');
+        setTemplates(
+          templates.filter((template) => template._id !== deletingTemplate._id)
+        );
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    getAllTemplates();
   }, []);
 
   return (
@@ -35,13 +54,14 @@ const SavedTemplatesWeb = ({ onBackToSidebar, onCardClick }) => {
           </div>
 
           <div className='cardsDiv'>
-            {templates.map((template, index) => (
+            {templates.map((template) => (
               <Card
-                key={index}
+                key={template._id}
                 templateName={template.templateName}
                 location={template.location}
                 date={template.date}
                 onClick={() => onCardClick(template)}
+                onDelete={() => handleDelete(template)}
               />
             ))}
           </div>
