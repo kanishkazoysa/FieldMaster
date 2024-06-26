@@ -27,6 +27,11 @@
   }
 }
 
+.search-bar:focus {
+  border-color: #ccc;
+  outline: none;
+}
+
 .headingDiv {
   display: flex;
   flex-direction: column;
@@ -39,11 +44,11 @@
   justify-content: space-between;
   width: 100%;
   margin: auto;
-  position: relative; /* Add this */
+  position: relative;
 }
 
 .search-icon {
   color: #adacac;
-  position: absolute; /* Add this */
-  right: 20px; /* Add this */
+  position: absolute;
+  right: 20px;
 }

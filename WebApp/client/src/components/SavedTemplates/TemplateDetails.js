@@ -89,6 +89,7 @@ const TemplateDetails = ({
                 </div>
               </div>
             </div>
+            <hr className='breaker' />
             <div className='description-div'>
               <p className='bold-text'>Description</p>
               <p className='description-text'>{template.description}</p>
