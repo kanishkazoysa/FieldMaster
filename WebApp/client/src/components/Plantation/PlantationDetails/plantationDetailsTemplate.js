@@ -1,4 +1,4 @@
-export const getPlantationDetailsHtml = ( PlantDensity,numberOfPlants,textPlant,textRowspace,textplantspace,RowSpaceUnitselectedValue,PlantSpaceUnitselectedValue,perimeter,area) => `
+export const getPlantationDetailsHtml = ( PlantDensity,numberOfPlants,textPlant,textRowspace,textplantspace,perimeter,area) => `
   <!DOCTYPE html>
   <html lang="en">
   <head>
