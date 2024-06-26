@@ -185,7 +185,7 @@ export default function ClearLand({ route }) {
       laborCount,
       workHours,
       displayValues2,
-      Area,
+      // Area,
     })
       .then((response) => {
         if (
@@ -203,14 +203,20 @@ export default function ClearLand({ route }) {
         navigation.navigate("EffortOutput", {
           id: id,
           item:item,
-          data: displayValues,
-          data1: displayValues1,
-          data2: displayValues2,
-          weedType: pressed,
-          stonesCount: stonesCount,
-          laborCount: laborCount,
-          workHours: workHours,
+          // data: displayValues,
+          // data1: displayValues1,
+          // data2: displayValues2,
+          // weedType: pressed,
+          // stonesCount: stonesCount,
+          // laborCount: laborCount,
+          // workHours: workHours,
         });
+        setPressed(" ");
+        setLaborCount(" ");
+        setWorkHours(" ");
+        setDisplayValues([]);
+        setDisplayValues1([]);
+        setDisplayValues2([]);
       })
       .catch((error) => {
         console.error("Error:", error.response.data);

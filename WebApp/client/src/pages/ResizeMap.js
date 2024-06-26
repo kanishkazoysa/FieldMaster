@@ -22,7 +22,7 @@ const ResizeMapScreen = () => {
     // streetViewControl: false,
     rotateControl: true,
     fullscreenControl: true,
-    // scrollwheel: false,
+    scrollwheel: false,
     mapTypeId: "satellite",
   };
 
@@ -130,9 +130,9 @@ const ResizeMapScreen = () => {
                   strokeColor: "black",
                   strokeOpacity: 0.4,
                   strokeWeight: 0.5,
-                  clickable: false,
-                  // draggable: false,
-                  // editable: false,
+                  clickable: true,
+                  draggable: true,
+                  editable: true,
                   geodesic: false,
                   zIndex: 1,
                 }}
