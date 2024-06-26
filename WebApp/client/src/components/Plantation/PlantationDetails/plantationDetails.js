@@ -14,21 +14,37 @@ import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
 import AxiosInstance from "../../../AxiosInstance";
 import Swal from 'sweetalert2';
 import Plantation from "../PlantationPage/plantation";
-
+import { RiEditBoxLine } from "react-icons/ri"; 
+import { BeatLoader } from 'react-spinners';
+import TemplateDetails from "../../SavedTemplates/TemplateDetails"
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Modal } from "antd";
+const { confirm } = Modal;
 export default function PlantationDetails({
- 
   onBackToSidebar,
-  textplantspace,
-  textRowspace,
-  PlantSpaceUnitselectedValue,
-  RowSpaceUnitselectedValue,
-  textPlant,
- 
-  id
+  onEditTemplateClick,
+  template,
+  onback,
+  id,
 }) {
   const [numberOfPlants,setnumberOfPlants]=useState(null);
   const [PlantDensity,setPlantDensity]=useState(null);
+  const [perimeter, setPerimeter] = useState(null);
+  const [area, setArea] = useState(null);
+  const [textPlant, settextPlant] = useState(null);
+  const [PlantSpaceUnitselectedValue, setPlantSpaceUnitselectedValue] =
+    useState("");
+  const [RowSpaceUnitselectedValue, setRowSpaceUnitselectedValue] =
+    useState("");
+  const [PlantSpaceUnitselectedValue1, setPlantSpaceUnitselectedValue1] =
+    useState("");
+  const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
+    useState("");
 
+  const [textplantspace, settextplantspace] = useState("");
+  const [textRowspace, settextRowspace] = useState("");
+
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
 
@@ -52,33 +68,29 @@ export default function PlantationDetails({
         const response = await AxiosInstance.get(`/api/plantation/numberOfPlants/${id}`);
         const data = response.data;
         setnumberOfPlants(data.numberOfPlants);
+        setPlantDensity(data.PlantDensity);
+        setArea(data.area);
+        setPerimeter(data.perimeter);
+        settextRowspace(data.rowSpace);
+        settextplantspace(data.plantspace);
+        settextPlant(data.PlnatType);
+        setPlantSpaceUnitselectedValue(data.Unit);
+        setRowSpaceUnitselectedValue(data.Unit);
+
+        setLoading(false);
         console.log(data);
 
         //setnumberOfPlants(data.data); // Assuming you want to set numberOfPlants here
       } catch (error) {
         console.error('Error fetching data:', error);
+        setLoading(false);
       }
     };
 
     fetchData();
   }, [id]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await AxiosInstance.get(`/api/plantation/plantDensity/${id}`);
-        const data = response.data;
-        console.log(data);
-        setPlantDensity(data.PlantDensity)
-
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, [id]);
-
+  
   const PlantationDelete = async (id) => {
     try {
       const response = await AxiosInstance.delete(`/api/plantation/deletePlantation/${id}`);
@@ -92,66 +104,70 @@ export default function PlantationDetails({
   };
   
   const handleIconPress = (e) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you Want to Update Plantation?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes"
-    }).then((result) => {
-      if (result.isConfirmed) {
+    confirm({
+      title: 'Are you sure?',
+      content: 'Do you want to update Plantation?',
+      icon: <ExclamationCircleOutlined />,
+      okText: 'Yes',
+      okType: 'primary',
+      cancelText: 'No',
+      onOk() {
         try {
           PlantationDelete(id)
             .then(() => {
-              // Swal.fire({
-              //   title: "Deleted!",
-              //   text: "Your file has been deleted.",
-              //   icon: "success"
-              // });
               // Navigate to the desired screen
-              setCurrentPage("Plantation");
+              setCurrentPage('Plantation');
               setAnimatePage(true);
               e.preventDefault();
             })
             .catch((error) => {
               // Show detailed error message
               const errorMessage = error.response ? error.response.data.message : error.message;
-              Swal.fire({
-                title: "Failed to delete plantation",
-                text: errorMessage,
-                icon: "error"
+              Modal.error({
+                title: 'Failed to delete plantation',
+                content: errorMessage,
               });
             });
         } catch (error) {
           console.error('Error:', error);
         }
-      }
+      },
+      onCancel() {
+        console.log('Cancelled');
+      },
     });
   };
-
+  const handleback = () => {
+    setCurrentPage("TemplateDetails");
+    setAnimatePage(true);
+  };
 
   return (
   <div>
-    {!currentPage && (
+    {loading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '85vh' }}>
+          <BeatLoader color="#007BFF" loading={loading} size={20} />
+        </div>
+      ) : (
+    !currentPage && (
     <div style={styles.content}>
       <div style={styles.header}>
         <MdArrowBack
-          onClick={onBackToSidebar}
+          onClick={onback}
           style={styles.backButton}
           fontSize={20}
         />
         <p style={styles.titleText1}>Plantation Details</p>
+        <RiEditBoxLine
+                onClick={handleIconPress}
+                style={styles.editorbutton}
+                fontSize={19}
+              />
       </div>
 
       {/* first box  */}
       <div style={styles.topSection}>
-      <FaEdit
-          onClick={handleIconPress}
-          style={styles.editbutton}
-          fontSize={20}
-        />
+     
     </div>
 
 
@@ -188,14 +204,14 @@ export default function PlantationDetails({
             <BsBoundingBox color="gray" size={28} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>1.5Km</p>
+              <p style={styles.propertyValue}>{area} Km</p>
             </div>
           </div>
           <div className="property" style={styles.property}>
             <PiSquareDuotone color="gray" size={40} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
-              <p style={styles.propertyValue}>100 acres</p>
+              <p style={styles.propertyValue}>{perimeter} Perches</p>
             </div>
           </div>
         </div>
@@ -254,11 +270,15 @@ export default function PlantationDetails({
       <div style={styles.bottom2}>
         <button style={styles.Button2}>
           <p style={styles.Box4ButtonText}>Save as PDF</p>
+        
         </button>
+        <button style={styles.Button1} onClick={handleback}>
+                <p style={styles.Box4ButtonText}>Back to Template</p>
+              </button>
       </div>
 
     </div>
-    )}
+    ))}
     <div
         style={{
           transform: animatePage ? "translateX(0)" : "translateX(-100%)",
@@ -273,9 +293,30 @@ export default function PlantationDetails({
             textPlant={textPlant}
             PlantDensity={PlantDensity}
             numberOfPlants={numberOfPlants}
-
-
-
+            id={id}
+            area={area}
+            Perimeter={perimeter}
+            onEditTemplateClick={onEditTemplateClick}
+            template={template}
+          />
+        )}
+        {currentPage === "Plantation" && (
+          <Plantation
+            onBackToSidebar={onBackToSidebar}
+            id={id}
+            area={area}
+            Perimeter={perimeter}
+            onEditTemplateClick={onEditTemplateClick}
+            template={template}
+          />
+        )}
+  
+        {currentPage === "TemplateDetails" && (
+          <TemplateDetails
+            onBackToSidebar={onBackToSidebar}
+            id={id}
+            onEditTemplateClick={onEditTemplateClick}
+            template={template}
           />
         )}
       </div>
