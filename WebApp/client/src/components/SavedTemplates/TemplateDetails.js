@@ -12,8 +12,13 @@ import { ImLocation2 } from 'react-icons/im';
 const TemplateDetails = ({
   onBackToSidebar,
   template,
-  onEditTemplateClick,
+  handleEditTemplateClick,
 }) => {
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    handleEditTemplateClick(template);
+  };
+
   return (
     <>
       <div className='main-div'>
@@ -22,7 +27,7 @@ const TemplateDetails = ({
             <MdArrowBack onClick={onBackToSidebar} className='backBtn' />
             <p className='templateName-text'>{template.templateName}</p>
             <div className='edit-icon-container'>
-              <BiEdit className='edit-icon' onClick={onEditTemplateClick} />
+              <BiEdit className='edit-icon' onClick={handleEdit} />
             </div>
           </div>
           <div className='div-02'>

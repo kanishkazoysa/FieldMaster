@@ -175,7 +175,7 @@ export default function SideNavbar() {
             <TemplateDetails
               onBackToSidebar={handleBackFromTemplateDetails}
               template={selectedTemplate}
-              onEditTemplateClick={handleEditTemplateClick}
+              handleEditTemplateClick={handleEditTemplateClick}
             />
           )}
           {currentPage === 'SaveScreen' && (
