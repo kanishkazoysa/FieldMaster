@@ -10,6 +10,8 @@ import { TbVector } from 'react-icons/tb';
 import { ImLocation2 } from 'react-icons/im';
 import Fence from '../Fence/Fence/fence';
 import FenceDetails from '../Fence/FenceDetails/fenceDetails';
+import Plantation from '../Plantation/PlantationPage/plantation';
+import PlantationDetails from '../Plantation/PlantationDetails/plantationDetails';
 import AxiosInstance from '../../AxiosInstance';
 
 const TemplateDetails = ({
@@ -43,6 +45,28 @@ const TemplateDetails = ({
       if (error.response.status === 404) {
         console.log('ID not found');
         setCurrentPage("Fence"); // Updated to Fence for 404 error
+        setAnimatePage(true);
+      } else {
+        console.error('Error checking ID:', error);
+      }
+    }
+  };
+
+  const checkIdPlantation = async (id) => {
+    try {
+      const response = await AxiosInstance.get(`/api/plantation/check-id/${id}`);
+      if (response.data.exists) {
+        console.log('ID exists');
+        setCurrentPage("PlantationDetails"); // Updated to PlantationDetails for existing ID
+        setAnimatePage(true);
+      } else {
+        console.log('ID does not exist');
+      }
+    } catch (error) {
+      // Handle error, maybe show a message to the user
+      if (error.response.status === 404) {
+        console.log('ID not found');
+        setCurrentPage("Plantation"); // Updated to Plantation for 404 error
         setAnimatePage(true);
       } else {
         console.error('Error checking ID:', error);
@@ -85,9 +109,9 @@ const TemplateDetails = ({
                 <p>Clear Land</p>
               </div>
               <div className='icon-container'>
-                <div className='circle-div circle-div-2'>
+                <button className='circle-div circle-div-2'onClick={() => checkIdPlantation(template._id)}>
                   <PiPlantFill className='icon' />
-                </div>
+                </button>
                 <p>Plantation</p>
               </div>
               <div className='icon-container'>
@@ -156,8 +180,29 @@ const TemplateDetails = ({
             template = {template}
           />
         )}
+        {currentPage === 'Plantation' && (
+          <Plantation
+            onBackToSidebar={onBackToSidebar}
+            id={template._id}
+            area={template.area}
+            Perimeter={template.perimeter}
+            onEditTemplateClick = {onEditTemplateClick}
+            template = {template}
+          />
+        )}
         {currentPage === 'FenceDetails' && (
           <FenceDetails
+            onBackToSidebar={onBackToSidebar}
+            onback = {handleBackClick}
+            id={template._id}
+            area={template.area}
+            Perimeter={template.perimeter}
+            onEditTemplateClick = {onEditTemplateClick}
+            template = {template}
+          />
+        )}
+        {currentPage === 'PlantationDetails' && (
+          <PlantationDetails
             onBackToSidebar={onBackToSidebar}
             onback = {handleBackClick}
             id={template._id}
