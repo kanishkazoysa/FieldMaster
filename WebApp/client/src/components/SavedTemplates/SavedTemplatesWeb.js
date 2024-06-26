@@ -11,6 +11,7 @@ const SavedTemplatesWeb = ({
   handleEditTemplateClick,
 }) => {
   const [templates, setTemplates] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const getAllTemplates = () => {
     AxiosInstance.get(`/api/auth/mapTemplate/getAllTemplates`)
@@ -43,6 +44,14 @@ const SavedTemplatesWeb = ({
     getAllTemplates();
   }, []);
 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredTemplates = templates.filter((template) =>
+    template.templateName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
       <div className='innerDiv'>
@@ -53,12 +62,14 @@ const SavedTemplatesWeb = ({
               type='text'
               className='search-bar'
               placeholder='Search your templates'
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
             <FaSearch className='search-icon' />
           </div>
 
           <div className='cardsDiv'>
-            {templates.map((template) => (
+            {filteredTemplates.map((template) => (
               <Card
                 key={template._id}
                 templateName={template.templateName}
