@@ -187,6 +187,9 @@ export default function SideNavbar() {
                 setCurrentPage('TemplateDetails');
               }}
               template={selectedTemplate}
+              onSaveSuccess={() => {
+                setCurrentPage('SavedTemplates');
+              }}
             />
           )}
         </div>

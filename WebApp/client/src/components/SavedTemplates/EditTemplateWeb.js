@@ -4,7 +4,7 @@ import './EditTemplateStyles.css';
 import { FaRegSave } from 'react-icons/fa';
 import AxiosInstance from '../../AxiosInstance';
 
-const EditTemplateWeb = ({ onBackToSidebar, template }) => {
+const EditTemplateWeb = ({ onBackToSidebar, template, onSaveSuccess }) => {
   const [templateName, setTemplateName] = useState(template.templateName);
   const [landType, setLandType] = useState(template.landType);
   const [description, setDescription] = useState(template.description);
@@ -24,6 +24,7 @@ const EditTemplateWeb = ({ onBackToSidebar, template }) => {
         }
       )
         .then((response) => {
+          onSaveSuccess();
           alert('Template updated successfully');
         })
         .catch((error) => {
