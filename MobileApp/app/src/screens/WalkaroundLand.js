@@ -8,7 +8,12 @@ import {
   Text,
   FlatList,
 } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Polyline, Marker ,Polygon } from "react-native-maps";
+import MapView, {
+  PROVIDER_GOOGLE,
+  Polyline,
+  Marker,
+  Polygon,
+} from "react-native-maps";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import { useNavigation } from "@react-navigation/native";
@@ -249,7 +254,10 @@ export default function Home() {
     const updatedCoordinates = [...pathCoordinates];
     updatedCoordinates[index] = { latitude, longitude };
     if (index === 0) {
-      updatedCoordinates[updatedCoordinates.length - 1] = { latitude, longitude };
+      updatedCoordinates[updatedCoordinates.length - 1] = {
+        latitude,
+        longitude,
+      };
     } else if (index === updatedCoordinates.length - 1) {
       updatedCoordinates[0] = { latitude, longitude };
     }
@@ -268,7 +276,7 @@ export default function Home() {
       setUndoStack(newUndoStack);
       setPathCoordinates(previousState);
       calculateAreaAndPerimeter();
-      
+
       // Hide undo icon if stack is empty
       if (newUndoStack.length === 0) {
         setShowUndoButton(false);
@@ -303,8 +311,12 @@ export default function Home() {
       </Appbar.Header>
 
       <View style={styles.overlay}>
-        <Text style={styles.overlayText}>Area: {calculatedArea.toFixed(2)} perches</Text>
-        <Text style={styles.overlayText}>Perimeter: {polygonPerimeter.toFixed(3)} km</Text>
+        <Text style={styles.overlayText}>
+          Area: {calculatedArea.toFixed(2)} perches
+        </Text>
+        <Text style={styles.overlayText}>
+          Perimeter: {polygonPerimeter.toFixed(3)} km
+        </Text>
       </View>
 
       <MapView
@@ -316,27 +328,27 @@ export default function Home() {
         initialRegion={{
           latitude: 6.2427,
           longitude: 80.0607,
-          latitudeDelta: 0.0922 / Math.pow(2, 20), // Adjust the zoom level here
-          longitudeDelta: 0.0421 / Math.pow(2, 20), // Adjust the zoom level here
+          latitudeDelta: 5, // Adjust the zoom level here
+          longitudeDelta: 5, // Adjust the zoom level here
         }}
       >
         {drawPolyline && pathCoordinates.length > 0 && (
-    <>
-      <Polyline 
-        coordinates={pathCoordinates} 
-        strokeWidth={2.3} 
-        strokeColor="white" 
-      />
-      {showFillColor && (
-        <Polygon
-          coordinates={pathCoordinates}
-          fillColor="rgba(0, 123, 255, 0.3)"
-          strokeColor="white"
-          strokeWidth={2.3}
-        />
-      )}
-    </>
-  )}
+          <>
+            <Polyline
+              coordinates={pathCoordinates}
+              strokeWidth={2.3}
+              strokeColor="white"
+            />
+            {showFillColor && (
+              <Polygon
+                coordinates={pathCoordinates}
+                fillColor="rgba(0, 123, 255, 0.3)"
+                strokeColor="white"
+                strokeWidth={2.3}
+              />
+            )}
+          </>
+        )}
         {resizingMode &&
           pathCoordinates.map((coordinate, index) => (
             <Marker
@@ -349,8 +361,15 @@ export default function Home() {
           ))}
       </MapView>
 
-      <TouchableOpacity style={styles.layerIconContainer} onPress={toggleMapType}>
-        <FontAwesomeIcon icon={faLayerGroup} size={responsiveFontSize(2.8)} color="#fff" />
+      <TouchableOpacity
+        style={styles.layerIconContainer}
+        onPress={toggleMapType}
+      >
+        <FontAwesomeIcon
+          icon={faLayerGroup}
+          size={responsiveFontSize(2.8)}
+          color="#fff"
+        />
         {showDropdown && (
           <View style={styles.dropdownContainer}>
             <FlatList
@@ -376,8 +395,17 @@ export default function Home() {
             mode="contained"
             onPress={handleStartPress}
             disabled={isStartPauseButtonDisabled}
-            style={[styles.button, isStartPauseButtonDisabled && { backgroundColor: "rgba(131, 180, 255, 0.8)" }]}
-            labelStyle={isStartPauseButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }}
+            style={[
+              styles.button,
+              isStartPauseButtonDisabled && {
+                backgroundColor: "rgba(131, 180, 255, 0.8)",
+              },
+            ]}
+            labelStyle={
+              isStartPauseButtonDisabled && {
+                color: "rgba(255, 255, 255, 0.7)",
+              }
+            }
           >
             {trackingPaused ? "Finish" : "Start"}
           </Button>
@@ -387,8 +415,15 @@ export default function Home() {
             icon="resize"
             mode="contained"
             disabled={isResizeButtonDisabled}
-            style={[styles.button, isResizeButtonDisabled && { backgroundColor: "rgba(131, 180, 255, 0.8)" }]}
-            labelStyle={isResizeButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }}
+            style={[
+              styles.button,
+              isResizeButtonDisabled && {
+                backgroundColor: "rgba(131, 180, 255, 0.8)",
+              },
+            ]}
+            labelStyle={
+              isResizeButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }
+            }
             onPress={handleResize}
           >
             {resizingMode ? "Done" : "Resize"}
@@ -396,8 +431,12 @@ export default function Home() {
         </View>
         {undoStack.length > 0 && showUndoButton && resizingMode && (
           <TouchableOpacity style={styles.undoIcon} onPress={handleUndo}>
-        <FontAwesomeIcon icon={faUndo} size={responsiveFontSize(2.5)} color="#fff" />
-      </TouchableOpacity>
+            <FontAwesomeIcon
+              icon={faUndo}
+              size={responsiveFontSize(2.5)}
+              color="#fff"
+            />
+          </TouchableOpacity>
         )}
       </View>
     </View>
@@ -489,10 +528,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   undoIcon: {
-    position: 'absolute',
+    position: "absolute",
     top: -responsiveHeight(17),
     right: responsiveWidth(1),
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
     borderRadius: responsiveWidth(1),
     padding: responsiveWidth(2.1),
   },
