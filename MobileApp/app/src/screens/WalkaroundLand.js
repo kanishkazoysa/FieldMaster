@@ -8,7 +8,7 @@ import {
   Text,
   FlatList,
 } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Polyline, Marker ,Polygon } from "react-native-maps";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import { useNavigation } from "@react-navigation/native";
@@ -16,8 +16,6 @@ import { Button, Appbar } from "react-native-paper";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import area from "@turf/area";
-import { convertArea } from "@turf/helpers";
-import AxiosInstance from "../AxiosInstance";
 import { distance } from "@turf/turf";
 import {
   responsiveHeight,
@@ -48,6 +46,7 @@ export default function Home() {
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
   const [resizingMode, setResizingMode] = useState(false);
   const [showUndoButton, setShowUndoButton] = useState(true);
+  const [showFillColor, setShowFillColor] = useState(false);
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -91,11 +90,13 @@ export default function Home() {
       setDrawPolyline(true);
       setPathCoordinates([initialLocation]);
       setIsSaveButtonDisabled(true);
+      setShowFillColor(false);
     } else {
       setTrackingStarted(false);
       setIsResizeButtonDisabled(false);
       setIsStartPauseButtonDisabled(true);
       setIsSaveButtonDisabled(false);
+      setShowFillColor(true);
       if (currentLocation) {
         const lineCoordinates = [currentLocation, initialLocation];
         setPathCoordinates((prevCoordinates) => [
@@ -104,9 +105,10 @@ export default function Home() {
         ]);
       }
       stopLocationUpdates();
-      calculateAreaAndPerimeter(); // Call calculateAreaAndPerimeter when tracking is paused
+      calculateAreaAndPerimeter();
     }
   };
+
   const handleResizeEnd = () => {
     calculateAreaAndPerimeter();
   };
@@ -255,6 +257,8 @@ export default function Home() {
     setPathCoordinates(updatedCoordinates);
     setShowUndoButton(true);
     handleResizeEnd();
+    // Ensure fill color is shown after resizing
+    setShowFillColor(true);
   };
 
   const handleUndo = () => {
@@ -317,8 +321,22 @@ export default function Home() {
         }}
       >
         {drawPolyline && pathCoordinates.length > 0 && (
-          <Polyline coordinates={pathCoordinates} strokeWidth={2.3} strokeColor="white" />
-        )}
+    <>
+      <Polyline 
+        coordinates={pathCoordinates} 
+        strokeWidth={2.3} 
+        strokeColor="white" 
+      />
+      {showFillColor && (
+        <Polygon
+          coordinates={pathCoordinates}
+          fillColor="rgba(0, 123, 255, 0.3)"
+          strokeColor="white"
+          strokeWidth={2.3}
+        />
+      )}
+    </>
+  )}
         {resizingMode &&
           pathCoordinates.map((coordinate, index) => (
             <Marker
@@ -361,7 +379,7 @@ export default function Home() {
             style={[styles.button, isStartPauseButtonDisabled && { backgroundColor: "rgba(131, 180, 255, 0.8)" }]}
             labelStyle={isStartPauseButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }}
           >
-            {trackingPaused ? "Pause" : "Start"}
+            {trackingPaused ? "Finish" : "Start"}
           </Button>
         </View>
         <View style={styles.buttonWrapper}>
