@@ -36,9 +36,14 @@ const TemplateDetails = ({
               alt='mapImage'
               className='map-img'
             ></img>
-            <button className='manage-land-btn'>
-              <p>Manage Land</p>
-            </button>
+            <div className='button-container'>
+              <button className='action-btn'>
+                <p>Manage Land</p>
+              </button>
+              <button className='action-btn'>
+                <p>Resize Map</p>
+              </button>
+            </div>
             <hr className='breaker' />
           </div>
           <div className='div-03'>
