@@ -9,6 +9,7 @@ import { FaClockRotateLeft } from "react-icons/fa6";
 import { IoTimeSharp } from "react-icons/io5";
 import { GiWeight, GiChemicalDrop } from "react-icons/gi";
 import { Tb24Hours } from "react-icons/tb";
+import AxiosInstance from "../../../AxiosInstance.js";
 import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
 import { getFertilizerDetailsHtml } from "./FertilizerDetailsTemplate.js";
@@ -102,9 +103,8 @@ export default function FertilizingDetails({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "http://192.168.1.2:3000/api/fertilizers/FertilizerAmountNeeded"
-        );
+        const response = await AxiosInstance.get(`/api/fertilizers/FertilizerAmountNeeded`)
+        console.log(response.data)
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
