@@ -17,7 +17,7 @@ const GetStarted = ({ toggleModal }) => {
     };
 
     const navigateToRegister = () => {
-        navigate('/register'); // Navigate to RegisterPage
+        navigate('/login'); // Navigate to LoginPage
     };
 
 
@@ -37,14 +37,14 @@ const GetStarted = ({ toggleModal }) => {
                     <h3>Mobile App</h3>
                     <img src={MobileImage} alt="Mobile Image" style={imageStyles} />
                     <p style={paragraphStyles}>GeoMeasure, a user-friendly web app, simplifies complex geographical measurements, allowing users to effortlessly calculate distances, areas, and coordinates for enhanced spatial analysis and planning.</p>
-                    <button style={buttonStyles}>Get Started</button>
+                    <button style={buttonStyles}>Download Now</button>
                 </div>
                 <h5 style={orTextStyle}>or</h5>
                 <div style={rightContentStyles}>
                 <h3>Web App</h3>
                     <img src={WebImage} alt="Web Image" style={imageStyles} />
                     <p style={paragraphStyles}>This app empowers you to easily calculate and record accurate area measurements while on the move and at your convenience at your desired place anywhere at anytime with super realtime mapping of the area.</p>
-                    <button style={buttonStyles} onClick={navigateToRegister}>Download Now</button>
+                    <button style={buttonStyles} onClick={navigateToRegister}>Get Started</button>
                 </div>
             </div>
         </Modal>

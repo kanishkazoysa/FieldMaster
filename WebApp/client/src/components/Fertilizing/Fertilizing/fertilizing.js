@@ -1,17 +1,14 @@
 // SideNavbar.js
-import React, { useState, useRef } from "react";
+import React, { useState} from "react";
 import { MdArrowBack } from "react-icons/md";
 import { GiWeight } from "react-icons/gi";
-
 import { PiSquareDuotone } from "react-icons/pi";
 import { MdGrass } from "react-icons/md";
 import { GiGrassMushroom } from "react-icons/gi";
 import { SlChemistry } from "react-icons/sl";
 import { FaClockRotateLeft } from "react-icons/fa6";
-
 import { styles } from "./fertilizingStyles.js";
 import Select from "react-select";
-// import AxiosInstance from "../../../AxiosInstance";
 import axios from "axios";
 import { FaTree } from "react-icons/fa";
 import FertilizingDetails from "../FertilizingDetails/fertilizingDetails";
@@ -24,7 +21,6 @@ export default function Fertilizing(
     PlantDensity,
     numberOfPlants
   }) {
-  const [perimeter, setPerimeter] = useState("1.5");
   const [area, setArea] = useState("10");
 
   const [textFertilizationType, setTextFertilizationType] =
@@ -50,8 +46,6 @@ export default function Fertilizing(
   const handleInputAmount = (event) => {
     setTextFertilizationAmount(event.target.value);
   };
-
-  const [frequency, setFrequency] = useState(''); 
 
   const [selectedFrequency, setSelectedFrequency] = useState(null);
 

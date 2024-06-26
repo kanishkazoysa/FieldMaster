@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import { IconButton } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -7,20 +7,34 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 const CalculatorModel = ({
   calculatorSelectModalVisible,
   setCalculatorSelectModalVisible,
-  //get area and perimeter from previous page
-  area, 
+  area,
   perimeter,
 }) => {
+  useEffect(() => {
+    return () => {
+      setCalculatorSelectModalVisible(false);
+    };
+  }, [setCalculatorSelectModalVisible]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setCalculatorSelectModalVisible(false);
+      };
+    }, [])
+  );
+
   const closeModal = () => {
     setCalculatorSelectModalVisible(false);
   };
+
   const navigation = useNavigation();
-  // navigate to different pages with area and perimeter
+
   const navigateToPage = (page) => {
     navigation.navigate(page, { area, perimeter });
   };
@@ -51,11 +65,10 @@ const CalculatorModel = ({
             <Text style={styles.headerText}>Manual Calculator</Text>
 
             <View style={styles.buttonContainer}>
-              {/*clear land button */}
               <View style={styles.button}>
                 <TouchableOpacity
                   style={styles.selectButton}
-                  onPress={() => navigateToPage('Clearland')} // navigate to ClearLand page
+                  onPress={() => navigateToPage("ClearLandFromManualCalculator")}
                 >
                   <View style={styles.icon}>
                     <MaterialCommunityIcons
@@ -64,23 +77,25 @@ const CalculatorModel = ({
                       color="brown"
                     />
                   </View>
-
                   <View
                     style={{
                       justifyContent: "center",
                       marginLeft: responsiveWidth(-9),
                     }}
                   >
-                    <Text style={{ color: "#FFF",fontSize:responsiveFontSize(1.6)  }}>CLEAR LAND</Text>
+                    <Text
+                      style={{ color: "#FFF", fontSize: responsiveFontSize(1.6) }}
+                    >
+                      CLEAR LAND
+                    </Text>
                   </View>
                 </TouchableOpacity>
               </View>
 
-              {/*Plantation button */}
               <View style={styles.button}>
                 <TouchableOpacity
                   style={styles.selectButton}
-                  onPress={() => navigateToPage('PlantationFromManualCalculator')} // navigate to Plantation page
+                  onPress={() => navigateToPage("PlantationFromManualCalculator")}
                 >
                   <View style={styles.icon}>
                     <MaterialCommunityIcons
@@ -89,27 +104,27 @@ const CalculatorModel = ({
                       color="green"
                     />
                   </View>
-
                   <View
                     style={{
                       justifyContent: "center",
                       marginLeft: responsiveWidth(-9),
                     }}
                   >
-                    <Text style={{ color: "#FFF",fontSize:responsiveFontSize(1.6)  }}>PLANTATION</Text>
+                    <Text
+                      style={{ color: "#FFF", fontSize: responsiveFontSize(1.6) }}
+                    >
+                      PLANTATION
+                    </Text>
                   </View>
                 </TouchableOpacity>
               </View>
 
-              {/*fence button */}
               <View style={styles.button}>
                 <TouchableOpacity
                   style={styles.selectButton}
-                  onPress={() => navigateToPage('Fence')} // navigate to FenceSetup page
+                  onPress={() => navigateToPage("FenceFromManualCal")}
                 >
-                  <View
-                    style={{ ...styles.icon, left: responsiveWidth(-26.6) }}
-                  >
+                  <View style={{ ...styles.icon, left: responsiveWidth(-26.6) }}>
                     <MaterialCommunityIcons
                       style={{ marginBottom: responsiveHeight(0.7) }}
                       name="fence"
@@ -117,14 +132,17 @@ const CalculatorModel = ({
                       color="black"
                     />
                   </View>
-
                   <View
                     style={{
                       justifyContent: "center",
                       marginLeft: responsiveWidth(-9),
                     }}
                   >
-                    <Text style={{ color: "#FFF", fontSize:responsiveFontSize(1.6) }  }>FENCE SETUP</Text>
+                    <Text
+                      style={{ color: "#FFF", fontSize: responsiveFontSize(1.6) }}
+                    >
+                      FENCE SETUP
+                    </Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -168,15 +186,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   headerText: {
     fontSize: responsiveFontSize(2),
   },
-
   container: {
     flex: 1,
   },
-
   centeredView: {
     flex: 1,
   },
@@ -200,13 +215,11 @@ const styles = StyleSheet.create({
     width: "100%",
     height: responsiveHeight(45),
   },
-
   cancelButton: {
     position: "absolute",
     top: 0,
     right: 0,
   },
 });
-
 
 export default CalculatorModel;

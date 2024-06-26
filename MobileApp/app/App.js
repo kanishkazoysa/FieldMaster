@@ -16,7 +16,6 @@ import Home from "./src/screens/Home";
 import WalkaroundLand from "./src/screens/WalkaroundLand";
 import Fence from "./src/screens/FenceSetup/fence/Fence";
 import FenceDetails from "./src/screens/FenceSetup/fenceDetails/FenceDetails";
-
 /* Template screens importing */
 
 import SaveScreen from "./src/screens/TempScreens/SaveScreen/SaveScreen";
@@ -38,6 +37,11 @@ import ProfileManagement from "./src/screens/ProfileManagement";
 
 import PlantationFromManualCalculator from "./src/screens/PlantationManual/PlantationFromManualCalculator.js";
 import PlantationDetailsFromManualCalculator from "./src/screens/PlantationDetailsManual/PlantationDetailsFromManualCalculator.js";
+import EffortOutputFromManualCalculator from "./src/screens/EffortOutputManual/EffortOutputFromManualCalculator.js";
+import ClearLandFromManualCalculator from "./src/screens/ClearLandManual/ClearLandFromManualCalculator.js";
+import FenceFromManualCal from "./src/screens/FenceManual/Fence/FenceFromManualCal";
+import FencedetailfromManual from  "./src/screens/FenceManual/FenceDetails/FencedetailfromManual";
+
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -90,6 +94,13 @@ const App = () => {
 
         <Stack.Screen name="PlantationFromManualCalculator" component={PlantationFromManualCalculator}/>
         <Stack.Screen name="PlantationDetailsFromManualCalculator" component={PlantationDetailsFromManualCalculator}/>
+        <Stack.Screen name="EffortOutputFromManualCalculator" component={EffortOutputFromManualCalculator}/>
+        <Stack.Screen name="ClearLandFromManualCalculator" component={ClearLandFromManualCalculator}/>
+        <Stack.Screen name="FenceFromManualCal" component={FenceFromManualCal}/>
+        <Stack.Screen name="FencedetailfromManual" component={FencedetailfromManual}/>
+
+
+
       </Stack.Navigator>
     </NavigationContainer>
   );

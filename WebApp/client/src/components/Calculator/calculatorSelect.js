@@ -5,8 +5,8 @@ import { PiTreePalmFill, PiSquareDuotone } from "react-icons/pi";
 import { BsBoundingBox } from "react-icons/bs";
 import { TbBackhoe } from "react-icons/tb";
 import { styles } from "./calculatorSelectStyles";
-import PlantationManul from "../PlantationManual/PlantationPageManual/PlantationManul";
-
+//import PlantationManul from "../PlantationManual/PlantationPageManual/PlantationManul";
+import FenceManual from '../Fence Manual/Fence/fenceManual';
 export default function CalculatorSelect({ onBackToSidebar, area, perimeter, PerimeterUnitselectedValue, AreaUnitselectedValue }) {
     const [isHovered1, setIsHovered1] = useState(false);
     const [isHovered2, setIsHovered2] = useState(false);
@@ -15,6 +15,8 @@ export default function CalculatorSelect({ onBackToSidebar, area, perimeter, Per
     //for plantation 
     const [currentPage, setCurrentPage] = useState(null);
     const [animatePage, setAnimatePage] = useState(false);
+    const [Perimeter , setPerimeter] = useState(0);
+    const [perimetersetValue, setperimetersetValue] = useState("");
     const handleBackClick = () => {
         setAnimatePage(false);
         setTimeout(() => {
@@ -23,10 +25,16 @@ export default function CalculatorSelect({ onBackToSidebar, area, perimeter, Per
     };
 
     const handlePageChange = (page) => {
+    let updatedPerimeter = perimeter;
+    let unit = PerimeterUnitselectedValue;
+    if (PerimeterUnitselectedValue === "m") {
+    updatedPerimeter = perimeter / 1000;
+    unit = "Km";
+       }
+        setperimetersetValue(unit)
+        setPerimeter(updatedPerimeter);
+        setCurrentPage(page);
         setAnimatePage(true);
-        setTimeout(() => {
-            setCurrentPage(page);
-        }, 300);
     };
 
     
@@ -134,7 +142,7 @@ export default function CalculatorSelect({ onBackToSidebar, area, perimeter, Per
                             }}
                             onMouseEnter={() => setIsHovered3(true)}
                             onMouseLeave={() => setIsHovered3(false)}
-                            onClick={() => handlePageChange('FenceSetup')}
+                            onClick={() => handlePageChange('FenceManual')}
                         >
                             <MdFence
                                 name="fence"
@@ -165,13 +173,23 @@ export default function CalculatorSelect({ onBackToSidebar, area, perimeter, Per
                     overflow: "auto",
                 }}
             >
-                {currentPage === "PlantationManul" && (
+                {/* {currentPage === "PlantationManul" && (
                     <PlantationManul
                         onBackToSidebar={handleBackClick}
                         area={area}
                         perimeter={perimeter}
                         PerimeterUnitselectedValue={PerimeterUnitselectedValue}
                         AreaUnitselectedValue={AreaUnitselectedValue}
+                    />
+                )} */}
+
+                    {currentPage === "FenceManual" && (
+                    <FenceManual
+                        onBackToSidebar={handleBackClick}
+                        area = {area}
+                        Perimeter = {Perimeter} 
+                        PerimeterUnitselectedValue = {perimetersetValue}
+                        AreaUnitselectedValue = {AreaUnitselectedValue}  
                     />
                 )}
             </div>

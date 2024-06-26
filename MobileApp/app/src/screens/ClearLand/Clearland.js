@@ -1,12 +1,9 @@
 import * as React from "react";
 import {
-  StyleSheet,
   Text,
   View,
   Image,
   ScrollView,
-  KeyboardAvoidingView,
-  Platform,
   Alert,
   StatusBar,
   TouchableOpacity,
@@ -17,29 +14,26 @@ import {
   Card,
   Button,
   Searchbar,
-  placeholderStyle,
   TextInput,
 } from "react-native-paper";
+import {
+  responsiveHeight,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
+
 import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
-import { useNavigation ,useRoute} from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { styles } from "./ClearLandStyles";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import AxiosInstance from "../../AxiosInstance";
-import {
-  responsiveFontSize,
-  responsiveHeight,
-  responsiveScreenFontSize,
-  responsiveWidth,
-} from "react-native-responsive-dimensions";
 
 export default function ClearLand({ route }) {
   const navigation = useNavigation();
-  const { id,item } = route.params;
+  const { id, Area ,item } = route.params;
   const [text, setText] = React.useState("");
-  
-  
   const [pressed, setPressed] = useState(null);
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
   const [plantCount, setPlantCount] = useState("");
@@ -54,7 +48,7 @@ export default function ClearLand({ route }) {
     "Excavators",
     "Backhoes",
     "Chainsaws",
-    "Excavator breakers"
+    "Excavator breakers",
   ]);
 
   const handleSearch = (query) => {
@@ -142,7 +136,7 @@ export default function ClearLand({ route }) {
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
-  //validation part Add button
+    //validation part Add button
     const combinedValue1 = stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
       Boolean
@@ -202,7 +196,7 @@ export default function ClearLand({ route }) {
         }
         navigation.navigate("EffortOutput", {
           id: id,
-          item:item,
+          item: item,
           // data: displayValues,
           // data1: displayValues1,
           // data2: displayValues2,
@@ -235,13 +229,13 @@ export default function ClearLand({ route }) {
       {/* Header section */}
       <View>
         <Appbar.Header style={styles.header}>
-            <Appbar.BackAction 
-              onPress={() => navigation.navigate("TemplateView",{item: item})}
-              color="white"
-            />
-        <View style={{marginTop:40,left:10,width:"70%"}}>
-          <Text style={styles.headerText}>Clear Land</Text>
-        </View>
+          <Appbar.BackAction
+            onPress={() => navigation.navigate("TemplateView", { item: item })}
+            color="white"
+          />
+          <View style={{ marginTop: 40, left: 10, width: "70%" }}>
+            <Text style={styles.headerText}>Clear Land</Text>
+          </View>
         </Appbar.Header>
       </View>
       {/* ScrollView section */}
@@ -645,191 +639,3 @@ export default function ClearLand({ route }) {
     </PaperProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container2: {
-    alignItems: "center",
-    flex: 1,
-  },
-  header: {
-    height: 45,
-    backgroundColor: "#007BFF",
-
-    ...Platform.select({
-      android: {
-        marginTop: StatusBar.currentHeight,
-      },
-    }),
-  },
-  headerText: {
-   
-    fontSize: 18,
-    textAlign: "center",
-    color: "white",
-    position: "absolute",
-    bottom: 7,
-    left: 0,
-    right: 0,
-  },
-
-  card1: {
-    height: "max-content",
-    borderRadius: 11,
-    marginTop: responsiveHeight(1),
-    paddingBottom: responsiveHeight(0.3),
-    width: "93%",
-    backgroundColor: "#fff",
-  },
-
-  weedButton: {
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: responsiveHeight(1),
-    marginBottom: responsiveHeight(-1),
-    marginLeft: responsiveWidth(2.6),
-  },
-  card2: {
-    height: "max-content",
-    justifyContent: "center",
-    marginTop: responsiveHeight(1),
-    width: "93%",
-    backgroundColor: "#fff",
-    borderRadius: 11,
-  },
-  countText: {
-    marginLeft: responsiveWidth(3.5),
-    fontSize: responsiveFontSize(2.2),
-  },
-  card3: {
-    height: "max-content",
-    marginTop: responsiveHeight(1),
-    marginBottom: responsiveHeight(3),
-    paddingBottom: responsiveHeight(0.3),
-    width: "93%",
-    borderRadius: 11,
-    backgroundColor: "#fff",
-  },
-  cardTopText: {
-    marginLeft: responsiveWidth(1),
-  },
-  cardContent: {
-    display: "flex",
-    flexDirection: "row",
-    marginTop: responsiveHeight(-1),
-  },
-  calButtton: {
-    marginTop: responsiveHeight(4),
-    bottom: responsiveHeight(2),
-    alignItems: "center",
-  },
-  Searchbar: {
-    backgroundColor: "#F0F2F5",
-    height: responsiveHeight(4.5),
-    width: responsiveWidth(65),
-  },
-  addButton: {
-    width: responsiveWidth(5),
-    height: responsiveHeight(3.5),
-    borderRadius: 11,
-    marginTop: responsiveHeight(3.5),
-    marginLeft: responsiveWidth(4.5),
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  addButtonText: {
-    color: "#fff",
-    width: "45%",
-    height: responsiveFontSize(2.5),
-    marginTop: responsiveHeight(0.4),
-    marginBottom: responsiveHeight(1),
-  },
-
-  displayValuesContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: responsiveHeight(1),
-    alignItems: "center",
-    backgroundColor: "white",
-    height: "max-content",
-    borderRadius: 11,
-    width: "100%",
-  },
-  displayValueContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    backgroundColor: "whitesmoke",
-    marginRight: responsiveWidth(1.2),
-    marginLeft: responsiveWidth(1.2),
-    marginBottom: responsiveHeight(1),
-    borderRadius: 8,
-    padding: responsiveWidth(0.6),
-    borderWidth: 1,
-    borderColor: "#007BFF",
-  },
-  displayValueText: {
-    fontSize: responsiveFontSize(1.4),
-    marginRight: responsiveWidth(1),
-    color: "#007BFF",
-  },
-  closeButton: {},
-  closeButtonText: {
-    color: "white",
-  },
-  button: {
-    borderColor: "#CED0D4",
-    borderWidth: 1,
-    backgroundColor: "#fff",
-    borderRadius: 11,
-    width: responsiveWidth(25),
-    height: responsiveHeight(4.5),
-    marginLeft: responsiveWidth(-20),
-    marginTop: responsiveHeight(3),
-  },
-  pressedButton: {
-    borderColor: "#0866FF",
-  },
-  text: {
-    marginLeft: responsiveScreenFontSize(0.2),
-    marginRight: responsiveFontSize(1),
-    fontSize: responsiveFontSize(1.8),
-    paddingVertical: responsiveHeight(0),
-    paddingHorizontal: responsiveWidth(0),
-    marginTop: responsiveHeight(0.4),
-    marginBottom: responsiveHeight(1),
-    color: "#CED0D4",
-  },
-  pressedText: {
-    color: "#0866FF",
-  },
-  Dropdown1: {
-    backgroundColor: "#F0F2F5",
-    borderRadius: 10,
-    width: "40%",
-    height: responsiveHeight(4),
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: responsiveWidth(-17),
-    marginTop: responsiveHeight(3.5),
-  },
-  machineAddButton: {
-    width: responsiveWidth(30),
-    height: responsiveHeight(3.5),
-    borderRadius: 11,
-    marginTop: responsiveHeight(2),
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  SearchbarContainer: {
-    marginBottom: responsiveHeight(0.2),
-  },
-  suggestionItem: {
-    borderWidth: responsiveWidth(0.1),
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: responsiveHeight(1),
-    marginTop: responsiveHeight(0.5),
-    backgroundColor: "#f9f9f9",
-  },
-});

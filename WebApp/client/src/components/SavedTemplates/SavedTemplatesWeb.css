@@ -1,0 +1,54 @@
+.backBtn:hover {
+  cursor: pointer;
+}
+
+.innerDiv {
+  margin: 5px;
+}
+
+@media (min-width: 768px) {
+  .card-image {
+    width: 128px;
+  }
+}
+.search-bar {
+  flex-grow: 1;
+  padding: 5px;
+  padding-left: 10px;
+  margin-right: 10px;
+  border-radius: 500px;
+  border: 1px solid #ccc;
+}
+
+@media (min-width: 768px) {
+  .search-bar {
+    width: 100%;
+    margin: 20px auto;
+  }
+}
+
+.search-bar:focus {
+  border-color: #ccc;
+  outline: none;
+}
+
+.headingDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: auto;
+  position: relative;
+}
+
+.search-icon {
+  color: #adacac;
+  position: absolute;
+  right: 20px;
+}

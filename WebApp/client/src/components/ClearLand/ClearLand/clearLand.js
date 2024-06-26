@@ -1,8 +1,6 @@
 // SideNavbar.js
-import React, { useState, useRef } from "react";
-import { FaBars } from "react-icons/fa";
+import React, { useState} from "react";
 import { MdArrowBack } from "react-icons/md";
-import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { BsBoundingBox } from "react-icons/bs";
 import {
@@ -25,9 +23,7 @@ export default function ClearLand({ onBackToSidebar }) {
   const [perimeter, setPerimeter] = useState("1.5");
   const [area, setArea] = useState("100");
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
-  const [plantTypeSelectedValue1, setPlantTypeSelectedValue1] = useState(null);
   const [stoneTypeSelectedValue, setStoneTypeSelectedValue] = useState(null);
-  const [stoneTypeSelectedValue1, setStoneTypeSelectedValue1] = useState(null);
   const [pressed, setPressed] = useState(null);
   const [plantCount, setPlantCount] = useState("");
   const [stonesCount, setStonesCount] = useState("");

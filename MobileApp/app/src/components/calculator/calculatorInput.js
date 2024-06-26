@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
+import { useFocusEffect } from "@react-navigation/native";
 
 const CalculatorSelectModel = ({
   calculatorModalVisible,
@@ -27,9 +28,8 @@ const CalculatorSelectModel = ({
   const [calculatorSelectModalVisible, setCalculatorSelectModalVisible] =
     useState(false);
   const [selectedValue, setSelectedValue] = useState("sqm");
-  const [area, setArea] = useState(""); // New state variable for area
-  const [perimeter, setPerimeter] = useState(""); // New state variable for perimeter
-
+  const [area, setArea] = useState("");
+  const [perimeter, setPerimeter] = useState("");
 
   const closeModal = () => {
     setCalculatorModalVisible(false);
@@ -41,6 +41,17 @@ const CalculatorSelectModel = ({
   };
 
   const navigation = useNavigation();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Reset the state when the screen is focused
+      return () => {
+        setCalculatorSelectModalVisible(false);
+        setArea("");
+        setPerimeter("");
+      };
+    }, [])
+  );
 
   return (
     <View>
@@ -91,7 +102,7 @@ const CalculatorSelectModel = ({
                       style={styles.input}
                       placeholder={"00.00"}
                       keyboardType="numeric"
-                      onChangeText={text => setArea(text)} // Update area state variable
+                      onChangeText={(text) => setArea(text)}
                     />
 
                     <View style={styles.dropdown}>
@@ -108,7 +119,6 @@ const CalculatorSelectModel = ({
                         <Picker.Item label="Square Meters" value="sqm" />
                         <Picker.Item label="Square Feet" value="sqft" />
                         <Picker.Item label="Acres" value="acres" />
-                        {/* Add more items as needed */}
                       </Picker>
                     </View>
                   </View>
@@ -136,7 +146,7 @@ const CalculatorSelectModel = ({
                       style={styles.input}
                       placeholder={"00.00"}
                       keyboardType="numeric"
-                      onChangeText={text => setPerimeter(text)} // Update perimeter state variable
+                      onChangeText={(text) => setPerimeter(text)}
                     />
 
                     <View style={styles.dropdown}>
@@ -152,8 +162,6 @@ const CalculatorSelectModel = ({
                       >
                         <Picker.Item label="m" value="m" />
                         <Picker.Item label="Km" value="km" />
-
-                        {/* Add more items as needed */}
                       </Picker>
                     </View>
                   </View>
@@ -175,8 +183,8 @@ const CalculatorSelectModel = ({
       <CalculatorSelect
         calculatorSelectModalVisible={calculatorSelectModalVisible}
         setCalculatorSelectModalVisible={setCalculatorSelectModalVisible}
-        area={area} // Pass area as prop
-        perimeter={perimeter} // Pass perimeter as prop
+        area={area}
+        perimeter={perimeter}
       />
     </View>
   );
@@ -191,7 +199,6 @@ const styles = StyleSheet.create({
     borderColor: "#DDDFE2",
     overflow: "hidden",
   },
-
   iconContainer: {
     marginTop: responsiveHeight(-0.7),
     flexDirection: "row",
@@ -210,20 +217,17 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     marginTop: responsiveHeight(0.5),
   },
-
   headerText: {
     fontSize: responsiveFontSize(2),
   },
   calculateButton: {
-    position: "absolute", // This line
+    position: "absolute",
     marginTop: responsiveHeight(49),
     width: "85%",
   },
-
   container: {
     flex: 1,
   },
-
   centeredView: {
     flex: 1,
   },
@@ -246,7 +250,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: responsiveHeight(60),
   },
-
   cancelButton: {
     position: "absolute",
     top: 0,

@@ -1,5 +1,5 @@
 // SideNavbar.js
-import React, { useState, useRef } from "react";
+import React, { useState} from "react";
 import { MdArrowBack, MdFormatLineSpacing } from "react-icons/md";
 import { RxRowSpacing } from "react-icons/rx";
 import { PiTreeEvergreenFill } from "react-icons/pi";

@@ -24,6 +24,7 @@ export const styles = {
       height: "45px",
       backgroundColor: "#007BFF",
       alignItems: "center",
+      justifyContent: "space-between"
     
     },
   
@@ -32,9 +33,25 @@ export const styles = {
       fontWeight: "bold",
       marginBottom: 0,
       color: "white",
-      marginLeft: "70px",
+      marginLeft: "0px",
     },
   
+
+    // topSection: {
+    //   display: "flex",
+    //   flexDirection: "row",
+    //   marginTop: "15px",
+    //   width: "100%",
+    //   justifyContent: "flex-end",
+    //   marginRight: "20px", // Align the items to the right
+    // },
+
+    editbutton: {
+      marginRight: "12px",
+      cursor: "pointer",
+      color: "white",
+    },
+
     /*first section*/
   
     Box1: {
@@ -44,7 +61,7 @@ export const styles = {
       flexDirection: "column",
       alignItems: "center",
       backgroundColor: "white",
-      marginTop: "30px",
+      marginTop: "35px",
       borderRadius: "11px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
       padding: "6px",
@@ -60,11 +77,10 @@ export const styles = {
       display: "flex",
       flexDirection: "coloumn",
       alignItems: "center",
-      justifyContent: "center",
+      justifyContent: "space-evenly",
       height: 50,
-      width: "100%",
+      width: "95%",
       backgroundColor: "white",
-      marginTop: "6px",
     },
   
     property: {
@@ -74,7 +90,7 @@ export const styles = {
       alignItems: "center",
       justifyContent: "left",
       backgroundColor: "white",
-      width: "46%",
+     
       //height: 50,
     },
   
@@ -98,7 +114,7 @@ export const styles = {
     },
   
     propertyValue: {
-      fontSize: 13,
+      fontSize: 12,
       fontWeight: "bold",
       marginBottom: 0,
     },
@@ -181,7 +197,7 @@ export const styles = {
   
     bottom: {
       alignItems: "center",
-      marginTop: 150,
+      marginTop: 80,
       width: "92%",
       
     },
@@ -191,6 +207,17 @@ export const styles = {
       width: "100%",
       height: 38,
       backgroundColor: "red",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 10,
+      borderRadius: 11,
+      borderWidth: 0,
+    },
+    Button2: {
+      display: "flex",
+      width: "100%",
+      height: 38,
+      backgroundColor: "#007BFF",
       alignItems: "center",
       justifyContent: "center",
       marginTop: 10,

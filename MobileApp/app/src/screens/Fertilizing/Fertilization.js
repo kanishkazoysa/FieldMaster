@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
   responsiveHeight,
-  responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
