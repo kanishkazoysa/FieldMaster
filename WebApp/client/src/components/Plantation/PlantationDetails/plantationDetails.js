@@ -19,6 +19,7 @@ import { BeatLoader } from 'react-spinners';
 import TemplateDetails from "../../SavedTemplates/TemplateDetails"
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal } from "antd";
+import { getPlantationDetailsHtml } from "./plantationDetailsTemplate";
 const { confirm } = Modal;
 export default function PlantationDetails({
   onBackToSidebar,
@@ -141,7 +142,14 @@ export default function PlantationDetails({
     setCurrentPage("TemplateDetails");
     setAnimatePage(true);
   };
-
+  const handleSave = () => {
+    const htmlContent = getPlantationDetailsHtml(
+      PlantDensity,numberOfPlants,textPlant,textRowspace,textplantspace,perimeter,area);
+    const newWindow = window.open();
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
+    newWindow.print();
+  };
   return (
   <div>
     {loading ? (
@@ -261,14 +269,14 @@ export default function PlantationDetails({
 
       </div>
 
-      <div style={styles.bottom}>
+      <div style={styles.bottom} >
         <button style={styles.Button1} onClick={handleFertilization}>
           <p style={styles.Box4ButtonText}>Fertilization</p>
         </button>
       </div>
 
       <div style={styles.bottom2}>
-        <button style={styles.Button2}>
+        <button style={styles.Button2} onClick={handleSave}>
           <p style={styles.Box4ButtonText}>Save as PDF</p>
         
         </button>
