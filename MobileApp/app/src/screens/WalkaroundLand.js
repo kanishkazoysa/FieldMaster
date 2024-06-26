@@ -24,6 +24,7 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from "react-native-responsive-dimensions";
+import { faUndo } from "@fortawesome/free-solid-svg-icons";
 
 const BACKGROUND_LOCATION_TASK = "background-location-task";
 
@@ -31,6 +32,7 @@ export default function Home() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [initialLocation, setInitialLocation] = useState(null);
   const [pathCoordinates, setPathCoordinates] = useState([]);
+  const [undoStack, setUndoStack] = useState([]);
   const [trackingStarted, setTrackingStarted] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -45,6 +47,7 @@ export default function Home() {
     useState(false);
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
   const [resizingMode, setResizingMode] = useState(false);
+  const [showUndoButton, setShowUndoButton] = useState(true);
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -221,10 +224,52 @@ export default function Home() {
 
   const saveMapData = async () => {
     navigation.navigate("SaveScreen", {
-     locationPoints: pathCoordinates,
+      locationPoints: pathCoordinates,
       area: calculatedArea,
       perimeter: polygonPerimeter,
     });
+  };
+
+  const handleResize = () => {
+    const newResizingMode = !resizingMode;
+    setResizingMode(newResizingMode);
+    if (newResizingMode) {
+      // Entering resize mode
+      setShowUndoButton(true);
+    } else {
+      // Exiting resize mode (pressing Done)
+      setShowUndoButton(false);
+    }
+  };
+
+  const handleDragEnd = (event, index) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    const updatedCoordinates = [...pathCoordinates];
+    updatedCoordinates[index] = { latitude, longitude };
+    if (index === 0) {
+      updatedCoordinates[updatedCoordinates.length - 1] = { latitude, longitude };
+    } else if (index === updatedCoordinates.length - 1) {
+      updatedCoordinates[0] = { latitude, longitude };
+    }
+    setUndoStack((prevStack) => [...prevStack, [...pathCoordinates]]);
+    setPathCoordinates(updatedCoordinates);
+    setShowUndoButton(true);
+    handleResizeEnd();
+  };
+
+  const handleUndo = () => {
+    if (undoStack.length > 0) {
+      const newUndoStack = [...undoStack];
+      const previousState = newUndoStack.pop();
+      setUndoStack(newUndoStack);
+      setPathCoordinates(previousState);
+      calculateAreaAndPerimeter();
+      
+      // Hide undo icon if stack is empty
+      if (newUndoStack.length === 0) {
+        setShowUndoButton(false);
+      }
+    }
   };
 
   return (
@@ -254,12 +299,8 @@ export default function Home() {
       </Appbar.Header>
 
       <View style={styles.overlay}>
-        <Text style={styles.overlayText}>
-          Area: {calculatedArea.toFixed(2)} perches
-        </Text>
-        <Text style={styles.overlayText}>
-          Perimeter: {polygonPerimeter.toFixed(3)} km
-        </Text>
+        <Text style={styles.overlayText}>Area: {calculatedArea.toFixed(2)} perches</Text>
+        <Text style={styles.overlayText}>Perimeter: {polygonPerimeter.toFixed(3)} km</Text>
       </View>
 
       <MapView
@@ -276,11 +317,7 @@ export default function Home() {
         }}
       >
         {drawPolyline && pathCoordinates.length > 0 && (
-          <Polyline
-            coordinates={pathCoordinates}
-            strokeWidth={2.3}
-            strokeColor="white"
-          />
+          <Polyline coordinates={pathCoordinates} strokeWidth={2.3} strokeColor="white" />
         )}
         {resizingMode &&
           pathCoordinates.map((coordinate, index) => (
@@ -289,34 +326,13 @@ export default function Home() {
               coordinate={coordinate}
               pinColor="red"
               draggable
-              onDragEnd={(event) => {
-                const { latitude, longitude } = event.nativeEvent.coordinate;
-                const updatedCoordinates = [...pathCoordinates];
-                updatedCoordinates[index] = { latitude, longitude };
-                if (index === 0) {
-                  updatedCoordinates[updatedCoordinates.length - 1] = {
-                    latitude,
-                    longitude,
-                  };
-                } else if (index === updatedCoordinates.length - 1) {
-                  updatedCoordinates[0] = { latitude, longitude };
-                }
-                setPathCoordinates(updatedCoordinates);
-                handleResizeEnd(); // Call handleResizeEnd when a marker is dragged and dropped
-              }}
+              onDragEnd={(event) => handleDragEnd(event, index)}
             />
           ))}
       </MapView>
 
-      <TouchableOpacity
-        style={styles.layerIconContainer}
-        onPress={toggleMapType}
-      >
-        <FontAwesomeIcon
-          icon={faLayerGroup}
-          size={responsiveFontSize(2.8)}
-          color="#fff"
-        />
+      <TouchableOpacity style={styles.layerIconContainer} onPress={toggleMapType}>
+        <FontAwesomeIcon icon={faLayerGroup} size={responsiveFontSize(2.8)} color="#fff" />
         {showDropdown && (
           <View style={styles.dropdownContainer}>
             <FlatList
@@ -342,17 +358,8 @@ export default function Home() {
             mode="contained"
             onPress={handleStartPress}
             disabled={isStartPauseButtonDisabled}
-            style={[
-              styles.button,
-              isStartPauseButtonDisabled && {
-                backgroundColor: "rgba(131, 180, 255, 0.8)",
-              },
-            ]}
-            labelStyle={
-              isStartPauseButtonDisabled && {
-                color: "rgba(255, 255, 255, 0.7)",
-              }
-            }
+            style={[styles.button, isStartPauseButtonDisabled && { backgroundColor: "rgba(131, 180, 255, 0.8)" }]}
+            labelStyle={isStartPauseButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }}
           >
             {trackingPaused ? "Pause" : "Start"}
           </Button>
@@ -362,20 +369,18 @@ export default function Home() {
             icon="resize"
             mode="contained"
             disabled={isResizeButtonDisabled}
-            style={[
-              styles.button,
-              isResizeButtonDisabled && {
-                backgroundColor: "rgba(131, 180, 255, 0.8)",
-              },
-            ]}
-            labelStyle={
-              isResizeButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }
-            }
-            onPress={() => setResizingMode(!resizingMode)}
+            style={[styles.button, isResizeButtonDisabled && { backgroundColor: "rgba(131, 180, 255, 0.8)" }]}
+            labelStyle={isResizeButtonDisabled && { color: "rgba(255, 255, 255, 0.7)" }}
+            onPress={handleResize}
           >
             {resizingMode ? "Done" : "Resize"}
           </Button>
         </View>
+        {undoStack.length > 0 && showUndoButton && resizingMode && (
+          <TouchableOpacity style={styles.undoIcon} onPress={handleUndo}>
+        <FontAwesomeIcon icon={faUndo} size={responsiveFontSize(2.5)} color="#fff" />
+      </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -387,7 +392,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0, 0.7)",
     padding: responsiveHeight(1),
     borderRadius: 5,
-    left: responsiveWidth(5),
+    right: responsiveWidth(4),
     top: responsiveHeight(78),
     zIndex: 1,
     flexDirection: "row",
@@ -396,7 +401,7 @@ const styles = StyleSheet.create({
   dropdownContainer: {
     position: "absolute",
     top: responsiveHeight(-16.5),
-    left: responsiveWidth(12),
+    right: responsiveWidth(12),
     backgroundColor: "rgba(0,0,0, 0.7)",
     borderRadius: 5,
     elevation: 3,
@@ -464,5 +469,13 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#007BFF",
     flex: 1,
+  },
+  undoIcon: {
+    position: 'absolute',
+    top: -responsiveHeight(17),
+    right: responsiveWidth(1),
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    borderRadius: responsiveWidth(1),
+    padding: responsiveWidth(2.1),
   },
 });
