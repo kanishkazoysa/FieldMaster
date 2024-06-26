@@ -8,6 +8,7 @@ import { TbContainer } from 'react-icons/tb';
 import { HiChartPie } from 'react-icons/hi2';
 import { TbVector } from 'react-icons/tb';
 import { ImLocation2 } from 'react-icons/im';
+import { Button, Flex } from 'antd';
 
 const TemplateDetails = ({
   onBackToSidebar,
@@ -37,13 +38,14 @@ const TemplateDetails = ({
               className='map-img'
             ></img>
             <div className='button-container'>
-              <button className='action-btn'>
-                <p>Manage Land</p>
-              </button>
-              <button className='action-btn'>
-                <p>Resize Map</p>
-              </button>
+              <Button type='primary' className='action-btn'>
+                Manage Map
+              </Button>
+              <Button type='primary' className='action-btn'>
+                Resize Map
+              </Button>
             </div>
+
             <hr className='breaker' />
           </div>
           <div className='div-03'>
