@@ -143,7 +143,7 @@ const styles = {
     transition: 'opacity 0.3s ease-in-out',
   },
   loader: {
-    marginTop: '60%',
+    marginTop: '65%',
   },
   modal: {
     background: 'white',
