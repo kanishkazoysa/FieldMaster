@@ -24,6 +24,7 @@ export const styles = {
       height: "45px",
       backgroundColor: "#007BFF",
       alignItems: "center",
+      justifyContent:"space-between"
     
     },
   
@@ -32,7 +33,7 @@ export const styles = {
       fontWeight: "bold",
       marginBottom: 0,
       color: "white",
-      marginLeft: "70px",
+      marginLeft: "0px",
     },
   
     /*first section*/
@@ -48,6 +49,11 @@ export const styles = {
       borderRadius: "11px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
       padding: "6px",
+    },
+    editorbutton: {
+      marginRight: "12px",
+      cursor: "pointer",
+      color: "white",
     },
   
     titleText: {
