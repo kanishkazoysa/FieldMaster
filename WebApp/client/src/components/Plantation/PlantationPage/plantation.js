@@ -9,12 +9,14 @@ import Swal from 'sweetalert2'
 import { styles } from "./plantationStyles.js";
 import Select from "react-select";
 import axios from "axios";
+import { message } from "antd";
 import PlantationDetails from "../PlantationDetails/plantationDetails";
 import AxiosInstance from "../../../AxiosInstance";
-export default function Plantation({ onBackToSidebar }) {
-  const [id , setId] = useState("66535b3c8eee9adc32c0488c");
-  const [perimeter, setPerimeter] = useState("1.5");
-  const [area, setArea] = useState("1");
+import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
+export default function Plantation({ onBackToSidebar,id,Perimeter,area,onEditTemplateClick,template}) {
+  // const [id , setId] = useState("66535b3c8eee9adc32c0488c");
+  // const [perimeter, setPerimeter] = useState("1.5");
+  // const [area, setArea] = useState("1");
   const [textPlant, settextPlant] = useState(null);
   const [PlantSpaceUnitselectedValue, setPlantSpaceUnitselectedValue] =
     useState("");
@@ -44,7 +46,10 @@ export default function Plantation({ onBackToSidebar }) {
     settextPlant(event.target.value);
   };
 
-
+  const backtotemp = () =>{
+    setCurrentPage("TemplateDetails"); // Update this line
+    setAnimatePage(true);
+  }
   const handlePlantSpaceUnitChange = (selectedOption) => {
     setPlantSpaceUnitselectedValue1(selectedOption);
     setPlantSpaceUnitselectedValue(selectedOption.value);
@@ -67,7 +72,7 @@ export default function Plantation({ onBackToSidebar }) {
       !textplantspace ||
       !textRowspace
     ) {
-      Swal.fire("Error: Please fill in all fields");
+      message.error("Please fill all input fields")
       return;
     }
   
@@ -76,7 +81,7 @@ export default function Plantation({ onBackToSidebar }) {
       !regex.test(textplantspace) ||
       !regex.test(textRowspace)
     ) {
-      Swal.fire("Error: Please enter valid values for Plant Space and Row Space");
+      message.error("Please fill valid input")
       return;
     }
   
@@ -88,6 +93,7 @@ export default function Plantation({ onBackToSidebar }) {
       textRowspace,
       PlantSpaceUnitselectedValue,
       RowSpaceUnitselectedValue,
+
     })
       .then((response) => {
         // If backend response is successful, navigate to detail page
@@ -98,7 +104,8 @@ export default function Plantation({ onBackToSidebar }) {
       })
       .catch((error) => {
         console.error("Error:", error.response ? error.response.data : error.message);
-        Swal.fire("Error", "Failed to create plantation. Please try again.");
+        message.error("Error", "Failed to create plantation. Please try again.")
+        alert("Error", "Failed to create plantation. Please try again.");
       });
   };
 
@@ -109,40 +116,7 @@ export default function Plantation({ onBackToSidebar }) {
     }, 300);
   };
 
-// calculating the number of plants and density
-function calculateNumberOfPlants(area, plantSpacing, rowSpacing) {
-  const areaInSquareMeters = parseFloat(area) * 4046.86;
-  const areaPerPlant = plantSpacing * rowSpacing;
-  const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
-  return numberOfPlants;
-}
 
-function RoundToTwoDecimals(number) {
-  return Math.round(number * 100) / 100;
-}
-function calculatePlantationDensity(area, plantSpacing, rowSpacing) {
-  const areaInSquareMeters = parseFloat(area) * 4046.86;
-
-  // const plantSpacing = parseFloat(plantSpacingInMeters);
-  // const rowSpacing = parseFloat(rowSpacingInMeters);
-
-  const areaPerPlant = plantSpacing * rowSpacing;
-  const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
-  const plantationDensity = RoundToTwoDecimals(numberOfPlants / areaInSquareMeters);
-
-  return plantationDensity;
-}
-function convertToCommonUnit(value, unit) {
-  if (unit === 'cm') {
-      return value / 100;
-  } else {
-      return value;
-  }
-}
-        const plantSpacing = convertToCommonUnit(textplantspace, PlantSpaceUnitselectedValue);
-        const rowSpacing = convertToCommonUnit(textRowspace,PlantSpaceUnitselectedValue );
-        const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
-        const calculatedPlantDensity = calculatePlantationDensity(area, plantSpacing, rowSpacing);
 
 
 
@@ -152,7 +126,7 @@ function convertToCommonUnit(value, unit) {
         <div style={styles.content}>
           <div style={styles.header}>
             <MdArrowBack
-              onClick={onBackToSidebar}
+              onClick={backtotemp}
               style={styles.backButton}
               fontSize={20}
             />
@@ -168,7 +142,7 @@ function convertToCommonUnit(value, unit) {
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{perimeter} Km</p>
+                  <p style={styles.propertyValue}>{Perimeter} Km</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -302,15 +276,20 @@ function convertToCommonUnit(value, unit) {
       >
         {currentPage === "plantationDetails" && (
           <PlantationDetails
-            onBackToSidebar={handleBackClick}
+          onBackToSidebar={onBackToSidebar}
+          onback = {handleBackClick}
+          id={id}
+          onEditTemplateClick = {onEditTemplateClick}
+          template = {template}
+            
+          />
+        )}
+        {currentPage === "TemplateDetails" && (
+          <TemplateDetails
+            onBackToSidebar={onBackToSidebar}
             id={id}
-            textplantspace={textplantspace}
-            textRowspace={textRowspace}
-            PlantSpaceUnitselectedValue={PlantSpaceUnitselectedValue}
-            RowSpaceUnitselectedValue={RowSpaceUnitselectedValue}
-            textPlant={textPlant}
-            numberOfPlants={numberOfPlants}
-            calculatedPlantDensity={calculatedPlantDensity}
+            onEditTemplateClick = {onEditTemplateClick}
+            template = {template}
           />
         )}
       </div>
