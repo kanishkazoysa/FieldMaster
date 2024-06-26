@@ -9,22 +9,33 @@ import { FaClockRotateLeft } from "react-icons/fa6";
 import { IoTimeSharp } from "react-icons/io5";
 import { GiWeight, GiChemicalDrop } from "react-icons/gi";
 import { Tb24Hours } from "react-icons/tb";
-
+import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
+import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
 export default function FertilizingDetails({
   route,
   onBackToSidebar,
+  onEditTemplateClick,
+  template,
+  onback,
+  id,
   FertilizerAmountUnitselectedValue,
   textFertilizationType,
   textFertilizationAmount,
   textFertilizationNUmberoftime,
   selectedFrequency,
-  numberOfPlants
+  numberOfPlants,
+  area,
+  Perimeter
 }) {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
-
+  
   const handleFertilization = () => {
     setCurrentPage("Fertilizing");
+    setAnimatePage(true);
+  };
+  const handleback = () => {
+    setCurrentPage("TemplateDetails");
     setAnimatePage(true);
   };
 
@@ -107,7 +118,12 @@ export default function FertilizingDetails({
   const calculateFertilizerAmountForPlantation = (totalAmount, numberOfPlants) => {
     return totalAmount * numberOfPlants;
   };
-
+  const handleBackClick = () => {
+    setAnimatePage(false);
+    setTimeout(() => {
+      setCurrentPage(null);
+    }, 300);
+  };
   return (
     <div>
       {!currentPage && (
@@ -151,14 +167,14 @@ export default function FertilizingDetails({
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>1.5Km</p>
+                  <p style={styles.propertyValue}>{Perimeter}Km</p>
                 </div>
               </div>
               <div className="property" style={styles.property}>
                 <PiSquareDuotone color="gray" size={40} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
-                  <p style={styles.propertyValue}>1 acres</p>
+                  <p style={styles.propertyValue}>{area} perches</p>
                 </div>
               </div>
             </div>
@@ -221,6 +237,9 @@ export default function FertilizingDetails({
             <button style={styles.Button2}>
               <p style={styles.Box4ButtonText}>Save as PDF</p>
             </button>
+            {/* <button style={styles.Button3} onClick={handleback}>
+                <p style={styles.Box4ButtonText}>Back to Template</p>
+              </button> */}
           </div>
         </div>
       )}
@@ -232,14 +251,26 @@ export default function FertilizingDetails({
           overflow: "auto",
         }}
       >
-        {/* {currentPage === "Fertilizing" && (
+        {currentPage === "Fertilizing" && (
           <Fertilizing
             onBackToSidebar={handleBackClick}
-            textPlant={textPlant}
-            PlantDensity={PlantDensity}
+            
             numberOfPlants={numberOfPlants}
+            id={id}
+            area={area}
+            Perimeter={Perimeter}
+            onEditTemplateClick={onEditTemplateClick}
+            template={template}
           />
-        )} */}
+        )}
+          {currentPage === "TemplateDetails" && (
+          <TemplateDetails
+            onBackToSidebar={onBackToSidebar}
+            id={id}
+            onEditTemplateClick={onEditTemplateClick}
+            template={template}
+          />
+        )}
       </div>
     </div>
   );

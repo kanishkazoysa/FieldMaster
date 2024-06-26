@@ -5,18 +5,21 @@ import { RxRowSpacing } from "react-icons/rx";
 import { PiTreeEvergreenFill } from "react-icons/pi";
 import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
-import Swal from 'sweetalert2'
 import { styles } from "./plantationStyles.js";
 import Select from "react-select";
-import axios from "axios";
 import { message } from "antd";
 import PlantationDetails from "../PlantationDetails/plantationDetails";
 import AxiosInstance from "../../../AxiosInstance";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
-export default function Plantation({ onBackToSidebar,id,Perimeter,area,onEditTemplateClick,template}) {
-  // const [id , setId] = useState("66535b3c8eee9adc32c0488c");
-  // const [perimeter, setPerimeter] = useState("1.5");
-  // const [area, setArea] = useState("1");
+export default function Plantation({ 
+  onBackToSidebar,
+  id,
+  Perimeter,
+  area,
+  onEditTemplateClick,
+  template
+}) {
+ 
   const [textPlant, settextPlant] = useState(null);
   const [PlantSpaceUnitselectedValue, setPlantSpaceUnitselectedValue] =
     useState("");
