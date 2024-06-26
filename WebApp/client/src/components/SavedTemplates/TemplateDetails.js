@@ -17,15 +17,11 @@ const TemplateDetails = ({
   return (
     <>
       <div className='main-div'>
-        <MdArrowBack onClick={onBackToSidebar} className='backBtn' />
         <div className='outer-div'>
           <div className='div-01'>
-            <div className='column details'>
-              <p className='templateName-text'>{template.templateName}</p>
-              <p>{template.location}</p>
-              <p>{template.date}</p>
-            </div>
-            <div className='column edit-icon-container'>
+            <MdArrowBack onClick={onBackToSidebar} className='backBtn' />
+            <p className='templateName-text'>{template.templateName}</p>
+            <div className='edit-icon-container'>
               <BiEdit className='edit-icon' onClick={onEditTemplateClick} />
             </div>
           </div>
@@ -93,6 +89,7 @@ const TemplateDetails = ({
                 </div>
               </div>
             </div>
+            <hr className='breaker' />
             <div className='description-div'>
               <p className='bold-text'>Description</p>
               <p className='description-text'>{template.description}</p>

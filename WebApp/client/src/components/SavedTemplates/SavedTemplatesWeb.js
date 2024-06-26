@@ -5,10 +5,15 @@ import Card from './Card';
 import { FaSearch } from 'react-icons/fa';
 import AxiosInstance from '../../AxiosInstance';
 
-const SavedTemplatesWeb = ({ onBackToSidebar, onCardClick }) => {
+const SavedTemplatesWeb = ({
+  onBackToSidebar,
+  onCardClick,
+  handleEditTemplateClick,
+}) => {
   const [templates, setTemplates] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(() => {
+  const getAllTemplates = () => {
     AxiosInstance.get(`/api/auth/mapTemplate/getAllTemplates`)
       .then((response) => {
         setTemplates(response.data);
@@ -18,7 +23,34 @@ const SavedTemplatesWeb = ({ onBackToSidebar, onCardClick }) => {
       .catch((error) => {
         console.error('Failed to fetch templates:', error);
       });
+  };
+
+  const handleDelete = (deletingTemplate) => {
+    AxiosInstance.delete(
+      `/api/auth/mapTemplate/deleteTemplate/${deletingTemplate._id}`
+    )
+      .then(() => {
+        alert('Template deleted');
+        setTemplates(
+          templates.filter((template) => template._id !== deletingTemplate._id)
+        );
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    getAllTemplates();
   }, []);
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredTemplates = templates.filter((template) =>
+    template.templateName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <>
@@ -30,18 +62,22 @@ const SavedTemplatesWeb = ({ onBackToSidebar, onCardClick }) => {
               type='text'
               className='search-bar'
               placeholder='Search your templates'
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
             <FaSearch className='search-icon' />
           </div>
 
           <div className='cardsDiv'>
-            {templates.map((template, index) => (
+            {filteredTemplates.map((template) => (
               <Card
-                key={index}
+                key={template._id}
                 templateName={template.templateName}
                 location={template.location}
                 date={template.date}
                 onClick={() => onCardClick(template)}
+                onDelete={() => handleDelete(template)}
+                onEdit={() => handleEditTemplateClick(template)}
               />
             ))}
           </div>
