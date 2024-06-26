@@ -66,7 +66,7 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
                 </div>
               ) : (
                 <>
-                  <p>{user.email}</p>
+                  <h7>{user.email}</h7>
                   <Divider style={styles.divider} />
                   <Avatar
                     size={130}
@@ -160,7 +160,7 @@ const styles = {
     transform: 'translateX(100vw)',
   },
   divider: {
-    marginTop: '6px',
+    marginTop: '20px',
   },
   manageModal: {
     background: 'white',
@@ -182,7 +182,7 @@ const styles = {
   },
   bottomtxt: {
     position: 'absolute',
-    bottom: 0,
+    bottom: '20px',
     fontSize: '0.8rem',
   },
   content: {
