@@ -272,7 +272,7 @@ export default function PlantationDetails({
           <p style={styles.Box4ButtonText}>Save as PDF</p>
         
         </button>
-        <button style={styles.Button1} onClick={handleback}>
+        <button style={styles.Button3} onClick={handleback}>
                 <p style={styles.Box4ButtonText}>Back to Template</p>
               </button>
       </div>

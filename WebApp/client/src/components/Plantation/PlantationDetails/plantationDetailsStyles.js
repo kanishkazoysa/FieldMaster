@@ -201,7 +201,7 @@ export const styles = {
   
     bottom: {
       alignItems: "center",
-      marginTop : 40,
+      marginTop : 35,
       width: "92%",
       
     },
@@ -211,6 +211,18 @@ export const styles = {
       width: "100%",
       height: 38,
       backgroundColor: "green",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 10,
+      borderRadius: 11,
+      borderWidth: 0,
+   
+    },
+    Button3: {
+      display: "flex",
+      width: "100%",
+      height: 38,
+      backgroundColor: "#007BFF",
       alignItems: "center",
       justifyContent: "center",
       marginTop: 10,
