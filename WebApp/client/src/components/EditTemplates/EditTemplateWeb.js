@@ -46,7 +46,6 @@ const EditTemplateWeb = ({ onBackToSidebar, template, onSaveSuccess }) => {
               console.log('clicked back btn');
               onBackToSidebar();
             }}
-            size={20}
             className='backBtn'
           />
         </div>
