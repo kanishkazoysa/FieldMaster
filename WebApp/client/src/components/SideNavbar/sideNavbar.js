@@ -10,9 +10,9 @@ import SavedTemplatesWeb from '../SavedTemplates/SavedTemplatesWeb.js';
 // import Fence from "../Fence/Fence/fence";
 import ClearLand from '../ClearLand/ClearLand/clearLand';
 import Plantation from '../Plantation/PlantationPage/plantation';
-import TemplateDetails from '../SavedTemplates/TemplateDetails.js';
+import TemplateDetails from '../TemplateDetails/TemplateDetails.js';
 import SaveScreenWeb from '../SaveScreen/SaveScreenWeb.js';
-import EditTemplateWeb from '../SavedTemplates/EditTemplateWeb.js';
+import EditTemplateWeb from '../EditTemplates/EditTemplateWeb.js';
 
 export default function SideNavbar() {
   const [collapsed, setCollapsed] = useState(true);
