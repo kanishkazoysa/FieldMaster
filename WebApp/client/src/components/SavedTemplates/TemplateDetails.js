@@ -92,9 +92,7 @@ const TemplateDetails = ({
               </div>
               <div className='icon-container'>
                 <button className='circle-div circle-div-3' onClick={() => checkIdFence(template._id)}>
-                  <div className='circle-div circle-div-3'>
                     <GiWoodenFence className='icon' />
-                  </div>
                 </button>
                 <p>Fence setup</p>
               </div>

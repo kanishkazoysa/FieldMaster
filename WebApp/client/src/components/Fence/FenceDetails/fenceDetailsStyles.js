@@ -47,7 +47,7 @@ export const styles = {
     // },
 
     editbutton: {
-      marginRight: "10px",
+      marginRight: "12px",
       cursor: "pointer",
       color: "white",
     },
@@ -197,7 +197,7 @@ export const styles = {
   
     bottom: {
       alignItems: "center",
-      marginTop: 120,
+      marginTop: 80,
       width: "92%",
       
     },
@@ -207,6 +207,17 @@ export const styles = {
       width: "100%",
       height: 38,
       backgroundColor: "red",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 10,
+      borderRadius: 11,
+      borderWidth: 0,
+    },
+    Button2: {
+      display: "flex",
+      width: "100%",
+      height: 38,
+      backgroundColor: "#007BFF",
       alignItems: "center",
       justifyContent: "center",
       marginTop: 10,
