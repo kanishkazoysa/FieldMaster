@@ -69,6 +69,17 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
     setPolygonPerimeter(perimeter);
   };
 
+
+  const insertIntermediatePoints = (startPoint, endPoint, numPoints = 1) => {
+    const points = [];
+    for (let i = 1; i <= numPoints; i++) {
+      const ratio = i / (numPoints + 1);
+      const lat = startPoint.latitude + (endPoint.latitude - startPoint.latitude) * ratio;
+      const lng = startPoint.longitude + (endPoint.longitude - startPoint.longitude) * ratio;
+      points.push({ latitude: lat, longitude: lng });
+    }
+    return points;
+  };
   // //focuses the map on the current location of the user
   // const focusOnCurrentLocation = () => {
   //   setSearchedLocation(null);
@@ -140,14 +151,12 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
       const lastAction = newUndoStack.pop();
       setUndoStack(newUndoStack);
       
-      const newPoints = [...points];
-      newPoints[lastAction.index] = lastAction.point;
-      setPoints(newPoints);
+      setPoints(lastAction.points);
       
       if (newUndoStack.length === 0) {
         setIsMarkerMoved(false);
       }
-      calculateAreaAndPerimeter(newPoints);
+      calculateAreaAndPerimeter(lastAction.points);
     }
   };
 
@@ -188,8 +197,21 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
   const handleMarkerDragEnd = (event, index) => {
     const newPoints = [...points];
     const originalPoint = {...newPoints[index]};
-    setUndoStack(prevStack => [...prevStack, {index, point: originalPoint}]);
-    newPoints[index] = event.nativeEvent.coordinate;
+    setUndoStack(prevStack => [...prevStack, {index, point: originalPoint, points: [...newPoints]}]);
+    
+    const draggedPoint = event.nativeEvent.coordinate;
+    newPoints[index] = draggedPoint;
+  
+    // Insert intermediate points
+    const prevIndex = (index - 1 + newPoints.length) % newPoints.length;
+    const nextIndex = (index + 1) % newPoints.length;
+    
+    const intermediatePrev = insertIntermediatePoints(newPoints[prevIndex], draggedPoint);
+    const intermediateNext = insertIntermediatePoints(draggedPoint, newPoints[nextIndex]);
+  
+    newPoints.splice(index, 0, ...intermediatePrev);
+    newPoints.splice(index + intermediatePrev.length + 1, 0, ...intermediateNext);
+  
     setPoints(newPoints);
     setIsMarkerMoved(true);
     calculateAreaAndPerimeter(newPoints);
@@ -283,14 +305,17 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
             }}
             mapPadding={{ top: 0, right: -100, bottom: 0, left: 0 }}
           >
-            {points.map((point, index) => (
-              <Marker
-                key={index}
-                coordinate={point}
-                draggable
-                onDragEnd={(e) => handleMarkerDragEnd(e, index)}
-              />
-            ))}
+          {points.map((point, index) => (
+            <Marker
+              key={index}
+              coordinate={point}
+              draggable
+              onDragEnd={(e) => handleMarkerDragEnd(e, index)}
+              tracksViewChanges={false}
+              stopPropagation={true}
+              dragThreshold={10} // Add this line
+            />
+          ))}
             {!isPolygonComplete && points.length > 1 && (
               <Polyline
                 coordinates={points}
