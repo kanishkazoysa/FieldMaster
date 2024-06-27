@@ -35,22 +35,6 @@ export const styles = {
       marginLeft: "70px",
     },
   
-
-    topSection: {
-      display: "flex",
-      flexDirection: "row",
-      marginTop: "15px",
-      width: "100%",
-      justifyContent: "flex-end",
-      marginRight: "20px", // Align the items to the right
-    },
-
-    editbutton: {
-      marginLeft: "10px",
-      cursor: "pointer",
-      color: "#007BFF",
-    },
-
     /*first section*/
   
     Box1: {
@@ -60,7 +44,7 @@ export const styles = {
       flexDirection: "column",
       alignItems: "center",
       backgroundColor: "white",
-      marginTop: "15px",
+      marginTop: "30px",
       borderRadius: "11px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
       padding: "6px",
@@ -76,10 +60,11 @@ export const styles = {
       display: "flex",
       flexDirection: "coloumn",
       alignItems: "center",
-      justifyContent: "space-evenly",
+      justifyContent: "center",
       height: 50,
-      width: "95%",
+      width: "100%",
       backgroundColor: "white",
+      marginTop: "6px",
     },
   
     property: {
@@ -89,7 +74,7 @@ export const styles = {
       alignItems: "center",
       justifyContent: "left",
       backgroundColor: "white",
-     
+      width: "46%",
       //height: 50,
     },
   
@@ -113,7 +98,7 @@ export const styles = {
     },
   
     propertyValue: {
-      fontSize: 12,
+      fontSize: 13,
       fontWeight: "bold",
       marginBottom: 0,
     },
@@ -196,7 +181,7 @@ export const styles = {
   
     bottom: {
       alignItems: "center",
-      marginTop: 120,
+      marginTop: 150,
       width: "92%",
       
     },

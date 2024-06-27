@@ -1,17 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, Button, Divider } from 'antd';
+import { BeatLoader } from 'react-spinners';
 import ManageProfileModal from '../ProfileManageModal/ManageProfile';
+import AxiosInstance from '../../../AxiosInstance';
+import { useNavigate } from 'react-router-dom';
+
 
 const ProfileModal = ({ isOpen, onRequestClose }) => {
   const [showManageProfileModal, setShowManageProfileModal] = useState(false);
+  const [user, setUser] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      fetchUser(); // Call the function to fetch user details only when modal is open
     } else {
       document.body.style.overflow = 'unset';
     }
   }, [isOpen]);
+
+  const fetchUser = async () => {
+    setIsLoading(true);
+    try {
+      setTimeout(async () => {
+        const response = await AxiosInstance.get("/api/users/details");
+        setUser(response.data.user);
+        setIsLoading(false);
+      }, 2000); // Simulate a 2-second delay
+    } catch (error) {
+      console.error("Failed to fetch user details:", error);
+      setIsLoading(false);
+    }
+  };
+
 
   const handleManageProfileClick = () => {
     setShowManageProfileModal(true);
@@ -23,55 +46,62 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
 
   if (!isOpen) return null;
 
+  const handleSignOut = async () => {
+    localStorage.removeItem('UserToken');
+    navigate('/login');
+  }
+
   return (
     <div style={styles.modalOverlay}>
-      <div
-        style={
-          showManageProfileModal
-            ? { ...styles.modal, ...styles.modalSlideOut }
-            : styles.modal
-        }
-      >
+      <div style={styles.modal}>
         {!showManageProfileModal && (
           <>
             <button style={styles.closeButton} onClick={onRequestClose}>
               ×
             </button>
             <div style={styles.content}>
-              <p>kanishkazoysa1234@gmail.com</p>
-              <Divider />
-              <Avatar
-                size={150}
-                style={styles.avatar}
-                src="https://th.bing.com/th/id/OIP.pWAz6MVBo5svuJ09ahjN7gHaEK?rs=1&pid=ImgDetMain"
-              />
-              <Divider />
-              <h4 style={styles.hellotxt}>Hi, Kanishka!</h4>
-              <Button
-                type="primary"
-                style={{
-                  marginTop: '40px',
-                  padding: '18px',
-                  width: '70%',
-                  borderRadius: 20,
-                }}
-                onClick={handleManageProfileClick}
-              >
-                Manage Your Profile
-              </Button>
-              <Button
-                style={{
-                  marginTop: '20px',
-                  padding: '18px',
-                  width: '70%',
-                  borderRadius: 20,
-                  marginBottom: '10px',
-                }}
-              >
-                Sign Out From Your Account
-              </Button>
-              <Divider />
-              <p style={styles.bottomtxt}>Privacy Policy . Terms of Services</p>
+              {isLoading ? (
+                <div style={styles.loader}>
+                <BeatLoader color="#007BFF" />
+                </div>
+              ) : (
+                <>
+                  <p>{user.email}</p>
+                  <Divider style={styles.divider} />
+                  <Avatar
+                    size={130}
+                    style={styles.avatar}
+                    src="https://th.bing.com/th/id/OIP.pWAz6MVBo5svuJ09ahjN7gHaEK?rs=1&pid=ImgDetMain"
+                  />
+                  <h4 style={styles.hellotxt}>Hi, {user.fname}!</h4>
+                  <Button
+                    type="primary"
+                    style={{
+                      marginTop: '30px',
+                      padding: '18px',
+                      width: '70%',
+                      borderRadius: 20,
+                    }}
+                    onClick={handleManageProfileClick}
+                  >
+                    Manage Your Profile
+                  </Button>
+                  <Button
+                  onClick={handleSignOut}
+                    style={{
+                      marginTop: '20px',
+                      padding: '18px',
+                      width: '70%',
+                      borderRadius: 20,
+                      marginBottom: '20px',
+                    }}
+                  >
+                    Sign Out From Your Account
+                  </Button>
+                  <Divider />
+                  <p style={styles.bottomtxt}>Privacy Policy . Terms of Services</p>
+                </>
+              )}
             </div>
           </>
         )}
@@ -88,6 +118,7 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
             isOpen={showManageProfileModal}
             onRequestClose={handleCloseManageProfileModal}
             onBack={handleCloseManageProfileModal}
+            user={user} // Passing the user object as a prop
           />
         )}
       </div>
@@ -109,21 +140,27 @@ const styles = {
     backdropFilter: 'blur(10px)',
     zIndex: 1000,
     opacity: 1,
-    transition: 'opacity 3s ease-in-out',
+    transition: 'opacity 0.3s ease-in-out',
+  },
+  loader: {
+    marginTop: '60%',
   },
   modal: {
     background: 'white',
     borderRadius: '10px',
     boxShadow: '0 0 10px rgba(0, 0, 0, 0.25)',
     width: '25%', // Adjust the width as needed
-    height: '80%',
+    height: '70%',
     padding: '20px',
-    position: 'absolute',
+    position: 'relative',
     transition: 'transform 0.3s ease-in-out',
     transform: 'translateX(0)',
   },
   modalSlideOut: {
     transform: 'translateX(100vw)',
+  },
+  divider: {
+    marginTop: '6px',
   },
   manageModal: {
     background: 'white',
@@ -140,6 +177,7 @@ const styles = {
     transform: 'translateX(0)',
   },
   hellotxt: {
+    marginTop: '20px',
     fontSize: '1.5rem',
   },
   bottomtxt: {
