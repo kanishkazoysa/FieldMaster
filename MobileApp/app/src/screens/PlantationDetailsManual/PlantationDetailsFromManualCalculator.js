@@ -127,7 +127,8 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
       numberOfPlants: numberOfPlants,
       PlantationDensity: plantDensity,
       plantType: textPlant,
-      area:area
+      area:area,
+      perimeter:perimeter
     });
     console.log(
       "sending" + numberOfPlants + " " + plantDensity + " " + textPlant

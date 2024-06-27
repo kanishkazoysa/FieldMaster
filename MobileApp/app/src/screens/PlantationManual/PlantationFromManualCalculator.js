@@ -93,6 +93,7 @@ export default function PlantationFromManualCalculator({ route }) {
           textRowspace,
           PlantSpaceUnitselectedValue,
           area,
+          perimeter
         }
       );
 

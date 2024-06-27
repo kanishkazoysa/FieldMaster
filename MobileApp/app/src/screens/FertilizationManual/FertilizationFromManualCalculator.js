@@ -26,7 +26,7 @@ import { styles } from "./FertilizationStylesFromManualCalculatot";
 
 export default function FertilizationFromManualCalculator({ route }) {
   const { params } = route;
-  const { numberOfPlants, PlantationDensity, plantType,area } = params;
+  const { numberOfPlants, PlantationDensity, plantType,area,perimeter } = params;
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function FertilizationFromManualCalculator({ route }) {
     }
 
 
-    AxiosInstance.post("/api/fertilizer/fertilizer", {
+    AxiosInstance.post("/api/fertilizer/fertilizerFromManualCalculator", {
       numberOfPlants,
       textFertilizationType,
       textFertilizationNUmberoftime,
@@ -53,7 +53,7 @@ export default function FertilizationFromManualCalculator({ route }) {
           const totalAmountForPlantation = response.data.data.totalAmountForPlantation;
           const lmn = response.data.data.totalAmount
 
-          navigation.navigate("FertilizationDetails", {
+          navigation.navigate("FertilizationDetailsFromManualCalculator", {
             plantcount: numberOfPlants,
             count: lmn,
             Total: totalAmountForPlantation,
@@ -62,13 +62,12 @@ export default function FertilizationFromManualCalculator({ route }) {
             FertilizerAmount: textFertilizationAmount,
             FertilizerAmountUnit: FertilizerAmountUnitselectedValue,
             SelectedButton: selectedButton !== null ? buttonNames[selectedButton] : null,
+            area:area,
+            perimeter:perimeter
           });
         } else {
           console.error(response.data.data);
         }
-      }).catch((err) => {
-        console.error(error);
-        Alert.alert("Error", "Something went wrong");
       })
   };
 

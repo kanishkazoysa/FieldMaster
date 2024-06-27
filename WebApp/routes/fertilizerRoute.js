@@ -78,4 +78,32 @@ router.post("/fertilizer", async (req, res) => {
     }
 });
 
+router.post("/fertilizerFromManualCalculator", async (req, res) => {
+    
+    try{
+        const {textFertilizationType,textFertilizationNUmberoftime,textFertilizationAmount,FertilizerAmountUnitselectedValue,selectedButton,numberOfPlants,area} = req.body;
+         
+        
+        const NoOfTimes = textFertilizationNUmberoftime;
+        const AmountOfOneTime = textFertilizationAmount;
+        const unit = FertilizerAmountUnitselectedValue;
+        const HowOften = selectedButton;
+        const totalAmount = calculateFertilizerAmountForYear(HowOften, NoOfTimes, AmountOfOneTime, unit);
+        const totalAmountForPlantation = calculateFertilizerAmountForPlantation(totalAmount,numberOfPlants);
+
+        
+      
+     
+        
+        res.json({status:"ok" , data: {
+            totalAmountForPlantation: totalAmountForPlantation,
+            totalAmount: totalAmount
+
+        }});
+    }
+    catch(error){
+        res.status(500).json({status:"error" , data: error.message});
+    }
+});
+
 module.exports = router;
