@@ -8,17 +8,15 @@ import { styles } from "./plantationDetailsStyles";
 import { MdGrass,MdFormatLineSpacing } from "react-icons/md";
 import { GiGrassMushroom } from "react-icons/gi";
 import { FaTree } from "react-icons/fa";
-import { FaEdit } from "react-icons/fa";
 import { RxRowSpacing } from "react-icons/rx";
 import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
 import AxiosInstance from "../../../AxiosInstance";
-import Swal from 'sweetalert2';
 import Plantation from "../PlantationPage/plantation";
 import { RiEditBoxLine } from "react-icons/ri"; 
 import { BeatLoader } from 'react-spinners';
 import TemplateDetails from "../../SavedTemplates/TemplateDetails"
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Modal } from "antd";
+import { Modal,Button} from "antd";
 import { getPlantationDetailsHtml } from "./plantationDetailsTemplate";
 const { confirm } = Modal;
 export default function PlantationDetails({
@@ -154,7 +152,7 @@ export default function PlantationDetails({
   <div>
     {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '85vh' }}>
-          <BeatLoader color="#007BFF" loading={loading} size={20} />
+          <BeatLoader color="#007BFF" loading={loading} size={12} />
         </div>
       ) : (
     !currentPage && (
@@ -270,19 +268,17 @@ export default function PlantationDetails({
       </div>
 
       <div style={styles.bottom} >
-        <button style={styles.Button1} onClick={handleFertilization}>
-          <p style={styles.Box4ButtonText}>Fertilization</p>
-        </button>
+        <Button type="primary" style={styles.Button1} onClick={handleFertilization}>
+          <p style={{fontSize: 13}}>Fertilization</p>
+        </Button>
       </div>
-
       <div style={styles.bottom2}>
-        <button style={styles.Button2} onClick={handleSave}>
-          <p style={styles.Box4ButtonText}>Save as PDF</p>
-        
-        </button>
-        <button style={styles.Button3} onClick={handleback}>
-                <p style={styles.Box4ButtonText}>Back to Template</p>
-              </button>
+        <Button type="primary" style={styles.Button2} onClick={handleSave}>
+          <p style={{fontSize: 13}}>Save as PDF</p>
+        </Button>
+        <Button style={styles.Button3} onClick={handleback}>
+          <p style={{fontSize: 13}}>Back to Template</p>
+        </Button>
       </div>
 
     </div>

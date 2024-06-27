@@ -207,28 +207,19 @@ export const styles = {
     },
   
     Button1: {
-      display: "flex",
       width: "100%",
-      height: 38,
-      backgroundColor: "green",
+      backgroundColor: "#3DCA6F",
       alignItems: "center",
-      justifyContent: "center",
-      marginTop: 10,
+      padding: '17px',
+      marginTop: 30,
       borderRadius: 11,
-      borderWidth: 0,
-   
     },
     Button3: {
-      display: "flex",
       width: "100%",
-      height: 38,
-      backgroundColor: "#007BFF",
       alignItems: "center",
-      justifyContent: "center",
-      marginTop: 10,
+      padding: '17px',
+      marginTop: 8,
       borderRadius: 11,
-      borderWidth: 0,
-   
     },
 
     bottom2: {
@@ -238,19 +229,13 @@ export const styles = {
       
     },
   
-    Button2: {
-      display: "flex",
+    Button2: { 
       width: "100%",
-      height: 38,
-      backgroundColor: "red",
       alignItems: "center",
-      justifyContent: "center",
-      marginTop: 10,
+      marginTop:8,
       borderRadius: 11,
-      borderWidth: 0,
-   
+      padding: '17px',
     },
-
 
     topSection: {
       flexDirection: "row",

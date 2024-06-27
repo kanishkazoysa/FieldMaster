@@ -7,7 +7,7 @@ import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
 import { styles } from "./plantationStyles.js";
 import Select from "react-select";
-import { message } from "antd";
+import { message,Button } from "antd";
 import PlantationDetails from "../PlantationDetails/plantationDetails";
 import AxiosInstance from "../../../AxiosInstance";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
@@ -262,9 +262,9 @@ export default function Plantation({
 
           {/* calculate button */}
           <div style={styles.bottom}>
-            <button style={styles.Button1} onClick={handlePlantationDetails}>
-              <p style={styles.Box4ButtonText}>Calculate Plantation</p>
-            </button>
+            <Button type="primary" style={styles.Button1} onClick={handlePlantationDetails}>
+            <p style={{fontSize: 13}}>Calculate Plantation</p>
+            </Button>
           </div>
         </div>
       )}

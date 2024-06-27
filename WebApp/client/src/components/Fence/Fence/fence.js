@@ -5,7 +5,7 @@ import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import {  BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
-import { message } from "antd";
+import { message,Button } from "antd";
 import { styles } from "./fenceStyles";
 import Select from "react-select";
 import FenceDetails from "../FenceDetails/fenceDetails";
@@ -310,9 +310,12 @@ export default function Fence({ onBackToSidebar , id , area,Perimeter,onEditTemp
           </div>
 
           <div style={styles.bottom}>
-            <button style={styles.Button1} onClick={handleFenceDetails}>
-              <p style={styles.Box4ButtonText}>Calculate</p>
-            </button>
+            <Button  
+            type="primary"
+            style={styles.Button1}
+            onClick={handleFenceDetails}>
+             <p style={{fontSize: 13}}>Calculate</p>
+            </Button>
           </div>
         </div>
       )}
