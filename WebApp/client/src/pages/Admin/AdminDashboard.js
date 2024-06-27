@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./AdminDashboard.css";
 import logo from "../../images/logo.png";
 import { Icon } from "@iconify/react";
-import { Avatar } from "antd";
+import { BeatLoader } from 'react-spinners';
+import { Avatar, message } from "antd";
 import { Tag, Space, Table } from "antd";
 import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
 import AxiosInstance from "../../AxiosInstance";
@@ -10,6 +11,7 @@ import AxiosInstance from "../../AxiosInstance";
 function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [userList, setUserList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [pagination, setPagination] = useState({
     pageSize: 10,
     current: 1,
@@ -20,8 +22,10 @@ function AdminDashboard() {
     try {
       const response = await AxiosInstance.get("/api/users/getAllUsers");
       setUserList(response.data.users);
+      setIsLoading(false);
     } catch (error) {
       console.error("Failed to fetch users:", error);
+      message.error("Failed to fetch users");
     }
   };
 
@@ -126,33 +130,41 @@ function AdminDashboard() {
 
   return (
     <div>
-      <div className="admin-dashboard-header">
-        <div className="logo">
-          <img className="image-admin" src={logo} alt="FIELDMASTER" />
+      {isLoading ? (
+        <div className="loader-container">
+          <BeatLoader size={20} color="#007BFF" />
         </div>
-        <div className="avatar-container">
-          <Avatar size={50} onClick={handleAvatarClick} />
-        </div>
-      </div>
-      <hr />
-      {isModalOpen && (
-        <ProfileModal
-          isOpen={isModalOpen}
-          onRequestClose={() => setIsModalOpen(false)}
-        />
+      ) : (
+        <>
+          <div className="admin-dashboard-header">
+            <div className="logo">
+              <img className="image-admin" src={logo} alt="FIELDMASTER" />
+            </div>
+            <div className="avatar-container">
+              <Avatar size={50} onClick={handleAvatarClick} />
+            </div>
+          </div>
+          <hr />
+          {isModalOpen && (
+            <ProfileModal
+              isOpen={isModalOpen}
+              onRequestClose={() => setIsModalOpen(false)}
+            />
+          )}
+          <div className="admin-dashboard-body">
+            <div className="tableHeaderContainer">
+              <h1>Manage Users</h1>
+              <button>Add New</button>
+            </div>
+            <Table
+              columns={columns}
+              dataSource={userList}
+              pagination={userList.length > 10 ? pagination : false}
+              onChange={handleTableChange}
+            />
+          </div>
+        </>
       )}
-      <div className="admin-dashboard-body">
-        <div className="tableHeaderContainer">
-          <h1>Manage Users</h1>
-          <button>Add New</button>
-        </div>
-        <Table
-          columns={columns}
-          dataSource={userList}
-          pagination={userList.length > 10 ? pagination : false}
-          onChange={handleTableChange}
-        />
-      </div>
     </div>
   );
 }
