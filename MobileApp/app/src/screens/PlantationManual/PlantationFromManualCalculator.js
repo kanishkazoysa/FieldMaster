@@ -152,7 +152,7 @@ export default function PlantationFromManualCalculator({ route }) {
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>Area</Text>
-                  <Text style={styles.propertyValue}>{area} acres</Text>
+                  <Text style={styles.propertyValue}>{area} m{"\u00B2"}</Text>
                 </View>
               </View>
             </View>

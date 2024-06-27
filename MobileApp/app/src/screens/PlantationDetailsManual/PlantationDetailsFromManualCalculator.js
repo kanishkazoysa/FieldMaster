@@ -192,7 +192,7 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>Density</Text>
-                  <Text style={styles.propertyValue}>{plantDensity}/m</Text>
+                  <Text style={styles.propertyValue}>{plantDensity} /m{"\u00B2"}</Text>
                 </View>
               </View>
             </View>
@@ -221,7 +221,7 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
                 />
                 <View style={styles.box2PropertyDetails}>
                   <Text style={styles.Box2PropertyLabel}>Area</Text>
-                  <Text style={styles.Box2PropertyValue}>{area} perches</Text>
+                  <Text style={styles.Box2PropertyValue}>{area}  m{"\u00B2"}</Text>
                 </View>
               </View>
             </View>
