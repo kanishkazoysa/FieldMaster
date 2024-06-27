@@ -209,7 +209,7 @@ export default function FertilizationDetailsFromManualCalculator({ route }) {
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>Per plant</Text>
-                  <Text style={styles.propertyValue}>{totalAmount} {FertilizerAmountUnit} </Text>
+                  <Text style={styles.propertyValue}> {Total}</Text>
                 </View>
               </View>
               <View style={styles.property}>
@@ -220,7 +220,7 @@ export default function FertilizationDetailsFromManualCalculator({ route }) {
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>For plantation</Text>
-                  <Text style={styles.propertyValue}>{Total} kg</Text>
+                  <Text style={styles.propertyValue}>{totalAmount} {FertilizerAmountUnit} </Text>
                 </View>
               </View>
             </View>
@@ -237,7 +237,7 @@ export default function FertilizationDetailsFromManualCalculator({ route }) {
               />
               <View style={styles.box2PropertyDetails}>
                 <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                <Text style={styles.Box2PropertyValue}>665m</Text>
+                <Text style={styles.Box2PropertyValue}>{perimeter} km</Text>
               </View>
             </View>
             <View style={styles.box2Property}>
@@ -248,7 +248,7 @@ export default function FertilizationDetailsFromManualCalculator({ route }) {
               />
               <View style={styles.box2PropertyDetails}>
                 <Text style={styles.Box2PropertyLabel}>Area</Text>
-                <Text style={styles.Box2PropertyValue}>2 acres</Text>
+                <Text style={styles.Box2PropertyValue}>{area} m{"\u00B2"}</Text>
               </View>
             </View>
           </View>

@@ -150,7 +150,7 @@ export default function FertilizationFromManualCalculator({ route }) {
                     />
                     <View style={styles.propertyDetails}>
                       <Text style={styles.propertyLabel}>Area</Text>
-                      <Text style={styles.propertyValue}>2 acres</Text>
+                      <Text style={styles.propertyValue}>{area} m{"\u00B2"}</Text>
                     </View>
                   </View>
                 </View>
@@ -164,7 +164,7 @@ export default function FertilizationFromManualCalculator({ route }) {
                     />
                     <View style={styles.propertyDetails}>
                       <Text style={styles.propertyLabel}>Density</Text>
-                      <Text style={styles.propertyValue}>{PlantationDensity}</Text>
+                      <Text style={styles.propertyValue}>{PlantationDensity} /m{"\u00B2"}</Text>
                     </View>
                   </View>
                   <View style={styles.property}>
