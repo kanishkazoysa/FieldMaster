@@ -53,8 +53,11 @@ const AdminRouteGuard = ({ children }) => {
 
 const AuthRouteGuard = ({ children }) => {
   const token = localStorage.getItem("UserToken");
+  const AdminToken = localStorage.getItem("AdminToken");
   if (token) {
     return <Navigate to="/home" />;
+  } else if(AdminToken) {
+    return <Navigate to="/admin" />;
   } else {
     return children;
   }
