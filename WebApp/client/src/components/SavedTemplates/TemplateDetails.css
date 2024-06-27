@@ -158,15 +158,17 @@ p {
   display: flex;
   justify-content: center;
   gap: 10px;
+  margin-top: 8px;
 }
 
 .action-btn {
   display: block;
-  width: 270px;
-  height: 40px;
+  width: 230px;
+  height: 30px;
   border: none;
   background-color: #064cbe;
-  color: white;
   border-radius: 10px;
   margin-top: 10px;
+  font-size: 13px;
+  padding-bottom: 5px;
 }

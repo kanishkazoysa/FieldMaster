@@ -13,6 +13,7 @@ import FenceDetails from '../Fence/FenceDetails/fenceDetails';
 import Plantation from '../Plantation/PlantationPage/plantation';
 import PlantationDetails from '../Plantation/PlantationDetails/plantationDetails';
 import AxiosInstance from '../../AxiosInstance';
+import { Button, Flex } from 'antd';
 
 const TemplateDetails = ({
   onBackToSidebar,
@@ -85,13 +86,11 @@ const TemplateDetails = ({
     <div>
       {!currentPage && (
         <div className='main-div'>
-          <MdArrowBack onClick={onBackToSidebar} className='backBtn' />
           <div className='outer-div'>
             <div className='div-01'>
-              <div className='column details'>
-                <p className='templateName-text'>{template.templateName}</p>
-              </div>
-              <div className='column edit-icon-container'>
+              <MdArrowBack onClick={onBackToSidebar} className='backBtn' />
+              <p className='templateName-text'>{template.templateName}</p>
+              <div className='edit-icon-container'>
                 <BiEdit className='edit-icon' onClick={handleEdit} />
               </div>
             </div>
@@ -102,12 +101,12 @@ const TemplateDetails = ({
                 className='map-img'
               />
               <div className='button-container'>
-                <button className='action-btn'>
-                  <p>Manage Land</p>
-                </button>
-                <button className='action-btn'>
-                  <p>Resize Map</p>
-                </button>
+                <Button type='primary' className='action-btn'>
+                  Manage Map
+                </Button>
+                <Button type='primary' className='action-btn'>
+                  Resize Map
+                </Button>
               </div>
               <hr className='breaker' />
             </div>

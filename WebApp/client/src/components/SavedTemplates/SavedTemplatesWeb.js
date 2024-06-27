@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MdArrowBack } from 'react-icons/md';
 import '../SavedTemplates/SavedTemplatesWeb.css';
-import Card from './Card';
+import Card from './Card.js';
 import { FaSearch } from 'react-icons/fa';
 import AxiosInstance from '../../AxiosInstance';
 
