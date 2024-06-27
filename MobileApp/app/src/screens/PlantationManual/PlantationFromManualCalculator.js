@@ -151,8 +151,8 @@ export default function PlantationFromManualCalculator({ route }) {
                   color="gray"
                 />
                 <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyLabel}>Area</Text>
-                  <Text style={styles.propertyValue}>{area} m{"\u00B2"}</Text>
+                  <Text style={styles.propertyLabel}>Area(m{"\u00B2"})</Text>
+                  <Text style={styles.propertyValue}>{area}</Text>
                 </View>
               </View>
             </View>

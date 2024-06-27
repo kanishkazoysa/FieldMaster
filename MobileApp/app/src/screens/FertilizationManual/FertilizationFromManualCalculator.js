@@ -26,7 +26,7 @@ import { styles } from "./FertilizationStylesFromManualCalculatot";
 
 export default function FertilizationFromManualCalculator({ route }) {
   const { params } = route;
-  const { numberOfPlants, PlantationDensity, plantType } = params;
+  const { numberOfPlants, PlantationDensity, plantType,area } = params;
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export default function FertilizationFromManualCalculator({ route }) {
           {/* Top section */}
           <View style={styles.Box1}>
             <View style={styles.innerContainer}>
-              <Text style={styles.titleText}>Plantation Info</Text>
+              <Text style={styles.titleText}>Plantation Infou</Text>
               {/* Property boxes */}
               <View style={styles.propertyBox}>
                 {/* Row 1 */}

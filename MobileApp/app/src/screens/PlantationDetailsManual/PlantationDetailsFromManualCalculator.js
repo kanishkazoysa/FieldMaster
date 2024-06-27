@@ -122,11 +122,12 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
     `;
 
   const navigation = useNavigation();
-  const handleFertilization = () => {
-    navigation.navigate("Fertilization", {
+  const handleFertilizationFromManual = () => {
+    navigation.navigate("FertilizationFromManualCalculator", {
       numberOfPlants: numberOfPlants,
       PlantationDensity: plantDensity,
       plantType: textPlant,
+      area:area
     });
     console.log(
       "sending" + numberOfPlants + " " + plantDensity + " " + textPlant
@@ -220,8 +221,8 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
                   color="#65676B"
                 />
                 <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Area</Text>
-                  <Text style={styles.Box2PropertyValue}>{area}  m{"\u00B2"}</Text>
+                  <Text style={styles.Box2PropertyLabel}>Area(m{"\u00B2"})</Text>
+                  <Text style={styles.Box2PropertyValue}>{area} </Text>
                 </View>
               </View>
             </View>
@@ -287,7 +288,7 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
         {/* Bottom section */}
         <View style={styles.bottom}>
           <CustomButton
-            onPress={handleFertilization}
+            onPress={handleFertilizationFromManual}
             text="Fertilizing"
             iconName="flask-outline"
             iconColor="white"

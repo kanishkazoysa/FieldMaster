@@ -15,11 +15,11 @@ import { shareAsync } from 'expo-sharing';
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import {styles} from './FertilizingDetailsFromManualCalculatorStyles';
-export default function FertilizationDetailsFromManualCalculator({ route }) {
+export default function FertilizationDetailsFromManualCalculator({ route}) {
 
 
   const { params } = route;
-  const { FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton,count,plantcount} = params;
+  const { FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton,count,plantcount,area} = params;
   const [factorValue, setFactor] = useState(1);
   const [totalAmount, setTotalAmount] = useState(0);
   const [Total,setTotal] = useState(0);

@@ -41,7 +41,8 @@ import EffortOutputFromManualCalculator from "./src/screens/EffortOutputManual/E
 import ClearLandFromManualCalculator from "./src/screens/ClearLandManual/ClearLandFromManualCalculator.js";
 import FenceFromManualCal from "./src/screens/FenceManual/Fence/FenceFromManualCal";
 import FencedetailfromManual from  "./src/screens/FenceManual/FenceDetails/FencedetailfromManual";
-
+import FertilizationFromManualCalculator from "./src/screens/FertilizationManual/FertilizationFromManualCalculator.js"
+import FertilizationDetailsFromManualCalculator from "./src/screens/FertilizingDetailsManual/FertilizingDetailsFromManualCalculator.js"
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -98,6 +99,8 @@ const App = () => {
         <Stack.Screen name="ClearLandFromManualCalculator" component={ClearLandFromManualCalculator}/>
         <Stack.Screen name="FenceFromManualCal" component={FenceFromManualCal}/>
         <Stack.Screen name="FencedetailfromManual" component={FencedetailfromManual}/>
+        <Stack.Screen name="FertilizationFromManualCalculator" component={FertilizationFromManualCalculator}/>
+        <Stack.Screen name="FertilizationDetailsFromManualCalculator" component={FertilizationDetailsFromManualCalculator}/>
 
 
 
