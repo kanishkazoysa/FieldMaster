@@ -31,17 +31,14 @@
 .templateName-text {
   font-weight: 500;
   font-size: 17px;
-  margin-top: -20px;
-  margin-left: -60px;
+  margin-top: -10px;
 }
-
 p {
   margin: 0;
   font-size: 13px;
 }
-
 .backBtn {
-  margin-top: -13px;
+  margin-top: -5px;
 }
 
 .div-02 {
