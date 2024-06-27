@@ -85,12 +85,12 @@ export const styles = StyleSheet.create({
     },
   
     propertyLabel: {
-        fontSize: responsiveFontSize(1.7),
+        fontSize: responsiveFontSize(1.6),
         
     },
   
     propertyValue: {
-        fontSize: responsiveFontSize(1.8),
+        fontSize: responsiveFontSize(1.6),
         fontWeight: "bold",
     },
   
@@ -134,11 +134,11 @@ export const styles = StyleSheet.create({
       backgroundColor: "white",
     },
     Box2PropertyLabel: {
-      fontSize: responsiveFontSize(1.7),
+      fontSize: responsiveFontSize(1.6),
       paddingTop: responsiveWidth(3),
     },
     Box2PropertyValue: {
-      fontSize: responsiveFontSize(1.8),
+      fontSize: responsiveFontSize(1.6),
       fontWeight: "bold",
     },
   
