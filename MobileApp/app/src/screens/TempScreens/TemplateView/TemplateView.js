@@ -91,7 +91,7 @@ const TemplateView = ({ route, navigation }) =>
 
   const handleEdit = (item) => {
     console.log(item);
-    navigation.navigate('ResizeMap', { templateId: item._id });
+    navigation.navigate('ResizeMap', { templateId: item._id, Area:item.area, Perimeter:item.perimeter });
   };
 
   

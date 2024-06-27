@@ -27,7 +27,7 @@ import {
 
 
 const ResizeMapScreen = ({ navigation, route }) => {
-  const { templateId } = route.params;
+  const { templateId , Area , Perimeter } = route.params;
   const [isPolygonComplete, setIsPolygonComplete] = useState(true);
   const [region, setRegion] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -235,6 +235,14 @@ const ResizeMapScreen = ({ navigation, route }) => {
           navigation={navigation}
           title="Resize Map"
         ></Headersection>
+      </View>
+      <View style={styles.overlay}>
+        <Text style={styles.overlayText}>
+          Area: {Area} perches
+        </Text>
+        <Text style={styles.overlayText}>
+          Perimeter: {Perimeter} km
+        </Text>
       </View>
       {region && (
         <View style={{ flex: 1 }}>
