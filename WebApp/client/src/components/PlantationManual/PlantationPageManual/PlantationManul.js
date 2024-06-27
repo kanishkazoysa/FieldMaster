@@ -1,24 +1,18 @@
 // SideNavbar.js
-import React, { useState} from "react";
+import React, { useState, useRef } from "react";
 import { MdArrowBack, MdFormatLineSpacing } from "react-icons/md";
 import { RxRowSpacing } from "react-icons/rx";
 import { PiTreeEvergreenFill } from "react-icons/pi";
 import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
-import { styles } from "./plantationStyles.js";
+
+import { styles } from "./PlantationManualStyles";
 import Select from "react-select";
-import { message } from "antd";
-import PlantationDetails from "../PlantationDetails/plantationDetails";
-import AxiosInstance from "../../../AxiosInstance";
-import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
-export default function Plantation({ 
-  onBackToSidebar,
-  id,
-  Perimeter,
-  area,
-  onEditTemplateClick,
-  template
-}) {
+// import AxiosInstance from "../../../AxiosInstance";
+import axios from "axios";
+import PlantationDetailsManual from "../PlantationDetailsManual/PlantationDetailsManual";
+
+export default function Plantation({ onBackToSidebar,area,perimeter,PerimeterUnitselectedValue,AreaUnitselectedValue }) {
  
   const [textPlant, settextPlant] = useState(null);
   const [PlantSpaceUnitselectedValue, setPlantSpaceUnitselectedValue] =
@@ -49,10 +43,7 @@ export default function Plantation({
     settextPlant(event.target.value);
   };
 
-  const backtotemp = () =>{
-    setCurrentPage("TemplateDetails"); // Update this line
-    setAnimatePage(true);
-  }
+
   const handlePlantSpaceUnitChange = (selectedOption) => {
     setPlantSpaceUnitselectedValue1(selectedOption);
     setPlantSpaceUnitselectedValue(selectedOption.value);
@@ -63,53 +54,48 @@ export default function Plantation({
     setRowSpaceUnitselectedValue(selectedOption.value);
   };
 
-
-
-
   const handlePlantationDetails = async (e) => {
-    // Validate the data
-    if (
-      !PlantSpaceUnitselectedValue ||
-      !RowSpaceUnitselectedValue ||
-      !textPlant ||
-      !textplantspace ||
-      !textRowspace
-    ) {
-      message.error("Please fill all input fields")
-      return;
-    }
-  
-    const regex = /^\d+(\.\d+)?$/; // allow decimal and float numbers
-    if (
-      !regex.test(textplantspace) ||
-      !regex.test(textRowspace)
-    ) {
-      message.error("Please fill valid input")
-      return;
-    }
-  
-    AxiosInstance.post("/api/plantation/plantation", {
-      id,
-      area,
-      textPlant,
-      textplantspace,
-      textRowspace,
-      PlantSpaceUnitselectedValue,
-      RowSpaceUnitselectedValue,
 
-    })
-      .then((response) => {
-        // If backend response is successful, navigate to detail page
-        setCurrentPage("plantationDetails");
-        setAnimatePage(true);
-        e.preventDefault();
-        console.log("Response:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error.response ? error.response.data : error.message);
-        message.error("Error", "Failed to create plantation. Please try again.")
-        alert("Error", "Failed to create plantation. Please try again.");
-      });
+    try {
+      // Validate required fields
+      if (
+
+        !PlantSpaceUnitselectedValue ||
+        !RowSpaceUnitselectedValue||
+        !textPlant ||
+        !textplantspace ||
+        !textRowspace
+      ) {
+        throw new Error("Please fill in all fields");
+      }
+
+      setCurrentPage("PlantationDetailsManual");
+      setAnimatePage(true);
+      e.preventDefault();
+
+      // Prepare data for the request
+      const requestData = {
+        textPlant,
+        textplantspace,
+        textRowspace,
+        PlantSpaceUnitselectedValue,
+        RowSpaceUnitselectedValue
+
+      };
+
+      // Make POST request to the backend
+      const response = await axios.post(
+        "http://192.168.1.2:3000/api/plantation/plantationFromManualCalculator",
+        requestData
+      );
+
+      // Handle successful response
+      console.log("Response:", response.data);
+    } catch (error) {
+      // Handle errors
+      console.error("Error:", error.message);
+      alert("Error: " + error.message);
+    }
   };
 
   const handleBackClick = () => {
@@ -119,7 +105,40 @@ export default function Plantation({
     }, 300);
   };
 
+// calculating the number of plants and density
+function calculateNumberOfPlants(area, plantSpacing, rowSpacing) {
+  const areaInSquareMeters = parseFloat(area) * 4046.86;
+  const areaPerPlant = plantSpacing * rowSpacing;
+  const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
+  return numberOfPlants;
+}
 
+function RoundToTwoDecimals(number) {
+  return Math.round(number * 100) / 100;
+}
+function calculatePlantationDensity(area, plantSpacing, rowSpacing) {
+  const areaInSquareMeters = parseFloat(area) * 4046.86;
+
+  // const plantSpacing = parseFloat(plantSpacingInMeters);
+  // const rowSpacing = parseFloat(rowSpacingInMeters);
+
+  const areaPerPlant = plantSpacing * rowSpacing;
+  const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
+  const plantationDensity = RoundToTwoDecimals(numberOfPlants / areaInSquareMeters);
+
+  return plantationDensity;
+}
+function convertToCommonUnit(value, unit) {
+  if (unit === 'cm') {
+      return value / 100;
+  } else {
+      return value;
+  }
+}
+        const plantSpacing = convertToCommonUnit(textplantspace, PlantSpaceUnitselectedValue);
+        const rowSpacing = convertToCommonUnit(textRowspace,PlantSpaceUnitselectedValue );
+        const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
+        const calculatedPlantDensity = calculatePlantationDensity(area, plantSpacing, rowSpacing);
 
 
 
@@ -129,7 +148,7 @@ export default function Plantation({
         <div style={styles.content}>
           <div style={styles.header}>
             <MdArrowBack
-              onClick={backtotemp}
+              onClick={onBackToSidebar}
               style={styles.backButton}
               fontSize={20}
             />
@@ -145,7 +164,7 @@ export default function Plantation({
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{Perimeter} Km</p>
+                  <p style={styles.propertyValue}>{perimeter} {PerimeterUnitselectedValue}</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -153,7 +172,7 @@ export default function Plantation({
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {/* {area} m<sup>2</sup> */}{area } Acres
+                    {/* {area} m<sup>2</sup> */}{area } {AreaUnitselectedValue}
                   </p>
                 </div>
               </div>
@@ -277,22 +296,21 @@ export default function Plantation({
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === "plantationDetails" && (
-          <PlantationDetails
-          onBackToSidebar={onBackToSidebar}
-          onback = {handleBackClick}
-          id={id}
-          onEditTemplateClick = {onEditTemplateClick}
-          template = {template}
-            
-          />
-        )}
-        {currentPage === "TemplateDetails" && (
-          <TemplateDetails
-            onBackToSidebar={onBackToSidebar}
-            id={id}
-            onEditTemplateClick = {onEditTemplateClick}
-            template = {template}
+        {currentPage === "PlantationDetailsManual" && (
+          <PlantationDetailsManual
+            onBackToSidebar={handleBackClick}
+            textplantspace={textplantspace}
+            textRowspace={textRowspace}
+            PlantSpaceUnitselectedValue={PlantSpaceUnitselectedValue}
+            RowSpaceUnitselectedValue={RowSpaceUnitselectedValue}
+            textPlant={textPlant}
+            numberOfPlants={numberOfPlants}
+            calculatedPlantDensity={calculatedPlantDensity}
+            area={area}
+            perimeter={perimeter}
+            AreaUnitselectedValue={AreaUnitselectedValue}
+            PerimeterUnitselectedValue={PerimeterUnitselectedValue}
+
           />
         )}
       </div>

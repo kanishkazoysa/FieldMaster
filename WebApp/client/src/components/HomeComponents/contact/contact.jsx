@@ -1,10 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./contact.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faGithub, faFacebook, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import video3 from "../../../assets/contact_video.mp4";
 
 function ContactForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [status, setStatus] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('Sending...');
+
+    try {
+      const response = await fetch('http://192.168.1.6:3000/api/contact/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        setStatus('Message Sent!');
+      } else {
+        setStatus('Error sending message');
+      }
+    } catch (error) {
+      setStatus('Error sending message');
+    }
+  };
+
   return (
     <div className="contact">
       <div style={{ textAlign: "center", color: "#007BFF", margin: "2rem" }}>
@@ -14,9 +53,9 @@ function ContactForm() {
       <footer className='footer-container'>
         <div className="top">
           <div className="pages">
-            <div className="contact-video-container" >
-              <div className="contact-video" style={{borderRadius:"0.5rem"}}>
-                <video  height="390rem" autoPlay loop muted style={{borderRadius:"0.5rem"}}>
+            <div className="contact-video-container">
+              <div className="contact-video" style={{ borderRadius: "0.5rem" }}>
+                <video height="390rem" autoPlay loop muted style={{ borderRadius: "0.5rem" }}>
                   <source src={video3} type="video/mp4" />
                 </video>
               </div>
@@ -24,60 +63,73 @@ function ContactForm() {
           </div>
 
           <div className="contactForm">
-            <div className="contactSupport" >Stay In Touch</div>
-            <div className="inputName">
-            <label htmlFor="contact_name">Name : </label> 
-            </div>
-            <div className='contactInput'>
-            <input className="input1"
-              type="text"
-              name="contact_name"
-              id="contact_name"
-              placeholder="John Doe"
-            />
-            </div>
-            <div className="inputName">
-            <label>Email : </label> 
-            </div>
-            <div className='contactInput'>
-            <input className="input1"
-              type="email"
-              name="contact_email"
-              id="contact_email"
-              placeholder="doe@gmail.com"
-            />
-            </div>
-            <div className="inputName">
-            <label>Message : </label> 
-            </div>
-            <div className='contactInput'>
-            <textarea rows={3} cols={30}
-              name="contact_message"
-              id="contact_message"
-              placeholder="Type your message here"
-            >    
-            </textarea>
-            </div>
+            <div className="contactSupport">Stay In Touch</div>
+            <form onSubmit={handleSubmit}>
+              <div className="inputName">
+                <label htmlFor="contact_name">Name: </label>
+              </div>
+              <div className='contactInput'>
+                <input
+                  className="input1"
+                  type="text"
+                  name="name"
+                  id="contact_name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="John Doe"
+                  required
+                />
+              </div>
+              <div className="inputName">
+                <label htmlFor="contact_email">Email: </label>
+              </div>
+              <div className='contactInput'>
+                <input
+                  className="input1"
+                  type="email"
+                  name="email"
+                  id="contact_email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="doe@gmail.com"
+                  required
+                />
+              </div>
+              <div className="inputName">
+                <label htmlFor="contact_message">Message: </label>
+              </div>
+              <div className='contactInput'>
+                <textarea
+                  rows={3}
+                  cols={30}
+                  name="message"
+                  id="contact_message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder="Type your message here"
+                  required
+                ></textarea>
+              </div>
 
-            <input type="submit" value="Submit" className="submit-button" />
+              <input type="submit" value="Submit" className="submit-button" />
+            </form>
+            {status && <p>{status}</p>}
           </div>
-
-          
         </div>
-        
+
         <div className="info">
-        <div className="copyright" >
-            <a href="#" style={{color:"white"}}>Terms & Conditions</a> / <a href="#" style={{color:"white"}}>Privacy Policy</a>
+          <div className="copyright">
+            <button onClick={() => window.location.href = "/terms"} style={{ color: "white", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>Terms & Conditions</button> / <button onClick={() => window.location.href = "/privacy"} style={{ color: "white", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>Privacy Policy</button>
           </div>
-        <div className="social-icon">
-          <FontAwesomeIcon icon={faLinkedin} style={{ color: "white" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faGithub} style={{ color: "white" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faFacebook} style={{ color: "white" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faInstagram} style={{ color: "white" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faTwitter} style={{ color: "white" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
-          <FontAwesomeIcon icon={faYoutube} style={{ color: "white" ,height : "2rem", width : "2rem"}}/>&nbsp;&nbsp;&nbsp;
-        </div>
-          
+          <div className="social-icon">
+            <FontAwesomeIcon icon={faLinkedin} style={{ color: "white", height: "2rem", width: "2rem" }} />&nbsp;&nbsp;&nbsp;
+            <FontAwesomeIcon icon={faGithub} style={{ color: "white", height: "2rem", width: "2rem" }} />&nbsp;&nbsp;&nbsp;
+            <FontAwesomeIcon icon={faFacebook} style={{ color: "white", height: "2rem", width: "2rem" }} />&nbsp;&nbsp;&nbsp;
+            <FontAwesomeIcon icon={faInstagram} style={{ color: "white", height: "2rem", width: "2rem" }} />&nbsp;&nbsp;&nbsp;
+            <FontAwesomeIcon icon={faTwitter} style={{ color: "white", height: "2rem", width: "2rem" }} />&nbsp;&nbsp;&nbsp;
+            <FontAwesomeIcon icon={faYoutube} style={{ color: "white", height: "2rem", width: "2rem" }} />&nbsp;&nbsp;&nbsp;
+          </div>
+
           <div className="copyright">2021 Copyright &copy; FIELDMASTER</div>
         </div>
       </footer>
