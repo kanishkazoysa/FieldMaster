@@ -25,6 +25,7 @@ const LoginForm = () => {
 
         if (isAdmin) {
           localStorage.setItem("AdminToken", token);
+          localStorage.setItem("UserToken", token);
           navigate('/admin', { replace: true, state: { loginSuccess: true } });
         } else {
           localStorage.setItem("UserToken", token);

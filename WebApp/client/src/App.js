@@ -9,7 +9,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import AxiosInstance from "./AxiosInstance";
 import Navbar from "./components/HomeComponents/navbar/Navbar";
 import Hero from "./components/HomeComponents/Hero/Hero";
 import About from "./components/HomeComponents/About";
@@ -26,12 +25,13 @@ import LoginPage from "./pages/auth/Login/LoginPage";
 import FPPage from "./pages/auth/ForgotPassowrd/FPPage";
 import OtpPage from "./pages/auth/ForgotPassowrd/OtpPage";
 import CPPage from "./pages/auth/ForgotPassowrd/CPPage";
-import Admin from "./pages/AdminDashboard";
+import Admin from "./pages/Admin/AdminDashboard";
 
 const UserRouteGuard = ({ children }) => {
   const token = localStorage.getItem("UserToken");
+  const AdminToken = localStorage.getItem("AdminToken");
 
-  if (token) {
+  if (token || AdminToken) {
     return children;
   } else {
     return <Navigate to="/login" />;

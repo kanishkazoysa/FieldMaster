@@ -47,6 +47,9 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
   if (!isOpen) return null;
 
   const handleSignOut = async () => {
+    if (localStorage.getItem('AdminToken')){
+      localStorage.removeItem('AdminToken');
+    }
     localStorage.removeItem('UserToken');
     navigate('/login');
   }
