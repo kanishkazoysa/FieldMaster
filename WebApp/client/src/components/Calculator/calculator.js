@@ -201,7 +201,7 @@ export default function Calculator({ onBackToSidebar }) {
 
                     <div style={styles.bottom}>
                         <button style={styles.Button1} onClick={handleCalculate}>
-                            <p style={styles.Box4ButtonText}>Calculate Plantation</p>
+                            <p style={styles.Box4ButtonText}>Calculate </p>
                         </button>
                     </div>
                 </div>
