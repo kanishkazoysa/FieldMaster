@@ -95,12 +95,13 @@ const App = () => {
 
         <Stack.Screen name="PlantationFromManualCalculator" component={PlantationFromManualCalculator}/>
         <Stack.Screen name="PlantationDetailsFromManualCalculator" component={PlantationDetailsFromManualCalculator}/>
+        <Stack.Screen name="FertilizationFromManualCalculator" component={FertilizationFromManualCalculator}/>
+        <Stack.Screen name="FertilizationDetailsFromManualCalculator" component={FertilizationDetailsFromManualCalculator}/>
         <Stack.Screen name="EffortOutputFromManualCalculator" component={EffortOutputFromManualCalculator}/>
         <Stack.Screen name="ClearLandFromManualCalculator" component={ClearLandFromManualCalculator}/>
         <Stack.Screen name="FenceFromManualCal" component={FenceFromManualCal}/>
         <Stack.Screen name="FencedetailfromManual" component={FencedetailfromManual}/>
-        <Stack.Screen name="FertilizationFromManualCalculator" component={FertilizationFromManualCalculator}/>
-        <Stack.Screen name="FertilizationDetailsFromManualCalculator" component={FertilizationDetailsFromManualCalculator}/>
+        
 
 
 

@@ -19,7 +19,7 @@ import CustomButton from "../../components/CustomButton";
 import AxiosInstance from "../../AxiosInstance";
 
 export default function PlantationFromManualCalculator({ route }) {
-  const { area, perimeter } = route.params;
+  const {area, perimeter } = route.params;
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   route = useRoute();
   console.log(area, perimeter);

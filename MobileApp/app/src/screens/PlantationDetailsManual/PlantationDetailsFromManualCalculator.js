@@ -12,8 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 import * as Print from "expo-print";
 import { styles } from "./PlantationDetailsStylesFromManualCalculatorStyles";
 import CustomButton from "../../components/CustomButton";
-import { Appbar } from "react-native-paper";
 
+import Headersection from "../../components/Headersection";
 export default function PlantationDetailsFromManualCalculator({ route }) {
   const {
     area,
@@ -154,17 +154,7 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
       {/* Static section at the top */}
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
-      <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
-        <Appbar.BackAction
-          onPress={() => {
-            navigation.navigate("Home");
-          }}
-        />
-        <Appbar.Content
-          title="Plantation Details"
-          titleStyle={{ fontSize: 17 }}
-        />
-      </Appbar.Header>
+      <Headersection navigation={navigation} title="Plantation Details" />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.top}>
