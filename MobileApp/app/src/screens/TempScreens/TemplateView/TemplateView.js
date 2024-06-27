@@ -229,7 +229,7 @@ if (error.response.status === 404) {
                 <PerimeterIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Perimeter </Text>
-                  <Text style={styles.text02Styling}>{item.perimeter} km</Text>
+                  <Text style={styles.text02Styling}>{parseFloat(item.perimeter).toFixed(3)} km</Text>
                 </View>
               </View>
             </View>
@@ -238,7 +238,7 @@ if (error.response.status === 404) {
                 <AreaIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Area</Text>
-                  <Text style={styles.text02Styling}>{item.area} perch</Text>
+                  <Text style={styles.text02Styling}>{parseFloat(item.area).toFixed(3)} perch</Text>
                 </View>
               </View>
               <View style={styles.blockView}>
