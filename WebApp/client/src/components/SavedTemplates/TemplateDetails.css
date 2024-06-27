@@ -39,7 +39,7 @@ p {
 }
 .backBtn {
   margin-top: -5px;
-  margin-left: -10px;
+  margin-left: -15px;
 }
 
 .div-02 {
@@ -152,4 +152,21 @@ p {
 .icon,
 .edit-icon {
   cursor: pointer;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.action-btn {
+  display: block;
+  width: 270px;
+  height: 40px;
+  border: none;
+  background-color: #064cbe;
+  color: white;
+  border-radius: 10px;
+  margin-top: 10px;
 }

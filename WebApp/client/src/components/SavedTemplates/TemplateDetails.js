@@ -90,8 +90,6 @@ const TemplateDetails = ({
             <div className='div-01'>
               <div className='column details'>
                 <p className='templateName-text'>{template.templateName}</p>
-                <p>{template.location}</p>
-                <p>{template.date}</p>
               </div>
               <div className='column edit-icon-container'>
                 <BiEdit className='edit-icon' onClick={handleEdit} />
@@ -103,9 +101,14 @@ const TemplateDetails = ({
                 alt='mapImage'
                 className='map-img'
               />
-              <button className='manage-land-btn'>
-                <p>Manage Land</p>
-              </button>
+              <div className='button-container'>
+                <button className='action-btn'>
+                  <p>Manage Land</p>
+                </button>
+                <button className='action-btn'>
+                  <p>Resize Map</p>
+                </button>
+              </div>
               <hr className='breaker' />
             </div>
             <div className='div-03'>

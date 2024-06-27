@@ -33,6 +33,7 @@ const EditTemplateWeb = ({ onBackToSidebar, template, onSaveSuccess }) => {
         });
     } else {
       alert('No changes made to the template');
+      onSaveSuccess();
     }
   };
 

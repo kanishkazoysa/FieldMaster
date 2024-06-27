@@ -6,6 +6,9 @@
   margin: 5px;
 }
 
+.backBtnDiv {
+  margin-left: 15px;
+}
 @media (min-width: 768px) {
   .card-image {
     width: 128px;
@@ -45,10 +48,19 @@
   width: 100%;
   margin: auto;
   position: relative;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .search-icon {
   color: #adacac;
   position: absolute;
-  right: 20px;
+  right: 18px;
+}
+
+@media (max-width: 768px) {
+  .search-icon {
+    right: 28px;
+    font-size: 14px;
+  }
 }

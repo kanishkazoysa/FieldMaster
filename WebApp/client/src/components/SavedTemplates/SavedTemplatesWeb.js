@@ -55,7 +55,9 @@ const SavedTemplatesWeb = ({
   return (
     <>
       <div className='innerDiv'>
-        <MdArrowBack onClick={onBackToSidebar} className='backBtn' />
+        <div className='backBtnDiv'>
+          <MdArrowBack onClick={onBackToSidebar} className='backBtn' />
+        </div>
         <div className='headingDiv'>
           <div className='search-container'>
             <input
