@@ -10,7 +10,7 @@ import Select from "react-select";
 import { message } from "antd";
 import PlantationDetails from "../PlantationDetails/plantationDetails";
 import AxiosInstance from "../../../AxiosInstance";
-import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
+import TemplateDetails from "../../TemplateDetails/TemplateDetails";
 export default function Plantation({ 
   onBackToSidebar,
   id,

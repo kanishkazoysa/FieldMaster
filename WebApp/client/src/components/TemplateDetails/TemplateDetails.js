@@ -87,7 +87,7 @@ const TemplateDetails = ({
                 <p>{template.date}</p>
               </div>
               <div className='column edit-icon-container'>
-                <BiEdit className='edit-icon' onClick={onEditTemplateClick} />
+                <BiEdit className='edit-icon' onClick={handleEditTemplateClick} />
               </div>
             </div>
             <div className='div-02'>
@@ -176,7 +176,7 @@ const TemplateDetails = ({
             id={template._id}
             area={template.area}
             Perimeter={template.perimeter}
-            onEditTemplateClick = {onEditTemplateClick}
+            onEditTemplateClick = {handleEditTemplateClick}
             template = {template}
           />
         )}
@@ -186,7 +186,7 @@ const TemplateDetails = ({
             id={template._id}
             area={template.area}
             Perimeter={template.perimeter}
-            onEditTemplateClick = {onEditTemplateClick}
+            onEditTemplateClick = {handleEditTemplateClick}
             template = {template}
           />
         )}
@@ -197,7 +197,7 @@ const TemplateDetails = ({
             id={template._id}
             area={template.area}
             Perimeter={template.perimeter}
-            onEditTemplateClick = {onEditTemplateClick}
+            onEditTemplateClick = {handleEditTemplateClick}
             template = {template}
           />
         )}
@@ -208,7 +208,7 @@ const TemplateDetails = ({
             id={template._id}
             area={template.area}
             Perimeter={template.perimeter}
-            onEditTemplateClick = {onEditTemplateClick}
+            onEditTemplateClick = {handleEditTemplateClick}
             template = {template}
           />
         )}

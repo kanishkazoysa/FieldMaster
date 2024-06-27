@@ -11,7 +11,7 @@ import { GiWeight, GiChemicalDrop } from "react-icons/gi";
 import { Tb24Hours } from "react-icons/tb";
 import AxiosInstance from "../../../AxiosInstance.js";
 import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
-import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
+import TemplateDetails from "../../TemplateDetails/TemplateDetails.js";
 import { getFertilizerDetailsHtml } from "./FertilizerDetailsTemplate.js";
 export default function FertilizingDetails({
 

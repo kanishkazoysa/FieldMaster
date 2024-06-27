@@ -11,7 +11,7 @@ import AxiosInstance from "../../../AxiosInstance";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal } from "antd";
 import Fence from "../Fence/fence";
-import TemplateDetails from "../../SavedTemplates/TemplateDetails";
+import TemplateDetails from "../../TemplateDetails/TemplateDetails";
 import { getFenceDetailsHtml } from "./FenceDetailsTemplate";
 import { LoadingOutlined } from '@ant-design/icons';
 import { BeatLoader } from 'react-spinners';

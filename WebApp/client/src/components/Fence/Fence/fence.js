@@ -9,7 +9,7 @@ import { message } from "antd";
 import { styles } from "./fenceStyles";
 import Select from "react-select";
 import FenceDetails from "../FenceDetails/fenceDetails";
-import TemplateDetails from "../../SavedTemplates/TemplateDetails";
+import TemplateDetails from "../../TemplateDetails/TemplateDetails";
 import AxiosInstance from "../../../AxiosInstance";
 
 export default function Fence({ onBackToSidebar , id , area,Perimeter,onEditTemplateClick,template}) {

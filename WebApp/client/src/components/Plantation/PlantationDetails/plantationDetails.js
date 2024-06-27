@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 import Plantation from "../PlantationPage/plantation";
 import { RiEditBoxLine } from "react-icons/ri"; 
 import { BeatLoader } from 'react-spinners';
-import TemplateDetails from "../../SavedTemplates/TemplateDetails"
+import TemplateDetails from "../../TemplateDetails/TemplateDetails";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal } from "antd";
 import { getPlantationDetailsHtml } from "./plantationDetailsTemplate";

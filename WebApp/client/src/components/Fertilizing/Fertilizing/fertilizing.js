@@ -14,7 +14,7 @@ import { FaTree } from "react-icons/fa";
 import FertilizingDetails from "../FertilizingDetails/fertilizingDetails";
 import { message } from "antd";
 import AxiosInstance from "../../../AxiosInstance";
-import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
+import TemplateDetails from "../../TemplateDetails/TemplateDetails";
 export default function Fertilizing(
   {
     onBackToSidebar,
