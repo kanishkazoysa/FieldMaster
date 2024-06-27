@@ -24,6 +24,7 @@ export const styles = {
       height: "45px",
       backgroundColor: "#007BFF",
       alignItems: "center",
+      justifyContent:"space-between"
     
     },
   
@@ -32,7 +33,7 @@ export const styles = {
       fontWeight: "bold",
       marginBottom: 0,
       color: "white",
-      marginLeft: "70px",
+      marginLeft: "0px",
     },
   
     /*first section*/
@@ -48,6 +49,11 @@ export const styles = {
       borderRadius: "11px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
       padding: "6px",
+    },
+    editorbutton: {
+      marginRight: "12px",
+      cursor: "pointer",
+      color: "white",
     },
   
     titleText: {
@@ -195,7 +201,7 @@ export const styles = {
   
     bottom: {
       alignItems: "center",
-      marginTop : 40,
+      marginTop : 35,
       width: "92%",
       
     },
@@ -205,6 +211,18 @@ export const styles = {
       width: "100%",
       height: 38,
       backgroundColor: "green",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 10,
+      borderRadius: 11,
+      borderWidth: 0,
+   
+    },
+    Button3: {
+      display: "flex",
+      width: "100%",
+      height: 38,
+      backgroundColor: "#007BFF",
       alignItems: "center",
       justifyContent: "center",
       marginTop: 10,
@@ -231,6 +249,18 @@ export const styles = {
       borderRadius: 11,
       borderWidth: 0,
    
+    },
+
+
+    topSection: {
+      flexDirection: "row",
+      marginTop: 3,
+      padding:1,
+      width: "100%",
+      justifyContent: "space-between", // Align the items to the right
+    },
+    editbutton: {
+      padding: 6,
     },
   };
   

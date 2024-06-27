@@ -17,26 +17,7 @@ export const styles = {
       justifyContent: "center",
       backgroundColor: "whitesmoke",
     },
-
-
-    //back totemplate
-    Box4ButtonText: {
-      color: "white",
-      fontSize: 16,
-      marginBottom: 0,
-    },
-    Button3: {
-      display: "flex",
-      width: "100%",
-      height: 38,
-      backgroundColor: "#007BFF",
-      alignItems: "center",
-      justifyContent: "center",
-      marginTop: 10,
-      borderRadius: 11,
-      borderWidth: 0,
-   
-    },
+  
     header: {
       display: "flex",
       width: "100%",
@@ -150,7 +131,7 @@ export const styles = {
       backgroundColor: "white",
       marginTop: 15,
       borderRadius: 11,
-      padding: 10,
+      padding: 20,
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
   
@@ -166,7 +147,8 @@ export const styles = {
       justifyContent: "left",
       width: "100%",
       backgroundColor: "white",
-      marginLeft : "15px"
+      
+      marginLeft : "20px"
       
 
     },
@@ -233,7 +215,7 @@ export const styles = {
 
     bottom2: {
       alignItems: "center",
-      marginTop : 90,
+      marginTop : 2,
       width: "92%",
       
     },

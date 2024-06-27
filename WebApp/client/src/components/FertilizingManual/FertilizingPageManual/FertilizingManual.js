@@ -1,5 +1,5 @@
 // SideNavbar.js
-import React, { useState} from "react";
+import React, { useState, useRef } from "react";
 import { MdArrowBack } from "react-icons/md";
 import { GiWeight } from "react-icons/gi";
 import { PiSquareDuotone } from "react-icons/pi";
@@ -7,29 +7,28 @@ import { MdGrass } from "react-icons/md";
 import { GiGrassMushroom } from "react-icons/gi";
 import { SlChemistry } from "react-icons/sl";
 import { FaClockRotateLeft } from "react-icons/fa6";
-import { styles } from "./fertilizingStyles.js";
+
+import { styles } from "./FetilizingManualStyles";
 import Select from "react-select";
+// import AxiosInstance from "../../../AxiosInstance";
 import axios from "axios";
 import { FaTree } from "react-icons/fa";
-import FertilizingDetails from "../FertilizingDetails/fertilizingDetails";
-import { message } from "antd";
-import AxiosInstance from "../../../AxiosInstance";
-import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
+import FertilizingDetailsManual from "../FertilizingDetailsManual/FertilizingDetailsManual";
+
+
 export default function Fertilizing(
   {
+    area,
+    perimeter,
+    AreaUnitselectedValue,
+    PerimeterUnitselectedValue,
     onBackToSidebar,
-  id,
-  Perimeter,
-  area,
-  onEditTemplateClick,
-  template,
-  textPlant,
-  numberOfPlants,
-  PlantDensity
+    textPlant,
+    calculatedPlantDensity,
+    numberOfPlants
   }) {
-    
-    
-   
+ 
+
   const [textFertilizationType, setTextFertilizationType] =
     useState("");
   const [textFertilizationNUmberoftime, setTextFertilizationNUmberoftime] =
@@ -54,6 +53,8 @@ export default function Fertilizing(
     setTextFertilizationAmount(event.target.value);
   };
 
+  const [frequency, setFrequency] = useState(''); 
+
   const [selectedFrequency, setSelectedFrequency] = useState(null);
 
 const handleFrequencyChange = (selectedFrequency) => {
@@ -65,78 +66,26 @@ const handleFrequencyChange = (selectedFrequency) => {
     setFertilizerAmountUnitselectedValue(selectedOption.value);
   };
 
-  const backtotemp = () =>{
-    setCurrentPage("TemplateDetails"); // Update this line
-    setAnimatePage(true);
-  }
-  const handleFertilizingDetails = async (e) => {
-
-    
-      // Validate required fields
-      if (
-
-        !textFertilizationNUmberoftime ||
-        !textFertilizationAmount ||
-        !textFertilizationType ||
-        !FertilizerAmountUnitselectedValue
-
-      ) {
-        message.error("Please fill all input fields")
+ 
+  const handleFertilizingDetails = (e) => {
+    e.preventDefault();
+  
+    // Validate required fields
+    if (
+      !textFertilizationNUmberoftime ||
+      !textFertilizationAmount ||
+      !textFertilizationType ||
+      !FertilizerAmountUnitselectedValue
+    ) {
+      alert("Please fill in all fields");
       return;
-      }
-      AxiosInstance.post("/api/fertilizer/fertilizer", {
-        id,
-        area,
-        textPlant,
-        textFertilizationNUmberoftime,
-        textFertilizationAmount,
-        textFertilizationType,
-        FertilizerAmountUnitselectedValue
-      })
-
-    //   setCurrentPage("fertilizingDetails");
-    //   setAnimatePage(true);
-    //   e.preventDefault();
-
-    //   // Prepare data for the request
-    //   const requestData = {
-    //     textPlant,
-    //     textFertilizationNUmberoftime,
-    //     textFertilizationAmount,
-    //     textFertilizationType,
-    //     FertilizerAmountUnitselectedValue
-
-
-    //   };
-
-    //   // Make POST request to the backend
-    //   const response = await axios.post(
-    //     "http://192.168.1.2:3000/api/fertilizers/fertilizers",
-    //     requestData
-    //   );
-
-    //   // Handle successful response
-    //   console.log("Response:", response.data);
-    // } catch (error) {
-    //   // Handle errors
-    //   console.error("Error:", error.message);
-    //   alert("Error: " + error.message);
-    // }
-    .then((response) => {
-      // If backend response is successful, navigate to detail page
-      setCurrentPage("fertilizingDetails");
-      setAnimatePage(true);
-      e.preventDefault();
-      console.log("Response:", response.data);
-    })
-    .catch((error) => {
-      console.error("Error:", error.response ? error.response.data : error.message);
-      message.error("Error", "Failed to create fertilizer. Please try again.")
-      alert("Error", "Failed to create fertilizer. Please try again.");
-    });
+    }
+  
+    // Transition to the next page or section
+    setCurrentPage("FertilizingDetailsManual");
+    setAnimatePage(true);
   };
-
-  const handleBackClick = () => {
+    const handleBackClick = () => {
     setAnimatePage(false);
     setTimeout(() => {
       setCurrentPage(null);
@@ -173,7 +122,7 @@ const handleFrequencyChange = (selectedFrequency) => {
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {/* {area} m<sup>2</sup> */}{area} Acres
+                    {area} {AreaUnitselectedValue}
                   </p>
                 </div>
               </div>
@@ -183,7 +132,7 @@ const handleFrequencyChange = (selectedFrequency) => {
                 <GiGrassMushroom color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Density</p>
-                  <p style={styles.propertyValue}>{PlantDensity}/m<sup>2</sup></p>
+                  <p style={styles.propertyValue}>{calculatedPlantDensity}/m<sup>2</sup></p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -191,7 +140,7 @@ const handleFrequencyChange = (selectedFrequency) => {
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Total Plants</p>
                   <p style={styles.propertyValue}>
-                    {numberOfPlants}
+                    {numberOfPlants} plants
                   </p>
                 </div>
               </div>
@@ -355,8 +304,8 @@ const handleFrequencyChange = (selectedFrequency) => {
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === "fertilizingDetails" 
-        && (<FertilizingDetails 
+        {currentPage === "FertilizingDetailsManual" 
+        && (<FertilizingDetailsManual 
         onBackToSidebar={handleBackClick}
         textPlant={textPlant}
         FertilizerAmountUnitselectedValue={FertilizerAmountUnitselectedValue}
@@ -364,20 +313,14 @@ const handleFrequencyChange = (selectedFrequency) => {
         textFertilizationAmount={textFertilizationAmount}
         textFertilizationType={textFertilizationType}
         selectedFrequency={selectedFrequency}
-        PlantDensity={PlantDensity}
+        calculatedPlantDensity={calculatedPlantDensity}
         numberOfPlants={numberOfPlants}
         area={area}
-            Perimeter={Perimeter}
+        perimeter={perimeter}
+        AreaUnitselectedValue={AreaUnitselectedValue}
+        PerimeterUnitselectedValue={PerimeterUnitselectedValue}
         
         />)}
-        {currentPage === "TemplateDetails" && (
-          <TemplateDetails
-            onBackToSidebar={onBackToSidebar}
-            id={id}
-            onEditTemplateClick = {onEditTemplateClick}
-            template = {template}
-          />
-        )}
       </div>
     </div>
   );
