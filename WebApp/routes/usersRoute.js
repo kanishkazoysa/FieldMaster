@@ -156,6 +156,7 @@ router.post("/login", async (req, res) => {
     await User.findOneAndUpdate({ email }, { token: token });
     res.status(200).send({
       success: true,
+      isAdmin: user.isAdmin,
       token: token,
       message: "User logged in successfully",
     });
