@@ -17,11 +17,16 @@ import AxiosInstance from '../../AxiosInstance';
 const TemplateDetails = ({
   onBackToSidebar,
   template,
-  onEditTemplateClick,
+  handleEditTemplateClick,
 }) => {
-  const id = template._id
+  const id = template._id;
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
+
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    handleEditTemplateClick(template);
+  };
 
   const handleBackClick = () => {
     setAnimatePage(false);
@@ -35,7 +40,7 @@ const TemplateDetails = ({
       const response = await AxiosInstance.get(`/api/fence/check-id/${id}`);
       if (response.data.exists) {
         console.log('ID exists');
-        setCurrentPage("FenceDetails"); // Updated to FenceDetails for existing ID
+        setCurrentPage('FenceDetails'); // Updated to FenceDetails for existing ID
         setAnimatePage(true);
       } else {
         console.log('ID does not exist');
@@ -44,7 +49,7 @@ const TemplateDetails = ({
       // Handle error, maybe show a message to the user
       if (error.response.status === 404) {
         console.log('ID not found');
-        setCurrentPage("Fence"); // Updated to Fence for 404 error
+        setCurrentPage('Fence'); // Updated to Fence for 404 error
         setAnimatePage(true);
       } else {
         console.error('Error checking ID:', error);
@@ -54,10 +59,12 @@ const TemplateDetails = ({
 
   const checkIdPlantation = async (id) => {
     try {
-      const response = await AxiosInstance.get(`/api/plantation/check-id/${id}`);
+      const response = await AxiosInstance.get(
+        `/api/plantation/check-id/${id}`
+      );
       if (response.data.exists) {
         console.log('ID exists');
-        setCurrentPage("PlantationDetails"); // Updated to PlantationDetails for existing ID
+        setCurrentPage('PlantationDetails'); // Updated to PlantationDetails for existing ID
         setAnimatePage(true);
       } else {
         console.log('ID does not exist');
@@ -66,7 +73,7 @@ const TemplateDetails = ({
       // Handle error, maybe show a message to the user
       if (error.response.status === 404) {
         console.log('ID not found');
-        setCurrentPage("Plantation"); // Updated to Plantation for 404 error
+        setCurrentPage('Plantation'); // Updated to Plantation for 404 error
         setAnimatePage(true);
       } else {
         console.error('Error checking ID:', error);
@@ -87,7 +94,7 @@ const TemplateDetails = ({
                 <p>{template.date}</p>
               </div>
               <div className='column edit-icon-container'>
-                <BiEdit className='edit-icon' onClick={onEditTemplateClick} />
+                <BiEdit className='edit-icon' onClick={handleEdit} />
               </div>
             </div>
             <div className='div-02'>
@@ -109,14 +116,20 @@ const TemplateDetails = ({
                 <p>Clear Land</p>
               </div>
               <div className='icon-container'>
-                <button className='circle-div circle-div-2'onClick={() => checkIdPlantation(template._id)}>
+                <button
+                  className='circle-div circle-div-2'
+                  onClick={() => checkIdPlantation(template._id)}
+                >
                   <PiPlantFill className='icon' />
                 </button>
                 <p>Plantation</p>
               </div>
               <div className='icon-container'>
-                <button className='circle-div circle-div-3' onClick={() => checkIdFence(template._id)}>
-                    <GiWoodenFence className='icon' />
+                <button
+                  className='circle-div circle-div-3'
+                  onClick={() => checkIdFence(template._id)}
+                >
+                  <GiWoodenFence className='icon' />
                 </button>
                 <p>Fence setup</p>
               </div>
@@ -167,7 +180,7 @@ const TemplateDetails = ({
           transform: animatePage ? 'translateX(0)' : 'translateX(-100%)',
           transition: 'transform 0.3s ease-in-out',
           backgroundColor: 'whitesmoke',
-          overflow: 'auto', 
+          overflow: 'auto',
         }}
       >
         {currentPage === 'Fence' && (
@@ -176,8 +189,8 @@ const TemplateDetails = ({
             id={template._id}
             area={template.area}
             Perimeter={template.perimeter}
-            onEditTemplateClick = {onEditTemplateClick}
-            template = {template}
+            onEditTemplateClick={handleEditTemplateClick}
+            template={template}
           />
         )}
         {currentPage === 'Plantation' && (
@@ -186,30 +199,30 @@ const TemplateDetails = ({
             id={template._id}
             area={template.area}
             Perimeter={template.perimeter}
-            onEditTemplateClick = {onEditTemplateClick}
-            template = {template}
+            onEditTemplateClick={handleEditTemplateClick}
+            template={template}
           />
         )}
         {currentPage === 'FenceDetails' && (
           <FenceDetails
             onBackToSidebar={onBackToSidebar}
-            onback = {handleBackClick}
+            onback={handleBackClick}
             id={template._id}
             area={template.area}
             Perimeter={template.perimeter}
-            onEditTemplateClick = {onEditTemplateClick}
-            template = {template}
+            onEditTemplateClick={handleEditTemplateClick}
+            template={template}
           />
         )}
         {currentPage === 'PlantationDetails' && (
           <PlantationDetails
             onBackToSidebar={onBackToSidebar}
-            onback = {handleBackClick}
+            onback={handleBackClick}
             id={template._id}
             area={template.area}
             Perimeter={template.perimeter}
-            onEditTemplateClick = {onEditTemplateClick}
-            template = {template}
+            onEditTemplateClick={handleEditTemplateClick}
+            template={template}
           />
         )}
       </div>
