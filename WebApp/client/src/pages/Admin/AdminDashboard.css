@@ -20,7 +20,7 @@
     flex-direction: row;
     justify-content: space-between;
     margin: 10px;
-    padding: 0 20px;
+    padding: 0 10px 0 20px;
 }
 
 .tableHeaderContainer h1 {
@@ -37,5 +37,9 @@
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
+}
+
+.admin-dashboard-body {
+    padding: 0 30px;
 }
 

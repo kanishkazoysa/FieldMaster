@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./AdminDashboard.css";
 import logo from "../../images/logo.png";
 import { Icon } from "@iconify/react";
 import { Avatar } from "antd";
 import { Tag, Space, Table } from "antd";
 import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
+import AxiosInstance from "../../AxiosInstance";
 
 function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -14,6 +15,20 @@ function AdminDashboard() {
     current: 1,
     position: ["bottomCenter"],
   });
+
+  const fetchUsers = async () => {
+    try {
+      const response = await AxiosInstance.get("/api/users/getAllUsers");
+      setUserList(response.data.users);
+    } catch (error) {
+      console.error("Failed to fetch users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   const handleTableChange = (pagination, filters, sorter) => {
     setPagination(pagination);
   };
@@ -79,10 +94,11 @@ function AdminDashboard() {
       key: "isAdmin",
       dataIndex: "isAdmin",
       render: (isAdmin) => {
-        let color = "blue";
+        let color = "red";
         let status = "Admin";
         if (!isAdmin) {
           status = "User";
+          color = "blue";
         }
         return <Tag color={color}>{status}</Tag>;
       },

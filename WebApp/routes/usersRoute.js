@@ -239,4 +239,13 @@ router.post('/updateProfile', auth, upload.single('photo'), async (req, res) => 
   }
 });
 
+router.get("/getAllUsers", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.send({ success: true, users });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+});
+
 module.exports = router;
