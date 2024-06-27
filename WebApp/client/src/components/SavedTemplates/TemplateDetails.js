@@ -10,6 +10,8 @@ import { TbVector } from 'react-icons/tb';
 import { ImLocation2 } from 'react-icons/im';
 import Fence from '../Fence/Fence/fence';
 import FenceDetails from '../Fence/FenceDetails/fenceDetails';
+import ClearLand from '../ClearLand/ClearLand/clearLand';
+import EffortOutput from '../ClearLand/EffortOutput/effortOutput';
 import AxiosInstance from '../../AxiosInstance';
 
 const TemplateDetails = ({
@@ -50,6 +52,27 @@ const TemplateDetails = ({
     }
   };
 
+  const checkIdClearLand = async (id) => {
+    try {
+      const response = await AxiosInstance.get(`/api/clearLand/check-id/${id}`);
+      if (response.data.exists) {
+        console.log('ID exists');
+        setCurrentPage("EffortOutput"); 
+        setAnimatePage(true);
+      } else {
+        console.log('ID does not exist');
+      }
+    } catch (error) {
+      // Handle error, maybe show a message to the user
+      if (error.response.status === 404) {
+        console.log('ID not found');
+        setCurrentPage("ClearLand"); 
+        setAnimatePage(true);
+      } else {
+        console.error('Error checking ID:', error);
+      }
+    }
+  };
   
 
   return (
@@ -81,7 +104,7 @@ const TemplateDetails = ({
             </div>
             <div className='div-03'>
               <div className='icon-container'>
-                <div className='circle-div circle-div-1'>
+                <div className='circle-div circle-div-1' onClick={() => checkIdClearLand(template._id)}>
                   <GiAxeInStump className='icon' />
                 </div>
                 <p>Clear Land</p>
@@ -160,6 +183,27 @@ const TemplateDetails = ({
         )}
         {currentPage === 'FenceDetails' && (
           <FenceDetails
+            onBackToSidebar={onBackToSidebar}
+            onback = {handleBackClick}
+            id={template._id}
+            area={template.area}
+            Perimeter={template.perimeter}
+            onEditTemplateClick = {onEditTemplateClick}
+            template = {template}
+          />
+        )}
+        {currentPage === 'ClearLand' && (
+          <ClearLand
+            onBackToSidebar={onBackToSidebar}
+            id={template._id}
+            area={template.area}
+            Perimeter={template.perimeter}
+            onEditTemplateClick = {onEditTemplateClick}
+            template = {template}
+          />
+        )}
+        {currentPage === 'EffortOutput' && (
+          <EffortOutput
             onBackToSidebar={onBackToSidebar}
             onback = {handleBackClick}
             id={template._id}

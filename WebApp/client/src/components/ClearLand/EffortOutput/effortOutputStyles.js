@@ -1,11 +1,16 @@
 export const styles = {
   backButton: {
-      marginLeft: "10px",
+      marginLeft: "12px",
+      cursor: "pointer",
+      color: "white",
+      
+    },
+    editbutton: {
+      marginRight: "1px",
       cursor: "pointer",
       color: "white",
     },
-  
-    content: {
+  content: {
       paddingLeft: "1px",
       paddingRight: "1px",
       width: "100%",
@@ -22,13 +27,14 @@ export const styles = {
       height: "45px",
       backgroundColor: "#007BFF",
       alignItems: "center",
+      justifyContent: "space-between"
     },
     titleText1: {
       fontSize: 15,
       fontWeight: "bold",
       marginBottom: 0,
       color: "white",
-      marginLeft: "95px",
+      marginLeft: "0px",
     },
     Box1: {
       width: "90%",
@@ -93,7 +99,8 @@ export const styles = {
       fontSize: 13,
       fontWeight: "bold",
       marginBottom: 0,
-    }, 
+    },
+
     Box2: {
       width: "90%",
       height: "68px",
@@ -104,7 +111,7 @@ export const styles = {
       marginTop: "10px",
       borderRadius: "11px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-      padding: "10px",
+      padding: "5px",
     },
     box3: {
       width: "90%",
@@ -184,5 +191,16 @@ export const styles = {
       color: "white",
       fontSize: 16,
       marginBottom: 0,
+    },
+    Button2: {
+      display: "flex",
+      width: "100%",
+      height: 38,
+      backgroundColor: "#007BFF",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 10,
+      borderRadius: 11,
+      borderWidth: 0,
     },
 };

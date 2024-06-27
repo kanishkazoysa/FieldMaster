@@ -17,14 +17,16 @@ import { GrUserWorker } from "react-icons/gr";
 import axios from "axios";
 import { styles } from "./clearLandStyles";
 import { FiSearch } from "react-icons/fi";
-import { Input, Space, List, AutoComplete } from "antd";
+import { Input, Space, List, AutoComplete ,message } from "antd";
 import { CloseSquareFilled } from "@ant-design/icons";
 import EffortOutput from "../EffortOutput/effortOutput";
-export default function ClearLand({ onBackToSidebar }) {
+import TemplateDetails from "../../SavedTemplates/TemplateDetails";
+import AxiosInstance from "../../../AxiosInstance";
+export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTemplateClick,template }) {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
-  const [perimeter, setPerimeter] = useState("1.5");
-  const [area, setArea] = useState("100");
+  // const [perimeter, setPerimeter] = useState("1.5");
+  // const [area, setArea] = useState("100");
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
   const [plantTypeSelectedValue1, setPlantTypeSelectedValue1] = useState(null);
   const [stoneTypeSelectedValue, setStoneTypeSelectedValue] = useState(null);
@@ -150,7 +152,6 @@ export default function ClearLand({ onBackToSidebar }) {
   };
 
   const handleClearlandDetails = async (e) => {
-    try {
       // Validate required fields
       if (
         !pressed ||
@@ -159,36 +160,31 @@ export default function ClearLand({ onBackToSidebar }) {
         !laborCount ||
         !workHours
       ) {
-        throw new Error("Please fill in all fields");
+        message.error("Error: Please fill in all fields");
+        return;
       }
 
-      setCurrentPage("EffortOutput"); // Update this line
-      setAnimatePage(true);
-      e.preventDefault();
-
-      // Prepare data for the request
-      const requestData = {
+       // Make POST request to the backend
+       AxiosInstance.post("/api/clearLand/clearLand", {
+        id,
         pressed,
         laborCount,
         workHours,
         displayValues,
         displayValues1,
         displayValues2,
-      };
-
-      // Make POST request to the backend
-      const response = await axios.post(
-        "http://192.168.8.173:3000/api/clearLand/clearLand",
-        requestData
-      );
-
-      // Handle successful response
-      console.log("Response:", response.data);
-    } catch (error) {
-      // Handle errors
-      console.error("Error:", error.message);
-      alert("Error: " + error.message);
-    }
+       })
+       .then((response) => {
+        setCurrentPage("EffortOutput"); // Update this line
+        setAnimatePage(true);
+        e.preventDefault();
+  
+       })
+       .catch((error) => {
+        console.error("Error:", error.response.data);
+        message.error("Error", "Failed to create clear land. Please try again.")
+        alert("Error", "Failed to create clear land. Please try again.");
+      });
   };
 
   const handleBackClick = () => {
@@ -198,13 +194,18 @@ export default function ClearLand({ onBackToSidebar }) {
     }, 300);
   };
 
+  const backtoTemp = () =>{
+    setCurrentPage("TemplateDetails"); 
+    setAnimatePage(true);
+  }
+
   return (
     <div>
       {!currentPage && (
         <div style={styles.content}>
           <div style={styles.header}>
             <MdArrowBack
-              onClick={onBackToSidebar}
+              onClick={backtoTemp}
               style={styles.backButton}
               fontSize={20}
             />
@@ -219,7 +220,7 @@ export default function ClearLand({ onBackToSidebar }) {
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{perimeter}Km</p>
+                  <p style={styles.propertyValue}>{Perimeter}Km</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -577,10 +578,19 @@ export default function ClearLand({ onBackToSidebar }) {
       >
         {currentPage === "EffortOutput" && (
           <EffortOutput
-            onBackToSidebar={handleBackClick}
-            laborCount={laborCount}
-            workHours={workHours}
-            displayValues2={displayValues2}
+            onBackToSidebar={onBackToSidebar}
+            onback = {handleBackClick}
+            id={id}
+            onEditTemplateClick = {onEditTemplateClick}
+            template = {template}
+          />
+        )}
+        {currentPage === "TemplateDetails" && (
+          <TemplateDetails
+            onBackToSidebar={onBackToSidebar}
+            id={id}
+            onEditTemplateClick = {onEditTemplateClick}
+            template = {template}
           />
         )}
       </div>
