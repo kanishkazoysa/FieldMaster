@@ -9,7 +9,12 @@ function calculateNumberOfPlants(area, plantSpacing, rowSpacing) {
     const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
     return numberOfPlants;
 }
-
+function calculateNumberOfPlantsManual(area, plantSpacing, rowSpacing) {
+    const areaInSquareMeters = parseFloat(area) ;
+    const areaPerPlant = plantSpacing * rowSpacing;
+    const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
+    return numberOfPlants;
+}
 function RoundToTwoDecimals(number) {
     return Math.round(number * 100) / 100;
 }
@@ -17,6 +22,14 @@ function calculatePlantationDensity(area, plantSpacing, rowSpacing) {
     const areaInSquareMeters = parseFloat(area) * 25.29;//converting perch to square m
 
 
+    const areaPerPlant = plantSpacing * rowSpacing;
+    const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
+    const plantationDensity = RoundToTwoDecimals(numberOfPlants / areaInSquareMeters);
+
+    return plantationDensity;
+}
+function calculatePlantationDensityManual(area, plantSpacing, rowSpacing) {
+    const areaInSquareMeters = parseFloat(area) ;
     const areaPerPlant = plantSpacing * rowSpacing;
     const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
     const plantationDensity = RoundToTwoDecimals(numberOfPlants / areaInSquareMeters);
@@ -69,8 +82,8 @@ router.post("/plantationFromManualCalculator", async (req, res) => {
       const { textplantspace, textRowspace, textPlant, PlantSpaceUnitselectedValue, area } = req.body;
       const plantSpacing = convertToCommonUnit(textplantspace, PlantSpaceUnitselectedValue);
       const rowSpacing = convertToCommonUnit(textRowspace, PlantSpaceUnitselectedValue);
-      const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
-      const calculatedPlantDensity = calculatePlantationDensity(area, plantSpacing, rowSpacing);
+      const numberOfPlants = calculateNumberOfPlantsManual(area, plantSpacing, rowSpacing);
+      const calculatedPlantDensity = calculatePlantationDensityManual(area, plantSpacing, rowSpacing);
   
       // Log and send data
       console.log("Number of plants:", numberOfPlants);
