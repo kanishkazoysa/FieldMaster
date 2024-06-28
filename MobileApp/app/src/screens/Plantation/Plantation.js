@@ -154,7 +154,7 @@ return (
               />
               <View style={styles.propertyDetails}>
                 <Text style={styles.propertyLabel}>Area</Text>
-                <Text style={styles.propertyValue}>{area} acres</Text>
+                <Text style={styles.propertyValue}>{area} Perch</Text>
               </View>
             </View>
           </View>

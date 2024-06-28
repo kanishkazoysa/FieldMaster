@@ -99,7 +99,7 @@ export const styles = StyleSheet.create({
     },
   
     propertyValue: {
-        fontSize: responsiveFontSize(1.8),
+        fontSize: responsiveFontSize(1.6),
       fontWeight: "bold",
     },
   

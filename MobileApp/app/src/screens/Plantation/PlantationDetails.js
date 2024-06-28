@@ -208,7 +208,10 @@ export default function PlantationDetails({ route }) {
     navigation.navigate("Fertilization", {
       numberOfPlants: numberOfPlants,
       PlantationDensity: PlantationDensity,
-      plantType: textPlant
+      plantType: textPlant,
+      perimeter:perimeter,
+      area:area
+      
     });
     console.log("sending" + numberOfPlants + " " + PlantationDensity+" "+textPlant);
   };
