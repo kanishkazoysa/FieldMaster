@@ -95,6 +95,7 @@ export default function Plantation({route}) {
         textRowspace,
         PlantSpaceUnitselectedValue,
         id ,
+        area
 
       });
       console.log(id);
@@ -152,8 +153,8 @@ return (
                 color="gray"
               />
               <View style={styles.propertyDetails}>
-                <Text style={styles.propertyLabel}>Area(perch)</Text>
-                <Text style={styles.propertyValue}>{area}</Text>
+                <Text style={styles.propertyLabel}>Area</Text>
+                <Text style={styles.propertyValue}>{area} acres</Text>
               </View>
             </View>
           </View>
@@ -272,7 +273,7 @@ return (
       {!isKeyboardVisible && (
         <View style={styles.bottom}>
           <CustomButton
-            onPress={handlePlantationDetails}
+            onPress={id ? handlePlantationDetails : handlePlantationDetailsFromManualCalculator}
             text="Calculate Plantation"
             iconName="calculator"
             iconColor="white"
