@@ -97,28 +97,7 @@ export default function Plantation({ onBackToSidebar,area,perimeter,PerimeterUni
   };
 
 // calculating the number of plants and density
-function calculateNumberOfPlants(area, plantSpacing, rowSpacing) {
- 
-  const areaPerPlant = plantSpacing * rowSpacing;
-  const numberOfPlants = Math.floor(area / areaPerPlant);
-  return numberOfPlants;
-}
 
-function RoundToTwoDecimals(number) {
-  return Math.round(number * 100) / 100;
-}
-function calculatePlantationDensity(area, plantSpacing, rowSpacing) {
-  const areaInSquareMeters = parseFloat(area) ;
-
-  // const plantSpacing = parseFloat(plantSpacingInMeters);
-  // const rowSpacing = parseFloat(rowSpacingInMeters);
-
-  const areaPerPlant = plantSpacing * rowSpacing;
-  const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
-  const plantationDensity = RoundToTwoDecimals(numberOfPlants / areaInSquareMeters);
-
-  return plantationDensity;
-}
 function convertToCommonUnit(value, unit) {
   if (unit === 'cm') {
       return value / 100;
