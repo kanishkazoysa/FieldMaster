@@ -94,24 +94,7 @@ export default function FertilizingDetails({
     setTotal((plantcount * totalAmount) / 1000);
   }, [plantcount, totalAmount]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "http://192.168.1.2:3000/api/fertilizers/FertilizerAmountNeeded"
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        //setNumberOfPlants(data.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
+  
   const calculateFertilizerAmountForPlantation = (totalAmount, numberOfPlants) => {
     return totalAmount * numberOfPlants;
   };
