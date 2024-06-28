@@ -10,7 +10,7 @@ import FenceManual from '../Fence Manual/Fence/fenceManual';
 const convertAreaToSqMeters = (area, unit) => {
     const conversionRates = {
         "Acres": 4046.86,  // 1 Acre = 4046.86 sq meters
-        "Perch": 25.2929,  // 1 Perch = 25.2929 sq meters
+        "Perch": 25.29,  // 1 Perch = 25.29 sq meters
         "m²": 1            // 1 sq meter = 1 sq meter
     };
 
