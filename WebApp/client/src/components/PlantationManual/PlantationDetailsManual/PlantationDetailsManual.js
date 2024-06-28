@@ -10,7 +10,7 @@ import { GiGrassMushroom } from "react-icons/gi";
 import { FaTree } from "react-icons/fa";
 import { RxRowSpacing } from "react-icons/rx";
 import FertilizingManual from "../../FertilizingManual/FertilizingPageManual/FertilizingManual";
-
+import { getPlantationDetailsHtml } from "./plantationDetailsTemplate";
 export default function PlantationDetails({
   area,
   perimeter,
@@ -44,7 +44,13 @@ export default function PlantationDetails({
     }, 300);
   };
 
-
+  const handleSave = () => {
+    const htmlContent = getPlantationDetailsHtml(calculatedPlantDensity,numberOfPlants,textPlant,textRowspace,textplantspace,perimeter,area);
+    const newWindow = window.open();
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
+    newWindow.print();
+  };
   return (
   <div>
     {!currentPage && (
@@ -158,7 +164,7 @@ export default function PlantationDetails({
       </div>
 
       <div style={styles.bottom2}>
-        <button style={styles.Button2}>
+        <button style={styles.Button2} onClick={handleSave}>
           <p style={styles.Box4ButtonText}>Save as PDF</p>
         </button>
       </div>
