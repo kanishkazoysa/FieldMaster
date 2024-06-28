@@ -60,7 +60,7 @@ export default function Plantation({route}) {
   };
 
   const PlantSpaceUnitOptions = [
-    // { label: "cm", value: "cm" },
+    { label: "cm", value: "cm" },
     { label: "m", value: "m" },
 
   ];
@@ -72,9 +72,27 @@ export default function Plantation({route}) {
   };
 
   const RowSpacingUnitOptions = [
-    //{ label: "cm", value: "cm" },
+    { label: "cm", value: "cm" },
     { label: "m", value: "m" },
   ];
+  let plantSpaceInMeters = textplantspace;
+  let rowSpaceInMeters = textRowspace;
+
+  // Convert to meters if the selected unit is 'cm'
+  if (PlantSpaceUnitselectedValue === "cm") {
+    plantSpaceInMeters = parseFloat(textplantspace) / 100;
+  }
+  if (PlantSpaceUnitselectedValue === "m") {
+    plantSpaceInMeters = plantSpaceInMeters;
+  }
+
+  if (PlantSpaceUnitselectedValue === "cm") {
+    rowSpaceInMeters = parseFloat(textRowspace) / 100;
+  }
+  if (PlantSpaceUnitselectedValue === "m") {
+    rowSpaceInMeters = rowSpaceInMeters ;
+;
+  }
 
   //handles submission of plantation details and navigation to PlantationDetails
   const handlePlantationDetails = async () => {
@@ -91,9 +109,9 @@ export default function Plantation({route}) {
     try {
       const response = await AxiosInstance.post("/api/plantation/plantation", {
         textPlant,
-        textplantspace,
-        textRowspace,
-        PlantSpaceUnitselectedValue,
+        textplantspace: plantSpaceInMeters,
+        textRowspace: rowSpaceInMeters,
+        PlantSpaceUnitselectedValue: "m", // Send 'm' as the unit   
         id ,
         area
 
