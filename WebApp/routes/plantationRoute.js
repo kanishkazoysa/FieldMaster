@@ -35,8 +35,8 @@ function convertToCommonUnit(value, unit) {
 
 router.post("/plantation", async (req, res) => {
     try {
-        const { textplantspace, textRowspace, textPlant, PlantSpaceUnitselectedValue,id } = req.body;
-        const area = 2;
+        const { textplantspace, textRowspace, textPlant, PlantSpaceUnitselectedValue,id , area } = req.body;
+        
 
         const plantSpacing = convertToCommonUnit(textplantspace, PlantSpaceUnitselectedValue);
         const rowSpacing = convertToCommonUnit(textRowspace,PlantSpaceUnitselectedValue );
