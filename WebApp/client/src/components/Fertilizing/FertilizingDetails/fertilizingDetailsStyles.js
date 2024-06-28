@@ -17,7 +17,26 @@ export const styles = {
       justifyContent: "center",
       backgroundColor: "whitesmoke",
     },
-  
+
+
+    //back totemplate
+    Box4ButtonText: {
+      color: "white",
+      fontSize: 16,
+      marginBottom: 0,
+    },
+    Button3: {
+      display: "flex",
+      width: "100%",
+      height: 38,
+      backgroundColor: "#007BFF",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 10,
+      borderRadius: 11,
+      borderWidth: 0,
+   
+    },
     header: {
       display: "flex",
       width: "100%",
@@ -214,7 +233,7 @@ export const styles = {
 
     bottom2: {
       alignItems: "center",
-      marginTop : 100,
+      marginTop : 90,
       width: "92%",
       
     },

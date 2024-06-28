@@ -22,9 +22,19 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
 
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
   const handleForgotPassword = async () => {
     if (!email) {
       Alert.alert("Please fill in all fields");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert("Invalid email address");
       return;
     }
 
@@ -82,7 +92,7 @@ export default function ForgotPassword() {
               theme={{ roundness: 10 }}
               style={{
                 width: responsiveWidth(87),
-                height: responsiveHeight(6),
+                height: responsiveHeight(6.5),
                 fontSize: responsiveFontSize(1.9),
               }}
               value={email}

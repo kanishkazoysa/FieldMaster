@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import {
+  responsiveFontSize,
   responsiveHeight,
   responsiveWidth,
 } from "react-native-responsive-dimensions";
@@ -13,6 +14,19 @@ export const styles = StyleSheet.create({
     justifyContent: "space-around",
     backgroundColor: "transparent",
     marginBottom: responsiveHeight(2),
+  },
+  overlay: {
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "rgba(0,0,0, 0.7)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 5,
+  },
+  overlayText: {
+    color: "#fff",
+    fontSize: responsiveFontSize(2),
+    marginHorizontal: 20,
   },
   btnStyle: {
     backgroundColor: "#0866FF",

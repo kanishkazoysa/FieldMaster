@@ -9,21 +9,27 @@ import { SlChemistry } from "react-icons/sl";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import { styles } from "./fertilizingStyles.js";
 import Select from "react-select";
-// import AxiosInstance from "../../../AxiosInstance";
 import axios from "axios";
 import { FaTree } from "react-icons/fa";
 import FertilizingDetails from "../FertilizingDetails/fertilizingDetails";
-
-
+import { message } from "antd";
+import AxiosInstance from "../../../AxiosInstance";
+import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
 export default function Fertilizing(
   {
     onBackToSidebar,
-    textPlant,
-    PlantDensity,
-    numberOfPlants
+  id,
+  Perimeter,
+  area,
+  onEditTemplateClick,
+  template,
+  textPlant,
+  numberOfPlants,
+  PlantDensity
   }) {
-  const [area, setArea] = useState("10");
-
+    
+    
+   
   const [textFertilizationType, setTextFertilizationType] =
     useState("");
   const [textFertilizationNUmberoftime, setTextFertilizationNUmberoftime] =
@@ -59,10 +65,13 @@ const handleFrequencyChange = (selectedFrequency) => {
     setFertilizerAmountUnitselectedValue(selectedOption.value);
   };
 
- 
+  const backtotemp = () =>{
+    setCurrentPage("TemplateDetails"); // Update this line
+    setAnimatePage(true);
+  }
   const handleFertilizingDetails = async (e) => {
 
-    try {
+    
       // Validate required fields
       if (
 
@@ -72,37 +81,59 @@ const handleFrequencyChange = (selectedFrequency) => {
         !FertilizerAmountUnitselectedValue
 
       ) {
-        throw new Error("Please fill in all fields");
+        message.error("Please fill all input fields")
+      return;
       }
-
-      setCurrentPage("fertilizingDetails");
-      setAnimatePage(true);
-      e.preventDefault();
-
-      // Prepare data for the request
-      const requestData = {
+      AxiosInstance.post("/api/fertilizer/fertilizer", {
+        id,
+        area,
         textPlant,
         textFertilizationNUmberoftime,
         textFertilizationAmount,
         textFertilizationType,
         FertilizerAmountUnitselectedValue
+      })
+
+    //   setCurrentPage("fertilizingDetails");
+    //   setAnimatePage(true);
+    //   e.preventDefault();
+
+    //   // Prepare data for the request
+    //   const requestData = {
+    //     textPlant,
+    //     textFertilizationNUmberoftime,
+    //     textFertilizationAmount,
+    //     textFertilizationType,
+    //     FertilizerAmountUnitselectedValue
 
 
-      };
+    //   };
 
-      // Make POST request to the backend
-      const response = await axios.post(
-        "http://192.168.1.2:3000/api/fertilizers/fertilizers",
-        requestData
-      );
+    //   // Make POST request to the backend
+    //   const response = await axios.post(
+    //     "http://192.168.1.2:3000/api/fertilizers/fertilizers",
+    //     requestData
+    //   );
 
-      // Handle successful response
+    //   // Handle successful response
+    //   console.log("Response:", response.data);
+    // } catch (error) {
+    //   // Handle errors
+    //   console.error("Error:", error.message);
+    //   alert("Error: " + error.message);
+    // }
+    .then((response) => {
+      // If backend response is successful, navigate to detail page
+      setCurrentPage("fertilizingDetails");
+      setAnimatePage(true);
+      e.preventDefault();
       console.log("Response:", response.data);
-    } catch (error) {
-      // Handle errors
-      console.error("Error:", error.message);
-      alert("Error: " + error.message);
-    }
+    })
+    .catch((error) => {
+      console.error("Error:", error.response ? error.response.data : error.message);
+      message.error("Error", "Failed to create fertilizer. Please try again.")
+      alert("Error", "Failed to create fertilizer. Please try again.");
+    });
   };
 
   const handleBackClick = () => {
@@ -160,7 +191,7 @@ const handleFrequencyChange = (selectedFrequency) => {
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Total Plants</p>
                   <p style={styles.propertyValue}>
-                    {numberOfPlants} plants
+                    {numberOfPlants}
                   </p>
                 </div>
               </div>
@@ -335,8 +366,18 @@ const handleFrequencyChange = (selectedFrequency) => {
         selectedFrequency={selectedFrequency}
         PlantDensity={PlantDensity}
         numberOfPlants={numberOfPlants}
+        area={area}
+            Perimeter={Perimeter}
         
         />)}
+        {currentPage === "TemplateDetails" && (
+          <TemplateDetails
+            onBackToSidebar={onBackToSidebar}
+            id={id}
+            onEditTemplateClick = {onEditTemplateClick}
+            template = {template}
+          />
+        )}
       </div>
     </div>
   );
