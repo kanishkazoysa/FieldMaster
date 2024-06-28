@@ -4,7 +4,7 @@ const plantationModel = require("../models/plantation");
 const MapTemplateModel = require("../models/MapTemplateModel");
 
 function calculateNumberOfPlants(area, plantSpacing, rowSpacing) {
-    const areaInSquareMeters = parseFloat(area) * 25.29;
+    const areaInSquareMeters = parseFloat(area) * 25.29;//converting perch to square m
     const areaPerPlant = plantSpacing * rowSpacing;
     const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
     return numberOfPlants;
@@ -14,10 +14,8 @@ function RoundToTwoDecimals(number) {
     return Math.round(number * 100) / 100;
 }
 function calculatePlantationDensity(area, plantSpacing, rowSpacing) {
-    const areaInSquareMeters = parseFloat(area) * 4046.86;
+    const areaInSquareMeters = parseFloat(area) * 25.29;//converting perch to square m
 
-    // const plantSpacing = parseFloat(plantSpacingInMeters);
-    // const rowSpacing = parseFloat(rowSpacingInMeters);
 
     const areaPerPlant = plantSpacing * rowSpacing;
     const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
