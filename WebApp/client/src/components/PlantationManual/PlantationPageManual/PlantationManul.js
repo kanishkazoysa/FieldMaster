@@ -11,7 +11,7 @@ import Select from "react-select";
 import AxiosInstance from "../../../AxiosInstance";
 import axios from "axios";
 import PlantationDetailsManual from "../PlantationDetailsManual/PlantationDetailsManual";
-
+import { message } from "antd";
 export default function Plantation({ onBackToSidebar,area,perimeter,PerimeterUnitselectedValue,AreaUnitselectedValue }) {
  
   const [textPlant, settextPlant] = useState(null);
@@ -56,7 +56,8 @@ export default function Plantation({ onBackToSidebar,area,perimeter,PerimeterUni
 
   const handlePlantationDetails = async (e) => {
     e.preventDefault();
-  
+
+    
     // Validate required fields
     if (
       !PlantSpaceUnitselectedValue ||
@@ -65,10 +66,18 @@ export default function Plantation({ onBackToSidebar,area,perimeter,PerimeterUni
       !textplantspace ||
       !textRowspace
     ) {
-      Swal.fire("Error: Please fill in all fields");
+      message.error("Error: Please fill in all fields");
       return;
     }
-  
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(textplantspace)) {
+      message.error("Error: Please enter a valid value for plant space")
+      return;
+    }
+    if (!regex.test(textRowspace)) {
+      message.error("Error: Please enter a valid value for row space")
+      return;
+    }
     const requestData = {
       textPlant,
       textplantspace,
@@ -163,7 +172,7 @@ function convertToCommonUnit(value, unit) {
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {/* {area} m<sup>2</sup> */}{area } {AreaUnitselectedValue}
+                    {area } {AreaUnitselectedValue}
                   </p>
                 </div>
               </div>
@@ -202,7 +211,7 @@ function convertToCommonUnit(value, unit) {
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="number"
+                  type="text"
                   style={styles.box3input}
                   placeholder="0"
                   value={textplantspace}
@@ -241,7 +250,7 @@ function convertToCommonUnit(value, unit) {
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="number"
+                  type="text"
                   style={styles.box3input}
                   placeholder="0"
                   value={textRowspace}
