@@ -1,14 +1,14 @@
-// SideNavbar.js
+
 import React, { useState, useRef } from "react";
 import { MdArrowBack, MdFormatLineSpacing } from "react-icons/md";
 import { RxRowSpacing } from "react-icons/rx";
 import { PiTreeEvergreenFill } from "react-icons/pi";
 import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
-
+import Swal from 'sweetalert2'
 import { styles } from "./PlantationManualStyles";
 import Select from "react-select";
-// import AxiosInstance from "../../../AxiosInstance";
+import AxiosInstance from "../../../AxiosInstance";
 import axios from "axios";
 import PlantationDetailsManual from "../PlantationDetailsManual/PlantationDetailsManual";
 
@@ -55,47 +55,38 @@ export default function Plantation({ onBackToSidebar,area,perimeter,PerimeterUni
   };
 
   const handlePlantationDetails = async (e) => {
-
-    try {
-      // Validate required fields
-      if (
-
-        !PlantSpaceUnitselectedValue ||
-        !RowSpaceUnitselectedValue||
-        !textPlant ||
-        !textplantspace ||
-        !textRowspace
-      ) {
-        throw new Error("Please fill in all fields");
-      }
-
-      setCurrentPage("PlantationDetailsManual");
-      setAnimatePage(true);
-      e.preventDefault();
-
-      // Prepare data for the request
-      const requestData = {
-        textPlant,
-        textplantspace,
-        textRowspace,
-        PlantSpaceUnitselectedValue,
-        RowSpaceUnitselectedValue
-
-      };
-
-      // Make POST request to the backend
-      const response = await axios.post(
-        "http://192.168.1.2:3000/api/plantation/plantationFromManualCalculator",
-        requestData
-      );
-
-      // Handle successful response
-      console.log("Response:", response.data);
-    } catch (error) {
-      // Handle errors
-      console.error("Error:", error.message);
-      alert("Error: " + error.message);
+    e.preventDefault();
+  
+    // Validate required fields
+    if (
+      !PlantSpaceUnitselectedValue ||
+      !RowSpaceUnitselectedValue ||
+      !textPlant ||
+      !textplantspace ||
+      !textRowspace
+    ) {
+      Swal.fire("Error: Please fill in all fields");
+      return;
     }
+  
+    const requestData = {
+      textPlant,
+      textplantspace,
+      textRowspace,
+      PlantSpaceUnitselectedValue,
+      RowSpaceUnitselectedValue
+    };
+  
+    AxiosInstance.post("/api/plantation/plantationFromManualCalculator", requestData)
+      .then((response) => {
+        console.log("Response:", response.data);
+        setCurrentPage("PlantationDetailsManual");
+        setAnimatePage(true);
+      })
+      .catch((error) => {
+        console.error("Error:", error.response.data);
+        alert("Error: Failed to create plantation. Please try again.");
+      });
   };
 
   const handleBackClick = () => {
