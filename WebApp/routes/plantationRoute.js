@@ -4,7 +4,7 @@ const plantationModel = require("../models/plantation");
 const MapTemplateModel = require("../models/MapTemplateModel");
 
 function calculateNumberOfPlants(area, plantSpacing, rowSpacing) {
-    const areaInSquareMeters = parseFloat(area) * 4046.86;
+    const areaInSquareMeters = parseFloat(area) * 25.29;
     const areaPerPlant = plantSpacing * rowSpacing;
     const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
     return numberOfPlants;
