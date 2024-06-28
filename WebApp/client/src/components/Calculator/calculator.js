@@ -6,6 +6,16 @@ import Select from "react-select";
 import { styles } from "./calculatorStyles.js";
 import CalculatorSelect from "./calculatorSelect"; // Import CalculatorSelect component
 
+const convertAreaToSqMeters = (area, unit) => {
+    const conversionRates = {
+        "Acres": 4046.86,  // 1 Acre = 4046.86 sq meters
+        "Perch": 25.29,  // 1 Perch = 25.2929 sq meters
+        "m²": 1            // 1 sq meter = 1 sq meter
+    };
+
+    return area * (conversionRates[unit] || 1);
+};
+
 export default function Calculator({ onBackToSidebar }) {
     // State hooks for managing input values and selected units
     const [perimeter, setPerimeter] = useState("");
@@ -41,41 +51,43 @@ export default function Calculator({ onBackToSidebar }) {
     };
 
     // Handler for calculate button click
-    // Handler for calculate button click
     const handleCalculate = async (e) => {
-      e.preventDefault();
-  
-      try {
-          // Check for missing inputs
-          if (!area.trim() || !perimeter.trim() || !AreaUnitselectedValue || !PerimeterUnitselectedValue) {
-              throw new Error("Please fill in all fields");
-          }
-  
-          // Check for non-numeric values in area and perimeter
-          const areaNumeric = parseFloat(area);
-          const perimeterNumeric = parseFloat(perimeter);
-  
-          if (isNaN(areaNumeric)) {
-              throw new Error("Please enter a valid numeric value for area");
-          }
-  
-          if (isNaN(perimeterNumeric)) {
-              throw new Error("Please enter a valid numeric value for perimeter");
-          }
-  
-          // Navigate to calculatorSelect page
-          setCurrentPage("calculatorSelect");
-          setAnimatePage(true);
-  
-          const requestData = { area: areaNumeric, perimeter: perimeterNumeric };
-          console.log("Request Data:", requestData);
-  
-          // Here you can send the request to the backend if needed
-      } catch (error) {
-          console.error("Error:", error.message);
-          alert("Error: " + error.message);
-      }
-  };
+        e.preventDefault();
+
+        try {
+            // Check for missing inputs
+            if (!area.trim() || !perimeter.trim() || !AreaUnitselectedValue || !PerimeterUnitselectedValue) {
+                throw new Error("Please fill in all fields");
+            }
+
+            // Check for non-numeric values in area and perimeter
+            const areaNumeric = parseFloat(area);
+            const perimeterNumeric = parseFloat(perimeter);
+
+            if (isNaN(areaNumeric)) {
+                throw new Error("Please enter a valid numeric value for area");
+            }
+
+            if (isNaN(perimeterNumeric)) {
+                throw new Error("Please enter a valid numeric value for perimeter");
+            }
+
+            // Convert area to square meters
+            const areaInSqMeters = convertAreaToSqMeters(areaNumeric, AreaUnitselectedValue);
+
+            // Navigate to calculatorSelect page
+            setCurrentPage("calculatorSelect");
+            setAnimatePage(true);
+
+            const requestData = { area: areaInSqMeters, perimeter: perimeterNumeric };
+            console.log("Request Data:", requestData);
+
+            // Here you can send the request to the backend if needed
+        } catch (error) {
+            console.error("Error:", error.message);
+            alert("Error: " + error.message);
+        }
+    };
 
     // Handler for back button click to navigate back to the main page
     const handleBackClick = () => {
@@ -123,6 +135,7 @@ export default function Calculator({ onBackToSidebar }) {
                                     options={[
                                         { value: "m²", label: "m²" },
                                         { value: "Acres", label: "Acres" },
+                                        { value: "Perch", label: "Perch" },
                                     ]}
                                     value={AreaUnitselectedValue1}
                                     onChange={handleAreaUnitChange}
@@ -138,7 +151,7 @@ export default function Calculator({ onBackToSidebar }) {
                             </div>
                         </div>
                         <div style={styles.smallText}>
-                            <p>*Note that this area is approximately correct</p>
+                        <p>*Note that this value is approximately correct</p>
                         </div>
                     </div>
 
@@ -182,13 +195,13 @@ export default function Calculator({ onBackToSidebar }) {
                             </div>
                         </div>
                         <div style={styles.smallText}>
-                            <p>*Note that this Perimeter is approximately correct</p>
+                            <p>*Note that this value is approximately correct</p>
                         </div>
                     </div>
 
                     <div style={styles.bottom}>
                         <button style={styles.Button1} onClick={handleCalculate}>
-                            <p style={styles.Box4ButtonText}>Calculate Plantation</p>
+                            <p style={styles.Box4ButtonText}>Calculate </p>
                         </button>
                     </div>
                 </div>
