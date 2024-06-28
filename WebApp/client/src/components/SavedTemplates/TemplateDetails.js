@@ -260,7 +260,7 @@ const TemplateDetails = ({
             id={template._id}
             area={template.area}
             Perimeter={template.perimeter}
-            onEditTemplateClick={onEditTemplateClick}
+            onEditTemplateClick={handleEditTemplateClick}
             template={template}
           />
         )}
@@ -271,28 +271,7 @@ const TemplateDetails = ({
             id={template._id}
             area={template.area}
             Perimeter={template.perimeter}
-            onEditTemplateClick={onEditTemplateClick}
-            template={template}
-          />
-        )}
-        {currentPage === "ClearLand" && (
-          <ClearLand
-            onBackToSidebar={onBackToSidebar}
-            id={template._id}
-            area={template.area}
-            Perimeter={template.perimeter}
-            onEditTemplateClick={onEditTemplateClick}
-            template={template}
-          />
-        )}
-        {currentPage === "EffortOutput" && (
-          <EffortOutput
-            onBackToSidebar={onBackToSidebar}
-            onback={handleBackClick}
-            id={template._id}
-            area={template.area}
-            Perimeter={template.perimeter}
-            onEditTemplateClick={onEditTemplateClick}
+            onEditTemplateClick={handleEditTemplateClick}
             template={template}
           />
         )}
