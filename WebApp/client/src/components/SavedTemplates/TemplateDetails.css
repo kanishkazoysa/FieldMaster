@@ -31,17 +31,15 @@
 .templateName-text {
   font-weight: 500;
   font-size: 17px;
-  margin-top: -20px;
-  margin-left: -60px;
+  margin-top: -10px;
 }
-
 p {
   margin: 0;
   font-size: 13px;
 }
-
 .backBtn {
-  margin-top: -13px;
+  margin-top: -5px;
+  margin-left: -15px;
 }
 
 .div-02 {
@@ -154,4 +152,23 @@ p {
 .icon,
 .edit-icon {
   cursor: pointer;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.action-btn {
+  display: block;
+  width: 230px;
+  height: 30px;
+  border: none;
+  background-color: #064cbe;
+  border-radius: 10px;
+  margin-top: 10px;
+  font-size: 13px;
+  padding-bottom: 5px;
 }
