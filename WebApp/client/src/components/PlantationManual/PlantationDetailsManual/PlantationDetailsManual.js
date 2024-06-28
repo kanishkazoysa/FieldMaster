@@ -44,43 +44,6 @@ export default function PlantationDetails({
     }, 300);
   };
 
-  
-
-  useEffect(() => {
-    const fetchData = async () => {
-        try {
-            const response = await fetch('http://192.168.1.2:3000/api/plantation/numberOfPlants');
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            //setnumberOfPlants(data.data);
-           
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
-    fetchData();
-  }, []);
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-        try {
-            const response = await fetch('http://192.168.1.2:3000/api/plantation/plantDensity');
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            //setPlantDensity(data.data);
-            
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
-    fetchData();
-  }, []);
-
 
   return (
   <div>
