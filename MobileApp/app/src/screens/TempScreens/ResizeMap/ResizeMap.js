@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Polygon } from "react-native-maps";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import {
   View,
   Text,
