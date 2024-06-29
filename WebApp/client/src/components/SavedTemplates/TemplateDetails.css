@@ -59,6 +59,7 @@ p {
   height: 150px;
   border-radius: 10px;
   object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .manage-land-btn {
