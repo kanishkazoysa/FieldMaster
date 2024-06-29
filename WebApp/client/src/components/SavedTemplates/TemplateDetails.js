@@ -1,21 +1,21 @@
-import React, { useState } from "react";
-import { MdArrowBack } from "react-icons/md";
-import { BiEdit } from "react-icons/bi";
-import { PiPlantFill } from "react-icons/pi";
-import { GiAxeInStump, GiWoodenFence } from "react-icons/gi";
-import "./TemplateDetails.css";
-import { TbContainer } from "react-icons/tb";
-import { HiChartPie } from "react-icons/hi2";
-import { TbVector } from "react-icons/tb";
-import { ImLocation2 } from "react-icons/im";
-import Fence from "../Fence/Fence/fence";
-import FenceDetails from "../Fence/FenceDetails/fenceDetails";
-import ClearLand from "../ClearLand/ClearLand/clearLand";
-import EffortOutput from "../ClearLand/EffortOutput/effortOutput";
-import Plantation from "../Plantation/PlantationPage/plantation";
-import PlantationDetails from "../Plantation/PlantationDetails/plantationDetails";
-import AxiosInstance from "../../AxiosInstance";
-import { Button, Flex } from "antd";
+import React, { useState } from 'react';
+import { MdArrowBack } from 'react-icons/md';
+import { BiEdit } from 'react-icons/bi';
+import { PiPlantFill } from 'react-icons/pi';
+import { GiAxeInStump, GiWoodenFence } from 'react-icons/gi';
+import './TemplateDetails.css';
+import { TbContainer } from 'react-icons/tb';
+import { HiChartPie } from 'react-icons/hi2';
+import { TbVector } from 'react-icons/tb';
+import { ImLocation2 } from 'react-icons/im';
+import Fence from '../Fence/Fence/fence';
+import FenceDetails from '../Fence/FenceDetails/fenceDetails';
+import ClearLand from '../ClearLand/ClearLand/clearLand';
+import EffortOutput from '../ClearLand/EffortOutput/effortOutput';
+import Plantation from '../Plantation/PlantationPage/plantation';
+import PlantationDetails from '../Plantation/PlantationDetails/plantationDetails';
+import AxiosInstance from '../../AxiosInstance';
+import { Button, Flex } from 'antd';
 
 const TemplateDetails = ({
   onBackToSidebar,
@@ -42,20 +42,20 @@ const TemplateDetails = ({
     try {
       const response = await AxiosInstance.get(`/api/clearLand/check-id/${id}`);
       if (response.data.exists) {
-        console.log("ID exists");
-        setCurrentPage("EffortOutput");
+        console.log('ID exists');
+        setCurrentPage('EffortOutput');
         setAnimatePage(true);
       } else {
-        console.log("ID does not exist");
+        console.log('ID does not exist');
       }
     } catch (error) {
       // Handle error, maybe show a message to the user
       if (error.response.status === 404) {
-        console.log("ID not found");
-        setCurrentPage("ClearLand");
+        console.log('ID not found');
+        setCurrentPage('ClearLand');
         setAnimatePage(true);
       } else {
-        console.error("Error checking ID:", error);
+        console.error('Error checking ID:', error);
       }
     }
   };
@@ -66,20 +66,20 @@ const TemplateDetails = ({
         `/api/plantation/check-id/${id}`
       );
       if (response.data.exists) {
-        console.log("ID exists");
-        setCurrentPage("PlantationDetails"); // Updated to PlantationDetails for existing ID
+        console.log('ID exists');
+        setCurrentPage('PlantationDetails'); // Updated to PlantationDetails for existing ID
         setAnimatePage(true);
       } else {
-        console.log("ID does not exist");
+        console.log('ID does not exist');
       }
     } catch (error) {
       // Handle error, maybe show a message to the user
       if (error.response.status === 404) {
-        console.log("ID not found");
-        setCurrentPage("Plantation"); // Updated to Plantation for 404 error
+        console.log('ID not found');
+        setCurrentPage('Plantation'); // Updated to Plantation for 404 error
         setAnimatePage(true);
       } else {
-        console.error("Error checking ID:", error);
+        console.error('Error checking ID:', error);
       }
     }
   };
@@ -88,20 +88,20 @@ const TemplateDetails = ({
     try {
       const response = await AxiosInstance.get(`/api/fence/check-id/${id}`);
       if (response.data.exists) {
-        console.log("ID exists");
-        setCurrentPage("FenceDetails"); // Updated to FenceDetails for existing ID
+        console.log('ID exists');
+        setCurrentPage('FenceDetails'); // Updated to FenceDetails for existing ID
         setAnimatePage(true);
       } else {
-        console.log("ID does not exist");
+        console.log('ID does not exist');
       }
     } catch (error) {
       // Handle error, maybe show a message to the user
       if (error.response.status === 404) {
-        console.log("ID not found");
-        setCurrentPage("Fence"); // Updated to Fence for 404 error
+        console.log('ID not found');
+        setCurrentPage('Fence'); // Updated to Fence for 404 error
         setAnimatePage(true);
       } else {
-        console.error("Error checking ID:", error);
+        console.error('Error checking ID:', error);
       }
     }
   };
@@ -109,96 +109,98 @@ const TemplateDetails = ({
   return (
     <div>
       {!currentPage && (
-        <div className="main-div">
-          <div className="outer-div">
-            <div className="div-01">
-              <MdArrowBack onClick={onBackToSidebar} className="backBtn" />
-              <p className="templateName-text">{template.templateName}</p>
-              <div className="edit-icon-container">
-                <BiEdit className="edit-icon" onClick={handleEdit} />
+        <div className='main-div'>
+          <div className='outer-div'>
+            <div className='div-01'>
+              <MdArrowBack onClick={onBackToSidebar} className='backBtn' />
+              <p className='templateName-text'>{template.templateName}</p>
+              <div className='edit-icon-container'>
+                <BiEdit className='edit-icon' onClick={handleEdit} />
               </div>
             </div>
-            <div className="div-02">
-              <img
-                src="https://i.ibb.co/9TQd2Bb/map-image.jpg"
-                alt="mapImage"
-                className="map-img"
-              />
-              <div className="button-container">
-                <Button type="primary" className="action-btn">
+            <div className='div-02'>
+              <div className='map-img-container'>
+                <img
+                  src={`data:image/jpeg;base64,${template.capturedImageBase64}`}
+                  alt='mapImage'
+                  className='map-img'
+                />
+              </div>
+              <div className='button-container'>
+                <Button type='primary' className='action-btn'>
                   Manage Map
                 </Button>
-                <Button type="primary" className="action-btn">
+                <Button type='primary' className='action-btn'>
                   Resize Map
                 </Button>
               </div>
-              <hr className="breaker" />
+              <hr className='breaker' />
             </div>
-            <div className="div-03">
-              <div className="icon-container">
+            <div className='div-03'>
+              <div className='icon-container'>
                 <div
-                  className="circle-div circle-div-1"
+                  className='circle-div circle-div-1'
                   onClick={() => checkIdClearLand(template._id)}
                 >
-                  <GiAxeInStump className="icon" />
+                  <GiAxeInStump className='icon' />
                 </div>
                 <p>Clear Land</p>
               </div>
-              <div className="icon-container">
+              <div className='icon-container'>
                 <button
-                  className="circle-div circle-div-2"
+                  className='circle-div circle-div-2'
                   onClick={() => checkIdPlantation(template._id)}
                 >
-                  <PiPlantFill className="icon" />
+                  <PiPlantFill className='icon' />
                 </button>
                 <p>Plantation</p>
               </div>
-              <div className="icon-container">
+              <div className='icon-container'>
                 <button
-                  className="circle-div circle-div-3"
+                  className='circle-div circle-div-3'
                   onClick={() => checkIdFence(template._id)}
                 >
-                  <GiWoodenFence className="icon" />
+                  <GiWoodenFence className='icon' />
                 </button>
                 <p>Fence setup</p>
               </div>
             </div>
-            <hr className="breaker" />
-            <div className="div-04">
-              <p className="bold-text">Land Info</p>
-              <div className="info-grid">
-                <div className="info-container">
-                  <TbContainer className="info-icon" />
+            <hr className='breaker' />
+            <div className='div-04'>
+              <p className='bold-text'>Land Info</p>
+              <div className='info-grid'>
+                <div className='info-container'>
+                  <TbContainer className='info-icon' />
                   <div>
                     <p>Type</p>
-                    <p className="bold-text">{template.landType}</p>
+                    <p className='bold-text'>{template.landType}</p>
                   </div>
                 </div>
-                <div className="info-container">
-                  <HiChartPie className="info-icon" />
+                <div className='info-container'>
+                  <HiChartPie className='info-icon' />
                   <div>
                     <p>Area</p>
-                    <p className="bold-text">{template.area}</p>
+                    <p className='bold-text'>{template.area}</p>
                   </div>
                 </div>
-                <div className="info-container">
-                  <TbVector className="info-icon" />
+                <div className='info-container'>
+                  <TbVector className='info-icon' />
                   <div>
                     <p>Perimeter</p>
-                    <p className="bold-text">{template.perimeter}</p>
+                    <p className='bold-text'>{template.perimeter}</p>
                   </div>
                 </div>
-                <div className="info-container">
-                  <ImLocation2 className="info-icon" />
+                <div className='info-container'>
+                  <ImLocation2 className='info-icon' />
                   <div>
                     <p>Location</p>
-                    <p className="bold-text">{template.location}</p>
+                    <p className='bold-text'>{template.location}</p>
                   </div>
                 </div>
               </div>
-              <div className="description-div">
-                <p className="bold-text">Description</p>
-                <p className="description-text">{template.description}</p>
+              <div className='description-div'>
+                <p className='bold-text'>Description</p>
+                <p className='description-text'>{template.description}</p>
               </div>
             </div>
           </div>
@@ -206,13 +208,13 @@ const TemplateDetails = ({
       )}
       <div
         style={{
-          transform: animatePage ? "translateX(0)" : "translateX(-100%)",
-          transition: "transform 0.3s ease-in-out",
-          backgroundColor: "whitesmoke",
-          overflow: "auto",
+          transform: animatePage ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 0.3s ease-in-out',
+          backgroundColor: 'whitesmoke',
+          overflow: 'auto',
         }}
       >
-        {currentPage === "Fence" && (
+        {currentPage === 'Fence' && (
           <Fence
             onBackToSidebar={onBackToSidebar}
             id={template._id}
@@ -222,7 +224,7 @@ const TemplateDetails = ({
             template={template}
           />
         )}
-        {currentPage === "Plantation" && (
+        {currentPage === 'Plantation' && (
           <Plantation
             onBackToSidebar={onBackToSidebar}
             id={template._id}
@@ -232,7 +234,7 @@ const TemplateDetails = ({
             template={template}
           />
         )}
-        {currentPage === "FenceDetails" && (
+        {currentPage === 'FenceDetails' && (
           <FenceDetails
             onBackToSidebar={onBackToSidebar}
             onback={handleBackClick}
@@ -243,7 +245,7 @@ const TemplateDetails = ({
             template={template}
           />
         )}
-        {currentPage === "PlantationDetails" && (
+        {currentPage === 'PlantationDetails' && (
           <PlantationDetails
             onBackToSidebar={onBackToSidebar}
             onback={handleBackClick}
@@ -254,7 +256,7 @@ const TemplateDetails = ({
             template={template}
           />
         )}
-        {currentPage === "ClearLand" && (
+        {currentPage === 'ClearLand' && (
           <ClearLand
             onBackToSidebar={onBackToSidebar}
             id={template._id}
@@ -264,7 +266,7 @@ const TemplateDetails = ({
             template={template}
           />
         )}
-        {currentPage === "EffortOutput" && (
+        {currentPage === 'EffortOutput' && (
           <EffortOutput
             onBackToSidebar={onBackToSidebar}
             onback={handleBackClick}

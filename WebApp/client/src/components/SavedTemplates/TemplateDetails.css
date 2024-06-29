@@ -41,6 +41,15 @@ p {
   margin-top: -5px;
   margin-left: -15px;
 }
+.map-img-container {
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 .div-02 {
   margin-top: 20px;
@@ -49,9 +58,7 @@ p {
   width: 150px;
   height: 150px;
   border-radius: 10px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+  transform: scale(1.1);
 }
 
 .manage-land-btn {

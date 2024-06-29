@@ -3,7 +3,15 @@ import './Card.css';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { BiEdit } from 'react-icons/bi';
 
-const Card = ({ templateName, location, date, onClick, onDelete, onEdit }) => {
+const Card = ({
+  templateName,
+  location,
+  date,
+  capturedImageBase64,
+  onClick,
+  onDelete,
+  onEdit,
+}) => {
   const handleDelete = (e) => {
     e.stopPropagation();
     onDelete();
@@ -21,7 +29,7 @@ const Card = ({ templateName, location, date, onClick, onDelete, onEdit }) => {
       <div className='card-flex'>
         <div className='card-image-container'>
           <img
-            src='https://i.ibb.co/9TQd2Bb/map-image.jpg'
+            src={`data:image/jpeg;base64,${capturedImageBase64}`}
             className='card-image'
             alt='mapImg'
           />
