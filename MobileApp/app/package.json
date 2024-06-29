@@ -80,7 +80,8 @@
     "react-native-svg": "13.9.0",
     "react-native-vector-icons": "^10.0.3",
     "react-native-view-shot": "^3.8.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "sweetalert": "^2.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

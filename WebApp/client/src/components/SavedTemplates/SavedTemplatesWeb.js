@@ -4,6 +4,7 @@ import '../SavedTemplates/SavedTemplatesWeb.css';
 import Card from './Card.js';
 import { FaSearch } from 'react-icons/fa';
 import AxiosInstance from '../../AxiosInstance';
+import { message } from 'antd';
 
 const SavedTemplatesWeb = ({
   onBackToSidebar,
@@ -30,7 +31,7 @@ const SavedTemplatesWeb = ({
       `/api/auth/mapTemplate/deleteTemplate/${deletingTemplate._id}`
     )
       .then(() => {
-        alert('Template deleted');
+        message.success('Template deleted successfully');
         setTemplates(
           templates.filter((template) => template._id !== deletingTemplate._id)
         );
