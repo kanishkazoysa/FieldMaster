@@ -52,6 +52,7 @@ export default function WalkaroundLand() {
   const [resizingMode, setResizingMode] = useState(false);
   const [showUndoButton, setShowUndoButton] = useState(true);
   const [showFillColor, setShowFillColor] = useState(false);
+  const [isPolygonClosed, setIsPolygonClosed] = useState(false);
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -96,19 +97,14 @@ export default function WalkaroundLand() {
       setPathCoordinates([initialLocation]);
       setIsSaveButtonDisabled(true);
       setShowFillColor(false);
+      setIsPolygonClosed(false);
     } else {
       setTrackingStarted(false);
       setIsResizeButtonDisabled(false);
       setIsStartPauseButtonDisabled(true);
       setIsSaveButtonDisabled(false);
       setShowFillColor(true);
-      if (currentLocation) {
-        const lineCoordinates = [currentLocation, initialLocation];
-        setPathCoordinates((prevCoordinates) => [
-          ...prevCoordinates,
-          ...lineCoordinates,
-        ]);
-      }
+      setIsPolygonClosed(true);
       stopLocationUpdates();
       calculateAreaAndPerimeter();
     }
@@ -252,22 +248,30 @@ export default function WalkaroundLand() {
   const handleDragEnd = (event, index) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
     const updatedCoordinates = [...pathCoordinates];
-    updatedCoordinates[index] = { latitude, longitude };
-    if (index === 0) {
-      updatedCoordinates[updatedCoordinates.length - 1] = {
-        latitude,
-        longitude,
-      };
-    } else if (index === updatedCoordinates.length - 1) {
-      updatedCoordinates[0] = { latitude, longitude };
-    }
+    const draggedPoint = { latitude, longitude };
+    updatedCoordinates[index] = draggedPoint;
+  
+    const prevIndex = (index - 1 + updatedCoordinates.length) % updatedCoordinates.length;
+    const nextIndex = (index + 1) % updatedCoordinates.length;
+  
+    const intermediatePrev = insertIntermediatePoints(updatedCoordinates[prevIndex], draggedPoint);
+    const intermediateNext = insertIntermediatePoints(draggedPoint, updatedCoordinates[nextIndex]);
+  
+    updatedCoordinates.splice(index, 0, ...intermediatePrev);
+    updatedCoordinates.splice(index + intermediatePrev.length + 1, 0, ...intermediateNext);
+  
     setUndoStack((prevStack) => [...prevStack, [...pathCoordinates]]);
     setPathCoordinates(updatedCoordinates);
     setShowUndoButton(true);
     handleResizeEnd();
-    // Ensure fill color is shown after resizing
     setShowFillColor(true);
+  
+    // If the polygon is closed, ensure it stays closed
+    if (isPolygonClosed) {
+      updatedCoordinates[updatedCoordinates.length - 1] = { ...updatedCoordinates[0] };
+    }
   };
+  
 
   const handleUndo = () => {
     if (undoStack.length > 0) {
@@ -283,6 +287,18 @@ export default function WalkaroundLand() {
       }
     }
   };
+
+  const insertIntermediatePoints = (startPoint, endPoint, numPoints = 1) => {
+    const points = [];
+    for (let i = 1; i <= numPoints; i++) {
+      const ratio = i / (numPoints + 1);
+      const lat = startPoint.latitude + (endPoint.latitude - startPoint.latitude) * ratio;
+      const lng = startPoint.longitude + (endPoint.longitude - startPoint.longitude) * ratio;
+      points.push({ latitude: lat, longitude: lng });
+    }
+    return points;
+  };
+  
 
   return (
     <View style={styles.container}>
@@ -320,46 +336,52 @@ export default function WalkaroundLand() {
       </View>
 
       <MapView
-        ref={mapRef}
-        style={styles.map}
-        mapType={mapTypes[mapTypeIndex].value}
-        showsUserLocation={trackingStarted}
-        provider={PROVIDER_GOOGLE}
-        initialRegion={{
-          latitude: 6.2427,
-          longitude: 80.0607,
-          latitudeDelta: 5, // Adjust the zoom level here
-          longitudeDelta: 5, // Adjust the zoom level here
-        }}
-      >
-        {drawPolyline && pathCoordinates.length > 0 && (
-          <>
-            <Polyline
-              coordinates={pathCoordinates}
-              strokeWidth={2.3}
-              strokeColor="white"
-            />
-            {showFillColor && (
-              <Polygon
-                coordinates={pathCoordinates}
-                fillColor="rgba(0, 123, 255, 0.3)"
-                strokeColor="white"
-                strokeWidth={2.3}
-              />
-            )}
-          </>
-        )}
-        {resizingMode &&
-          pathCoordinates.map((coordinate, index) => (
-            <Marker
-              key={index}
-              coordinate={coordinate}
-              pinColor="red"
-              draggable
-              onDragEnd={(event) => handleDragEnd(event, index)}
-            />
-          ))}
-      </MapView>
+  ref={mapRef}
+  style={styles.map}
+  mapType={mapTypes[mapTypeIndex].value}
+  showsUserLocation={trackingStarted}
+  provider={PROVIDER_GOOGLE}
+  initialRegion={{
+    latitude: 6.2427,
+    longitude: 80.0607,
+    latitudeDelta: 5,
+    longitudeDelta: 5,
+  }}
+>
+{drawPolyline && pathCoordinates.length > 0 && (
+  <>
+    <Polyline
+      coordinates={isPolygonClosed ? [...pathCoordinates, pathCoordinates[0]] : pathCoordinates}
+      strokeWidth={2.3}
+      strokeColor="white"
+    />
+    {showFillColor && (
+      <Polygon
+        coordinates={pathCoordinates}
+        fillColor="rgba(0, 123, 255, 0.3)"
+        strokeColor="white"
+        strokeWidth={2.3}
+      />
+    )}
+  </>
+)}
+  {resizingMode && pathCoordinates.map((coordinate, index) => (
+    <Marker
+      key={index}
+      coordinate={coordinate}
+      draggable
+      onDragEnd={(event) => handleDragEnd(event, index)}
+      tracksViewChanges={false}
+      stopPropagation={true}
+      anchor={{ x: 0.5, y: 0.5 }}
+    >
+      <View style={styles.markerTouchArea}>
+        <View style={styles.marker} />
+      </View>
+    </Marker>
+  ))}
+</MapView>
+
 
       <TouchableOpacity
         style={styles.layerIconContainer}
@@ -486,6 +508,20 @@ const styles = StyleSheet.create({
   dropdownItem: {
     padding: 10,
     color: "#fff",
+  },
+  markerTouchArea: {
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  marker: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'black',
   },
   header: {
     height: responsiveHeight(6.5),
