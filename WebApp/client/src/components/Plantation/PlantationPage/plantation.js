@@ -202,7 +202,7 @@ export default function Plantation({
                   placeholder="m"
                   options={[
                     { value: "m", label: "m" },
-                    { value: "cm", label: "cm" },
+                    //{ value: "cm", label: "cm" },
                   ]}
                   value={PlantSpaceUnitselectedValue1}
                   onChange={handlePlantSpaceUnitChange}
@@ -241,7 +241,7 @@ export default function Plantation({
                   placeholder="m"
                   options={[
                     { value: "m", label: "m" },
-                    { value: "cm", label: "cm" },
+                   // { value: "cm", label: "cm" },
                   ]}
                   value={RowSpaceUnitselectedValue1}
                   onChange={handleRowSpaceUnitChange}

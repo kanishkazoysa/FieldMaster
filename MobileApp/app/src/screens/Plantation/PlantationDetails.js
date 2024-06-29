@@ -202,21 +202,7 @@ export default function PlantationDetails({ route }) {
   
   `;
 
-  // const handleIconPress = () => {
-  //   // Display an alert message when the icon is pressed
-  //   Alert.alert(
-  //     "Important",
-  //     "This is an estimated count for the given details , allowing for a variance of +/- 10 plants from the actual value for flexibility and potential contingencies. ou pressed the icon!",
-  //     [
-  //       {
-  //         text: "OK",
-  //         onPress: () => console.log("OK Pressed"),
-  //       },
-  //     ],
-  //     { cancelable: false }
-  //   );
-  // };
-
+  
   const navigation = useNavigation();
   const handleFertilization = () => {
     navigation.navigate("Fertilization", {
@@ -308,7 +294,7 @@ export default function PlantationDetails({ route }) {
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>Density</Text>
-                  <Text style={styles.propertyValue}>{PlantationDensity}/m</Text>
+                  <Text style={styles.propertyValue}>{PlantationDensity}/m{"\u00B2"}</Text>
                 </View>
               </View>
             </View>
@@ -336,7 +322,7 @@ export default function PlantationDetails({ route }) {
                   color="#65676B"
                 />
                 <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Area</Text>
+                  <Text style={styles.Box2PropertyLabel}>Area </Text>
                   <Text style={styles.Box2PropertyValue}>{area} perches</Text>
                 </View>
               </View>

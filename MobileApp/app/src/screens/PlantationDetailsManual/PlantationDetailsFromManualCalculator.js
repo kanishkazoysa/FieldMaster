@@ -12,8 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 import * as Print from "expo-print";
 import { styles } from "./PlantationDetailsStylesFromManualCalculatorStyles";
 import CustomButton from "../../components/CustomButton";
-import { Appbar } from "react-native-paper";
 
+import Headersection from "../../components/Headersection";
 export default function PlantationDetailsFromManualCalculator({ route }) {
   const {
     area,
@@ -122,11 +122,13 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
     `;
 
   const navigation = useNavigation();
-  const handleFertilization = () => {
-    navigation.navigate("Fertilization", {
+  const handleFertilizationFromManual = () => {
+    navigation.navigate("FertilizationFromManualCalculator", {
       numberOfPlants: numberOfPlants,
       PlantationDensity: plantDensity,
       plantType: textPlant,
+      area:area,
+      perimeter:perimeter
     });
     console.log(
       "sending" + numberOfPlants + " " + plantDensity + " " + textPlant
@@ -152,17 +154,7 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
       {/* Static section at the top */}
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
-      <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
-        <Appbar.BackAction
-          onPress={() => {
-            navigation.navigate("Home");
-          }}
-        />
-        <Appbar.Content
-          title="Plantation Details"
-          titleStyle={{ fontSize: 17 }}
-        />
-      </Appbar.Header>
+      <Headersection navigation={navigation} title="Plantation Details" />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.top}>
@@ -192,7 +184,7 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>Density</Text>
-                  <Text style={styles.propertyValue}>{plantDensity}/m</Text>
+                  <Text style={styles.propertyValue}>{plantDensity} /m{"\u00B2"}</Text>
                 </View>
               </View>
             </View>
@@ -220,8 +212,8 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
                   color="#65676B"
                 />
                 <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Area</Text>
-                  <Text style={styles.Box2PropertyValue}>{area} perches</Text>
+                  <Text style={styles.Box2PropertyLabel}>Area(m{"\u00B2"})</Text>
+                  <Text style={styles.Box2PropertyValue}>{area} </Text>
                 </View>
               </View>
             </View>
@@ -287,7 +279,7 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
         {/* Bottom section */}
         <View style={styles.bottom}>
           <CustomButton
-            onPress={handleFertilization}
+            onPress={handleFertilizationFromManual}
             text="Fertilizing"
             iconName="flask-outline"
             iconColor="white"

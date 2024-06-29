@@ -15,12 +15,13 @@ import {
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import ProfileAvatar from "../components/ProfileAvatar";
+import ProfileAvatar from "../../components/ProfileAvatar";
 import * as ImagePicker from "expo-image-picker";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import { Alert } from "react-native";
-import AxiosInstance from "../AxiosInstance";
+import AxiosInstance from "../../AxiosInstance";
 import { ActivityIndicator } from "react-native";
+import styles from './ProfileManageStyles';
 
 const ProfileManagement = () => {
   const [user, setUser] = useState({});
@@ -29,10 +30,13 @@ const ProfileManagement = () => {
   const [image, setImage] = useState(null);
   const [forceUpdate, setForceUpdate] = useState(0);
 
+  // Update the image when the user changes it
   useEffect(() => {
     setForceUpdate((prevValue) => prevValue + 1);
   }, [user.imageUrl]);
 
+
+  
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -266,79 +270,5 @@ const ProfileManagement = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  header: {
-    height: responsiveHeight(6),
-    backgroundColor: "#007BFF",
-    zIndex: 1,
-    ...Platform.select({
-      android: {
-        marginTop: StatusBar.currentHeight,
-      },
-    }),
-  },
-  appbarText: {
-    alignItems: "center",
-    marginRight: responsiveWidth(12),
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-  section1: {
-    flex: 1,
-    borderRadius: 30,
-    marginTop: responsiveHeight(3),
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  section2: {
-    flex: 2,
-  },
-  text1: {
-    fontSize: responsiveFontSize(2.5),
-    fontWeight: "bold",
-    marginTop: responsiveHeight(3),
-    marginLeft: responsiveWidth(8),
-  },
-  inputContainer: {
-    marginTop: responsiveHeight(3),
-    alignItems: "center",
-  },
-  inputField: {
-    width: responsiveWidth(82),
-    height: responsiveHeight(6),
-    fontSize: responsiveFontSize(1.9),
-    marginBottom: responsiveHeight(2),
-    borderRadius: 15,
-  },
-  button1: {
-    marginTop: responsiveHeight(1),
-    width: responsiveWidth(82),
-    height: responsiveHeight(5.7),
-    alignSelf: "center",
-    justifyContent: "center",
-    borderRadius: 10,
-    borderColor: "#007BFF",
-  },
-  button: {
-    marginTop: responsiveHeight(5),
-    backgroundColor: "#007BFF",
-    width: responsiveWidth(60),
-    padding: responsiveHeight(0),
-    alignSelf: "center",
-  },
-  cameraIcon: {
-    top: responsiveHeight(-2.8),
-    right: responsiveWidth(-28),
-  },
-  avtarTxt: {
-    fontSize: responsiveFontSize(3),
-    marginTop: responsiveHeight(-2),
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-});
 
 export default ProfileManagement;

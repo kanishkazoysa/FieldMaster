@@ -110,9 +110,9 @@ export const styles = {
         //borderColor: "#CED0D4",
       },
       smallText:{
-        fontSize: 8,
+        fontSize: 6,
         marginTop: 8,
-        marginLeft: -95
+        paddingLeft: 0
       },
       bottom: {
         width: "92%",

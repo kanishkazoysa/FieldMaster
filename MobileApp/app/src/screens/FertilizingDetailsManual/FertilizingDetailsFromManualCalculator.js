@@ -15,11 +15,11 @@ import { shareAsync } from 'expo-sharing';
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import {styles} from './FertilizingDetailsFromManualCalculatorStyles';
-export default function FertilizationDetailsFromManualCalculator({ route }) {
+export default function FertilizationDetailsFromManualCalculator({ route}) {
 
 
   const { params } = route;
-  const { FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton,count,plantcount} = params;
+  const { FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton,count,plantcount,area,perimeter} = params;
   const [factorValue, setFactor] = useState(1);
   const [totalAmount, setTotalAmount] = useState(0);
   const [Total,setTotal] = useState(0);
@@ -32,7 +32,7 @@ export default function FertilizationDetailsFromManualCalculator({ route }) {
         factorValue = 365;
         break;
       case "Weekly":
-        factorValue = 4; 
+        factorValue = 48; 
         break;
       case "Monthly":
         factorValue = 12;
@@ -53,7 +53,7 @@ export default function FertilizationDetailsFromManualCalculator({ route }) {
   }, []);
 
   useEffect(() =>{
-    setTotal((plantcount*totalAmount/1000));
+    setTotal((plantcount*totalAmount));
   })
 
 
@@ -220,7 +220,7 @@ export default function FertilizationDetailsFromManualCalculator({ route }) {
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>For plantation</Text>
-                  <Text style={styles.propertyValue}>{Total} kg</Text>
+                  <Text style={styles.propertyValue}>{Total} {FertilizerAmountUnit}</Text>
                 </View>
               </View>
             </View>
@@ -237,7 +237,7 @@ export default function FertilizationDetailsFromManualCalculator({ route }) {
               />
               <View style={styles.box2PropertyDetails}>
                 <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                <Text style={styles.Box2PropertyValue}>665m</Text>
+                <Text style={styles.Box2PropertyValue}>{perimeter} km</Text>
               </View>
             </View>
             <View style={styles.box2Property}>
@@ -247,8 +247,8 @@ export default function FertilizationDetailsFromManualCalculator({ route }) {
                 color="#65676B"
               />
               <View style={styles.box2PropertyDetails}>
-                <Text style={styles.Box2PropertyLabel}>Area</Text>
-                <Text style={styles.Box2PropertyValue}>2 acres</Text>
+                <Text style={styles.Box2PropertyLabel}>Area ( m{"\u00B2"})</Text>
+                <Text style={styles.Box2PropertyValue}>{area}</Text>
               </View>
             </View>
           </View>
