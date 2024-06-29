@@ -12,8 +12,8 @@ import WelcomeScreen from "./src/screens/StartingScreens/WelcomeScreen";
 import ForgotPassword from "./src/screens/AuthScreens/ForgotPassword";
 import Otp from "./src/screens/AuthScreens/Otp";
 import CreateNewPassword from "./src/screens/AuthScreens/CreateNewPassword";
-import Home from "./src/screens/Home";
-import WalkaroundLand from "./src/screens/WalkaroundLand";
+import Home from "./src/screens/HomePage/Home.js";
+import WalkaroundLand from "./src/screens/WalkaroundLand/WalkaroundLand";
 import Fence from "./src/screens/FenceSetup/fence/Fence";
 import FenceDetails from "./src/screens/FenceSetup/fenceDetails/FenceDetails";
 /* Template screens importing */
@@ -33,7 +33,7 @@ import EffortOutput from './src/screens/ClearLand/EffortOutput';
 import ResizeMap from './src/screens/TempScreens/ResizeMap/ResizeMap';
 import PointAddingScreen from './src/screens/PointAddingScreen/PointAddingScreen';
 
-import ProfileManagement from "./src/screens/ProfileManagement";
+import ProfileManagement from "./src/screens/ProfileManagement/ProfileManagement.js";
 
 import PlantationFromManualCalculator from "./src/screens/PlantationManual/PlantationFromManualCalculator.js";
 import PlantationDetailsFromManualCalculator from "./src/screens/PlantationDetailsManual/PlantationDetailsFromManualCalculator.js";

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Polygon } from "react-native-maps";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import {
   View,
   Text,
@@ -23,6 +22,7 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import area from "@turf/area";
 import { distance } from "@turf/turf";
 
+
 const ResizeMapScreen = ({ navigation, route }) => {
   const { templateId, Area, Perimeter } = route.params;
   const [isPolygonComplete, setIsPolygonComplete] = useState(true);
@@ -33,6 +33,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [currentLocation, setCurrentLocation] = useState(null);
   const mapRef = React.useRef(null);
+  
   const [isButtonPressed, setIsButtonPressed] = useState(false);
   const [isMarkerMoved, setIsMarkerMoved] = useState(false);
   const [undoStack, setUndoStack] = useState([]);
@@ -80,22 +81,6 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
     }
     return points;
   };
-  // //focuses the map on the current location of the user
-  // const focusOnCurrentLocation = () => {
-  //   setSearchedLocation(null);
-  //   setShowCurrentLocation((prevShowCurrentLocation) => {
-  //     const newShowCurrentLocation = !prevShowCurrentLocation;
-  //     if (newShowCurrentLocation && currentLocation && mapRef.current) {
-  //       mapRef.current.animateToRegion({
-  //         latitude: currentLocation.coords.latitude,
-  //         longitude: currentLocation.coords.longitude,
-  //         latitudeDelta: 0.0005,
-  //         longitudeDelta: 0.0005,
-  //       });
-  //     }
-  //     return newShowCurrentLocation;
-  //   });
-  // };
 
   //handling location and fetching template data
   useEffect(() => {
@@ -113,7 +98,7 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
 
       AxiosInstance.get(`/api/auth/mapTemplate/getOneTemplate/${templateId}`)
         .then((response) => {
-          setPoints(response.data.locationPoints);
+          setPoints(response.data.locationPoints.map(point => ({ ...point, isMain: true })));
           console.log(response.data.locationPoints);
 
           // Calculate the average latitude and longitude
@@ -151,12 +136,12 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
       const lastAction = newUndoStack.pop();
       setUndoStack(newUndoStack);
       
-      setPoints(lastAction.points);
+      setPoints(lastAction.originalPoints);
       
       if (newUndoStack.length === 0) {
         setIsMarkerMoved(false);
       }
-      calculateAreaAndPerimeter(lastAction.points);
+      calculateAreaAndPerimeter(lastAction.originalPoints);
     }
   };
 
@@ -195,27 +180,30 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
 
   //update the point's coordinates when a marker is dragged to a new location
   const handleMarkerDragEnd = (event, index) => {
-    const newPoints = [...points];
-    const originalPoint = {...newPoints[index]};
-    setUndoStack(prevStack => [...prevStack, {index, point: originalPoint, points: [...newPoints]}]);
-    
-    const draggedPoint = event.nativeEvent.coordinate;
-    newPoints[index] = draggedPoint;
+  const newPoints = [...points];
+  const originalPoints = [...newPoints];
+  const draggedPoint = { ...event.nativeEvent.coordinate, isMain: true };
+  newPoints[index] = draggedPoint;
+
+  const prevIndex = (index - 1 + newPoints.length) % newPoints.length;
+  const nextIndex = (index + 1) % newPoints.length;
   
-    // Insert intermediate points
-    const prevIndex = (index - 1 + newPoints.length) % newPoints.length;
-    const nextIndex = (index + 1) % newPoints.length;
-    
-    const intermediatePrev = insertIntermediatePoints(newPoints[prevIndex], draggedPoint);
-    const intermediateNext = insertIntermediatePoints(draggedPoint, newPoints[nextIndex]);
-  
-    newPoints.splice(index, 0, ...intermediatePrev);
-    newPoints.splice(index + intermediatePrev.length + 1, 0, ...intermediateNext);
-  
-    setPoints(newPoints);
-    setIsMarkerMoved(true);
-    calculateAreaAndPerimeter(newPoints);
-  };
+  const intermediatePrev = insertIntermediatePoints(newPoints[prevIndex], draggedPoint).map(p => ({ ...p, isMain: false }));
+  const intermediateNext = insertIntermediatePoints(draggedPoint, newPoints[nextIndex]).map(p => ({ ...p, isMain: false }));
+
+  newPoints.splice(index, 0, ...intermediatePrev);
+  newPoints.splice(index + intermediatePrev.length + 1, 0, ...intermediateNext);
+
+  setUndoStack(prevStack => [...prevStack, {
+    originalPoints,
+    newPoints,
+    draggedIndex: index
+  }]);
+
+  setPoints(newPoints);
+  setIsMarkerMoved(true);
+  calculateAreaAndPerimeter(newPoints);
+};
 
   //select a map type
   const handleSetMapType = (type) => {
@@ -236,6 +224,36 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
   const toggleMapType = () => {
     setShowDropdown(!showDropdown);
   };
+
+  const MainMarker = ({ coordinate, onDragEnd, index }) => (
+    <Marker
+      coordinate={coordinate}
+      draggable
+      onDragEnd={(e) => onDragEnd(e, index)}
+      tracksViewChanges={false}
+      stopPropagation={true}
+      anchor={{ x: 0.5, y: 0.5 }}
+    >
+      <View style={styles.markerTouchArea}>
+        <View style={styles.mainMarker} />
+      </View>
+    </Marker>
+  );
+  
+  const IntermediateMarker = ({ coordinate, onDragEnd, index }) => (
+    <Marker
+      coordinate={coordinate}
+      draggable
+      onDragEnd={(e) => onDragEnd(e, index)}
+      tracksViewChanges={false}
+      stopPropagation={true}
+      anchor={{ x: 0.5, y: 0.5 }}
+    >
+      <View style={styles.markerTouchArea}>
+        <View style={styles.intermediateMarker} />
+      </View>
+    </Marker>
+  );
   return (
     <>
       <Modal
@@ -298,24 +316,25 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
             style={{ flex: 1, paddingTop: 100 }}
             region={region}
             mapType={mapTypes[mapTypeIndex].value}
-            onPress={(event) => {
-              if (!isButtonPressed) {
-                setPoints([...points, event.nativeEvent.coordinate]);
-              }
-            }}
             mapPadding={{ top: 0, right: -100, bottom: 0, left: 0 }}
           >
-          {points.map((point, index) => (
-            <Marker
-              key={index}
-              coordinate={point}
-              draggable
-              onDragEnd={(e) => handleMarkerDragEnd(e, index)}
-              tracksViewChanges={false}
-              stopPropagation={true}
-              dragThreshold={10} // Add this line
-            />
-          ))}
+          {points.map((point, index) => 
+            point.isMain ? (
+              <MainMarker
+                key={index}
+                coordinate={point}
+                onDragEnd={handleMarkerDragEnd}
+                index={index}
+              />
+            ) : (
+              <IntermediateMarker
+                key={index}
+                coordinate={point}
+                onDragEnd={handleMarkerDragEnd}
+                index={index}
+              />
+            )
+          )}
             {!isPolygonComplete && points.length > 1 && (
               <Polyline
                 coordinates={points}
@@ -368,13 +387,13 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
               style={styles.sideIconWrap}
               onPressIn={() => setIsButtonPressed(true)}
               onPressOut={() => setIsButtonPressed(false)}
+              onPress={handleUndoLastPoint}
             >
               <MaterialCommunityIcons
                 name="arrow-u-left-top"
                 size={responsiveFontSize(3)}
                 color="white"
                 style={styles.sideIconStyle}
-                onPress={handleUndoLastPoint}
               />
             </TouchableOpacity>
           )}
