@@ -50,6 +50,8 @@ export const styles = StyleSheet.create({
     width: responsiveWidth(82),
     height: responsiveHeight(35),
     borderRadius: 20,
+    borderWidth: 0.2,
+    borderColor: 'black',
   },
   iconBlockStyling: {
     display: 'flex',
