@@ -1,6 +1,8 @@
 // SideNavbar.js
-import React, { useState} from "react";
+import React, { useState, useRef } from "react";
+import { FaBars } from "react-icons/fa";
 import { MdArrowBack } from "react-icons/md";
+import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { BsBoundingBox } from "react-icons/bs";
 import {
@@ -15,15 +17,20 @@ import { GrUserWorker } from "react-icons/gr";
 import axios from "axios";
 import { styles } from "./clearLandStyles";
 import { FiSearch } from "react-icons/fi";
-import { Input, Space, List, AutoComplete } from "antd";
+import { Input, Space, List, AutoComplete ,message } from "antd";
 import { CloseSquareFilled } from "@ant-design/icons";
-export default function ClearLand({ onBackToSidebar }) {
+import EffortOutput from "../EffortOutput/effortOutput";
+import TemplateDetails from "../../SavedTemplates/TemplateDetails";
+import AxiosInstance from "../../../AxiosInstance";
+export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTemplateClick,template }) {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
-  const [perimeter, setPerimeter] = useState("1.5");
-  const [area, setArea] = useState("100");
+  // const [perimeter, setPerimeter] = useState("1.5");
+  // const [area, setArea] = useState("100");
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
+  const [plantTypeSelectedValue1, setPlantTypeSelectedValue1] = useState(null);
   const [stoneTypeSelectedValue, setStoneTypeSelectedValue] = useState(null);
+  const [stoneTypeSelectedValue1, setStoneTypeSelectedValue1] = useState(null);
   const [pressed, setPressed] = useState(null);
   const [plantCount, setPlantCount] = useState("");
   const [stonesCount, setStonesCount] = useState("");
@@ -34,14 +41,10 @@ export default function ClearLand({ onBackToSidebar }) {
   // const { Search } = Input;
 
   const machineryList = [
-    "Bulldozers",
     "Excavators",
     "Backhoes",
-    "Skid-steer loaders",
     "Chainsaws",
-    "Brush cutters",
-    "Tractors",
-    "Land clearing rakes",
+    "Excavator breakers",
   ];
 
   const prefix = <FiSearch style={{ fontSize: 16, color: "#d3d3d3" }} />;
@@ -94,7 +97,7 @@ export default function ClearLand({ onBackToSidebar }) {
 
   const handleAdd1 = () => {
     //validation part Add button
-    const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
+    const combinedValue1 = stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
       Boolean
     );
@@ -149,7 +152,6 @@ export default function ClearLand({ onBackToSidebar }) {
   };
 
   const handleClearlandDetails = async (e) => {
-    try {
       // Validate required fields
       if (
         !pressed ||
@@ -158,41 +160,31 @@ export default function ClearLand({ onBackToSidebar }) {
         !laborCount ||
         !workHours
       ) {
-        throw new Error("Please fill in all fields");
+        message.error("Error: Please fill in all fields");
+        return;
       }
 
-      setCurrentPage("EffortOutput"); // Update this line
-      setAnimatePage(true);
-      e.preventDefault();
-
-      // Prepare data for the request
-      const requestData = {
+       // Make POST request to the backend
+       AxiosInstance.post("/api/clearLand/clearLand", {
+        id,
+        pressed,
+        laborCount,
+        workHours,
         displayValues,
         displayValues1,
         displayValues2,
-        pressed,
-        plantTypeSelectedValue,
-        plantCount,
-        stoneTypeSelectedValue,
-        stonesCount,
-        laborCount,
-        workHours,
-        machineCount,
-      };
-
-      // Make POST request to the backend
-      const response = await axios.post(
-        "http://192.168.8.173:3000/api/clearLand/clearLand",
-        requestData
-      );
-
-      // Handle successful response
-      console.log("Response:", response.data);
-    } catch (error) {
-      // Handle errors
-      console.error("Error:", error.message);
-      alert("Error: " + error.message);
-    }
+       })
+       .then((response) => {
+        setCurrentPage("EffortOutput"); // Update this line
+        setAnimatePage(true);
+        e.preventDefault();
+  
+       })
+       .catch((error) => {
+        console.error("Error:", error.response.data);
+        message.error("Error", "Failed to create clear land. Please try again.")
+        alert("Error", "Failed to create clear land. Please try again.");
+      });
   };
 
   const handleBackClick = () => {
@@ -202,13 +194,18 @@ export default function ClearLand({ onBackToSidebar }) {
     }, 300);
   };
 
+  const backtoTemp = () =>{
+    setCurrentPage("TemplateDetails"); 
+    setAnimatePage(true);
+  }
+
   return (
     <div>
       {!currentPage && (
         <div style={styles.content}>
           <div style={styles.header}>
             <MdArrowBack
-              onClick={onBackToSidebar}
+              onClick={backtoTemp}
               style={styles.backButton}
               fontSize={20}
             />
@@ -223,7 +220,7 @@ export default function ClearLand({ onBackToSidebar }) {
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{perimeter}Km</p>
+                  <p style={styles.propertyValue}>{Perimeter}Km</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -483,7 +480,7 @@ export default function ClearLand({ onBackToSidebar }) {
               </div>
             </div>
 
-            <Space direction="vertical" style={{ width: "100%"}}>
+            <Space direction="vertical" style={{ width: "100%" }}>
               <AutoComplete
                 option={filteredMachinery.map((item) => ({ value: item }))}
                 value={searchValue}
@@ -536,12 +533,15 @@ export default function ClearLand({ onBackToSidebar }) {
               />
             </div>
             <div style={styles.box7addButtonContainer}>
-                <button style={{...styles.addButton,width:"100%"}} onClick={handleAdd2}>
-                  <p style={styles.addButtonText}>Add</p>
-                </button>
-              </div>
+              <button
+                style={{ ...styles.addButton, width: "100%" }}
+                onClick={handleAdd2}
+              >
+                <p style={styles.addButtonText}>Add</p>
+              </button>
+            </div>
 
-              <div style={styles.displayValuesContainer}>
+            <div style={styles.displayValuesContainer}>
               {displayValues2.map((value, index) => (
                 <div key={index} style={styles.displayValueContainer}>
                   <div style={styles.displayValueText}>{value}</div>
@@ -576,15 +576,23 @@ export default function ClearLand({ onBackToSidebar }) {
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {/* {currentPage === "FenceDetails" && (
-          <FenceDetails
-            onBackToSidebar={handleBackClick}
-            inputValuePostspace={inputValuePostspace}
-            displayValues={displayValues}
-            PostSpaceUnitselectedValue={PostSpaceUnitselectedValue}
-            FenceTypeselectedValue={FenceTypeselectedValue}
+        {currentPage === "EffortOutput" && (
+          <EffortOutput
+            onBackToSidebar={onBackToSidebar}
+            onback = {handleBackClick}
+            id={id}
+            onEditTemplateClick = {onEditTemplateClick}
+            template = {template}
           />
-        )} */}
+        )}
+        {currentPage === "TemplateDetails" && (
+          <TemplateDetails
+            onBackToSidebar={onBackToSidebar}
+            id={id}
+            onEditTemplateClick = {onEditTemplateClick}
+            template = {template}
+          />
+        )}
       </div>
     </div>
   );

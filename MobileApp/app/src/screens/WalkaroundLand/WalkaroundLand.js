@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
-  StyleSheet,
-  Platform,
   StatusBar,
   TouchableOpacity,
   Text,
@@ -22,11 +20,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import area from "@turf/area";
 import { distance } from "@turf/turf";
-import {
-  responsiveHeight,
-  responsiveWidth,
-  responsiveFontSize,
-} from "react-native-responsive-dimensions";
+import styles from "./WalkaroundLandStyles";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { faUndo } from "@fortawesome/free-solid-svg-icons";
 
 const BACKGROUND_LOCATION_TASK = "background-location-task";
@@ -52,12 +47,14 @@ export default function WalkaroundLand() {
   const [resizingMode, setResizingMode] = useState(false);
   const [showUndoButton, setShowUndoButton] = useState(true);
   const [showFillColor, setShowFillColor] = useState(false);
+  const [isPolygonClosed, setIsPolygonClosed] = useState(false);
 
-  TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
+  //define taskmanager to request location permission
+  TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => { 
     if (error) {
       console.error("Background location task error:", error);
       return;
-    }
+    } //get location data
 
     if (data) {
       const { locations } = data;
@@ -68,6 +65,7 @@ export default function WalkaroundLand() {
           longitude: location.coords.longitude,
           accuracy: location.coords.accuracy,
         }));
+        //set pathcoordinates array to store location data
         setPathCoordinates((prevCoordinates) => [
           ...prevCoordinates,
           ...newCoordinates,
@@ -90,45 +88,43 @@ export default function WalkaroundLand() {
   });
 
   const handleStartPress = () => {
+    //start tracking location
     setTrackingPaused(!trackingPaused);
     if (!trackingPaused) {
       setDrawPolyline(true);
-      setPathCoordinates([initialLocation]);
-      setIsSaveButtonDisabled(true);
-      setShowFillColor(false);
+      setPathCoordinates([initialLocation]); //set initial location
+      setIsSaveButtonDisabled(true);//disable save button
+      setShowFillColor(false);//hide fill color
+      setIsPolygonClosed(false);//  set polygon closed to false
     } else {
       setTrackingStarted(false);
       setIsResizeButtonDisabled(false);
-      setIsStartPauseButtonDisabled(true);
-      setIsSaveButtonDisabled(false);
+      setIsStartPauseButtonDisabled(true); //disable start button
+      setIsSaveButtonDisabled(false); // enable save button
       setShowFillColor(true);
-      if (currentLocation) {
-        const lineCoordinates = [currentLocation, initialLocation];
-        setPathCoordinates((prevCoordinates) => [
-          ...prevCoordinates,
-          ...lineCoordinates,
-        ]);
-      }
+      setIsPolygonClosed(true);
       stopLocationUpdates();
-      calculateAreaAndPerimeter();
+      calculateAreaAndPerimeter(); //calculate area and perimeter
     }
   };
 
   const handleResizeEnd = () => {
+    //if point is drag calculate area and perimeter
     calculateAreaAndPerimeter();
   };
 
   useEffect(() => {
+    //start tracking location
     const startTracking = async () => {
       try {
-        const { coords } = await Location.getCurrentPositionAsync({});
+        const { coords } = await Location.getCurrentPositionAsync({}); // get current location data 
 
-        const { status } = await Location.requestForegroundPermissionsAsync();
+        const { status } = await Location.requestForegroundPermissionsAsync(); // request location permission
         if (status !== "granted") {
           console.error("Foreground location permission not granted");
           return;
         }
-
+        //start location updates  and set location data to initial location and current location
         await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
           accuracy: Location.Accuracy.Highest,
           timeInterval: 1000,
@@ -165,13 +161,15 @@ export default function WalkaroundLand() {
     };
   }, []);
 
+  //stop location updates
   const stopLocationUpdates = async () => {
     try {
+      // Check if the task is already running and stop it if it is running
       const isTaskRunning = await TaskManager.isTaskRegisteredAsync(
         BACKGROUND_LOCATION_TASK
       );
       if (isTaskRunning) {
-        await Location.stopLocationUpdatesAsync(BACKGROUND_LOCATION_TASK);
+        await Location.stopLocationUpdatesAsync(BACKGROUND_LOCATION_TASK); //stop location updates
         console.log("Background location updates stopped");
       }
     } catch (error) {
@@ -180,15 +178,17 @@ export default function WalkaroundLand() {
   };
 
   const toggleMapType = () => {
+    //toggle map type dropdown menu
     setShowDropdown(!showDropdown);
   };
 
   const selectMapType = (index) => {
-    setMapTypeIndex(index);
+    setMapTypeIndex(index); //set map type index
     setShowDropdown(false);
   };
 
   const focusOnCurrentLocation = () => {
+    //focus on current location
     if (mapRef.current && currentLocation) {
       mapRef.current.animateToRegion({
         latitude: currentLocation.latitude,
@@ -206,16 +206,18 @@ export default function WalkaroundLand() {
     { name: "Terrain", value: "terrain" },
   ];
 
+  //calculate area and perimeter of polygon
   const calculateAreaAndPerimeter = () => {
     const polygon = {
       type: "Polygon",
       coordinates: [
-        pathCoordinates.map((coord) => [coord.longitude, coord.latitude]),
+        pathCoordinates.map((coord) => [coord.longitude, coord.latitude]), //get coordinates
       ],
     };
-    const polygonArea = area(polygon);
+    const polygonArea = area(polygon); //calculate area by using turf library
     setCalculatedArea(polygonArea * 0.03954);
 
+    // Calculate perimeter
     let perimeter = 0;
     for (let i = 0; i < pathCoordinates.length; i++) {
       const start = [pathCoordinates[i].longitude, pathCoordinates[i].latitude];
@@ -226,9 +228,10 @@ export default function WalkaroundLand() {
       perimeter += distance(start, end, { units: "kilometers" });
     }
 
-    setPolygonPerimeter(perimeter);
+    setPolygonPerimeter(perimeter); //  set polygon perimeter
   };
 
+  // save map data
   const saveMapData = async () => {
     navigation.navigate("SaveScreen", {
       locationPoints: pathCoordinates,
@@ -237,6 +240,7 @@ export default function WalkaroundLand() {
     });
   };
 
+  //  handle drag end
   const handleResize = () => {
     const newResizingMode = !resizingMode;
     setResizingMode(newResizingMode);
@@ -249,30 +253,51 @@ export default function WalkaroundLand() {
     }
   };
 
+  //handle drag points
   const handleDragEnd = (event, index) => {
-    const { latitude, longitude } = event.nativeEvent.coordinate;
-    const updatedCoordinates = [...pathCoordinates];
-    updatedCoordinates[index] = { latitude, longitude };
-    if (index === 0) {
-      updatedCoordinates[updatedCoordinates.length - 1] = {
-        latitude,
-        longitude,
-      };
-    } else if (index === updatedCoordinates.length - 1) {
-      updatedCoordinates[0] = { latitude, longitude };
-    }
-    setUndoStack((prevStack) => [...prevStack, [...pathCoordinates]]);
+    const { latitude, longitude } = event.nativeEvent.coordinate; // Dragged point
+    const updatedCoordinates = [...pathCoordinates]; //update path coordinates
+    const draggedPoint = { latitude, longitude }; //
+    updatedCoordinates[index] = draggedPoint;
+
+    const prevIndex =
+      (index - 1 + updatedCoordinates.length) % updatedCoordinates.length;
+    const nextIndex = (index + 1) % updatedCoordinates.length;
+
+    const intermediatePrev = insertIntermediatePoints(
+      updatedCoordinates[prevIndex],
+      draggedPoint
+    ); //insert intermediate points
+    const intermediateNext = insertIntermediatePoints(
+      draggedPoint,
+      updatedCoordinates[nextIndex]
+    );
+
+    updatedCoordinates.splice(index, 0, ...intermediatePrev);
+    updatedCoordinates.splice(
+      index + intermediatePrev.length + 1,
+      0,
+      ...intermediateNext
+    );
+
+    setUndoStack((prevStack) => [...prevStack, [...pathCoordinates]]); // Save previous state to undo stack
     setPathCoordinates(updatedCoordinates);
     setShowUndoButton(true);
     handleResizeEnd();
-    // Ensure fill color is shown after resizing
     setShowFillColor(true);
+
+    // If the polygon is closed, ensure it stays closed
+    if (isPolygonClosed) {
+      updatedCoordinates[updatedCoordinates.length - 1] = {
+        ...updatedCoordinates[0],
+      };
+    }
   };
 
   const handleUndo = () => {
     if (undoStack.length > 0) {
-      const newUndoStack = [...undoStack];
-      const previousState = newUndoStack.pop();
+      const newUndoStack = [...undoStack]; // Copy the stack
+      const previousState = newUndoStack.pop(); // Get the previous state
       setUndoStack(newUndoStack);
       setPathCoordinates(previousState);
       calculateAreaAndPerimeter();
@@ -282,6 +307,21 @@ export default function WalkaroundLand() {
         setShowUndoButton(false);
       }
     }
+  };
+
+  // insert intermediate points
+  const insertIntermediatePoints = (startPoint, endPoint, numPoints = 1) => {
+    const points = [];
+    for (let i = 1; i <= numPoints; i++) {
+      const ratio = i / (numPoints + 1);
+      const lat =
+        startPoint.latitude + (endPoint.latitude - startPoint.latitude) * ratio; // Calculate the intermediate point
+      const lng =
+        startPoint.longitude +
+        (endPoint.longitude - startPoint.longitude) * ratio; // Calculate the intermediate point
+      points.push({ latitude: lat, longitude: lng });
+    }
+    return points;
   };
 
   return (
@@ -328,14 +368,19 @@ export default function WalkaroundLand() {
         initialRegion={{
           latitude: 6.2427,
           longitude: 80.0607,
-          latitudeDelta: 5, // Adjust the zoom level here
-          longitudeDelta: 5, // Adjust the zoom level here
-        }}
+          latitudeDelta: 5,
+          longitudeDelta: 5,
+        }} //initial region
       >
+      {/** Draw polyline */}
         {drawPolyline && pathCoordinates.length > 0 && (
           <>
             <Polyline
-              coordinates={pathCoordinates}
+              coordinates={
+                isPolygonClosed
+                  ? [...pathCoordinates, pathCoordinates[0]]
+                  : pathCoordinates
+              }
               strokeWidth={2.3}
               strokeColor="white"
             />
@@ -349,15 +394,22 @@ export default function WalkaroundLand() {
             )}
           </>
         )}
+          {/** Draw markers */}
         {resizingMode &&
           pathCoordinates.map((coordinate, index) => (
             <Marker
               key={index}
               coordinate={coordinate}
-              pinColor="red"
               draggable
               onDragEnd={(event) => handleDragEnd(event, index)}
-            />
+              tracksViewChanges={false}
+              stopPropagation={true}
+              anchor={{ x: 0.5, y: 0.5 }}
+            >
+              <View style={styles.markerTouchArea}>
+                <View style={styles.marker} />
+              </View>
+            </Marker>
           ))}
       </MapView>
 
@@ -442,97 +494,3 @@ export default function WalkaroundLand() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  layerIconContainer: {
-    position: "absolute",
-    backgroundColor: "rgba(0,0,0, 0.7)",
-    padding: responsiveHeight(1),
-    borderRadius: 5,
-    right: responsiveWidth(4),
-    top: responsiveHeight(78),
-    zIndex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  dropdownContainer: {
-    position: "absolute",
-    top: responsiveHeight(-16.5),
-    right: responsiveWidth(12),
-    backgroundColor: "rgba(0,0,0, 0.7)",
-    borderRadius: 5,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  overlay: {
-    display: "flex",
-    flexDirection: "row",
-    backgroundColor: "rgba(0,0,0, 0.7)",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 5,
-  },
-  overlayText: {
-    color: "#fff",
-    fontSize: responsiveFontSize(2),
-    marginHorizontal: 20,
-  },
-  dropdownItem: {
-    padding: 10,
-    color: "#fff",
-  },
-  header: {
-    height: responsiveHeight(6.5),
-    backgroundColor: "#007BFF",
-    flexDirection: "row",
-    alignItems: "center",
-    ...Platform.select({
-      android: {
-        marginTop: StatusBar.currentHeight,
-      },
-    }),
-  },
-  appbarButton: {
-    padding: responsiveWidth(3.5),
-  },
-  buttonText: {
-    color: "white",
-    fontSize: responsiveFontSize(2),
-  },
-  container: {
-    flex: 1,
-  },
-  map: {
-    flex: 1,
-  },
-  buttonContainer: {
-    position: "absolute",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    bottom: responsiveHeight(3),
-    left: responsiveWidth(3),
-    right: responsiveWidth(3),
-  },
-  buttonWrapper: {
-    flex: 1,
-    marginHorizontal: 15,
-  },
-  button: {
-    backgroundColor: "#007BFF",
-    flex: 1,
-  },
-  undoIcon: {
-    position: "absolute",
-    top: -responsiveHeight(17),
-    right: responsiveWidth(1),
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    borderRadius: responsiveWidth(1),
-    padding: responsiveWidth(2.1),
-  },
-});

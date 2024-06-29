@@ -11,7 +11,9 @@ export const styles = StyleSheet.create({
     },
   
     /*Top Section*/
-  
+    Box5bottomText: {
+      fontSize: responsiveFontSize(0.9),
+    },
     scrollContent: {
       flexDirection: "column",
       justifyContent: "space-between",
