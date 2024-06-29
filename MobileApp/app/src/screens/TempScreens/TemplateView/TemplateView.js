@@ -13,107 +13,115 @@ import AxiosInstance from '../../../AxiosInstance';
 const ClearLandIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="island"
+    name='island'
     size={responsiveFontSize(2.8)}
-    color="white"
+    color='white'
   />
 );
 
 const PlantationIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="sprout"
+    name='sprout'
     size={responsiveFontSize(2.8)}
-    color="white"
+    color='white'
   />
 );
 
 const FenceSetupIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="fence"
+    name='fence'
     size={responsiveFontSize(2.8)}
-    color="white"
+    color='white'
   />
 );
 
 const TypeIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="format-list-bulleted-type"
+    name='format-list-bulleted-type'
     size={responsiveFontSize(2.8)}
-    color="grey"
+    color='grey'
   />
 );
 const PerimeterIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="vector-square"
+    name='vector-square'
     size={responsiveFontSize(2.8)}
-    color="grey"
+    color='grey'
   />
 );
 
 const AreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="texture-box"
+    name='texture-box'
     size={responsiveFontSize(2.8)}
-    color="grey"
+    color='grey'
   />
 );
 
 const CustomMapIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="map-marker-radius"
+    name='map-marker-radius'
     size={responsiveFontSize(2.8)}
-    color="grey"
+    color='grey'
   />
 );
 
 const CustomEditIcon = ({ navigation, item }) => (
   <MaterialCommunityIcons
-    name="square-edit-outline"
+    name='square-edit-outline'
     size={responsiveFontSize(2.8)}
     color={'white'}
     style={{ marginRight: responsiveWidth(3) }}
   />
 );
 
-const TemplateView = ({ route, navigation }) => 
-{
+const TemplateView = ({ route, navigation }) => {
   const { item } = route.params;
-  const  id  = item._id
+  const id = item._id;
   useEffect(() => {
     console.log('template view screen ', item._id);
   }, []);
 
   const handleEdit = (item) => {
     console.log(item);
-    navigation.navigate('ResizeMap', { templateId: item._id, Area:item.area, Perimeter:item.perimeter });
+    navigation.navigate('ResizeMap', {
+      templateId: item._id,
+      Area: item.area,
+      Perimeter: item.perimeter,
+    });
   };
 
-  
- // check id exist in the databse
+  // check id exist in the databse
   const checkIdFence = async (id) => {
     try {
       const response = await AxiosInstance.get(`/api/fence/check-id/${id}`);
       if (response.data.exists) {
         console.log('ID exists');
-        navigation.navigate('FenceDetails', { id: item._id ,item: item});
+        navigation.navigate('FenceDetails', { id: item._id, item: item });
       } else {
         console.log('ID does not exist');
       }
     } catch (error) {
       // Handle error, maybe show a message to the user
- if (error.response.status === 404) {
-      console.log('ID not found');
-      navigation.navigate('Fence', { id: item._id, Area: item.area, Perimeter: item.perimeter, item: item });
-    } else {
-      console.error('Error checking ID:', error);
-      // Handle other errors
-    }    }
+      if (error.response.status === 404) {
+        console.log('ID not found');
+        navigation.navigate('Fence', {
+          id: item._id,
+          Area: item.area,
+          Perimeter: item.perimeter,
+          item: item,
+        });
+      } else {
+        console.error('Error checking ID:', error);
+        // Handle other errors
+      }
+    }
   };
 
   const checkIdClearLand = async (id) => {
@@ -121,54 +129,67 @@ const TemplateView = ({ route, navigation }) =>
       const response = await AxiosInstance.get(`/api/clearLand/check-id/${id}`);
       if (response.data.exists) {
         console.log('ID exists');
-        navigation.navigate('EffortOutput', { id: item._id, item:item });
+        navigation.navigate('EffortOutput', { id: item._id, item: item });
       } else {
         console.log('ID does not exist');
       }
     } catch (error) {
       // Handle error, maybe show a message to the user
-if (error.response.status === 404) {
-      console.log('ID not found');
-      navigation.navigate('Clearland', { id: item._id,Area:item.Area,Perimeter:item.Perimeter,item:item });
-    } else {
-      console.error('Error checking ID:', error);
-      // Handle other errors
-    }    }
+      if (error.response.status === 404) {
+        console.log('ID not found');
+        navigation.navigate('Clearland', {
+          id: item._id,
+          Area: item.Area,
+          Perimeter: item.Perimeter,
+          item: item,
+        });
+      } else {
+        console.error('Error checking ID:', error);
+        // Handle other errors
+      }
+    }
   };
-  
-
-
-  
 
   const checkIdPlantation = async (id) => {
     try {
-      const response = await AxiosInstance.get(`/api/plantation/check-id/${id}`);
+      const response = await AxiosInstance.get(
+        `/api/plantation/check-id/${id}`
+      );
       if (response.data.exists) {
         console.log('ID exists');
-        navigation.navigate('PlantationDetails', { id: item._id, item: item});
+        navigation.navigate('PlantationDetails', { id: item._id, item: item });
       } else {
         console.log('ID does not exist');
       }
     } catch (error) {
       // Handle error, maybe show a message to the user
-if (error.response.status === 404) {
-      console.log('ID not found');
-      navigation.navigate('Plantation', { id: item._id, area: item.area, perimeter: item.perimeter, item: item });
-    } else {
-      console.error('Error checking ID:', error);
-      // Handle other errors
-    }    }
+      if (error.response.status === 404) {
+        console.log('ID not found');
+        navigation.navigate('Plantation', {
+          id: item._id,
+          area: item.area,
+          perimeter: item.perimeter,
+          item: item,
+        });
+      } else {
+        console.error('Error checking ID:', error);
+        // Handle other errors
+      }
+    }
   };
 
   return (
     <>
-      <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
+      <Appbar.Header style={styles.top_Bar} dark={true} mode='center-aligned'>
         <Appbar.BackAction
           onPress={() => {
             navigation.navigate('SavedTemplatesScreen');
           }}
         />
-        <Appbar.Content title={item.templateName} titleStyle={styles.title_text} />
+        <Appbar.Content
+          title={item.templateName}
+          titleStyle={styles.title_text}
+        />
         {/* pencil/ pen icon  */}
         <TouchableOpacity onPress={() => handleEdit(item)}>
           <CustomEditIcon />
@@ -177,27 +198,28 @@ if (error.response.status === 404) {
       <View style={styles.low_outer}>
         <View style={styles.imageView}>
           <Image
-            source={{ uri: 'https://i.ibb.co/9TQd2Bb/map-image.jpg' }}
+            source={{
+              uri: `data:image/jpeg;base64,${item.capturedImageBase64}`,
+            }}
             style={styles.imageStyling}
           />
         </View>
         {/* icons_block */}
         <View style={styles.iconBlockStyling}>
-  
-        <View style={styles.iconBlockInner}>
-          <TouchableOpacity onPress={() => checkIdClearLand(item._id)}>
-            <View style={styles.iconOuter_01}>
-              <ClearLandIcon />
-            </View>
+          <View style={styles.iconBlockInner}>
+            <TouchableOpacity onPress={() => checkIdClearLand(item._id)}>
+              <View style={styles.iconOuter_01}>
+                <ClearLandIcon />
+              </View>
             </TouchableOpacity>
             <Text>Clear land</Text>
           </View>
 
           <TouchableOpacity onPress={() => checkIdPlantation(item._id)}>
             <View style={styles.iconBlockInner}>
-                <View style={styles.iconOuter_02}>
-                  <PlantationIcon />
-                </View>
+              <View style={styles.iconOuter_02}>
+                <PlantationIcon />
+              </View>
               <Text>Plantation</Text>
             </View>
           </TouchableOpacity>
@@ -229,7 +251,9 @@ if (error.response.status === 404) {
                 <PerimeterIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Perimeter </Text>
-                  <Text style={styles.text02Styling}>{parseFloat(item.perimeter).toFixed(3)} km</Text>
+                  <Text style={styles.text02Styling}>
+                    {parseFloat(item.perimeter).toFixed(3)} km
+                  </Text>
                 </View>
               </View>
             </View>
@@ -238,7 +262,9 @@ if (error.response.status === 404) {
                 <AreaIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Area</Text>
-                  <Text style={styles.text02Styling}>{parseFloat(item.area).toFixed(3)} perch</Text>
+                  <Text style={styles.text02Styling}>
+                    {parseFloat(item.area).toFixed(3)} perch
+                  </Text>
                 </View>
               </View>
               <View style={styles.blockView}>
@@ -253,7 +279,7 @@ if (error.response.status === 404) {
         </View>
         {/* Description block */}
         <View style={styles.descriptionBlock}>
-         <Text style={styles.text02Styling}>Description</Text>
+          <Text style={styles.text02Styling}>Description</Text>
           <View style={styles.subTextOuter}>
             <Text style={styles.subTextStyle}>{item.description}</Text>
           </View>

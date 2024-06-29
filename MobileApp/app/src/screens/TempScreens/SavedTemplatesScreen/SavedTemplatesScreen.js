@@ -108,7 +108,9 @@ const SavedTemplatesScreen = ({ navigation }) => {
                       <Image
                         style={styles.image_style}
                         source={{
-                          uri: 'https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png',
+                          uri: item.capturedImageBase64
+                            ? `data:image/jpeg;base64,${item.capturedImageBase64}`
+                            : 'https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png',
                         }}
                       />
                     </View>
