@@ -117,7 +117,7 @@ const PointAddingScreen = ({ navigation, route }) => {
       if (mapRef.current) {
         const uri = await captureRef(mapRef.current, {
           format: 'jpg',
-          quality: 0.05,
+          quality: 0.09,
         });
         console.log('Captured image URI:', uri);
         capturedImageBase64 = await FileSystem.readAsStringAsync(uri, {
