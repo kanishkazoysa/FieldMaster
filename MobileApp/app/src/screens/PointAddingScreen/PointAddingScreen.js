@@ -18,6 +18,7 @@ import * as Location from 'expo-location';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { responsiveFontSize } from 'react-native-responsive-dimensions';
 import { captureRef } from 'react-native-view-shot';
+import * as FileSystem from 'expo-file-system';
 
 const PointAddingScreen = ({ navigation, route }) => {
   const [showUserLocation, setShowUserLocation] = useState(false);
@@ -35,6 +36,7 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [isButtonPressed, setIsButtonPressed] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [capturedImageUri, setCapturedImageUri] = useState(null);
 
   /* the closeModal function is used to close the modal */
   const closeModal = () => {
@@ -111,18 +113,25 @@ const PointAddingScreen = ({ navigation, route }) => {
         return;
       }
 
+      let capturedImageBase64 = '';
       if (mapRef.current) {
         const uri = await captureRef(mapRef.current, {
           format: 'jpg',
-          quality: 0.8,
+          quality: 0.05,
         });
         console.log('Captured image URI:', uri);
+        capturedImageBase64 = await FileSystem.readAsStringAsync(uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        setCapturedImageUri(uri);
       }
+
+      console.log('Captured image as base64:', capturedImageBase64);
 
       if (viewShotRef.current) {
         const uri = await captureRef(viewShotRef.current, {
           format: 'jpg',
-          quality: 0.8,
+          quality: 0.01,
         });
         console.log('Captured image URI:', uri);
       }
@@ -154,6 +163,7 @@ const PointAddingScreen = ({ navigation, route }) => {
                 locationPoints: points,
                 area: areaPerches,
                 perimeter: perimeterKilometers,
+                capturedImageBase64,
               });
             },
           },

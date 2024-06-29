@@ -40,9 +40,12 @@ const MapTemplateSchema = new mongoose.Schema({
     type: [PointSchema],
     default: [],
   },
-   userId: {
+  userId: {
     type: String,
     required: true,
+  },
+  capturedImageBase64: {
+    type: String,
   },
 });
 

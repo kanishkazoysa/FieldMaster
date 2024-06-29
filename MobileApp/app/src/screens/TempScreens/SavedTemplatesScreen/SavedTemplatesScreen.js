@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback } from 'react';
 import {
   TouchableOpacity,
   View,
@@ -6,28 +6,28 @@ import {
   Image,
   ScrollView,
   StatusBar,
-} from "react-native";
-import { Appbar } from "react-native-paper";
-import { styles } from "./SavedTemplatesScreenStyles";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useFocusEffect } from "@react-navigation/native";
-import AxiosInstance from "../../../AxiosInstance";
-import { responsiveFontSize } from "react-native-responsive-dimensions";
+} from 'react-native';
+import { Appbar } from 'react-native-paper';
+import { styles } from './SavedTemplatesScreenStyles';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useFocusEffect } from '@react-navigation/native';
+import AxiosInstance from '../../../AxiosInstance';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 
 const CustomEditIcon = (props) => {
   <MaterialCommunityIcons
     {...props}
-    name="square-edit-outline"
+    name='square-edit-outline'
     size={responsiveFontSize(3.5)}
-    color="#65676B"
+    color='#65676B'
   />;
 };
 const CustomDeleteIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="trash-can-outline"
+    name='trash-can-outline'
     size={responsiveFontSize(3)}
-    color="#65676B"
+    color='#65676B'
   />
 );
 
@@ -35,11 +35,11 @@ const SavedTemplatesScreen = ({ navigation }) => {
   const [templates, setTemplates] = useState([]);
 
   const fetchData = () => {
-    console.log("calling api to get all templates...");
+    console.log('calling api to get all templates...');
     AxiosInstance.get(`/api/auth/mapTemplate/getAllTemplates`)
       .then((response) => {
         setTemplates(response.data);
-        console.log("fetching successful");
+        console.log('fetching successful');
       })
       .catch((error) => {
         console.error(error);
@@ -58,7 +58,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
     )
       .then((response) => {
         /* console.log(response); */
-        alert("Template deleted");
+        alert('Template deleted');
         setTemplates(
           templates.filter((template) => template._id !== deletingTemplate._id)
         );
@@ -69,23 +69,23 @@ const SavedTemplatesScreen = ({ navigation }) => {
   };
 
   const handleTemplatePress = (item) => {
-    console.log("template pressed");
-    navigation.navigate("TemplateView", { item: item });
+    console.log('template pressed');
+    navigation.navigate('TemplateView', { item: item });
   };
 
   return (
     <>
       <View>
         {/* Static section at the top */}
-        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
+        <StatusBar barStyle='light-content' backgroundColor='#007BFF' />
 
         <Appbar.Header style={styles.header}>
           <Appbar.BackAction
-            onPress={() => navigation.navigate("Home")}
-            color="white"
+            onPress={() => navigation.navigate('Home')}
+            color='white'
           />
           <Appbar.Content
-            title="Saved Templates"
+            title='Saved Templates'
             titleStyle={styles.title_text}
           />
         </Appbar.Header>
@@ -108,7 +108,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
                       <Image
                         style={styles.image_style}
                         source={{
-                          uri: "https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png",
+                          uri: 'https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png',
                         }}
                       />
                     </View>
@@ -121,7 +121,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
                           Location: {item.location}
                         </Text>
                         <Text style={styles.sub_text_style}>
-                          Date: {item.date}{" "}
+                          Date: {item.date}{' '}
                         </Text>
                         <Text style={styles.sub_text_style}>
                           Time: {item.time}
@@ -132,17 +132,20 @@ const SavedTemplatesScreen = ({ navigation }) => {
                       <TouchableOpacity
                         style={styles.icon_style}
                         onPress={() => {
-                          navigation.navigate("EditTemplate", { item: item });
+                          navigation.navigate('EditTemplate', { item: item });
                         }}
                       >
                         <MaterialCommunityIcons
-                          name="square-edit-outline"
+                          name='square-edit-outline'
                           size={responsiveFontSize(2.7)}
-                          color="#65676B"
+                          color='#65676B'
                         />
                       </TouchableOpacity>
 
-                      <TouchableOpacity  style={styles.icon_style1} onPress={() => handleDelete(item)}>
+                      <TouchableOpacity
+                        style={styles.icon_style1}
+                        onPress={() => handleDelete(item)}
+                      >
                         <CustomDeleteIcon />
                       </TouchableOpacity>
                     </View>

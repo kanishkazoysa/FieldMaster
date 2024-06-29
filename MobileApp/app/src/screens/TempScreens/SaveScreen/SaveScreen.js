@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StatusBar } from 'react-native';
+import { Text, View, StatusBar, Image } from 'react-native';
 import { Appbar, TextInput } from 'react-native-paper';
 import { styles } from './SaveScreenStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -7,24 +7,22 @@ import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { errorUtils } from '../../../common.app';
 import AxiosInstance from '../../../AxiosInstance';
-import {
-  responsiveFontSize,
-} from 'react-native-responsive-dimensions';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 
 const CustomPerimeterIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="vector-square"
+    name='vector-square'
     size={responsiveFontSize(3.7)}
-    color="grey"
+    color='grey'
   />
 );
 const CustomAreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name="texture-box"
+    name='texture-box'
     size={responsiveFontSize(3.7)}
-    color="grey"
+    color='grey'
   />
 );
 
@@ -33,17 +31,17 @@ export function SaveScreen({ navigation, route }) {
     area: initialArea,
     perimeter: initialPerimeter,
     locationPoints,
+    capturedImageBase64,
   } = route.params;
   const [perimeter, setPerimeter] = React.useState(
     parseFloat(initialPerimeter).toFixed(2)
   );
   const [area, setArea] = React.useState(parseFloat(initialArea).toFixed(2));
-  // rest of the code
-  const [templateName, setTemplateName] = React.useState('');
-  const [measureName, setMeasureName] = React.useState('');
-  const [landType, setLandType] = React.useState('');
-  const [location, setLocation] = React.useState('');
-  const [descriptionText, setDescriptionText] = React.useState('');
+  const [templateName, setTemplateName] = React.useState('test');
+  const [measureName, setMeasureName] = React.useState('test');
+  const [landType, setLandType] = React.useState('test');
+  const [location, setLocation] = React.useState('test');
+  const [descriptionText, setDescriptionText] = React.useState('test');
 
   /* this function is used to save the data */
   const onSaveButtonPress = () => {
@@ -57,6 +55,7 @@ export function SaveScreen({ navigation, route }) {
       location: location,
       description: descriptionText,
       locationPoints: locationPoints,
+      capturedImageBase64: capturedImageBase64,
     };
     console.log(dataItem);
 
@@ -75,15 +74,15 @@ export function SaveScreen({ navigation, route }) {
       <StatusBar barStyle={'light-content'} backgroundColor={'#007BFF'} />
       <Appbar.Header style={styles.top_Bar_Whole} statusBarHeight={0}>
         <View style={styles.top_Bar_View}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <View>
-            <Text style={styles.top_Text_Styling}>Cancel</Text>
-          </View>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <View>
+              <Text style={styles.top_Text_Styling}>Cancel</Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={onSaveButtonPress}>
             <View>
               <Text style={styles.top_Text_Styling}>Save</Text>
@@ -141,7 +140,7 @@ export function SaveScreen({ navigation, route }) {
                 />
               </View>
               <View style={styles.input_view}>
-                <Text style={styles.bold_text}>Location             :</Text>
+                <Text style={styles.bold_text}>Location :</Text>
                 <TextInput
                   style={styles.input_text}
                   value={location}
@@ -149,7 +148,7 @@ export function SaveScreen({ navigation, route }) {
                 />
               </View>
               <View style={styles.input_view}>
-                <Text style={styles.bold_text}>Land Type          :</Text>
+                <Text style={styles.bold_text}>Land Type :</Text>
                 <TextInput
                   style={styles.input_text}
                   value={landType}
@@ -162,13 +161,21 @@ export function SaveScreen({ navigation, route }) {
               <Text style={styles.bold_text1}>Description:</Text>
 
               <TextInput
-                placeholder="Type here..."
+                placeholder='Type here...'
                 value={descriptionText}
                 onChangeText={(text) => setDescriptionText(text)}
                 multiline={true}
                 numberOfLines={6}
                 style={styles.description_input}
-                underlineColor="transparent"
+                underlineColor='transparent'
+              />
+            </View>
+            <View style={styles.imageContainer}>
+              <Image
+                source={{
+                  uri: 'data:image/jpeg;base64,' + capturedImageBase64,
+                }}
+                style={styles.base64Image}
               />
             </View>
           </View>
