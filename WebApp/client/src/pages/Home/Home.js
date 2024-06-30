@@ -10,7 +10,7 @@ import { MdLocationOn, MdSearch } from 'react-icons/md';
 import ProfileModal from '../../components/profileManage/ProfileModal/ProfileModal';
 import { styles, containerStyle, center } from './HomeStyles';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Avatar, message } from 'antd';
+import { Avatar, message, Button } from 'antd';
 
 export default function Home() {
   const location = useLocation();
@@ -200,14 +200,16 @@ export default function Home() {
           {showMapButtons && (
             <div style={styles.buttonContainer}>
               <div style={{ ...styles.buttonGroup, ...styles.buttonGroupLeft }}>
-                <button style={styles.mapButton}>Reset</button>
-                <button style={styles.mapButton}>Add Point</button>
+                <Button type='primary'>Reset</Button>
+                <Button type='primary'>Add Point</Button>
               </div>
               <div
                 style={{ ...styles.buttonGroup, ...styles.buttonGroupRight }}
               >
-                <button style={styles.mapButton}>Save</button>
-                <button style={styles.mapButton}>Cancel</button>
+                <Button type='primary'>Save</Button>
+                <Button type='primary' danger>
+                  Cancel
+                </Button>
               </div>
             </div>
           )}
