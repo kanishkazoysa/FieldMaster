@@ -14,8 +14,8 @@ import { Avatar, message } from 'antd';
 
 export default function Home() {
   const location = useLocation();
-  const navigate = useNavigate(); // Use useNavigate hook
-  const messageShownRef = useRef(false); // Ref to track if the message has been shown
+  const navigate = useNavigate();
+  const messageShownRef = useRef(false);
   const [showMapButtons, setShowMapButtons] = useState(false);
 
   const mapRef = useRef(null);
@@ -35,6 +35,9 @@ export default function Home() {
     }
   }, [location, navigate]); // Dependency array
 
+  const hideMapButtons = () => {
+    setShowMapButtons(false);
+  };
   // Function to be passed to SideNavbar
   const toggleMapButtons = (show) => {
     setShowMapButtons(show);
@@ -119,7 +122,10 @@ export default function Home() {
   return (
     <div style={styles.container}>
       <div style={styles.sidebar}>
-        <SideNavbar toggleMapButtons={toggleMapButtons} />
+        <SideNavbar
+          toggleMapButtons={toggleMapButtons}
+          hideMapButtons={hideMapButtons}
+        />
       </div>
       <LoadScript
         googleMapsApiKey='AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U'

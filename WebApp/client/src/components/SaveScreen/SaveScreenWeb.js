@@ -5,7 +5,7 @@ import { FaVectorSquare } from 'react-icons/fa6';
 import { RiPieChart2Fill } from 'react-icons/ri';
 import { FaRegSave } from 'react-icons/fa';
 
-const SaveScreenWeb = ({ onBackToSidebar }) => {
+const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons }) => {
   return (
     <div className='outer-div'>
       <div className='save-screen'>
@@ -13,6 +13,7 @@ const SaveScreenWeb = ({ onBackToSidebar }) => {
           <MdArrowBack
             onClick={() => {
               console.log('clicked back btn');
+              hideMapButtons();
               onBackToSidebar();
             }}
             size={20}
