@@ -149,11 +149,7 @@ const ManageProfileModal = ({
       </button>
       <div style={styles.headerContainer}>
         <ArrowLeftOutlined style={styles.backicon} onClick={onBack} />
-        <img
-          src={logo}
-          alt="profile"
-          style={{ width: "100px", height: "40px", marginBottom: "-20px" }}
-        />
+        <p style={styles.headertxt}>Manage Your Profile</p>
       </div>
       <Divider style={styles.divider} />
       <div style={styles.content}>
@@ -259,18 +255,20 @@ const styles = {
   backicon: {
     position: "absolute",
     left: "10px",
-    fontSize: "17px",
-    top: "30px",
+    fontSize: "15px",
+    top: "25px",
     cursor: "pointer",
+  },
+  headertxt: {
+    fontSize: "15px",
+    marginTop: "3px",
   },
   editIcon: {
     position: "absolute",
-    top: "37%",
+    top: "33%",
     right: "34%",
-    backgroundColor: "rgba(0,0,0,0.5)",
-    color: "white",
-    padding: "5px",
-    borderRadius: "50%",
+    fontSize: "1.2rem",
+    color: "gray",
   },
   headtxt: {
     fontSize: "1rem",
@@ -281,10 +279,8 @@ const styles = {
     flexDirection: "row",
   },
   divider: {
-    color: "#777",
     fontSize: "14px",
-    marginTop: "40px",
-    borderColor: "#777",
+    marginTop: "20px",
   },
   formfeild: {
     alignItems: "left",
@@ -300,10 +296,10 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    marginBottom: "15px",
+    marginBottom: "2px",
   },
   userInfo: {
-    marginBottom: "-120px",
+    marginBottom: "-80px",
     textAlign: "center",
   },
   form: {
