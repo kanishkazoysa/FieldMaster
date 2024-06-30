@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, Button, Divider } from "antd";
+import { Button, Divider } from "antd";
 import { BeatLoader } from "react-spinners";
 import ManageProfileModal from "../ProfileManageModal/ManageProfile";
 import AxiosInstance from "../../../AxiosInstance";
 import { useNavigate } from "react-router-dom";
+import Avatar from "../ProfileManageModal/Avatar";
 
-const ProfileModal = ({ isOpen, onRequestClose }) => {
+const ProfileModal = ({ isOpen, onRequestClose, user: initialUser, updateUserInHome }) => {
   const [showManageProfileModal, setShowManageProfileModal] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUserState] = useState(initialUser);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
     setIsLoading(true);
     try {
       const response = await AxiosInstance.get("/api/users/details");
-      setUser(response.data.user);
+      setUserState(response.data.user);
       setIsLoading(false);
     } catch (error) {
       console.error("Failed to fetch user details:", error);
@@ -33,7 +34,7 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
   };
 
   const updateUser = (updatedUser) => {
-    setUser(updatedUser);
+    setUserState(updatedUser);
     fetchUser();  // Refresh user data
   };
 
@@ -43,6 +44,10 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
 
   const handleCloseManageProfileModal = () => {
     setShowManageProfileModal(false);
+  };
+
+  const handleCloseModal = () => {
+    onRequestClose(user);  // Pass the updated user data back to Home
   };
 
   if (!isOpen) return null;
@@ -57,7 +62,7 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
       <div style={styles.modal}>
         {!showManageProfileModal && (
           <>
-            <button style={styles.closeButton} onClick={onRequestClose}>
+            <button style={styles.closeButton} onClick={handleCloseModal}>
               ×
             </button>
             <div style={styles.content}>
@@ -70,9 +75,9 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
                   <h7>{user.email}</h7>
                   <Divider style={styles.divider} />
                   <Avatar
+                    userData={user}
                     size={130}
                     style={styles.avatar}
-                    src="https://th.bing.com/th/id/OIP.pWAz6MVBo5svuJ09ahjN7gHaEK?rs=1&pid=ImgDetMain"
                   />
                   <h4 style={styles.hellotxt}>Hi, {user.fname}!</h4>
                   <Button
