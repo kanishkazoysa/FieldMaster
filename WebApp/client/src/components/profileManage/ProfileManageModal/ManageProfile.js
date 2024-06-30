@@ -1,18 +1,102 @@
-import React, { useState } from "react";
-import { Avatar, Box } from "@mui/material";
-import { Divider, Form, Input, Button } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { Box } from "@mui/material";
+import { Divider, Form, Input, Button, Upload, message } from "antd";
+import { ArrowLeftOutlined, EditOutlined } from "@ant-design/icons";
 import logo from "../../../images/logo.png";
+import Avatar from "./Avatar"; // Import the new Avatar component
+import AxiosInstance from "../../../AxiosInstance";
 
-const ManageProfileModal = ({ isOpen, onRequestClose, onBack, user }) => {
-  const [setEditProfilePhoto] = useState(false);
+const ManageProfileModal = ({
+  isOpen,
+  onRequestClose,
+  onBack,
+  user,
+  onUpdate,
+}) => {
   const [fname, setFname] = useState(user.fname);
   const [lname, setLname] = useState(user.lname);
   const [email, setEmail] = useState(user.email);
+  const [image, setImage] = useState(null);
 
-  const handleEditProfilePhoto = () => {
-    setEditProfilePhoto(true);
+  
+
+  const handleImageChange = (info) => {
+    console.log('Upload event:', info);
+    if (info.file.status === 'done') {
+      const file = info.file.originFileObj;
+      if (file) {
+        const previewURL = URL.createObjectURL(file);
+        setImage({ file: file, preview: previewURL });
+        console.log('Image selected:', file);
+      } else {
+        console.log('No file selected');
+      }
+    }
   };
+
+  const handleRemoveImage = () => {
+    if (image && image.preview) {
+      URL.revokeObjectURL(image.preview);
+    }
+    setImage(null);
+  };
+
+  useEffect(() => {
+    console.log("Image state updated:", image);
+  }, [image]);
+
+  const handleUpdate = async () => {
+    const formData = new FormData();
+    formData.append("user", JSON.stringify({ fname, lname, email }));
+
+    console.log("Image state:", image);
+
+    if (image && image.file) {
+      formData.append("photo", image.file, image.file.name);
+      console.log("Image file appended:", image.file);
+    } else {
+      console.log("No image file to append");
+    }
+
+    console.log("FormData contents:");
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    try {
+      console.log("Sending request to update profile");
+      const response = await AxiosInstance.post(
+        "/api/users/updateProfile",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("Server response:", response.data);
+
+      if (response.data.success) {
+        message.success("Profile updated successfully");
+        onUpdate({
+          ...response.data.user,
+          imageUrl:
+            response.data.user.imageUrl || (image ? image.preview : null),
+        });
+        onRequestClose();
+      } else {
+        message.error(response.data.message || "Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      message.error("An error occurred while updating the profile");
+    }
+  };
+
+  useEffect(() => {
+    console.log('Image state updated:', image);
+  }, [image]);
 
   if (!isOpen) return null;
 
@@ -32,10 +116,23 @@ const ManageProfileModal = ({ isOpen, onRequestClose, onBack, user }) => {
       <Divider style={styles.divider} />
       <div style={styles.content}>
         <div style={styles.avatarContainer}>
-          <Avatar
-            sx={{ width: 150, height: 150 }}
-            src="https://th.bing.com/th/id/OIP.pWAz6MVBo5svuJ09ahjN7gHaEK?rs=1&pid=ImgDetMain"
-          />
+        <Upload
+        accept="image/*"
+        showUploadList={false}
+        customRequest={({ file, onSuccess }) => {
+          setTimeout(() => {
+            onSuccess("ok");
+          }, 0);
+        }}
+        onChange={handleImageChange}
+      >
+        <Avatar 
+          userData={user} 
+          image={image ? image.preview : null} 
+          size={150} 
+        />
+        <EditOutlined style={styles.editIcon} />
+      </Upload>
         </div>
         <div style={styles.userInfo}>
           <h5>
@@ -72,13 +169,16 @@ const ManageProfileModal = ({ isOpen, onRequestClose, onBack, user }) => {
           </Form>
         </Box>
 
+        {image && (
+          <Button onClick={handleRemoveImage} style={{ marginTop: "10px" }}>
+            Remove Profile Picture
+          </Button>
+        )}
         <Button style={{ marginTop: "10px" }}>Change Password</Button>
         <Button
           type="primary"
-          style={{
-            marginTop: "20px",
-            width: "70%",
-          }}
+          onClick={handleUpdate}
+          style={{ marginTop: "20px", width: "70%" }}
         >
           Update
         </Button>
@@ -116,6 +216,15 @@ const styles = {
     fontSize: "17px",
     top: "30px",
     cursor: "pointer",
+  },
+  editIcon: {
+    position: "absolute",
+    top: "37%",
+    right: "34%",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    color: "white",
+    padding: "5px",
+    borderRadius: "50%",
   },
   headtxt: {
     fontSize: "1rem",
