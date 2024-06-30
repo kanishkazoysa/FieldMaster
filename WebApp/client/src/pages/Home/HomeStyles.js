@@ -1,27 +1,33 @@
 export const styles = {
+  mapButton: {
+    padding: '10px 15px',
+    fontSize: '14px',
+    color: 'white',
+    backgroundColor: '#1640D6',
+    border: 'none',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+    transition: 'background-color 0.3s',
+  },
   buttonContainer: {
     position: 'absolute',
     bottom: '20px',
-    left: '80px',
+    left: '20px',
     right: '20px',
     display: 'flex',
     justifyContent: 'space-between',
     zIndex: 1000,
   },
-  buttonGroupLeft: {
-    display: 'flex',
-    gap: '10px',
-    marginLeft: '50px',
-  },
-  buttonGroupRight: {
-    display: 'flex',
-    gap: '10px',
-    marginRight: '50px',
-  },
-
   buttonGroup: {
     display: 'flex',
     gap: '10px',
+  },
+  buttonGroupLeft: {
+    marginLeft: '50px',
+  },
+  buttonGroupRight: {
+    marginRight: '50px',
   },
 
   mapButtonTopLeft: {
@@ -111,30 +117,6 @@ export const styles = {
       top: '4%',
       padding: '0 8px',
     },
-  },
-  undoIconContainer: {
-    position: 'absolute',
-    bottom: '20px',
-    left: '10px',
-    marginBottom: '120px',
-    zIndex: 1000,
-  },
-  completePolygonIconContainer: {
-    position: 'absolute',
-    bottom: '20px',
-    left: '10px',
-    marginBottom: '180px',
-    zIndex: 1000,
-  },
-  undoIcon: {
-    color: '#fff',
-    borderRadius: '50%',
-    padding: '10px',
-    backgroundColor: 'black',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
   },
   '@media (max-width: 320px)': {
     sidebar: {

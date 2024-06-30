@@ -4,18 +4,13 @@ import {
   LoadScript,
   StandaloneSearchBox,
   Marker,
-  Polyline,
-  Polygon,
 } from '@react-google-maps/api';
 import SideNavbar from '../../components/SideNavbar/sideNavbar';
 import { MdLocationOn, MdSearch } from 'react-icons/md';
 import ProfileModal from '../../components/profileManage/ProfileModal/ProfileModal';
 import { styles, containerStyle, center } from './HomeStyles';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Avatar, message, Button } from 'antd';
-import { BiUndo } from 'react-icons/bi';
-import { MdCheckCircle } from 'react-icons/md';
-import { polygon, area, length } from '@turf/turf';
+import { Avatar, message } from 'antd';
 
 export default function Home() {
   const location = useLocation();
@@ -29,8 +24,6 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isPointEdgesMode, setIsPointEdgesMode] = useState(false);
-  const [isPolygonComplete, setIsPolygonComplete] = useState(false);
-  const [points, setPoints] = useState([]);
   const [markers, setMarkers] = useState([]);
 
   useEffect(() => {
@@ -45,53 +38,15 @@ export default function Home() {
     }
   }, [location, navigate]); // Dependency array
 
-  const handleSaveMap = () => {
-    if (markers.length < 3) {
-      message.error(
-        'You need at least 3 points to calculate area and perimeter'
-      );
-      return;
-    }
-
-    const formattedPoints = markers.map((marker) => [marker.lng, marker.lat]);
-    formattedPoints.push(formattedPoints[0]);
-
-    const poly = polygon([formattedPoints]);
-    const areaMeters = area(poly);
-    const perimeterMeters = length(poly, { units: 'meters' });
-    const areaPerches = areaMeters / 25.29285264;
-    const perimeterKilometers = perimeterMeters / 1000;
-
-    message.success(
-      `Area: ${areaPerches.toFixed(
-        2
-      )} perches, Perimeter: ${perimeterKilometers.toFixed(2)} kilometers`
-    );
-
-    console.log('Map data:', {
-      markers,
-      area: areaPerches,
-      perimeter: perimeterKilometers,
-    });
-  };
   const clearMarkers = () => {
-    setPoints([]);
     setMarkers([]);
-    setIsPolygonComplete(false);
   };
+
   const hideMapButtons = () => {
     setShowMapButtons(false);
     setIsPointEdgesMode(false);
     clearMarkers();
   };
-
-  const handleClearPoints = () => {
-    setPoints([]);
-    setMarkers([]);
-    setIsPolygonComplete(false);
-    setSelectedLocation(null);
-  };
-
   // Function to be passed to SideNavbar
   const toggleMapButtons = (show) => {
     setShowMapButtons(show);
@@ -100,7 +55,7 @@ export default function Home() {
 
   const handleMapClick = useCallback(
     (event) => {
-      if (isPointEdgesMode && !isPolygonComplete) {
+      if (isPointEdgesMode) {
         const newMarker = {
           lat: event.latLng.lat(),
           lng: event.latLng.lng(),
@@ -108,17 +63,9 @@ export default function Home() {
         setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
       }
     },
-    [isPointEdgesMode, isPolygonComplete]
+    [isPointEdgesMode]
   );
-  const handleUndo = () => {
-    setMarkers((prevMarkers) => {
-      const newMarkers = prevMarkers.slice(0, -1);
-      if (newMarkers.length < 3) {
-        setIsPolygonComplete(false);
-      }
-      return newMarkers;
-    });
-  };
+
   const handlePlacesChanged = useCallback(() => {
     if (!searchBoxRef.current) return;
 
@@ -148,14 +95,7 @@ export default function Home() {
       input.blur();
     }
   };
-  const handleCompletePolygon = () => {
-    if (markers.length > 2) {
-      setMarkers((prevMarkers) => [...prevMarkers, prevMarkers[0]]);
-      setIsPolygonComplete(true);
-    } else {
-      message.error('You need at least 3 points to complete a polygon');
-    }
-  };
+
   const onSearchBoxLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
   }, []);
@@ -217,38 +157,20 @@ export default function Home() {
       >
         <GoogleMap
           ref={mapRef}
-          mapContainerStyle={containerStyle}
+          mapContainerStyle={{
+            ...containerStyle,
+            cursor: isPointEdgesMode ? 'pointer' : 'grab',
+          }}
           center={center}
           zoom={2}
           options={mapOptions()}
           onClick={handleMapClick}
         >
-          {points.map((point, index) => (
-            <Marker key={index} position={point} />
-          ))}
           {markers.map((marker, index) => (
             <Marker key={index} position={marker} />
           ))}
-          {markers.length > 2 && (
-            <>
-              <Polyline
-                path={markers}
-                options={{
-                  strokeColor: '#000',
-                  strokeWeight: 1,
-                }}
-              />
-              {isPolygonComplete && (
-                <Polygon
-                  paths={markers}
-                  options={{
-                    strokeColor: '#000',
-                    strokeWeight: 1,
-                    fillColor: 'rgba(199, 192, 192, 0.5)',
-                  }}
-                />
-              )}
-            </>
+          {selectedLocation && (
+            <Marker position={selectedLocation} onClick={handleMarkerClick} />
           )}
           <MdLocationOn
             fontSize={27}
@@ -276,45 +198,18 @@ export default function Home() {
             <ProfileModal isOpen={isModalOpen} onRequestClose={closeModal} />
           )}
           {showMapButtons && (
-            <>
-              <div style={styles.completePolygonIconContainer}>
-                <MdCheckCircle
-                  style={styles.undoIcon}
-                  size={40}
-                  onClick={handleCompletePolygon}
-                />
+            <div style={styles.buttonContainer}>
+              <div style={{ ...styles.buttonGroup, ...styles.buttonGroupLeft }}>
+                <button style={styles.mapButton}>Reset</button>
+                <button style={styles.mapButton}>Add Point</button>
               </div>
-              <div style={styles.undoIconContainer}>
-                <BiUndo
-                  style={styles.undoIcon}
-                  size={40}
-                  onClick={handleUndo}
-                />
+              <div
+                style={{ ...styles.buttonGroup, ...styles.buttonGroupRight }}
+              >
+                <button style={styles.mapButton}>Save</button>
+                <button style={styles.mapButton}>Cancel</button>
               </div>
-              <div style={styles.buttonContainer}>
-                <div style={styles.buttonGroupLeft}>
-                  <Button
-                    type='primary'
-                    style={styles.mapButton}
-                    onClick={handleClearPoints}
-                  >
-                    Reset
-                  </Button>
-                </div>
-                <div style={styles.buttonGroupRight}>
-                  <Button
-                    type='primary'
-                    style={styles.mapButton}
-                    onClick={handleSaveMap}
-                  >
-                    Save
-                  </Button>
-                  <Button type='primary' danger onClick={handleClearPoints}>
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            </>
+            </div>
           )}
         </GoogleMap>
       </LoadScript>
