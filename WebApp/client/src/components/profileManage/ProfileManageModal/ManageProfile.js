@@ -17,17 +17,18 @@ const ManageProfileModal = ({
   const [lname, setLname] = useState(user.lname);
   const [email, setEmail] = useState(user.email);
   const [image, setImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleImageChange = (info) => {
-    console.log('Upload event:', info);
-    if (info.file.status === 'done') {
+    console.log("Upload event:", info);
+    if (info.file.status === "done") {
       const file = info.file.originFileObj;
       if (file) {
         const previewURL = URL.createObjectURL(file);
         setImage({ file: file, preview: previewURL });
-        console.log('Image selected:', file);
+        console.log("Image selected:", file);
       } else {
-        console.log('No file selected');
+        console.log("No file selected");
       }
     }
   };
@@ -37,9 +38,11 @@ const ManageProfileModal = ({
       message.info("No profile picture to remove");
       return;
     }
-  
+
     try {
-      const response = await AxiosInstance.post("/api/users/removeProfilePicture");
+      const response = await AxiosInstance.post(
+        "/api/users/removeProfilePicture"
+      );
       if (response.data.success) {
         if (image && image.preview) {
           URL.revokeObjectURL(image.preview);
@@ -57,34 +60,36 @@ const ManageProfileModal = ({
   };
 
   const handleUpdateAndClose = async () => {
+    setIsLoading(true); // Step 2: Set loading to true
     await handleUpdate();
     onRequestClose();
+    setIsLoading(false); // Reset loading to false here if you want the modal to close regardless of update success
   };
-
   const showImageOptions = () => {
     if (user.imageUrl || (image && image.preview)) {
       Modal.confirm({
-        title: 'Profile Picture',
-        content: 'What would you like to do?',
-        okText: 'Choose from Device',
-        cancelText: 'Remove Profile Picture',
+        title: "Profile Picture",
+        content: "What would you like to do?",
+        okText: "Choose from Device",
+        cancelText: "Remove Profile Picture",
         onOk() {
-          document.getElementById('profile-picture-upload').click();
+          document.getElementById("profile-picture-upload").click();
         },
         onCancel() {
           handleRemoveImage();
         },
       });
     } else {
-      document.getElementById('profile-picture-upload').click();
+      document.getElementById("profile-picture-upload").click();
     }
   };
 
   useEffect(() => {
-    console.log('Image state updated:', image);
+    console.log("Image state updated:", image);
   }, [image]);
 
   const handleUpdate = async () => {
+    setIsLoading(true); // Ensure loading is true at the start
     const formData = new FormData();
     formData.append("user", JSON.stringify({ fname, lname, email }));
 
@@ -130,6 +135,8 @@ const ManageProfileModal = ({
     } catch (error) {
       console.error("Error updating profile:", error);
       message.error("An error occurred while updating the profile");
+    } finally {
+      setIsLoading(false); // Step 3: Reset loading to false upon completion
     }
   };
 
@@ -162,15 +169,17 @@ const ManageProfileModal = ({
             }}
             onChange={handleImageChange}
           >
-            <div onClick={(e) => {
-              e.stopPropagation();
-              showImageOptions();
-            }}>
-            <Avatar 
-            userData={user} 
-            image={image ? image.preview : user.imageUrl} 
-            size={150} 
-          />
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                showImageOptions();
+              }}
+            >
+              <Avatar
+                userData={user}
+                image={image ? image.preview : user.imageUrl}
+                size={150}
+              />
               <EditOutlined style={styles.editIcon} />
             </div>
           </Upload>
@@ -212,12 +221,13 @@ const ManageProfileModal = ({
 
         <Button style={{ marginTop: "10px" }}>Change Password</Button>
         <Button
-  type="primary"
-  onClick={handleUpdateAndClose}
-  style={{ marginTop: "20px", width: "70%" }}
->
-  Update
-</Button>
+          type="primary"
+          onClick={handleUpdateAndClose}
+          loading={isLoading} // Control loading indicator with isLoading state
+          style={{ marginTop: "20px", width: "70%" }}
+        >
+          Update
+        </Button>
       </div>
     </div>
   );
