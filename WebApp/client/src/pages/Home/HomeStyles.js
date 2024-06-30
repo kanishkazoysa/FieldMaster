@@ -34,10 +34,10 @@ export const styles = {
       fontSize: '14px',
     },
     avatar: {
-      backgroundColor: '#87d068',
+      cursor: 'pointer',
       position: 'absolute',
       right: '0.5%',
-      top: '2.5%',
+      top: '6.2%',
     },
 
     '@media (max-width: 1024px)': {
