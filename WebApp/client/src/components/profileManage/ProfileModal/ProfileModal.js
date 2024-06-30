@@ -34,10 +34,7 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
 
   const updateUser = (updatedUser) => {
     setUser(updatedUser);
-    setShowManageProfileModal(false);
     fetchUser();  // Refresh user data
-    onRequestClose();  // Close the ProfileModal
-    navigate('/home');  // Navigate to home page
   };
 
   const handleManageProfileClick = () => {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { Divider, Form, Input, Button, Upload, message } from "antd";
+import { Divider, Form, Input, Button, Upload, message, Modal } from "antd";
 import { ArrowLeftOutlined, EditOutlined } from "@ant-design/icons";
 import logo from "../../../images/logo.png";
-import Avatar from "./Avatar"; // Import the new Avatar component
+import Avatar from "./Avatar";
 import AxiosInstance from "../../../AxiosInstance";
 
 const ManageProfileModal = ({
@@ -17,8 +17,6 @@ const ManageProfileModal = ({
   const [lname, setLname] = useState(user.lname);
   const [email, setEmail] = useState(user.email);
   const [image, setImage] = useState(null);
-
-  
 
   const handleImageChange = (info) => {
     console.log('Upload event:', info);
@@ -34,15 +32,56 @@ const ManageProfileModal = ({
     }
   };
 
-  const handleRemoveImage = () => {
-    if (image && image.preview) {
-      URL.revokeObjectURL(image.preview);
+  const handleRemoveImage = async () => {
+    if (!user.imageUrl && !image) {
+      message.info("No profile picture to remove");
+      return;
     }
-    setImage(null);
+  
+    try {
+      const response = await AxiosInstance.post("/api/users/removeProfilePicture");
+      if (response.data.success) {
+        if (image && image.preview) {
+          URL.revokeObjectURL(image.preview);
+        }
+        setImage(null);
+        message.success("Profile picture removed successfully");
+        onUpdate({ ...user, imageUrl: null });
+      } else {
+        message.error("Failed to remove profile picture");
+      }
+    } catch (error) {
+      console.error("Error removing profile picture:", error);
+      message.error("An error occurred while removing the profile picture");
+    }
+  };
+
+  const handleUpdateAndClose = async () => {
+    await handleUpdate();
+    onRequestClose();
+  };
+
+  const showImageOptions = () => {
+    if (user.imageUrl || (image && image.preview)) {
+      Modal.confirm({
+        title: 'Profile Picture',
+        content: 'What would you like to do?',
+        okText: 'Choose from Device',
+        cancelText: 'Remove Profile Picture',
+        onOk() {
+          document.getElementById('profile-picture-upload').click();
+        },
+        onCancel() {
+          handleRemoveImage();
+        },
+      });
+    } else {
+      document.getElementById('profile-picture-upload').click();
+    }
   };
 
   useEffect(() => {
-    console.log("Image state updated:", image);
+    console.log('Image state updated:', image);
   }, [image]);
 
   const handleUpdate = async () => {
@@ -94,10 +133,6 @@ const ManageProfileModal = ({
     }
   };
 
-  useEffect(() => {
-    console.log('Image state updated:', image);
-  }, [image]);
-
   if (!isOpen) return null;
 
   return (
@@ -116,23 +151,29 @@ const ManageProfileModal = ({
       <Divider style={styles.divider} />
       <div style={styles.content}>
         <div style={styles.avatarContainer}>
-        <Upload
-        accept="image/*"
-        showUploadList={false}
-        customRequest={({ file, onSuccess }) => {
-          setTimeout(() => {
-            onSuccess("ok");
-          }, 0);
-        }}
-        onChange={handleImageChange}
-      >
-        <Avatar 
-          userData={user} 
-          image={image ? image.preview : null} 
-          size={150} 
-        />
-        <EditOutlined style={styles.editIcon} />
-      </Upload>
+          <Upload
+            id="profile-picture-upload"
+            accept="image/*"
+            showUploadList={false}
+            customRequest={({ file, onSuccess }) => {
+              setTimeout(() => {
+                onSuccess("ok");
+              }, 0);
+            }}
+            onChange={handleImageChange}
+          >
+            <div onClick={(e) => {
+              e.stopPropagation();
+              showImageOptions();
+            }}>
+            <Avatar 
+            userData={user} 
+            image={image ? image.preview : user.imageUrl} 
+            size={150} 
+          />
+              <EditOutlined style={styles.editIcon} />
+            </div>
+          </Upload>
         </div>
         <div style={styles.userInfo}>
           <h5>
@@ -169,19 +210,14 @@ const ManageProfileModal = ({
           </Form>
         </Box>
 
-        {image && (
-          <Button onClick={handleRemoveImage} style={{ marginTop: "10px" }}>
-            Remove Profile Picture
-          </Button>
-        )}
         <Button style={{ marginTop: "10px" }}>Change Password</Button>
         <Button
-          type="primary"
-          onClick={handleUpdate}
-          style={{ marginTop: "20px", width: "70%" }}
-        >
-          Update
-        </Button>
+  type="primary"
+  onClick={handleUpdateAndClose}
+  style={{ marginTop: "20px", width: "70%" }}
+>
+  Update
+</Button>
       </div>
     </div>
   );
