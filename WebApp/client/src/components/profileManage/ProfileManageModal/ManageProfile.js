@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { Divider, Form, Input, Button, Upload, message, Modal } from "antd";
 import { ArrowLeftOutlined, EditOutlined } from "@ant-design/icons";
-import logo from "../../../images/logo.png";
 import Avatar from "./Avatar";
 import AxiosInstance from "../../../AxiosInstance";
+import { useNavigate } from 'react-router-dom';
 
 const ManageProfileModal = ({
   isOpen,
@@ -18,6 +18,7 @@ const ManageProfileModal = ({
   const [email, setEmail] = useState(user.email);
   const [image, setImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleImageChange = (info) => {
     console.log("Upload event:", info);
@@ -30,6 +31,24 @@ const ManageProfileModal = ({
       } else {
         console.log("No file selected");
       }
+    }
+  };
+
+  const handleChangePassword = async () => {
+    try {
+      const response = await AxiosInstance.post("/api/mail/otp", {
+        email: user.email,
+      });
+
+      if (response.data.success) {
+        message.success("OTP sent successfully");
+        navigate(`/enter-otp/${user.email}`);
+      } else {
+        message.error("Failed to send OTP. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+      message.error("An error occurred while sending OTP. Please try again.");
     }
   };
 
@@ -246,7 +265,12 @@ const ManageProfileModal = ({
           </Form>
         </Box>
 
-        <Button style={{ marginTop: "10px" }}>Change Password</Button>
+        <Button 
+        style={{ marginTop: "10px" }}
+        onClick={handleChangePassword}
+        >
+        Change Password
+        </Button>
         <Button
           type="primary"
           onClick={handleUpdateAndClose}
