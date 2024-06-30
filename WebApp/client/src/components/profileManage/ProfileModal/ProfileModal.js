@@ -6,7 +6,8 @@ import AxiosInstance from "../../../AxiosInstance";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../ProfileManageModal/Avatar";
 
-const ProfileModal = ({ isOpen, onRequestClose, user: initialUser, updateUserInHome }) => {
+
+const ProfileModal = ({ isOpen, onRequestClose, user: initialUser}) => {
   const [showManageProfileModal, setShowManageProfileModal] = useState(false);
   const [user, setUserState] = useState(initialUser);
   const [isLoading, setIsLoading] = useState(false);

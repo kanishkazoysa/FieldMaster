@@ -38,7 +38,7 @@ const ManageProfileModal = ({
       message.info("No profile picture to remove");
       return;
     }
-
+  
     try {
       const response = await AxiosInstance.post(
         "/api/users/removeProfilePicture"
@@ -50,6 +50,7 @@ const ManageProfileModal = ({
         setImage(null);
         message.success("Profile picture removed successfully");
         onUpdate({ ...user, imageUrl: null });
+        Modal.destroyAll(); // Add this line to close the modal
       } else {
         message.error("Failed to remove profile picture");
       }

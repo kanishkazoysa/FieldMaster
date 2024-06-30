@@ -12,6 +12,8 @@ import { styles, containerStyle, center } from "./HomeStyles";
 import { useLocation, useNavigate } from "react-router-dom";
 import { message } from "antd";
 import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
+import AxiosInstance from "../../AxiosInstance";
+
 
 export default function Home() {
   const location = useLocation();
@@ -24,6 +26,19 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
+    fetchUserDetails();
+  }, []);
+  
+  const fetchUserDetails = async () => {
+    try {
+      const response = await AxiosInstance.get("/api/users/details");
+      setUser(response.data.user);
+    } catch (error) {
+      console.error("Failed to fetch user details:", error);
+    }
+  };
+
+  useEffect(() => {
     // Check if we navigated here after a successful login and if the message hasn't been shown yet
     if (location.state?.loginSuccess && !messageShownRef.current) {
       message.success("User logged in successfully!");
@@ -34,6 +49,8 @@ export default function Home() {
       navigate(location.pathname, { state: {}, replace: true });
     }
   }, [location, navigate]); // Dependency array
+
+  
 
   const handlePlacesChanged = useCallback(() => {
     if (!searchBoxRef.current) return;
@@ -73,11 +90,9 @@ export default function Home() {
     setIsModalOpen(!isModalOpen);
   };
 
-  const closeModal = (updatedUser) => {
+  const closeModal = () => {
     setIsModalOpen(false);
-    if (updatedUser) {
-      setUser(updatedUser);
-    }
+    fetchUserDetails(); // Refresh user data when modal closes
   };
 
   const mapOptions = useCallback(() => {
