@@ -1,6 +1,5 @@
 export const styles = {
   mapButton: {
-    position: 'absolute',
     padding: '10px 15px',
     fontSize: '14px',
     color: 'white',
@@ -11,6 +10,26 @@ export const styles = {
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
     transition: 'background-color 0.3s',
   },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: '20px',
+    left: '20px',
+    right: '20px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    zIndex: 1000,
+  },
+  buttonGroup: {
+    display: 'flex',
+    gap: '10px',
+  },
+  buttonGroupLeft: {
+    marginLeft: '50px',
+  },
+  buttonGroupRight: {
+    marginRight: '50px',
+  },
+
   mapButtonTopLeft: {
     top: '80px',
     left: '10px',

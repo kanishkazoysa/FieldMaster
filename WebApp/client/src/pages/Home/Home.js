@@ -23,6 +23,9 @@ export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [isPointEdgesMode, setIsPointEdgesMode] = useState(false);
+  const [markers, setMarkers] = useState([]);
+
   useEffect(() => {
     // Check if we navigated here after a successful login and if the message hasn't been shown yet
     if (location.state?.loginSuccess && !messageShownRef.current) {
@@ -35,13 +38,33 @@ export default function Home() {
     }
   }, [location, navigate]); // Dependency array
 
+  const clearMarkers = () => {
+    setMarkers([]);
+  };
+
   const hideMapButtons = () => {
     setShowMapButtons(false);
+    setIsPointEdgesMode(false);
+    clearMarkers();
   };
   // Function to be passed to SideNavbar
   const toggleMapButtons = (show) => {
     setShowMapButtons(show);
+    setIsPointEdgesMode(show);
   };
+
+  const handleMapClick = useCallback(
+    (event) => {
+      if (isPointEdgesMode) {
+        const newMarker = {
+          lat: event.latLng.lat(),
+          lng: event.latLng.lng(),
+        };
+        setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
+      }
+    },
+    [isPointEdgesMode]
+  );
 
   const handlePlacesChanged = useCallback(() => {
     if (!searchBoxRef.current) return;
@@ -102,7 +125,7 @@ export default function Home() {
       mapTypeControl: true,
       mapTypeControlOptions: {
         style: window.google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-        position: window.google.maps.ControlPosition.LEFT_BOTTOM,
+        position: window.google.maps.ControlPosition.TOP_RIGHT,
       },
       fullscreenControl: false,
       fullscreenControlOptions: {
@@ -116,8 +139,9 @@ export default function Home() {
       streetViewControlOptions: {
         position: window.google.maps.ControlPosition.RIGHT_BOTTOM,
       },
+      draggableCursor: isPointEdgesMode ? 'pointer' : 'grab',
     };
-  }, []);
+  }, [isPointEdgesMode]);
 
   return (
     <div style={styles.container}>
@@ -133,11 +157,18 @@ export default function Home() {
       >
         <GoogleMap
           ref={mapRef}
-          mapContainerStyle={containerStyle}
+          mapContainerStyle={{
+            ...containerStyle,
+            cursor: isPointEdgesMode ? 'pointer' : 'grab',
+          }}
           center={center}
           zoom={2}
           options={mapOptions()}
+          onClick={handleMapClick}
         >
+          {markers.map((marker, index) => (
+            <Marker key={index} position={marker} />
+          ))}
           {selectedLocation && (
             <Marker position={selectedLocation} onClick={handleMarkerClick} />
           )}
@@ -167,28 +198,18 @@ export default function Home() {
             <ProfileModal isOpen={isModalOpen} onRequestClose={closeModal} />
           )}
           {showMapButtons && (
-            <>
-              <button
-                style={{ ...styles.mapButton, ...styles.mapButtonTopLeft }}
+            <div style={styles.buttonContainer}>
+              <div style={{ ...styles.buttonGroup, ...styles.buttonGroupLeft }}>
+                <button style={styles.mapButton}>Reset</button>
+                <button style={styles.mapButton}>Add Point</button>
+              </div>
+              <div
+                style={{ ...styles.buttonGroup, ...styles.buttonGroupRight }}
               >
-                Add Point
-              </button>
-              <button
-                style={{ ...styles.mapButton, ...styles.mapButtonTopRight }}
-              >
-                Remove Point
-              </button>
-              <button
-                style={{ ...styles.mapButton, ...styles.mapButtonBottomLeft }}
-              >
-                Undo
-              </button>
-              <button
-                style={{ ...styles.mapButton, ...styles.mapButtonBottomRight }}
-              >
-                Done
-              </button>
-            </>
+                <button style={styles.mapButton}>Save</button>
+                <button style={styles.mapButton}>Cancel</button>
+              </div>
+            </div>
           )}
         </GoogleMap>
       </LoadScript>
