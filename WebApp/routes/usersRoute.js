@@ -8,17 +8,10 @@ const User = require("../models/user");
 const { PassThrough } = require("nodemailer/lib/xoauth2");
 const auth = require("../middleware/middleware");
 const multer = require('multer');
+const axios = require('axios');
+const FormData = require('form-data');
 
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'uploads/')
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
-  }
-});
-
-const upload = multer({ storage: storage });
+const upload = multer({ storage: multer.memoryStorage() });
 
 let transporter = nodemailer.createTransport({
   service: "gmail",
@@ -223,8 +216,23 @@ router.post('/updateProfile', auth, upload.single('photo'), async (req, res) => 
   }
 
   if (req.file) {
-  user.imageUrl = `uploads/${req.file.filename}`; // e.g., "uploads/photo-1715444811685"
-}
+    try {
+      const formData = new FormData();
+      formData.append('image', req.file.buffer.toString('base64'));
+
+      const response = await axios.post('https://api.imgbb.com/1/upload', formData, {
+        headers: formData.getHeaders(),
+        params: {
+          key: 'a08fb8cde558efecce3f05b7f97d4ef7' // Replace with your ImageBB API key
+        }
+      });
+
+      user.imageUrl = response.data.data.url;
+    } catch (error) {
+      console.error('Error uploading image to ImageBB:', error);
+      return res.status(500).send({ success: false, message: 'Error uploading image' });
+    }
+  }
 
   user.fname = userUpdate.fname || user.fname;
   user.lname = userUpdate.lname || user.lname;
@@ -234,6 +242,26 @@ router.post('/updateProfile', auth, upload.single('photo'), async (req, res) => 
     await user.save();
     res.send({ success: true, user });
   } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+});
+
+router.post('/removeProfilePicture', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).send({ success: false, message: 'User not found' });
+    }
+
+    // If there's an existing image URL, you might want to delete it from ImageBB here
+    // This would require making an API call to ImageBB's deletion endpoint
+
+    user.imageUrl = null;
+    await user.save();
+
+    res.send({ success: true, message: 'Profile picture removed successfully' });
+  } catch (error) {
+    console.error('Error removing profile picture:', error);
     res.status(500).send({ success: false, message: 'Server error' });
   }
 });
