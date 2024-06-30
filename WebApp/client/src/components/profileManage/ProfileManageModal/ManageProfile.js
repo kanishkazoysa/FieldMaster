@@ -67,21 +67,51 @@ const ManageProfileModal = ({
   };
   const showImageOptions = () => {
     if (user.imageUrl || (image && image.preview)) {
-      Modal.confirm({
+      Modal.info({
         title: "Profile Picture",
         content: "What would you like to do?",
-        okText: "Choose from Device",
-        cancelText: "Remove Profile Picture",
-        onOk() {
-          document.getElementById("profile-picture-upload").click();
-        },
-        onCancel() {
-          handleRemoveImage();
-        },
+        icon: null,
+        okText: null,
+        footer: [
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+          <Button 
+            key="close" 
+            onClick={() => Modal.destroyAll()}
+            style={buttonStyle}
+          >
+            Close
+          </Button>
+            <Button 
+              key="remove" 
+              onClick={handleRemoveImage}
+              style={buttonStyle}
+            >
+              Remove
+            </Button>
+            <Button
+              key="choose"
+              type="primary"
+              onClick={() => {
+                document.getElementById("profile-picture-upload").click();
+                Modal.destroyAll();
+              }}
+              style={buttonStyle}
+            >
+              Choose from Device
+            </Button>
+          </div>
+        ],
       });
     } else {
       document.getElementById("profile-picture-upload").click();
     }
+
+  };
+  const buttonStyle = {
+    flex: 1,
+    margin: '7px',
+    height: '32px',
+    fontSize: '14px',
   };
 
   useEffect(() => {
