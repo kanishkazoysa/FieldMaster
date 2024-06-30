@@ -11,6 +11,9 @@ import ProfileModal from '../../components/profileManage/ProfileModal/ProfileMod
 import { styles, containerStyle, center } from './HomeStyles';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Avatar, message, Button } from 'antd';
+import { MdOutlineAddHome } from 'react-icons/md';
+
+import { LuUndo2 } from 'react-icons/lu';
 
 export default function Home() {
   const location = useLocation();
@@ -41,6 +44,10 @@ export default function Home() {
   const clearMarkers = () => {
     setMarkers([]);
   };
+
+  const handleUndo = useCallback(() => {
+    setMarkers((prevMarkers) => prevMarkers.slice(0, -1));
+  }, []);
 
   const hideMapButtons = () => {
     setShowMapButtons(false);
@@ -198,20 +205,30 @@ export default function Home() {
             <ProfileModal isOpen={isModalOpen} onRequestClose={closeModal} />
           )}
           {showMapButtons && (
-            <div style={styles.buttonContainer}>
-              <div style={{ ...styles.buttonGroup, ...styles.buttonGroupLeft }}>
-                <Button type='primary'>Reset</Button>
-                <Button type='primary'>Add Point</Button>
+            <>
+              <div style={styles.completeButton} title='Add Home'>
+                <MdOutlineAddHome fontSize={20} color='white' />
               </div>
-              <div
-                style={{ ...styles.buttonGroup, ...styles.buttonGroupRight }}
-              >
-                <Button type='primary'>Save</Button>
-                <Button type='primary' danger>
-                  Cancel
-                </Button>
+              <div style={styles.undoButton} onClick={handleUndo} title='Undo'>
+                <LuUndo2 fontSize={20} color='white' />
               </div>
-            </div>
+              <div style={styles.buttonContainer}>
+                <div
+                  style={{ ...styles.buttonGroup, ...styles.buttonGroupLeft }}
+                >
+                  <Button type='primary'>Reset</Button>
+                  <Button type='primary'>Add Point</Button>
+                </div>
+                <div
+                  style={{ ...styles.buttonGroup, ...styles.buttonGroupRight }}
+                >
+                  <Button type='primary'>Save</Button>
+                  <Button type='primary' danger>
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </>
           )}
         </GoogleMap>
       </LoadScript>
