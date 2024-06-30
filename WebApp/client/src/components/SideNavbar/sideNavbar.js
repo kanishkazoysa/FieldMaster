@@ -14,13 +14,19 @@ import TemplateDetails from '../SavedTemplates/TemplateDetails.js';
 import SaveScreenWeb from '../SaveScreen/SaveScreenWeb.js';
 import EditTemplateWeb from '../SavedTemplates/EditTemplateWeb.js';
 
-export default function SideNavbar() {
+export default function SideNavbar({ toggleMapButtons }) {
   const [collapsed, setCollapsed] = useState(true);
   const [hoveredMenuItem, setHoveredMenuItem] = useState(null);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [isEditingTemplate, setIsEditingTemplate] = useState(false);
+  const [showMapButtons, setShowMapButtons] = useState(false);
+
+  const handlePointEdgesClick = () => {
+    toggleMapButtons(true);
+    setCurrentPage('SaveScreen');
+  };
 
   const handleMouseEnter = (item) => {
     setHoveredMenuItem(item);
@@ -156,7 +162,10 @@ export default function SideNavbar() {
           }}
         >
           {currentPage === 'StartMeasure' && (
-            <StartMeasurePage onBackToSidebar={handleBackClick} />
+            <StartMeasurePage
+              onBackToSidebar={handleBackClick}
+              onPointEdgesClick={handlePointEdgesClick}
+            />
           )}
           {currentPage === 'ClearLand' && (
             <ClearLand onBackToSidebar={handleBackClick} />

@@ -1,23 +1,29 @@
-import React, { useRef, useState, useCallback, useEffect } from "react";
-import { GoogleMap, LoadScript, StandaloneSearchBox, Marker } from "@react-google-maps/api";
-import SideNavbar from "../../components/SideNavbar/sideNavbar";
-import { MdLocationOn, MdSearch } from "react-icons/md";
-import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
+import React, { useRef, useState, useCallback, useEffect } from 'react';
+import {
+  GoogleMap,
+  LoadScript,
+  StandaloneSearchBox,
+  Marker,
+} from '@react-google-maps/api';
+import SideNavbar from '../../components/SideNavbar/sideNavbar';
+import { MdLocationOn, MdSearch } from 'react-icons/md';
+import ProfileModal from '../../components/profileManage/ProfileModal/ProfileModal';
 import { styles, containerStyle, center } from './HomeStyles';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Avatar, message } from "antd";
+import { Avatar, message } from 'antd';
 
 export default function Home() {
   const location = useLocation();
   const navigate = useNavigate(); // Use useNavigate hook
   const messageShownRef = useRef(false); // Ref to track if the message has been shown
+  const [showMapButtons, setShowMapButtons] = useState(false);
 
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
- useEffect(() => {
+  useEffect(() => {
     // Check if we navigated here after a successful login and if the message hasn't been shown yet
     if (location.state?.loginSuccess && !messageShownRef.current) {
       message.success('User logged in successfully!');
@@ -29,16 +35,21 @@ export default function Home() {
     }
   }, [location, navigate]); // Dependency array
 
+  // Function to be passed to SideNavbar
+  const toggleMapButtons = (show) => {
+    setShowMapButtons(show);
+  };
+
   const handlePlacesChanged = useCallback(() => {
     if (!searchBoxRef.current) return;
-  
+
     const places = searchBoxRef.current.getPlaces();
     if (places.length === 0) return;
-  
+
     const selectedPlace = places[0];
     const location = selectedPlace.geometry.location.toJSON();
     setSelectedLocation(location);
-  
+
     const bounds = new window.google.maps.LatLngBounds();
     bounds.extend(location);
     if (mapRef.current && mapRef.current.state.map) {
@@ -52,13 +63,13 @@ export default function Home() {
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       event.preventDefault();
       const input = event.target;
       input.blur();
     }
   };
-  
+
   const onSearchBoxLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
   }, []);
@@ -72,7 +83,7 @@ export default function Home() {
   };
   const mapOptions = useCallback(() => {
     if (!window.google || typeof window.google === 'undefined') return {};
-  
+
     return {
       minZoom: 2,
       maxZoom: 40,
@@ -108,9 +119,12 @@ export default function Home() {
   return (
     <div style={styles.container}>
       <div style={styles.sidebar}>
-        <SideNavbar />
+        <SideNavbar toggleMapButtons={toggleMapButtons} />
       </div>
-      <LoadScript googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U" libraries={["places"]}>
+      <LoadScript
+        googleMapsApiKey='AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U'
+        libraries={['places']}
+      >
         <GoogleMap
           ref={mapRef}
           mapContainerStyle={containerStyle}
@@ -119,12 +133,13 @@ export default function Home() {
           options={mapOptions()}
         >
           {selectedLocation && (
-            <Marker
-              position={selectedLocation}
-              onClick={handleMarkerClick}
-            />
+            <Marker position={selectedLocation} onClick={handleMarkerClick} />
           )}
-          <MdLocationOn fontSize={27} style={{ marginLeft: '10px', marginTop: '10px' }} color="#fff" />
+          <MdLocationOn
+            fontSize={27}
+            style={{ marginLeft: '10px', marginTop: '10px' }}
+            color='#fff'
+          />
 
           <StandaloneSearchBox
             onLoad={onSearchBoxLoad}
@@ -133,8 +148,8 @@ export default function Home() {
             <div style={styles.searchContainer}>
               <MdSearch style={styles.searchIcon} />
               <input
-                type="text"
-                placeholder="Search location"
+                type='text'
+                placeholder='Search location'
                 style={styles.searchBox}
                 onKeyDown={handleKeyDown}
               />
@@ -143,14 +158,34 @@ export default function Home() {
           </StandaloneSearchBox>
 
           {isModalOpen && (
-            <ProfileModal
-              isOpen={isModalOpen}
-              onRequestClose={closeModal}
-            />
+            <ProfileModal isOpen={isModalOpen} onRequestClose={closeModal} />
+          )}
+          {showMapButtons && (
+            <>
+              <button
+                style={{ ...styles.mapButton, ...styles.mapButtonTopLeft }}
+              >
+                Add Point
+              </button>
+              <button
+                style={{ ...styles.mapButton, ...styles.mapButtonTopRight }}
+              >
+                Remove Point
+              </button>
+              <button
+                style={{ ...styles.mapButton, ...styles.mapButtonBottomLeft }}
+              >
+                Undo
+              </button>
+              <button
+                style={{ ...styles.mapButton, ...styles.mapButtonBottomRight }}
+              >
+                Done
+              </button>
+            </>
           )}
         </GoogleMap>
       </LoadScript>
     </div>
   );
 }
-
