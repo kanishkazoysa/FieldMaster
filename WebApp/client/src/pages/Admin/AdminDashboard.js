@@ -143,6 +143,11 @@ function AdminDashboard() {
         setIsAddModalOpen(false);
     };
 
+    const closeModal = () => {
+        setIsModalOpen(false);
+        fetchUserDetails(); // Refresh user data when modal closes
+      };
+
     const columns = [
         {
             title: "",
@@ -255,11 +260,12 @@ function AdminDashboard() {
                                 alt="FIELDMASTER"
                             />
                         </div>
+                            <h1 className="admin-dashboard-header-center">Admin Dashboard</h1>
+                     
                         <div className="avatar-container"   onClick={handleAvatarClick} >
                         <Avatar 
                         userData={user} 
                         size={50}
-                       
                         />
                         </div>
                     </div>
@@ -267,7 +273,7 @@ function AdminDashboard() {
                     {isModalOpen && (
                         <ProfileModal
                             isOpen={isModalOpen}
-                            onRequestClose={() => setIsModalOpen(false)}
+                            onRequestClose={closeModal}
                             user={user}
                             updateUserInHome={setUser}
                         />
