@@ -4,6 +4,8 @@ import {
   LoadScript,
   StandaloneSearchBox,
   Marker,
+  Polyline,
+  Polygon,
 } from '@react-google-maps/api';
 import SideNavbar from '../../components/SideNavbar/sideNavbar';
 import { MdLocationOn, MdSearch } from 'react-icons/md';
@@ -28,7 +30,21 @@ export default function Home() {
 
   const [isPointEdgesMode, setIsPointEdgesMode] = useState(false);
   const [markers, setMarkers] = useState([]);
+  const [isPolygonComplete, setIsPolygonComplete] = useState(false);
 
+  const handleAddHome = () => {
+    if (markers.length > 2) {
+      setIsPolygonComplete(true);
+      setMarkers((prevMarkers) => {
+        if (prevMarkers[0] !== prevMarkers[prevMarkers.length - 1]) {
+          return [...prevMarkers, prevMarkers[0]];
+        }
+        return prevMarkers;
+      });
+    } else {
+      alert('You need at least 3 points to complete a polygon');
+    }
+  };
   useEffect(() => {
     // Check if we navigated here after a successful login and if the message hasn't been shown yet
     if (location.state?.loginSuccess && !messageShownRef.current) {
@@ -45,8 +61,24 @@ export default function Home() {
     setMarkers([]);
   };
 
+  const getPolylinePath = useCallback(() => {
+    if (isPolygonComplete && markers.length > 2) {
+      return [...markers, markers[0]].map((marker) => ({
+        lat: marker.lat,
+        lng: marker.lng,
+      }));
+    }
+    return markers.map((marker) => ({ lat: marker.lat, lng: marker.lng }));
+  }, [markers, isPolygonComplete]);
+
   const handleUndo = useCallback(() => {
-    setMarkers((prevMarkers) => prevMarkers.slice(0, -1));
+    setMarkers((prevMarkers) => {
+      const newMarkers = prevMarkers.slice(0, -1);
+      if (newMarkers.length < 3) {
+        setIsPolygonComplete(false);
+      }
+      return newMarkers;
+    });
   }, []);
 
   const hideMapButtons = () => {
@@ -60,9 +92,26 @@ export default function Home() {
     setIsPointEdgesMode(show);
   };
 
+  const handleClearPoints = () => {
+    setMarkers([]);
+    setIsPolygonComplete(false);
+  };
+  const handleCancel = () => {
+    setMarkers([]);
+    setIsPolygonComplete(false);
+  };
+
+  const handleCompleteMap = () => {
+    if (markers.length > 2) {
+      setIsPolygonComplete(true);
+    } else {
+      alert('You need at least 3 points to complete a polygon');
+    }
+  };
+
   const handleMapClick = useCallback(
     (event) => {
-      if (isPointEdgesMode) {
+      if (isPointEdgesMode && !isPolygonComplete) {
         const newMarker = {
           lat: event.latLng.lat(),
           lng: event.latLng.lng(),
@@ -70,9 +119,8 @@ export default function Home() {
         setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
       }
     },
-    [isPointEdgesMode]
+    [isPointEdgesMode, isPolygonComplete]
   );
-
   const handlePlacesChanged = useCallback(() => {
     if (!searchBoxRef.current) return;
 
@@ -113,6 +161,9 @@ export default function Home() {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+  const removeMarker = (index) => {
+    setMarkers((prevMarkers) => prevMarkers.filter((_, i) => i !== index));
   };
   const mapOptions = useCallback(() => {
     if (!window.google || typeof window.google === 'undefined') return {};
@@ -174,8 +225,34 @@ export default function Home() {
           onClick={handleMapClick}
         >
           {markers.map((marker, index) => (
-            <Marker key={index} position={marker} />
+            <Marker
+              key={index}
+              position={marker}
+              onClick={() => removeMarker(index)}
+            />
           ))}
+          {!isPolygonComplete && markers.length > 1 && (
+            <Polyline
+              path={getPolylinePath()}
+              options={{
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2,
+              }}
+            />
+          )}
+          {isPolygonComplete && markers.length > 2 && (
+            <Polygon
+              paths={getPolylinePath()}
+              options={{
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2,
+                fillColor: '#ADD8E6',
+                fillOpacity: 0.35,
+              }}
+            />
+          )}
           {selectedLocation && (
             <Marker position={selectedLocation} onClick={handleMarkerClick} />
           )}
@@ -206,7 +283,11 @@ export default function Home() {
           )}
           {showMapButtons && (
             <>
-              <div style={styles.completeButton} title='Add Home'>
+              <div
+                style={styles.completeButton}
+                onClick={handleAddHome}
+                title='Add Home'
+              >
                 <MdOutlineAddHome fontSize={20} color='white' />
               </div>
               <div style={styles.undoButton} onClick={handleUndo} title='Undo'>
@@ -223,7 +304,7 @@ export default function Home() {
                   style={{ ...styles.buttonGroup, ...styles.buttonGroupRight }}
                 >
                   <Button type='primary'>Save</Button>
-                  <Button type='primary' danger>
+                  <Button type='primary' danger onClick={handleCancel}>
                     Cancel
                   </Button>
                 </div>
