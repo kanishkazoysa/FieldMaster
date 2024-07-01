@@ -8,6 +8,7 @@ import { Tag, Space, Table, Button, Modal, Input, Alert } from "antd";
 import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
 import AxiosInstance from "../../AxiosInstance";
 import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
+import { Link } from "react-router-dom";
 
 function AdminDashboard() {
     const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -254,11 +255,13 @@ function AdminDashboard() {
                 <>
                     <div className="admin-dashboard-header">
                         <div className="logo">
+                        <Link to="/Home">
                             <img
                                 className="image-admin"
                                 src={logo}
                                 alt="FIELDMASTER"
                             />
+                            </Link>
                         </div>
                             <h1 className="admin-dashboard-header-center">Admin Dashboard</h1>
                      
