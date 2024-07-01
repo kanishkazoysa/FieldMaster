@@ -41,7 +41,7 @@ function NavBar() {
               <Link activeClass="active" to="about"  className="menu-item">About</Link>
             </li>
             <li>
-              <Link activeClass="active" to="setsetup-card" className="menu-item">Setup</Link>
+              <Link activeClass="active" to="Setup" className="menu-item">Setup</Link>
             </li>
 
             <li>
