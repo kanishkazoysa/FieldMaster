@@ -54,9 +54,13 @@ const ProfileModal = ({ isOpen, onRequestClose, user: initialUser}) => {
   if (!isOpen) return null;
 
   const handleSignOut = async () => {
-    localStorage.removeItem("UserToken");
-    navigate("/login");
-  };
+
+    if (localStorage.getItem('AdminToken')){
+      localStorage.removeItem('AdminToken');
+    }
+    localStorage.removeItem('UserToken');
+    navigate('/login');
+  }
 
   return (
     <div style={styles.modalOverlay}>
