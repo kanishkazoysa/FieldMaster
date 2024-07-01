@@ -126,7 +126,7 @@ export default function Calculator({ onBackToSidebar }) {
                         <div style={styles.box3Property}>
                             <div style={styles.box3inputContainer}>
                                 <input
-                                    type="number"
+                                    type="text"
                                     style={styles.box3input}
                                     placeholder="25"
                                     value={area}
@@ -171,7 +171,7 @@ export default function Calculator({ onBackToSidebar }) {
                         <div style={styles.box3Property}>
                             <div style={styles.box3inputContainer}>
                                 <input
-                                    type="number"
+                                    type="text"
                                     style={styles.box3input}
                                     placeholder="25"
                                     value={perimeter}
