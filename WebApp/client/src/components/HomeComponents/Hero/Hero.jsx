@@ -1,7 +1,7 @@
 import React from "react";
 import "./Hero.css";
 import video1 from "../../../assets/home_video.mp4";
-import GetStarted from "../../GetStarted"; // Renamed to avoid collision
+import GetStarted from "../../GetStarted";
 
 const Hero = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -29,7 +29,7 @@ const Hero = () => {
         </video>
       </div>
 
-      {isModalOpen && <GetStarted toggleModal={toggleModal} />} {/* Renamed imported component */}
+      {isModalOpen && <GetStarted toggleModal={toggleModal} />} 
     </section>
   );
 };
