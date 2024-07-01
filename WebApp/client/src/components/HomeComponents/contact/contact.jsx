@@ -3,6 +3,7 @@ import "./contact.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faGithub, faFacebook, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import video3 from "../../../assets/contact_video.mp4";
+import AxiosInstance from '../../../AxiosInstance'; // Adjust the path according to your project structure
 
 function ContactForm() {
   const [formData, setFormData] = useState({
@@ -25,16 +26,9 @@ function ContactForm() {
     setStatus('Sending...');
 
     try {
-      const response = await fetch('http://192.168.1.2:3000/api/contact/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-
-      const result = await response.json();
-      if (response.ok) {
+      const response = await AxiosInstance.post('/contact/send', formData);
+      const data = response.data;
+      if (response.status === 200 && data.ok) {
         setStatus('Message Sent!');
       } else {
         setStatus('Error sending message');
