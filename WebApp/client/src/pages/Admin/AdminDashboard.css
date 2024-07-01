@@ -50,3 +50,17 @@
     height: 100vh;
 }
 
+.user_edit_model {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.user_edit_model input {
+    margin: 10px;
+    padding: 5px;
+    width: 400px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
