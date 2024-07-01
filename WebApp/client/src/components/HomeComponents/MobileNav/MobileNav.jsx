@@ -1,6 +1,8 @@
 import React from "react";
 import "./MobileNav.css";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-gvf7LaAPdVMTIn4IuZbRirUFLBAmT/7/3gHvZuOWv7dM0HZ5zmZbZIbyibGLazmu+q3UqGzKqz8n0dFwXOoY7w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 const MobileNav = ({ isOpen, toggleMenu }) => {
   
   const handleScroll = (sectionId) => {
@@ -15,7 +17,7 @@ const MobileNav = ({ isOpen, toggleMenu }) => {
         onClick={toggleMenu}
       >
         <div className="mobile-menu-container">
-        <h1 className="styled">FIELDMASTER</h1>
+          <h1 className="styled">FIELDMASTER</h1>
 
           <ul>
             <li>
@@ -25,16 +27,20 @@ const MobileNav = ({ isOpen, toggleMenu }) => {
             </li>
 
             <li>
-              <a onClick={() => handleScroll("skills")} className="menu-item">
+              <a onClick={() => handleScroll("about")} className="menu-item">
                 About
               </a>
             </li>
-
-            {/* <li>
-              <a onClick={() => handleScroll("work-exp")} className="menu-item">
-                Projects
+            <li>
+              <a onClick={() => handleScroll("Setup")} className="menu-item">
+                SetUp
               </a>
-            </li> */}
+            </li>
+            <li>
+              <a onClick={() => handleScroll("pricing")} className="menu-item">
+                Pricing
+              </a>
+            </li>
 
             <li>
               <a onClick={() => handleScroll("contact")} className="menu-item">
@@ -48,6 +54,7 @@ const MobileNav = ({ isOpen, toggleMenu }) => {
           </ul>
         </div>
       </div>
+
     </>
   );
 };
