@@ -14,7 +14,11 @@ import TemplateDetails from '../SavedTemplates/TemplateDetails.js';
 import SaveScreenWeb from '../SaveScreen/SaveScreenWeb.js';
 import EditTemplateWeb from '../SavedTemplates/EditTemplateWeb.js';
 
-export default function SideNavbar({ toggleMapButtons, hideMapButtons }) {
+export default function SideNavbar({
+  toggleMapButtons,
+  hideMapButtons,
+  landInfo,
+}) {
   const [collapsed, setCollapsed] = useState(true);
   const [hoveredMenuItem, setHoveredMenuItem] = useState(null);
   const [currentPage, setCurrentPage] = useState(null);
@@ -191,6 +195,7 @@ export default function SideNavbar({ toggleMapButtons, hideMapButtons }) {
             <SaveScreenWeb
               onBackToSidebar={handleBackClick}
               hideMapButtons={hideMapButtons}
+              landInfo={landInfo}
             />
           )}
           {currentPage === 'EditTemplateWeb' && (

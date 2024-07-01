@@ -1,4 +1,5 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
+import styled from '@emotion/styled';
 import {
   GoogleMap,
   LoadScript,
@@ -14,6 +15,8 @@ import { styles, containerStyle, center } from './HomeStyles';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Avatar, message, Button } from 'antd';
 import { MdOutlineAddHome } from 'react-icons/md';
+import * as turf from '@turf/turf';
+import SaveScreenWeb from '../../components/SaveScreen/SaveScreenWeb';
 
 import { LuUndo2 } from 'react-icons/lu';
 
@@ -22,6 +25,7 @@ export default function Home() {
   const navigate = useNavigate();
   const messageShownRef = useRef(false);
   const [showMapButtons, setShowMapButtons] = useState(false);
+  const [landInfo, setLandInfo] = useState(null);
 
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
@@ -32,19 +36,29 @@ export default function Home() {
   const [markers, setMarkers] = useState([]);
   const [isPolygonComplete, setIsPolygonComplete] = useState(false);
 
-  const handleAddHome = () => {
-    if (markers.length > 2) {
-      setIsPolygonComplete(true);
-      setMarkers((prevMarkers) => {
-        if (prevMarkers[0] !== prevMarkers[prevMarkers.length - 1]) {
-          return [...prevMarkers, prevMarkers[0]];
-        }
-        return prevMarkers;
-      });
-    } else {
-      alert('You need at least 3 points to complete a polygon');
+  const StyledButton = styled(Button)`
+    &&& {
+      background-color: #064dbe;
+      border-color: #064dbe;
+      &:hover,
+      &:focus {
+        background-color: #3b69ad;
+        border-color: #3b69ad;
+      }
     }
-  };
+  `;
+
+  const StyledDangerButton = styled(Button)`
+    &&& {
+      background-color: #c62828;
+      border-color: #c62828;
+      &:hover,
+      &:focus {
+        background-color: #ca1818;
+        border-color: #ca1818;
+      }
+    }
+  `;
   useEffect(() => {
     // Check if we navigated here after a successful login and if the message hasn't been shown yet
     if (location.state?.loginSuccess && !messageShownRef.current) {
@@ -92,10 +106,6 @@ export default function Home() {
     setIsPointEdgesMode(show);
   };
 
-  const handleClearPoints = () => {
-    setMarkers([]);
-    setIsPolygonComplete(false);
-  };
   const handleCancel = () => {
     setMarkers([]);
     setIsPolygonComplete(false);
@@ -104,6 +114,45 @@ export default function Home() {
   const handleCompleteMap = () => {
     if (markers.length > 2) {
       setIsPolygonComplete(true);
+      setMarkers((prevMarkers) => {
+        if (prevMarkers[0] !== prevMarkers[prevMarkers.length - 1]) {
+          return [...prevMarkers, prevMarkers[0]];
+        }
+        return prevMarkers;
+      });
+
+      setMarkers((updatedMarkers) => {
+        const polygonCoordinates = updatedMarkers.map((marker) => [
+          marker.lng,
+          marker.lat,
+        ]);
+
+        try {
+          const turfPolygon = turf.polygon([polygonCoordinates]);
+
+          const areaInSquareMeters = turf.area(turfPolygon);
+          const areaInPerches = areaInSquareMeters / 25.29285264;
+          const perimeterInKm = turf.length(
+            turf.lineString(polygonCoordinates),
+            {
+              units: 'kilometers',
+            }
+          );
+
+          const newLandInfo = {
+            area: areaInPerches.toFixed(2),
+            perimeter: perimeterInKm.toFixed(2),
+            locationPoints: updatedMarkers,
+          };
+
+          setLandInfo(newLandInfo);
+          console.log('Land Info:', newLandInfo);
+        } catch (error) {
+          console.error('Error creating polygon:', error);
+        }
+
+        return updatedMarkers;
+      });
     } else {
       alert('You need at least 3 points to complete a polygon');
     }
@@ -207,6 +256,7 @@ export default function Home() {
         <SideNavbar
           toggleMapButtons={toggleMapButtons}
           hideMapButtons={hideMapButtons}
+          landInfo={landInfo}
         />
       </div>
       <LoadScript
@@ -285,7 +335,7 @@ export default function Home() {
             <>
               <div
                 style={styles.completeButton}
-                onClick={handleAddHome}
+                onClick={handleCompleteMap}
                 title='Add Home'
               >
                 <MdOutlineAddHome fontSize={20} color='white' />
@@ -297,16 +347,20 @@ export default function Home() {
                 <div
                   style={{ ...styles.buttonGroup, ...styles.buttonGroupLeft }}
                 >
-                  <Button type='primary'>Reset</Button>
-                  <Button type='primary'>Add Point</Button>
+                  <StyledButton type='primary'>Reset</StyledButton>
+                  <StyledButton type='primary'>Add Point</StyledButton>
                 </div>
                 <div
                   style={{ ...styles.buttonGroup, ...styles.buttonGroupRight }}
                 >
-                  <Button type='primary'>Save</Button>
-                  <Button type='primary' danger onClick={handleCancel}>
+                  <StyledButton type='primary'>Save</StyledButton>
+                  <StyledDangerButton
+                    type='primary'
+                    danger
+                    onClick={handleCancel}
+                  >
                     Cancel
-                  </Button>
+                  </StyledDangerButton>
                 </div>
               </div>
             </>
