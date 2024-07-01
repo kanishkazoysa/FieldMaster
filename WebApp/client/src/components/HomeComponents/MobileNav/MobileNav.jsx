@@ -1,8 +1,6 @@
 import React from "react";
 import "./MobileNav.css";
 import GetStarted from "../../GetStarted"; 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-gvf7LaAPdVMTIn4IuZbRirUFLBAmT/7/3gHvZuOWv7dM0HZ5zmZbZIbyibGLazmu+q3UqGzKqz8n0dFwXOoY7w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 const MobileNav = ({ isOpen, toggleMenu }) => {
   
