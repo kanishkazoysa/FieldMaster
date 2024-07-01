@@ -3,10 +3,11 @@ import "./AdminDashboard.css";
 import logo from "../../images/logo.png";
 import { Icon } from "@iconify/react";
 import { BeatLoader } from "react-spinners";
-import { Avatar, message } from "antd";
+import {message } from "antd";
 import { Tag, Space, Table, Button, Modal, Input, Alert } from "antd";
 import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
 import AxiosInstance from "../../AxiosInstance";
+import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
 
 function AdminDashboard() {
     const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -16,6 +17,7 @@ function AdminDashboard() {
     const [editUser, setEditUser] = useState({});
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [addUser, setAddUser] = useState({});
+    const [user, setUser] = useState({});
     const [pagination, setPagination] = useState({
         pageSize: 10,
         current: 1,
@@ -147,7 +149,7 @@ function AdminDashboard() {
             dataIndex: "profileImage",
             key: "imageUrl",
             render: (_, record) => (
-                <Avatar size={35} src={record.imageUrl} alt="imageUrl" />
+                <Avatar size={35} userData={record}  />
             ),
         },
         {
@@ -224,6 +226,19 @@ function AdminDashboard() {
         },
     ];
 
+    useEffect(() => {
+        fetchUserDetails();
+      }, []);
+      
+      const fetchUserDetails = async () => {
+        try {
+          const response = await AxiosInstance.get("/api/users/details");
+          setUser(response.data.user);
+        } catch (error) {
+          console.error("Failed to fetch user details:", error);
+        }
+      };
+
     return (
         <div>
             {isLoading ? (
@@ -240,8 +255,12 @@ function AdminDashboard() {
                                 alt="FIELDMASTER"
                             />
                         </div>
-                        <div className="avatar-container">
-                            <Avatar size={50} onClick={handleAvatarClick} />
+                        <div className="avatar-container"   onClick={handleAvatarClick} >
+                        <Avatar 
+                        userData={user} 
+                        size={50}
+                       
+                        />
                         </div>
                     </div>
                     <hr />
@@ -249,6 +268,8 @@ function AdminDashboard() {
                         <ProfileModal
                             isOpen={isModalOpen}
                             onRequestClose={() => setIsModalOpen(false)}
+                            user={user}
+                            updateUserInHome={setUser}
                         />
                     )}
                     <div className="admin-dashboard-body">

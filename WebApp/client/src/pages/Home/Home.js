@@ -171,7 +171,6 @@ export default function Home() {
                 <Avatar 
                 userData={user} 
                 size={30}
-                
                 />
               </div>
             </div>
