@@ -149,6 +149,7 @@ router.post("/login", async (req, res) => {
     await User.findOneAndUpdate({ email }, { token: token });
     res.status(200).send({
       success: true,
+      isAdmin: user.isAdmin,
       token: token,
       message: "User logged in successfully",
     });
@@ -243,6 +244,53 @@ router.post('/updateProfile', auth, upload.single('photo'), async (req, res) => 
     res.send({ success: true, user });
   } catch (error) {
     res.status(500).send({ success: false, message: 'Server error' });
+  }
+});
+
+router.post("/editUser/:id", async (req, res) => {
+  const { id } = req.params;
+  const { fname, lname, email, isVerified } = req.body;
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).send({ success: false, message: 'User not found' });
+    }
+    user.fname = fname;
+    user.lname = lname;
+    user.email = email;
+    user.isVerified = isVerified;
+    await user.save();
+    res.send({ success: true, user });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+});
+
+router.get("/getAllUsers", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.send({ success: true, users });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+});
+
+router.post("/addUser", async (req, res) => {
+  const { fname, lname, email,password, isVerified } = req.body;
+
+  try {
+      const newUser = new User({
+          fname,
+          lname,
+          email,
+          password,
+          isVerified,
+      });
+      await newUser.save();
+      res.status(201).send({ success: true, user: newUser });
+  } catch (error) {
+      console.error("Failed to add user:", error.message);
+      res.status(500).send({ success: false, message: 'Failed to add user', error: error.message });
   }
 });
 
