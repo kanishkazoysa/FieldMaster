@@ -1,12 +1,11 @@
-// SideNavbar.js
 import React from "react";
-import { useState, useEffect } from "react";
 import { HiMiniBars4 } from "react-icons/hi2";
 import { TbArrowBarBoth, TbBarrierBlock, TbFence } from "react-icons/tb";
 import { MdArrowBack } from "react-icons/md";
 import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
 import { styles } from "./fenceDetailsmanualStyles";
+import { getFenceDetailsHtml } from "./FenceDetailsTemplate";
 
 export default function FenceDetailsManual({
   onBackToSidebar,
@@ -18,8 +17,25 @@ export default function FenceDetailsManual({
   area,
   Perimeter,
   PerimeterUnitselectedValue,
-  AreaUnitselectedValue
+  AreaUnitselectedValue,
 }) {
+  const handleSave = () => {
+    const htmlContent = getFenceDetailsHtml(
+      FenceTypeselectedValue,
+      NumberOfSticks,
+      inputValuePostspace,
+      PostSpaceUnitselectedValue,
+      displayValues,
+      Perimeter,
+      area,
+      PerimeterUnitselectedValue,
+      AreaUnitselectedValue
+    );
+    const newWindow = window.open();
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
+    newWindow.print();
+  };
 
   return (
     <div style={styles.content}>
@@ -66,14 +82,20 @@ export default function FenceDetailsManual({
             <BsBoundingBox color="gray" size={28} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>{Perimeter}{PerimeterUnitselectedValue}</p>
+              <p style={styles.propertyValue}>
+                {Perimeter}
+                {PerimeterUnitselectedValue}
+              </p>
             </div>
           </div>
           <div className="property" style={styles.property}>
             <PiSquareDuotone color="gray" size={40} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
-              <p style={styles.propertyValue}>{area}{AreaUnitselectedValue}</p>
+              <p style={styles.propertyValue}>
+                {area}
+                {AreaUnitselectedValue}
+              </p>
             </div>
           </div>
         </div>
@@ -115,7 +137,7 @@ export default function FenceDetailsManual({
       </div>
 
       <div style={styles.bottom}>
-        <button style={styles.Button1}>
+        <button style={styles.Button1} onClick={handleSave}>
           <p style={styles.Box4ButtonText}>Save Data</p>
         </button>
       </div>

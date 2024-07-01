@@ -1,22 +1,33 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { MdArrowBack, MdFence } from "react-icons/md";
 import { PiTreePalmFill, PiSquareDuotone } from "react-icons/pi";
 import { BsBoundingBox } from "react-icons/bs";
 import { TbBackhoe } from "react-icons/tb";
 import { styles } from "./calculatorSelectStyles";
-//import PlantationManul from "../PlantationManual/PlantationPageManual/PlantationManul";
+import PlantationManul from "../PlantationManual/PlantationPageManual/PlantationManul";
 import FenceManual from '../Fence Manual/Fence/fenceManual';
+
+const convertAreaToSqMeters = (area, unit) => {
+    const conversionRates = {
+        "Acres": 4046.86,  // 1 Acre = 4046.86 sq meters
+        "Perch": 25.2929,  // 1 Perch = 25.2929 sq meters
+        "m²": 1            // 1 sq meter = 1 sq meter
+    };
+
+    return area * (conversionRates[unit] || 1);
+};
+
 export default function CalculatorSelect({ onBackToSidebar, area, perimeter, PerimeterUnitselectedValue, AreaUnitselectedValue }) {
     const [isHovered1, setIsHovered1] = useState(false);
     const [isHovered2, setIsHovered2] = useState(false);
     const [isHovered3, setIsHovered3] = useState(false);
 
-    //for plantation 
+    // For plantation 
     const [currentPage, setCurrentPage] = useState(null);
     const [animatePage, setAnimatePage] = useState(false);
-    const [Perimeter , setPerimeter] = useState(0);
+    const [Perimeter, setPerimeter] = useState(0);
     const [perimetersetValue, setperimetersetValue] = useState("");
+
     const handleBackClick = () => {
         setAnimatePage(false);
         setTimeout(() => {
@@ -25,21 +36,22 @@ export default function CalculatorSelect({ onBackToSidebar, area, perimeter, Per
     };
 
     const handlePageChange = (page) => {
-    let updatedPerimeter = perimeter;
-    let unit = PerimeterUnitselectedValue;
-    if (PerimeterUnitselectedValue === "m") {
-    updatedPerimeter = perimeter / 1000;
-    unit = "Km";
-       }
+        let updatedPerimeter = perimeter;
+        let unit = PerimeterUnitselectedValue;
+        if (PerimeterUnitselectedValue === "m") {
+            updatedPerimeter = perimeter / 1000;
+            unit = "Km";
+        }
         setperimetersetValue(unit)
         setPerimeter(updatedPerimeter);
         setCurrentPage(page);
         setAnimatePage(true);
     };
 
-    
+    // Convert area to square meters
+    const areaInSqMeters = convertAreaToSqMeters(parseFloat(area), AreaUnitselectedValue);
 
-    //ui
+    // UI
     return (
         <div>
             {!currentPage && (
@@ -173,23 +185,23 @@ export default function CalculatorSelect({ onBackToSidebar, area, perimeter, Per
                     overflow: "auto",
                 }}
             >
-                {/* {currentPage === "PlantationManul" && (
+                {currentPage === "PlantationManul" && (
                     <PlantationManul
                         onBackToSidebar={handleBackClick}
-                        area={area}
+                        area={areaInSqMeters}  // Use converted area in sq meters
                         perimeter={perimeter}
                         PerimeterUnitselectedValue={PerimeterUnitselectedValue}
-                        AreaUnitselectedValue={AreaUnitselectedValue}
+                        AreaUnitselectedValue="m²"
                     />
-                )} */}
+                )}
 
-                    {currentPage === "FenceManual" && (
+                {currentPage === "FenceManual" && (
                     <FenceManual
                         onBackToSidebar={handleBackClick}
-                        area = {area}
-                        Perimeter = {Perimeter} 
-                        PerimeterUnitselectedValue = {perimetersetValue}
-                        AreaUnitselectedValue = {AreaUnitselectedValue}  
+                        area={area}
+                        Perimeter={Perimeter} 
+                        PerimeterUnitselectedValue={perimetersetValue}
+                        AreaUnitselectedValue={AreaUnitselectedValue}  
                     />
                 )}
             </div>

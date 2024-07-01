@@ -1,4 +1,4 @@
-import React, { useState, useCallback  } from "react";
+import React from "react";
 import {
   Text,
   View,
@@ -6,18 +6,15 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  TouchableOpacity,
-  Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation,useFocusEffect  } from "@react-navigation/native";
+import { useNavigation} from "@react-navigation/native";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
 
 import { styles } from "./FencedetailfromManualStyles";
 import Headersection from "../../../components/Headersection";
 import CustomButton from "../../../components/CustomButton";
-import AxiosInstance from "../../../AxiosInstance";
 import  {getFenceDetailsHtml}  from "./fenceDetailPrint";
 
 export default function FencedetailfromManual({ route }) {
@@ -25,15 +22,7 @@ export default function FencedetailfromManual({ route }) {
   const navigation = useNavigation();
 
   const {FenceTypeselectedValue,inputValuePostspace,PostSpaceUnitselectedValue,displayValues,perimeter,area,NumberofSticks} = route.params;
-  // const [numberOfSticks, setnumberOfSticks] = useState(null);
-  // const [fenceType , setfenceType] = useState(null);
-  // const [postSpace, setpostSpac] = useState(null);
-  // const [PostSpaceUnit, setPostSpaceUnit] = useState(null);
-  // const [Area, setArea] = useState(null);
-  // const [Perimeter, setPerimeter] = useState(null);
-  // const [data1 , setdata1] = useState([]);
-
-  //Fetch data from  database
+ 
   
 
 // html file to be printed
@@ -81,23 +70,7 @@ const html = getFenceDetailsHtml(FenceTypeselectedValue, NumberofSticks, inputVa
 
 
         <View style={styles.top}>
-          
-      {/* <View style={styles.topSection}>
-      <TouchableOpacity style={styles.iconButton} onPress={BackToHome}>
-        <MaterialCommunityIcons
-          name="home"
-          size={26}
-          color="#007BFF"
-        />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.iconButton} onPress={handleIconPress}>
-        <MaterialCommunityIcons
-          name="square-edit-outline"
-          size={26}
-          color="#007BFF"
-        />
-      </TouchableOpacity>
-    </View> */}
+     
           <View style={styles.box1}>
             <Text style={styles.titleText}>Total posts / Sticks</Text>
             <View style={styles.propertyBox}>

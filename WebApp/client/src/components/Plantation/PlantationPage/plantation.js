@@ -5,16 +5,21 @@ import { RxRowSpacing } from "react-icons/rx";
 import { PiTreeEvergreenFill } from "react-icons/pi";
 import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
-
 import { styles } from "./plantationStyles.js";
 import Select from "react-select";
-// import AxiosInstance from "../../../AxiosInstance";
-import axios from "axios";
+import { message } from "antd";
 import PlantationDetails from "../PlantationDetails/plantationDetails";
-
-export default function Plantation({ onBackToSidebar }) {
-  const [perimeter, setPerimeter] = useState("1.5");
-  const [area, setArea] = useState("100");
+import AxiosInstance from "../../../AxiosInstance";
+import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
+export default function Plantation({ 
+  onBackToSidebar,
+  id,
+  Perimeter,
+  area,
+  onEditTemplateClick,
+  template
+}) {
+ 
   const [textPlant, settextPlant] = useState(null);
   const [PlantSpaceUnitselectedValue, setPlantSpaceUnitselectedValue] =
     useState("");
@@ -44,7 +49,10 @@ export default function Plantation({ onBackToSidebar }) {
     settextPlant(event.target.value);
   };
 
-
+  const backtotemp = () =>{
+    setCurrentPage("TemplateDetails"); // Update this line
+    setAnimatePage(true);
+  }
   const handlePlantSpaceUnitChange = (selectedOption) => {
     setPlantSpaceUnitselectedValue1(selectedOption);
     setPlantSpaceUnitselectedValue(selectedOption.value);
@@ -55,48 +63,53 @@ export default function Plantation({ onBackToSidebar }) {
     setRowSpaceUnitselectedValue(selectedOption.value);
   };
 
+
+
+
   const handlePlantationDetails = async (e) => {
-
-    try {
-      // Validate required fields
-      if (
-
-        !PlantSpaceUnitselectedValue ||
-        !RowSpaceUnitselectedValue||
-        !textPlant ||
-        !textplantspace ||
-        !textRowspace
-      ) {
-        throw new Error("Please fill in all fields");
-      }
-
-      setCurrentPage("plantationDetails");
-      setAnimatePage(true);
-      e.preventDefault();
-
-      // Prepare data for the request
-      const requestData = {
-        textPlant,
-        textplantspace,
-        textRowspace,
-        PlantSpaceUnitselectedValue,
-        RowSpaceUnitselectedValue
-
-      };
-
-      // Make POST request to the backend
-      const response = await axios.post(
-        "http://192.168.1.2:3000/api/plantation/plantation",
-        requestData
-      );
-
-      // Handle successful response
-      console.log("Response:", response.data);
-    } catch (error) {
-      // Handle errors
-      console.error("Error:", error.message);
-      alert("Error: " + error.message);
+    // Validate the data
+    if (
+      !PlantSpaceUnitselectedValue ||
+      !RowSpaceUnitselectedValue ||
+      !textPlant ||
+      !textplantspace ||
+      !textRowspace
+    ) {
+      message.error("Please fill all input fields")
+      return;
     }
+  
+    const regex = /^\d+(\.\d+)?$/; // allow decimal and float numbers
+    if (
+      !regex.test(textplantspace) ||
+      !regex.test(textRowspace)
+    ) {
+      message.error("Please fill valid input")
+      return;
+    }
+  
+    AxiosInstance.post("/api/plantation/plantation", {
+      id,
+      area,
+      textPlant,
+      textplantspace,
+      textRowspace,
+      PlantSpaceUnitselectedValue,
+      RowSpaceUnitselectedValue,
+
+    })
+      .then((response) => {
+        // If backend response is successful, navigate to detail page
+        setCurrentPage("plantationDetails");
+        setAnimatePage(true);
+        e.preventDefault();
+        console.log("Response:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error.response ? error.response.data : error.message);
+        message.error("Error", "Failed to create plantation. Please try again.")
+        alert("Error", "Failed to create plantation. Please try again.");
+      });
   };
 
   const handleBackClick = () => {
@@ -106,13 +119,17 @@ export default function Plantation({ onBackToSidebar }) {
     }, 300);
   };
 
+
+
+
+
   return (
     <div>
       {!currentPage && (
         <div style={styles.content}>
           <div style={styles.header}>
             <MdArrowBack
-              onClick={onBackToSidebar}
+              onClick={backtotemp}
               style={styles.backButton}
               fontSize={20}
             />
@@ -128,7 +145,7 @@ export default function Plantation({ onBackToSidebar }) {
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{perimeter}Km</p>
+                  <p style={styles.propertyValue}>{Perimeter} Km</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -136,7 +153,7 @@ export default function Plantation({ onBackToSidebar }) {
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} m<sup>2</sup>
+                    {/* {area} m<sup>2</sup> */}{area } Acres
                   </p>
                 </div>
               </div>
@@ -185,7 +202,7 @@ export default function Plantation({ onBackToSidebar }) {
                   placeholder="m"
                   options={[
                     { value: "m", label: "m" },
-                    { value: "cm", label: "cm" },
+                    //{ value: "cm", label: "cm" },
                   ]}
                   value={PlantSpaceUnitselectedValue1}
                   onChange={handlePlantSpaceUnitChange}
@@ -224,7 +241,7 @@ export default function Plantation({ onBackToSidebar }) {
                   placeholder="m"
                   options={[
                     { value: "m", label: "m" },
-                    { value: "cm", label: "cm" },
+                   // { value: "cm", label: "cm" },
                   ]}
                   value={RowSpaceUnitselectedValue1}
                   onChange={handleRowSpaceUnitChange}
@@ -262,13 +279,20 @@ export default function Plantation({ onBackToSidebar }) {
       >
         {currentPage === "plantationDetails" && (
           <PlantationDetails
-            onBackToSidebar={handleBackClick}
-            textplantspace={textplantspace}
-            textRowspace={textRowspace}
-            PlantSpaceUnitselectedValue={PlantSpaceUnitselectedValue}
-            RowSpaceUnitselectedValue={RowSpaceUnitselectedValue}
-            textPlant={textPlant}
-
+          onBackToSidebar={onBackToSidebar}
+          onback = {handleBackClick}
+          id={id}
+          onEditTemplateClick = {onEditTemplateClick}
+          template = {template}
+            
+          />
+        )}
+        {currentPage === "TemplateDetails" && (
+          <TemplateDetails
+            onBackToSidebar={onBackToSidebar}
+            id={id}
+            onEditTemplateClick = {onEditTemplateClick}
+            template = {template}
           />
         )}
       </div>

@@ -1,28 +1,31 @@
-// SideNavbar.js
 import React from "react";
-import { useState, useEffect,useCallback } from "react";
+import { useState, useEffect } from "react";
 import { HiMiniBars4 } from "react-icons/hi2";
 import { TbArrowBarBoth, TbBarrierBlock, TbFence } from "react-icons/tb";
-import { MdArrowBack } from "react-icons/md";
+import { MdArrowBack  } from "react-icons/md";
 import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
 import { styles } from "./fenceDetailsStyles";
-import { FaEdit } from "react-icons/fa";
+import { RiEditBoxLine } from "react-icons/ri"; 
 import AxiosInstance from "../../../AxiosInstance";
-import Swal from 'sweetalert2'
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Modal } from "antd";
 import Fence from "../Fence/fence";
+import TemplateDetails from "../../SavedTemplates/TemplateDetails";
+import { getFenceDetailsHtml } from "./FenceDetailsTemplate";
+import { BeatLoader } from 'react-spinners';
 
 
+const { confirm } = Modal;
 
 export default function FenceDetails({
   onBackToSidebar,
-  inputValuePostspace,
-  displayValues,
-  PostSpaceUnitselectedValue,
-  FenceTypeselectedValue,
+  onEditTemplateClick,
+  template,
+  onback,
   id,
 }) {
-
+  const [loading, setLoading] = useState(true);
   const [numberOfSticks, setnumberOfSticks] = useState(null);
   const [fenceType , setfenceType] = useState(null);
   const [postSpace, setpostSpac] = useState(null);
@@ -40,7 +43,7 @@ export default function FenceDetails({
         const response = await AxiosInstance.get(`/api/fence/numberOfSticks/${id}`);
         const data = response.data;
         console.log(data);
-        
+  
         setnumberOfSticks(data.numberOfSticks);
         setfenceType(data.fenceType);
         setpostSpac(data.postSpace);
@@ -48,16 +51,19 @@ export default function FenceDetails({
         setArea(data.Area);
         setPerimeter(data.Perimeter);
         setdata1(data.gateDetails);
+        setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
         console.error('Error fetching data:', error);
+        setLoading(false); // Set loading to false even if there is an error
       }
     };
-
+  
     fetchData();
-
+  
     // Cleanup function if needed
     return () => {};
   }, [id]);
+  
 
 
   const FenceDelete = async (id) => {
@@ -73,178 +79,196 @@ export default function FenceDetails({
   };
 
   const handleIconPress = (e) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you Want to Update Fence?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes"
-    }).then((result) => {
-      if (result.isConfirmed) {
+    confirm({
+      title: 'Are you sure?',
+      content: 'Do you want to update Fence?',
+      icon: <ExclamationCircleOutlined />,
+      okText: 'Yes',
+      okType: 'primary',
+      cancelText: 'No',
+      onOk() {
         try {
           FenceDelete(id)
             .then(() => {
-              // Swal.fire({
-              //   title: "Deleted!",
-              //   text: "Your file has been deleted.",
-              //   icon: "success"
-              // });
               // Navigate to the desired screen
-              setCurrentPage("Fence");
+              setCurrentPage('Fence');
               setAnimatePage(true);
               e.preventDefault();
             })
             .catch((error) => {
               // Show detailed error message
               const errorMessage = error.response ? error.response.data.message : error.message;
-              Swal.fire({
-                title: "Failed to delete fence",
-                text: errorMessage,
-                icon: "error"
+              Modal.error({
+                title: 'Failed to delete fence',
+                content: errorMessage,
               });
             });
         } catch (error) {
           console.error('Error:', error);
         }
-      }
+      },
+      onCancel() {
+        console.log('Cancelled');
+      },
     });
   };
 
-  const handleBackClick = () => {
-    setAnimatePage(false);
-    setTimeout(() => {
-      setCurrentPage(null);
-    }, 300);
+ 
+  const handleback = () => {
+    setCurrentPage("TemplateDetails");
+    setAnimatePage(true);
+  };
+
+  const handleSave = () => {
+    const htmlContent = getFenceDetailsHtml(fenceType, numberOfSticks, postSpace, PostSpaceUnit, data1,Perimeter,Area);
+    const newWindow = window.open();
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
+    newWindow.print();
   };
   
   return (
     <div>
-    {!currentPage && (
-    <div style={styles.content}>
-      <div style={styles.header}>
-        <MdArrowBack
-          onClick={onBackToSidebar}
-          style={styles.backButton}
-          fontSize={20}
-        />
-        <p style={styles.titleText1}>Fence Details</p>
-      </div>
-
-      {/* first box */}
-
-      <div style={styles.topSection}>
-      <FaEdit
-          onClick={handleIconPress}
-          style={styles.editbutton}
-          fontSize={20}
-        />
-    </div>
-
-      <div style={styles.Box1}>
-        <p style={styles.titleText}>Total Posts / Sticks</p>
-        <div style={styles.propertyBox}>
-          <div style={styles.property}>
-            <div style={{ transform: "rotate(90deg)" }}>
-              <HiMiniBars4 color="gray" size={30} />
-            </div>
-            <div style={styles.propertyDetails}>
-              <p style={styles.propertyLabel}>Total Amount</p>
-              <p style={styles.propertyValue}>{numberOfSticks} Sticks</p>
-            </div>
-          </div>
-          <div className="property" style={styles.property}>
-            <TbArrowBarBoth color="gray" size={30} />
-            <div style={styles.propertyDetails}>
-              <p style={styles.propertyLabel}>post Gap</p>
-              <p style={styles.propertyValue}>
-                {postSpace} {PostSpaceUnit}
-              </p>
-            </div>
-          </div>
+      {loading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '85vh' }}>
+          <BeatLoader color="#007BFF" loading={loading} size={20} />
         </div>
-      </div>
-
-      {/* Second box */}
-
-      <div style={styles.Box2}>
-        <div style={styles.propertyBox}>
-          <div style={styles.property}>
-            <BsBoundingBox color="gray" size={28} />
-            <div style={styles.propertyDetails}>
-              <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>{Perimeter} Km</p>
+      ) : (
+        !currentPage && (
+          <div style={styles.content}>
+            <div style={styles.header}>
+              <MdArrowBack
+                onClick={onback}
+                style={styles.backButton}
+                fontSize={20}
+              />
+              <p style={styles.titleText1}>Fence Details</p>
+              <RiEditBoxLine
+                onClick={handleIconPress}
+                style={styles.editbutton}
+                fontSize={19}
+              />
+            </div>
+  
+            {/* first box */}
+            <div style={styles.Box1}>
+              <p style={styles.titleText}>Total Posts / Sticks</p>
+              <div style={styles.propertyBox}>
+                <div style={styles.property}>
+                  <div style={{ transform: "rotate(90deg)" }}>
+                    <HiMiniBars4 color="gray" size={30} />
+                  </div>
+                  <div style={styles.propertyDetails}>
+                    <p style={styles.propertyLabel}>Total Amount</p>
+                    <p style={styles.propertyValue}>{numberOfSticks} Sticks</p>
+                  </div>
+                </div>
+                <div className="property" style={styles.property}>
+                  <TbArrowBarBoth color="gray" size={30} />
+                  <div style={styles.propertyDetails}>
+                    <p style={styles.propertyLabel}>post Gap</p>
+                    <p style={styles.propertyValue}>
+                      {postSpace} {PostSpaceUnit}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            {/* Second box */}
+            <div style={styles.Box2}>
+              <div style={styles.propertyBox}>
+                <div style={styles.property}>
+                  <BsBoundingBox color="gray" size={28} />
+                  <div style={styles.propertyDetails}>
+                    <p style={styles.propertyLabel}>Perimeter</p>
+                    <p style={styles.propertyValue}>{Perimeter} Km</p>
+                  </div>
+                </div>
+                <div className="property" style={styles.property}>
+                  <PiSquareDuotone color="gray" size={40} />
+                  <div style={styles.propertyDetails}>
+                    <p style={styles.propertyLabel}>Area</p>
+                    <p style={styles.propertyValue}>{Area} perches</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            {/* Third box */}
+            <div style={styles.box3}>
+              <p style={styles.innertopText}>Result based on</p>
+  
+              <div style={styles.innercenter}>
+                <div style={styles.innersquareleft}>
+                  <TbFence name="gate" size={35} color="gray" />
+                  <p style={styles.propertyLabel1}>Fence Type &nbsp;&nbsp;:</p>
+                </div>
+                <div style={styles.innersquareright}>
+                  <p style={styles.propertyLabel}>{fenceType}</p>
+                </div>
+              </div>
+  
+              <div style={styles.innercenter}>
+                <div style={styles.innersquareleft}>
+                  <TbBarrierBlock name="boom-gate" size={35} color="gray" />
+                  <p style={styles.propertyLabel1}>
+                    Gates &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    :
+                  </p>
+                </div>
+                <div style={styles.innersquareright1}>
+                  {data1.length === 0 ? (
+                    <div>No Gate</div>
+                  ) : (
+                    data1.map((value, index) => (
+                      <div key={index}>{value}</div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+  
+            <div style={styles.bottom}>
+              <button style={styles.Button1} onClick={handleSave}>
+                <p style={styles.Box4ButtonText}>Save Data</p>
+              </button>
+              <button style={styles.Button2} onClick={handleback}>
+                <p style={styles.Box4ButtonText}>Back to Template</p>
+              </button>
             </div>
           </div>
-          <div className="property" style={styles.property}>
-            <PiSquareDuotone color="gray" size={40} />
-            <div style={styles.propertyDetails}>
-              <p style={styles.propertyLabel}>Area</p>
-              <p style={styles.propertyValue}>{Area} perches</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Third box */}
-
-      <div style={styles.box3}>
-        <p style={styles.innertopText}>Result based on</p>
-
-        <div style={styles.innercenter}>
-          <div style={styles.innersquareleft}>
-            <TbFence name="gate" size={35} color="gray" />
-            <p style={styles.propertyLabel1}>Fence Type &nbsp;&nbsp;:</p>
-          </div>
-          <div style={styles.innersquareright}>
-            <p style={styles.propertyLabel}>{fenceType}</p>
-          </div>
-        </div>
-
-        <div style={styles.innercenter}>
-          <div style={styles.innersquareleft}>
-            <TbBarrierBlock name="boom-gate" size={35} color="gray" />
-            <p style={styles.propertyLabel1}>
-              Gates &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              :
-            </p>
-          </div>
-          <div style={styles.innersquareright1}>
-            {displayValues.length === 0 ? (
-              <div>No Gate</div>
-            ) : (
-              data1.map((value, index) => (
-                <div key={index}>{value}</div>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div style={styles.bottom}>
-        <button style={styles.Button1}>
-          <p style={styles.Box4ButtonText}>Save Data</p>
-        </button>
-      </div>
-    </div>
-    )}
-
-    <div
-      style={{
-        transform: animatePage ? "translateX(0)" : "translateX(-100%)",
-        transition: "transform 0.3s ease-in-out",
-        backgroundColor: "whitesmoke",
-        overflow: "auto", // Add scrollbar if content exceeds container height
-      }}
-    >
-      {currentPage === "Fence" && (
-        <Fence
-          onBackToSidebar={handleBackClick}
-          id={id}
-        />
+        )
       )}
+      <div
+        style={{
+          transform: animatePage ? "translateX(0)" : "translateX(-100%)",
+          transition: "transform 0.3s ease-in-out",
+          backgroundColor: "whitesmoke",
+          overflow: "auto", // Add scrollbar if content exceeds container height
+        }}
+      >
+        {currentPage === "Fence" && (
+          <Fence
+            onBackToSidebar={onBackToSidebar}
+            id={id}
+            area={Area}
+            Perimeter={Perimeter}
+            onEditTemplateClick={onEditTemplateClick}
+            template={template}
+          />
+        )}
+  
+        {currentPage === "TemplateDetails" && (
+          <TemplateDetails
+            onBackToSidebar={onBackToSidebar}
+            id={id}
+            onEditTemplateClick={onEditTemplateClick}
+            template={template}
+          />
+        )}
+      </div>
     </div>
-  </div>
   );
+  
 }

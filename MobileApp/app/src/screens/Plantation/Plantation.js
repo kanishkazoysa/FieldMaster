@@ -95,6 +95,7 @@ export default function Plantation({route}) {
         textRowspace,
         PlantSpaceUnitselectedValue,
         id ,
+        area
 
       });
       console.log(id);

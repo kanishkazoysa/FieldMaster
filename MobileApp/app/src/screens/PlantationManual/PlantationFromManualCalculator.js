@@ -19,9 +19,9 @@ import CustomButton from "../../components/CustomButton";
 import AxiosInstance from "../../AxiosInstance";
 
 export default function PlantationFromManualCalculator({ route }) {
-  const { area, perimeter } = route.params;
+  const {area, perimeter } = route.params;
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  route = useRoute(); // get route
+  route = useRoute();
   console.log(area, perimeter);
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -93,6 +93,7 @@ export default function PlantationFromManualCalculator({ route }) {
           textRowspace,
           PlantSpaceUnitselectedValue,
           area,
+          perimeter
         }
       );
 
@@ -151,8 +152,8 @@ export default function PlantationFromManualCalculator({ route }) {
                   color="gray"
                 />
                 <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyLabel}>Area</Text>
-                  <Text style={styles.propertyValue}>{area} acres</Text>
+                  <Text style={styles.propertyLabel}>Area(m{"\u00B2"})</Text>
+                  <Text style={styles.propertyValue}>{area}</Text>
                 </View>
               </View>
             </View>

@@ -1,15 +1,14 @@
-import axios from "axios";
-
+import axios from 'axios';
 
 const AxiosInstance = axios.create({
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
 AxiosInstance.interceptors.request.use(
   async (config) => {
-    const token = localStorage.getItem("UserToken");
+    const token = localStorage.getItem('UserToken');
     if (token) {
       config.headers.authorization = `${token}`;
     }

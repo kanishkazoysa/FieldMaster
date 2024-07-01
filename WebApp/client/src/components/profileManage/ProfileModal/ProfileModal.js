@@ -1,40 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import { Avatar, Button, Divider } from 'antd';
-import { BeatLoader } from 'react-spinners';
-import ManageProfileModal from '../ProfileManageModal/ManageProfile';
-import AxiosInstance from '../../../AxiosInstance';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Button, Divider } from "antd";
+import { BeatLoader } from "react-spinners";
+import ManageProfileModal from "../ProfileManageModal/ManageProfile";
+import AxiosInstance from "../../../AxiosInstance";
+import { useNavigate } from "react-router-dom";
+import Avatar from "../ProfileManageModal/Avatar";
 
 
-const ProfileModal = ({ isOpen, onRequestClose }) => {
+const ProfileModal = ({ isOpen, onRequestClose, user: initialUser}) => {
   const [showManageProfileModal, setShowManageProfileModal] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUserState] = useState(initialUser);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
       fetchUser(); // Call the function to fetch user details only when modal is open
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
   }, [isOpen]);
 
   const fetchUser = async () => {
     setIsLoading(true);
     try {
-      setTimeout(async () => {
-        const response = await AxiosInstance.get("/api/users/details");
-        setUser(response.data.user);
-        setIsLoading(false);
-      }, 2000); // Simulate a 2-second delay
+      const response = await AxiosInstance.get("/api/users/details");
+      setUserState(response.data.user);
+      setIsLoading(false);
     } catch (error) {
       console.error("Failed to fetch user details:", error);
       setIsLoading(false);
     }
   };
 
+  const updateUser = (updatedUser) => {
+    setUserState(updatedUser);
+    fetchUser();  // Refresh user data
+  };
 
   const handleManageProfileClick = () => {
     setShowManageProfileModal(true);
@@ -44,9 +47,14 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
     setShowManageProfileModal(false);
   };
 
+  const handleCloseModal = () => {
+    onRequestClose(user);  // Pass the updated user data back to Home
+  };
+
   if (!isOpen) return null;
 
   const handleSignOut = async () => {
+
     if (localStorage.getItem('AdminToken')){
       localStorage.removeItem('AdminToken');
     }
@@ -59,30 +67,30 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
       <div style={styles.modal}>
         {!showManageProfileModal && (
           <>
-            <button style={styles.closeButton} onClick={onRequestClose}>
+            <button style={styles.closeButton} onClick={handleCloseModal}>
               ×
             </button>
             <div style={styles.content}>
               {isLoading ? (
                 <div style={styles.loader}>
-                <BeatLoader color="#007BFF" />
+                  <BeatLoader color="#007BFF" />
                 </div>
               ) : (
                 <>
-                  <p>{user.email}</p>
+                  <h7>{user.email}</h7>
                   <Divider style={styles.divider} />
                   <Avatar
+                    userData={user}
                     size={130}
                     style={styles.avatar}
-                    src="https://th.bing.com/th/id/OIP.pWAz6MVBo5svuJ09ahjN7gHaEK?rs=1&pid=ImgDetMain"
                   />
                   <h4 style={styles.hellotxt}>Hi, {user.fname}!</h4>
                   <Button
                     type="primary"
                     style={{
-                      marginTop: '30px',
-                      padding: '18px',
-                      width: '70%',
+                      marginTop: "30px",
+                      padding: "18px",
+                      width: "70%",
                       borderRadius: 20,
                     }}
                     onClick={handleManageProfileClick}
@@ -90,19 +98,21 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
                     Manage Your Profile
                   </Button>
                   <Button
-                  onClick={handleSignOut}
+                    onClick={handleSignOut}
                     style={{
-                      marginTop: '20px',
-                      padding: '18px',
-                      width: '70%',
+                      marginTop: "20px",
+                      padding: "18px",
+                      width: "70%",
                       borderRadius: 20,
-                      marginBottom: '20px',
+                      marginBottom: "20px",
                     }}
                   >
                     Sign Out From Your Account
                   </Button>
                   <Divider />
-                  <p style={styles.bottomtxt}>Privacy Policy . Terms of Services</p>
+                  <p style={styles.bottomtxt}>
+                    Privacy Policy . Terms of Services
+                  </p>
                 </>
               )}
             </div>
@@ -121,7 +131,8 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
             isOpen={showManageProfileModal}
             onRequestClose={handleCloseManageProfileModal}
             onBack={handleCloseManageProfileModal}
-            user={user} // Passing the user object as a prop
+            user={user}
+            onUpdate={updateUser} // Add this line
           />
         )}
       </div>
@@ -131,78 +142,78 @@ const ProfileModal = ({ isOpen, onRequestClose }) => {
 
 const styles = {
   modalOverlay: {
-    position: 'fixed',
+    position: "fixed",
     top: 0,
     left: 0,
-    width: '100%',
-    height: '100%',
-    background: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backdropFilter: 'blur(10px)',
+    width: "100%",
+    height: "100%",
+    background: "rgba(0, 0, 0, 0.5)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backdropFilter: "blur(10px)",
     zIndex: 1000,
     opacity: 1,
-    transition: 'opacity 0.3s ease-in-out',
+    transition: "opacity 0.3s ease-in-out",
   },
   loader: {
-    marginTop: '60%',
+    marginTop: "65%",
   },
   modal: {
-    background: 'white',
-    borderRadius: '10px',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.25)',
-    width: '25%', // Adjust the width as needed
-    height: '70%',
-    padding: '20px',
-    position: 'relative',
-    transition: 'transform 0.3s ease-in-out',
-    transform: 'translateX(0)',
+    background: "white",
+    borderRadius: "10px",
+    boxShadow: "0 0 10px rgba(0, 0, 0, 0.25)",
+    width: "25%", // Adjust the width as needed
+    height: "70%",
+    padding: "20px",
+    position: "relative",
+    transition: "transform 0.3s ease-in-out",
+    transform: "translateX(0)",
   },
   modalSlideOut: {
-    transform: 'translateX(100vw)',
+    transform: "translateX(100vw)",
   },
   divider: {
-    marginTop: '6px',
+    marginTop: "20px",
   },
   manageModal: {
-    background: 'white',
-    borderRadius: '10px',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.25)',
-    width: '30%', // Increase the width for the ManageProfileModal
-    height: '90%',
-    padding: '20px',
-    position: 'absolute',
-    transition: 'transform 0.3s ease-in-out',
-    transform: 'translateX(-100vw)',
+    background: "white",
+    borderRadius: "10px",
+    boxShadow: "0 0 10px rgba(0, 0, 0, 0.25)",
+    width: "30%", // Increase the width for the ManageProfileModal
+    height: "90%",
+    padding: "20px",
+    position: "absolute",
+    transition: "transform 0.3s ease-in-out",
+    transform: "translateX(-100vw)",
   },
   modalSlideIn: {
-    transform: 'translateX(0)',
+    transform: "translateX(0)",
   },
   hellotxt: {
-    marginTop: '20px',
-    fontSize: '1.5rem',
+    marginTop: "20px",
+    fontSize: "1.5rem",
   },
   bottomtxt: {
-    position: 'absolute',
-    bottom: 0,
-    fontSize: '0.8rem',
+    position: "absolute",
+    bottom: "20px",
+    fontSize: "0.8rem",
   },
   content: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
   },
   avatar: {},
   closeButton: {
-    background: 'transparent',
-    border: 'none',
-    fontSize: '1.5rem',
-    cursor: 'pointer',
-    position: 'absolute',
-    top: '10px',
-    right: '10px',
+    background: "transparent",
+    border: "none",
+    fontSize: "1.5rem",
+    cursor: "pointer",
+    position: "absolute",
+    top: "10px",
+    right: "10px",
   },
 };
 
