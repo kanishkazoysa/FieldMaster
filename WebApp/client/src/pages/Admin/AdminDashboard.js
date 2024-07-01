@@ -3,10 +3,12 @@ import "./AdminDashboard.css";
 import logo from "../../images/logo.png";
 import { Icon } from "@iconify/react";
 import { BeatLoader } from "react-spinners";
-import { Avatar, message } from "antd";
+import {message } from "antd";
 import { Tag, Space, Table, Button, Modal, Input, Alert } from "antd";
 import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
 import AxiosInstance from "../../AxiosInstance";
+import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
+import { Link } from "react-router-dom";
 
 function AdminDashboard() {
     const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -16,6 +18,7 @@ function AdminDashboard() {
     const [editUser, setEditUser] = useState({});
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [addUser, setAddUser] = useState({});
+    const [user, setUser] = useState({});
     const [pagination, setPagination] = useState({
         pageSize: 10,
         current: 1,
@@ -141,13 +144,18 @@ function AdminDashboard() {
         setIsAddModalOpen(false);
     };
 
+    const closeModal = () => {
+        setIsModalOpen(false);
+        fetchUserDetails(); // Refresh user data when modal closes
+      };
+
     const columns = [
         {
             title: "",
             dataIndex: "profileImage",
             key: "imageUrl",
             render: (_, record) => (
-                <Avatar size={35} src={record.imageUrl} alt="imageUrl" />
+                <Avatar size={35} userData={record}  />
             ),
         },
         {
@@ -224,6 +232,19 @@ function AdminDashboard() {
         },
     ];
 
+    useEffect(() => {
+        fetchUserDetails();
+      }, []);
+      
+      const fetchUserDetails = async () => {
+        try {
+          const response = await AxiosInstance.get("/api/users/details");
+          setUser(response.data.user);
+        } catch (error) {
+          console.error("Failed to fetch user details:", error);
+        }
+      };
+
     return (
         <div>
             {isLoading ? (
@@ -234,21 +255,30 @@ function AdminDashboard() {
                 <>
                     <div className="admin-dashboard-header">
                         <div className="logo">
+                        <Link to="/Home">
                             <img
                                 className="image-admin"
                                 src={logo}
                                 alt="FIELDMASTER"
                             />
+                            </Link>
                         </div>
-                        <div className="avatar-container">
-                            <Avatar size={50} onClick={handleAvatarClick} />
+                            <h1 className="admin-dashboard-header-center">Admin Dashboard</h1>
+                     
+                        <div className="avatar-container"   onClick={handleAvatarClick} >
+                        <Avatar 
+                        userData={user} 
+                        size={50}
+                        />
                         </div>
                     </div>
                     <hr />
                     {isModalOpen && (
                         <ProfileModal
                             isOpen={isModalOpen}
-                            onRequestClose={() => setIsModalOpen(false)}
+                            onRequestClose={closeModal}
+                            user={user}
+                            updateUserInHome={setUser}
                         />
                     )}
                     <div className="admin-dashboard-body">
