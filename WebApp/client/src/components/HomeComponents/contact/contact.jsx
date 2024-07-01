@@ -25,7 +25,7 @@ function ContactForm() {
     setStatus('Sending...');
 
     try {
-      const response = await fetch('http://192.168.1.6:3000/api/contact/send', {
+      const response = await fetch('http://192.168.1.2:3000/api/contact/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
