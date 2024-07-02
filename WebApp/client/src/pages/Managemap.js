@@ -25,14 +25,11 @@ const Managemap = () => {
   const [mapTypeId, setMapTypeId] = useState('roadmap');
 
   const handleGeofenceComplete = (polygon) => {
+    polygon.setEditable(true);
     const newPoints = polygon.getPath().getArray().map((latLng) => ({
       latitude: latLng.lat(),
       longitude: latLng.lng(),
     }));
-  
-    // Remove the drawn polygon from the map
-    polygon.setMap(null);
-  
     setPartitionPolygons((prevPolygons) => [...prevPolygons, newPoints]);
     setDrawingEnabled(false);
   };
@@ -71,17 +68,11 @@ const Managemap = () => {
 
   const deleteSelectedPolygon = async () => {
     if (selectedPolygonIndex !== null) {
-      // Remove the polygon from the map
-      if (polygonRefs.current[selectedPolygonIndex]) {
-        polygonRefs.current[selectedPolygonIndex].setMap(null);
-      }
-  
+      
       const updatedPolygons = partitionPolygons.filter((_, index) => index !== selectedPolygonIndex);
       setPartitionPolygons(updatedPolygons);
       setSelectedPolygonIndex(null);
-      
-      // Update polygonRefs
-      polygonRefs.current = polygonRefs.current.filter((_, index) => index !== selectedPolygonIndex);
+     
   
       try {
         await AxiosInstance.put(`/api/auth/mapTemplate/savePartitionPoints/${templateId}`, {
@@ -225,7 +216,10 @@ const Managemap = () => {
               ref={drawingManagerRef}
               onPolygonComplete={handleGeofenceComplete}
               options={{
-                drawingControl: false,
+                drawingControl: true,
+                drawingControlOptions: {
+                  position: window.google.maps.ControlPosition.TOP_CENTER,
+                },
                 polygonOptions: {
                   fillColor: "#0000FF",
                   fillOpacity: 0.4,
