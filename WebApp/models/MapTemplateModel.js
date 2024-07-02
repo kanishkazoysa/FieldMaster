@@ -44,8 +44,8 @@ const MapTemplateSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  partitionPoints: {
-    type: [PointSchema],
+  partitionPolygons: {
+    type: [[PointSchema]],
     default: [],
   },
 });

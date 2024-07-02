@@ -3,7 +3,6 @@ import {
   GoogleMap,
   LoadScript,
   DrawingManager,
-  Marker,
   Polygon
 } from "@react-google-maps/api";
 import SideNavbar from "../components/SideNavbar/sideNavbar";
@@ -15,10 +14,11 @@ const Managemap = () => {
   const { templateId } = useParams();
   const apiKey = "AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U";
   const [points, setPoints] = useState([]);
-  const [partitionPoints, setPartitionPoints] = useState([]);
+  const [partitionPolygons, setPartitionPolygons] = useState([]);
   const [drawingEnabled, setDrawingEnabled] = useState(false);
   const drawingManagerRef = useRef(null);
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
+  const [mapTypeId, setMapTypeId] = useState('roadmap');
 
   const handleGeofenceComplete = (polygon) => {
     polygon.setEditable(true);
@@ -27,12 +27,15 @@ const Managemap = () => {
       .getArray()
       .map((latLng) => ({ latitude: latLng.lat(), longitude: latLng.lng() }));
 
-    setPartitionPoints((prevPoints) => [...prevPoints, ...newPoints]);
+    setPartitionPolygons((prevPolygons) => [...prevPolygons, newPoints]);
     setDrawingEnabled(false);
   };
 
   const enableDrawingMode = () => {
     setDrawingEnabled(true);
+    if (drawingManagerRef.current) {
+      drawingManagerRef.current.setDrawingMode(window.google.maps.drawing.OverlayType.POLYGON);
+    }
   };
 
   const disableDrawingMode = () => {
@@ -44,13 +47,14 @@ const Managemap = () => {
 
   const savePartitionPoints = async () => {
     try {
-      await AxiosInstance.put(`/api/auth/mapTemplate/savePartitionPoints/${templateId}`, {
-        partitionPoints,
+      const response = await AxiosInstance.put(`/api/auth/mapTemplate/savePartitionPoints/${templateId}`, {
+        partitionPolygons,
       });
-      alert("Partition points saved successfully!");
+      console.log('Save response:', response.data);
+      alert("Partition polygons saved successfully!");
     } catch (error) {
-      console.error("Error saving partition points:", error);
-      alert("Failed to save partition points.");
+      console.error("Error saving partition polygons:", error);
+      alert("Failed to save partition polygons.");
     }
   };
 
@@ -58,10 +62,11 @@ const Managemap = () => {
     const fetchTemplateData = async () => {
       try {
         const response = await AxiosInstance.get(`/api/auth/mapTemplate/getOneTemplate/${templateId}`);
+        console.log('Fetched template data:', response.data);
         const fetchedPoints = response.data.locationPoints;
-        const fetchedPartitionPoints = response.data.partitionPoints || [];
+        const fetchedPartitionPolygons = response.data.partitionPolygons || [];
         setPoints(fetchedPoints);
-        setPartitionPoints(fetchedPartitionPoints);
+        setPartitionPolygons(fetchedPartitionPolygons);
 
         const avgLatitude = fetchedPoints.reduce((total, point) => total + point.latitude, 0) / fetchedPoints.length;
         const avgLongitude = fetchedPoints.reduce((total, point) => total + point.longitude, 0) / fetchedPoints.length;
@@ -75,6 +80,10 @@ const Managemap = () => {
     fetchTemplateData();
   }, [templateId]);
 
+  const toggleMapType = () => {
+    setMapTypeId(prevType => prevType === 'roadmap' ? 'satellite' : 'roadmap');
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.sidebar}>
@@ -82,15 +91,18 @@ const Managemap = () => {
       </div>
 
       <LoadScript googleMapsApiKey={apiKey} libraries={["places", "drawing", "geometry"]}>
-        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={17}>
-          {points.map((point, index) => (
-            <Marker
-              key={index}
-              position={{ lat: point.latitude, lng: point.longitude }}
-              zIndex={10}
-            />
-          ))}
-
+        <GoogleMap 
+          mapContainerStyle={containerStyle} 
+          center={center} 
+          zoom={17}
+          mapTypeId={mapTypeId}
+          options={{
+            mapTypeControl: false,
+            streetViewControl: false,
+            fullscreenControl: false,
+            gestureHandling: 'greedy'  // This allows zooming in satellite mode
+          }}
+        >
           {points.length > 1 && (
             <Polygon
               path={points.map(point => ({ lat: point.latitude, lng: point.longitude }))}
@@ -105,9 +117,10 @@ const Managemap = () => {
             />
           )}
 
-          {partitionPoints.length > 1 && (
+          {partitionPolygons.map((polygonPoints, index) => (
             <Polygon
-              path={partitionPoints.map(point => ({ lat: point.latitude, lng: point.longitude }))}
+              key={index}
+              path={polygonPoints.map(point => ({ lat: point.latitude, lng: point.longitude }))}
               options={{
                 strokeColor: "#0000FF",
                 strokeOpacity: 1.0,
@@ -117,14 +130,14 @@ const Managemap = () => {
                 zIndex: 2
               }}
             />
-          )}
+          ))}
 
           {drawingEnabled && (
             <DrawingManager
               ref={drawingManagerRef}
               onPolygonComplete={handleGeofenceComplete}
               options={{
-                drawingControl: true,
+                drawingControl: false,
                 drawingControlOptions: {
                   position: window.google.maps.ControlPosition.TOP_CENTER,
                 },
@@ -180,7 +193,19 @@ const Managemap = () => {
               zIndex: 1,
             }}
           >
-            Save Partition Points
+            Save Partition Polygons
+          </button>
+
+          <button
+            onClick={toggleMapType}
+            style={{
+              position: "absolute",
+              top: "90px",
+              left: "10px",
+              zIndex: 1,
+            }}
+          >
+            Toggle Map Type
           </button>
         </GoogleMap>
       </LoadScript>

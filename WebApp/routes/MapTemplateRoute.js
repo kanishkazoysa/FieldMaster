@@ -136,14 +136,20 @@ router.get('/getAllMapPoints', async (req, res) => {
 /* this route is used to save partition points */
 router.put('/savePartitionPoints/:id', async (req, res) => {
   try {
-    const { partitionPoints } = req.body;
+    const { partitionPolygons } = req.body;
     const updatedTemplate = await MapTemplateModel.findByIdAndUpdate(
       req.params.id,
-      { $set: { partitionPoints } },
+      { $set: { partitionPolygons } },
       { new: true }
     );
+    
+    if (!updatedTemplate) {
+      return res.status(404).send('Template not found');
+    }
+    
     res.json(updatedTemplate);
   } catch (error) {
+    console.error('Error saving partition points:', error);
     res.status(500).send('Error while saving partition points.');
   }
 });
