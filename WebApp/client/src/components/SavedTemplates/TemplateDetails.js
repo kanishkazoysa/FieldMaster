@@ -13,6 +13,8 @@ import FenceDetails from '../Fence/FenceDetails/fenceDetails';
 import Plantation from '../Plantation/PlantationPage/plantation';
 import PlantationDetails from '../Plantation/PlantationDetails/plantationDetails';
 import AxiosInstance from '../../AxiosInstance';
+import { useNavigate } from 'react-router-dom';
+
 
 const TemplateDetails = ({
   onBackToSidebar,
@@ -22,6 +24,11 @@ const TemplateDetails = ({
   const id = template._id
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [points, setPoints] = useState([]);
+  const [region, setRegion] = useState(null);
+  const navigate = useNavigate();
+
 
   const handleBackClick = () => {
     setAnimatePage(false);
@@ -29,6 +36,11 @@ const TemplateDetails = ({
       setCurrentPage(null);
     }, 300);
   };
+
+  const navigateToRegister = () => {
+    navigate(`/Managemap/${id}`); // Navigate to ManageMap page with template ID
+  };
+
 
   const checkIdFence = async (id) => {
     try {
@@ -74,6 +86,12 @@ const TemplateDetails = ({
     }
   };
 
+
+
+   
+  
+
+
   return (
     <div>
       {!currentPage && (
@@ -96,7 +114,7 @@ const TemplateDetails = ({
                 alt='mapImage'
                 className='map-img'
               />
-              <button className='manage-land-btn'>
+              <button className='manage-land-btn' onClick={navigateToRegister}>
                 <p>Manage Land</p>
               </button>
               <hr className='breaker' />

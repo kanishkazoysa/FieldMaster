@@ -125,7 +125,7 @@ export default function App() {
 
         <Route path="/Home" element={<UserRouteGuard><Home /></UserRouteGuard>} />
         <Route path="/emailVerification" element={<EmailVerified />} />
-        <Route path="/managemap" element={<Managemap />} />
+        <Route path="/managemap/:templateId" element={<Managemap />} />
       </Routes>
     </Router>
   );
