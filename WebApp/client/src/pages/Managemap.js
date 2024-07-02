@@ -20,6 +20,7 @@ const Managemap = () => {
   const [selectedPolygonIndex, setSelectedPolygonIndex] = useState(null);
   const [undoStack, setUndoStack] = useState([]);
   const drawingManagerRef = useRef(null);
+  const polygonRefs = useRef([]);
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [mapTypeId, setMapTypeId] = useState('roadmap');
 
@@ -87,30 +88,36 @@ const Managemap = () => {
   const editSelectedPolygon = () => {
     if (selectedPolygonIndex !== null) {
       setEditingPolygonIndex(selectedPolygonIndex);
+      setUndoStack([partitionPolygons[selectedPolygonIndex]]); // Initialize undo stack with original polygon
       setSelectedPolygonIndex(null);
-      setUndoStack([]);
     }
   };
 
-  const handlePolygonEdit = (index, event) => {
+  const handlePolygonEdit = (index) => {
     if (editingPolygonIndex === index) {
-      const updatedPolygons = [...partitionPolygons];
-      const newPoints = event.getPath().getArray().map((latLng) => ({
-        latitude: latLng.lat(),
-        longitude: latLng.lng(),
-      }));
-      setUndoStack((prevStack) => [...prevStack, updatedPolygons[index]]);
-      updatedPolygons[index] = newPoints;
-      setPartitionPolygons(updatedPolygons);
+      const polygon = polygonRefs.current[index];
+      if (polygon) {
+        const newPoints = polygon.getPath().getArray().map((latLng) => ({
+          latitude: latLng.lat(),
+          longitude: latLng.lng(),
+        }));
+        
+        setUndoStack(prevStack => [...prevStack, newPoints]);
+        
+        const updatedPolygons = [...partitionPolygons];
+        updatedPolygons[index] = newPoints;
+        setPartitionPolygons(updatedPolygons);
+      }
     }
   };
 
   const undoEdit = () => {
-    if (undoStack.length > 0) {
+    if (undoStack.length > 1) {
+      const previousState = undoStack[undoStack.length - 2]; // Get the previous state
       const updatedPolygons = [...partitionPolygons];
-      updatedPolygons[editingPolygonIndex] = undoStack[undoStack.length - 1];
+      updatedPolygons[editingPolygonIndex] = previousState;
       setPartitionPolygons(updatedPolygons);
-      setUndoStack((prevStack) => prevStack.slice(0, -1));
+      setUndoStack(prevStack => prevStack.slice(0, -1)); // Remove the last state
     }
   };
 
@@ -193,7 +200,10 @@ const Managemap = () => {
                 clickable: true
               }}
               onClick={() => handlePolygonClick(index)}
-              onEdit={(e) => handlePolygonEdit(index, e)}
+              onMouseUp={() => handlePolygonEdit(index)}
+              onLoad={(polygon) => {
+                polygonRefs.current[index] = polygon;
+              }}
             />
           ))}
 
@@ -232,7 +242,7 @@ const Managemap = () => {
             )}
             {editingPolygonIndex !== null && (
               <>
-                <button onClick={undoEdit} disabled={undoStack.length === 0}>Undo</button>
+                <button onClick={undoEdit} disabled={undoStack.length <= 1}>Undo</button>
                 <button onClick={finishEditing}>Finish Editing</button>
               </>
             )}
