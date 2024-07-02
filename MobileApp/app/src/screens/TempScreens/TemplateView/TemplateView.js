@@ -190,7 +190,6 @@ const TemplateView = ({ route, navigation }) => {
           title={item.templateName}
           titleStyle={styles.title_text}
         />
-        {/* pencil/ pen icon  */}
         <TouchableOpacity onPress={() => handleEdit(item)}>
           <CustomEditIcon />
         </TouchableOpacity>
@@ -199,7 +198,9 @@ const TemplateView = ({ route, navigation }) => {
         <View style={styles.imageView}>
           <Image
             source={{
-              uri: `data:image/jpeg;base64,${item.capturedImageBase64}`,
+              uri:
+                item.imageUrl ||
+                'https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png',
             }}
             style={styles.imageStyling}
           />

@@ -19,6 +19,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { responsiveFontSize } from 'react-native-responsive-dimensions';
 import { captureRef } from 'react-native-view-shot';
 import * as FileSystem from 'expo-file-system';
+import axios from 'axios';
 
 const PointAddingScreen = ({ navigation, route }) => {
   const [showUserLocation, setShowUserLocation] = useState(false);
@@ -37,6 +38,32 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [capturedImageUri, setCapturedImageUri] = useState(null);
+
+  const uploadToImgbb = async (imageUri) => {
+    const apiKey = 'a08fb8cde558efecce3f05b7f97d4ef7';
+    const formData = new FormData();
+    formData.append('image', {
+      uri: imageUri,
+      type: 'image/jpeg',
+      name: 'map_image.jpg',
+    });
+
+    try {
+      const response = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${apiKey}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      return response.data.data.url;
+    } catch (error) {
+      console.error('Error uploading image to imgbb:', error);
+      throw error;
+    }
+  };
 
   /* the closeModal function is used to close the modal */
   const closeModal = () => {
@@ -113,28 +140,17 @@ const PointAddingScreen = ({ navigation, route }) => {
         return;
       }
 
-      let capturedImageBase64 = '';
+      let imageUrl = '';
       if (mapRef.current) {
         const uri = await captureRef(mapRef.current, {
           format: 'jpg',
-          quality: 0.05,
+          quality: 0.8,
         });
         console.log('Captured image URI:', uri);
-        capturedImageBase64 = await FileSystem.readAsStringAsync(uri, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
-        setCapturedImageUri(uri);
+        imageUrl = await uploadToImgbb(uri);
+        console.log('Uploaded image URL:', imageUrl);
       }
 
-      console.log('Captured image as base64:', capturedImageBase64);
-
-      if (viewShotRef.current) {
-        const uri = await captureRef(viewShotRef.current, {
-          format: 'jpg',
-          quality: 0.01,
-        });
-        console.log('Captured image URI:', uri);
-      }
       const formattedPoints = points.map((point) => [
         point.longitude,
         point.latitude,
@@ -163,7 +179,7 @@ const PointAddingScreen = ({ navigation, route }) => {
                 locationPoints: points,
                 area: areaPerches,
                 perimeter: perimeterKilometers,
-                capturedImageBase64,
+                imageUrl,
               });
             },
           },

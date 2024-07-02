@@ -44,7 +44,7 @@ const MapTemplateSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  capturedImageBase64: {
+  imageUrl: {
     type: String,
   },
 });

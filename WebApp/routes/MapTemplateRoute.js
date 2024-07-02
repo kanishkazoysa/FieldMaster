@@ -19,7 +19,7 @@ router.post('/saveTemplate', async (req, res) => {
       location,
       description,
       locationPoints,
-      capturedImageBase64,
+      imageUrl,
     } = req.body;
     area = parseFloat(area).toFixed(2);
     perimeter = parseFloat(perimeter).toFixed(2);
@@ -32,7 +32,7 @@ router.post('/saveTemplate', async (req, res) => {
       location,
       description,
       locationPoints,
-      capturedImageBase64,
+      imageUrl,
       userId: req.userId,
     });
     const savedMapTemplate = await mapTemplate.save();

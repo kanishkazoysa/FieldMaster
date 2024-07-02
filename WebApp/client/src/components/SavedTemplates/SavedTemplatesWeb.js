@@ -78,7 +78,7 @@ const SavedTemplatesWeb = ({
                 templateName={template.templateName}
                 location={template.location}
                 date={template.date}
-                capturedImageBase64={template.capturedImageBase64}
+                imageUrl={template.imageUrl} // Change this line
                 onClick={() => onCardClick(template)}
                 onDelete={() => handleDelete(template)}
                 onEdit={() => handleEditTemplateClick(template)}

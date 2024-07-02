@@ -17,7 +17,7 @@
     "antd": "^5.18.1",
     "antd-style": "^3.6.2",
     "autoprefixer": "^10.4.17",
-    "axios": "^1.6.5",
+    "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "mdb-react-ui-kit": "^7.2.0",

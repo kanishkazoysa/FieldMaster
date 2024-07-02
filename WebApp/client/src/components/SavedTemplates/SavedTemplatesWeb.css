@@ -13,6 +13,7 @@
 @media (min-width: 768px) {
   .card-image {
     width: 128px;
+    border-radius: 10px;
   }
 }
 .search-bar {

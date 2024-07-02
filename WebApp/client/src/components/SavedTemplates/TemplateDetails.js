@@ -121,7 +121,7 @@ const TemplateDetails = ({
             <div className='div-02'>
               <div className='map-img-container'>
                 <img
-                  src={`data:image/jpeg;base64,${template.capturedImageBase64}`}
+                  src={template.imageUrl}
                   alt='mapImage'
                   className='map-img'
                 />

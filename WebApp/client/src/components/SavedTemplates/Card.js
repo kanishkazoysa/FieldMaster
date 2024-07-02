@@ -7,7 +7,7 @@ const Card = ({
   templateName,
   location,
   date,
-  capturedImageBase64,
+  imageUrl, // Changed from capturedImageBase64
   onClick,
   onDelete,
   onEdit,
@@ -29,7 +29,7 @@ const Card = ({
       <div className='card-flex'>
         <div className='card-image-container'>
           <img
-            src={`data:image/jpeg;base64,${capturedImageBase64}`}
+            src={imageUrl} // Changed this line
             className='card-image'
             alt='mapImg'
           />

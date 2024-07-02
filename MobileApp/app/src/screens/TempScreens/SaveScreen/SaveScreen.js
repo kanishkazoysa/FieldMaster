@@ -31,7 +31,7 @@ export function SaveScreen({ navigation, route }) {
     area: initialArea,
     perimeter: initialPerimeter,
     locationPoints,
-    capturedImageBase64,
+    imageUrl,
   } = route.params;
   const [perimeter, setPerimeter] = React.useState(
     parseFloat(initialPerimeter).toFixed(2)
@@ -55,7 +55,7 @@ export function SaveScreen({ navigation, route }) {
       location: location,
       description: descriptionText,
       locationPoints: locationPoints,
-      capturedImageBase64: capturedImageBase64,
+      imageUrl: imageUrl,
     };
     console.log(dataItem);
 
@@ -171,12 +171,7 @@ export function SaveScreen({ navigation, route }) {
               />
             </View>
             <View style={styles.imageContainer}>
-              <Image
-                source={{
-                  uri: 'data:image/jpeg;base64,' + capturedImageBase64,
-                }}
-                style={styles.base64Image}
-              />
+              <Image source={{ uri: imageUrl }} style={styles.base64Image} />
             </View>
           </View>
         </View>

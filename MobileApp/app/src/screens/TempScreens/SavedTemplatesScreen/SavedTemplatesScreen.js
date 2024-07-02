@@ -57,7 +57,6 @@ const SavedTemplatesScreen = ({ navigation }) => {
       `/api/auth/mapTemplate/deleteTemplate/${deletingTemplate._id}`
     )
       .then((response) => {
-        /* console.log(response); */
         alert('Template deleted');
         setTemplates(
           templates.filter((template) => template._id !== deletingTemplate._id)
@@ -76,7 +75,6 @@ const SavedTemplatesScreen = ({ navigation }) => {
   return (
     <>
       <View>
-        {/* Static section at the top */}
         <StatusBar barStyle='light-content' backgroundColor='#007BFF' />
 
         <Appbar.Header style={styles.header}>
@@ -91,7 +89,6 @@ const SavedTemplatesScreen = ({ navigation }) => {
         </Appbar.Header>
       </View>
       <View style={styles.low_outer}>
-        {/* template */}
         <View style={styles.scrollViewOuterStyle}>
           <ScrollView
             style={{ flex: 1 }}
@@ -108,9 +105,9 @@ const SavedTemplatesScreen = ({ navigation }) => {
                       <Image
                         style={styles.image_style}
                         source={{
-                          uri: item.capturedImageBase64
-                            ? `data:image/jpeg;base64,${item.capturedImageBase64}`
-                            : 'https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png',
+                          uri:
+                            item.imageUrl ||
+                            'https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png',
                         }}
                       />
                     </View>
