@@ -16,32 +16,35 @@ const Managemap = () => {
   const [points, setPoints] = useState([]);
   const [partitionPolygons, setPartitionPolygons] = useState([]);
   const [drawingEnabled, setDrawingEnabled] = useState(false);
+  const [editingPolygonIndex, setEditingPolygonIndex] = useState(null);
+  const [selectedPolygonIndex, setSelectedPolygonIndex] = useState(null);
+  const [undoStack, setUndoStack] = useState([]);
   const drawingManagerRef = useRef(null);
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [mapTypeId, setMapTypeId] = useState('roadmap');
 
   const handleGeofenceComplete = (polygon) => {
-    polygon.setEditable(true);
-    const newPoints = polygon
-      .getPath()
-      .getArray()
-      .map((latLng) => ({ latitude: latLng.lat(), longitude: latLng.lng() }));
+    const newPoints = polygon.getPath().getArray().map((latLng) => ({
+      latitude: latLng.lat(),
+      longitude: latLng.lng(),
+    }));
 
     setPartitionPolygons((prevPolygons) => [...prevPolygons, newPoints]);
     setDrawingEnabled(false);
   };
 
-  const enableDrawingMode = () => {
-    setDrawingEnabled(true);
-    if (drawingManagerRef.current) {
-      drawingManagerRef.current.setDrawingMode(window.google.maps.drawing.OverlayType.POLYGON);
-    }
-  };
-
-  const disableDrawingMode = () => {
-    setDrawingEnabled(false);
-    if (drawingManagerRef.current && drawingManagerRef.current.state.drawingControlPosition) {
-      drawingManagerRef.current.state.setDrawingMode(null);
+  const toggleDrawingMode = () => {
+    setDrawingEnabled((prevState) => !prevState);
+    setEditingPolygonIndex(null);
+    setSelectedPolygonIndex(null);
+    if (!drawingEnabled) {
+      if (drawingManagerRef.current) {
+        drawingManagerRef.current.setDrawingMode(window.google.maps.drawing.OverlayType.POLYGON);
+      }
+    } else {
+      if (drawingManagerRef.current && drawingManagerRef.current.state.drawingControlPosition) {
+        drawingManagerRef.current.state.setDrawingMode(null);
+      }
     }
   };
 
@@ -56,6 +59,64 @@ const Managemap = () => {
       console.error("Error saving partition polygons:", error);
       alert("Failed to save partition polygons.");
     }
+  };
+
+  const handlePolygonClick = (index) => {
+    setSelectedPolygonIndex(index);
+    setEditingPolygonIndex(null);
+  };
+
+  const deleteSelectedPolygon = async () => {
+    if (selectedPolygonIndex !== null) {
+      const updatedPolygons = partitionPolygons.filter((_, index) => index !== selectedPolygonIndex);
+      setPartitionPolygons(updatedPolygons);
+      setSelectedPolygonIndex(null);
+      
+      try {
+        await AxiosInstance.put(`/api/auth/mapTemplate/savePartitionPoints/${templateId}`, {
+          partitionPolygons: updatedPolygons,
+        });
+        alert("Partition polygon deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting partition polygon:", error);
+        alert("Failed to delete partition polygon.");
+      }
+    }
+  };
+
+  const editSelectedPolygon = () => {
+    if (selectedPolygonIndex !== null) {
+      setEditingPolygonIndex(selectedPolygonIndex);
+      setSelectedPolygonIndex(null);
+      setUndoStack([]);
+    }
+  };
+
+  const handlePolygonEdit = (index, event) => {
+    if (editingPolygonIndex === index) {
+      const updatedPolygons = [...partitionPolygons];
+      const newPoints = event.getPath().getArray().map((latLng) => ({
+        latitude: latLng.lat(),
+        longitude: latLng.lng(),
+      }));
+      setUndoStack((prevStack) => [...prevStack, updatedPolygons[index]]);
+      updatedPolygons[index] = newPoints;
+      setPartitionPolygons(updatedPolygons);
+    }
+  };
+
+  const undoEdit = () => {
+    if (undoStack.length > 0) {
+      const updatedPolygons = [...partitionPolygons];
+      updatedPolygons[editingPolygonIndex] = undoStack[undoStack.length - 1];
+      setPartitionPolygons(updatedPolygons);
+      setUndoStack((prevStack) => prevStack.slice(0, -1));
+    }
+  };
+
+  const finishEditing = () => {
+    setEditingPolygonIndex(null);
+    setUndoStack([]);
   };
 
   useEffect(() => {
@@ -100,7 +161,7 @@ const Managemap = () => {
             mapTypeControl: false,
             streetViewControl: false,
             fullscreenControl: false,
-            gestureHandling: 'greedy'  // This allows zooming in satellite mode
+            gestureHandling: 'greedy'
           }}
         >
           {points.length > 1 && (
@@ -127,8 +188,12 @@ const Managemap = () => {
                 strokeWeight: 2,
                 fillColor: "rgba(0, 0, 255, 0.2)",
                 fillOpacity: 0.4,
-                zIndex: 2
+                zIndex: 2,
+                editable: editingPolygonIndex === index,
+                clickable: true
               }}
+              onClick={() => handlePolygonClick(index)}
+              onEdit={(e) => handlePolygonEdit(index, e)}
             />
           ))}
 
@@ -138,9 +203,6 @@ const Managemap = () => {
               onPolygonComplete={handleGeofenceComplete}
               options={{
                 drawingControl: false,
-                drawingControlOptions: {
-                  position: window.google.maps.ControlPosition.TOP_CENTER,
-                },
                 polygonOptions: {
                   fillColor: "#0000FF",
                   fillOpacity: 0.4,
@@ -156,57 +218,25 @@ const Managemap = () => {
             />
           )}
 
-          {!drawingEnabled && (
-            <button
-              onClick={enableDrawingMode}
-              style={{
-                position: "absolute",
-                top: "10px",
-                left: "10px",
-                zIndex: 1,
-              }}
-            >
-              Enable Drawing Mode
+          <div style={{ position: "absolute", top: "10px", left: "10px", zIndex: 1 }}>
+            <button onClick={toggleDrawingMode}>
+              {drawingEnabled ? "Disable Drawing Mode" : "Enable Drawing Mode"}
             </button>
-          )}
-
-          {drawingEnabled && (
-            <button
-              onClick={disableDrawingMode}
-              style={{
-                position: "absolute",
-                top: "10px",
-                left: "10px",
-                zIndex: 1,
-              }}
-            >
-              Disable Drawing Mode
-            </button>
-          )}
-
-          <button
-            onClick={savePartitionPoints}
-            style={{
-              position: "absolute",
-              top: "50px",
-              left: "10px",
-              zIndex: 1,
-            }}
-          >
-            Save Partition Polygons
-          </button>
-
-          <button
-            onClick={toggleMapType}
-            style={{
-              position: "absolute",
-              top: "90px",
-              left: "10px",
-              zIndex: 1,
-            }}
-          >
-            Toggle Map Type
-          </button>
+            <button onClick={savePartitionPoints}>Save Partition Polygons</button>
+            <button onClick={toggleMapType}>Toggle Map Type</button>
+            {selectedPolygonIndex !== null && (
+              <>
+                <button onClick={deleteSelectedPolygon}>Delete Selected Partition</button>
+                <button onClick={editSelectedPolygon}>Edit Selected Partition</button>
+              </>
+            )}
+            {editingPolygonIndex !== null && (
+              <>
+                <button onClick={undoEdit} disabled={undoStack.length === 0}>Undo</button>
+                <button onClick={finishEditing}>Finish Editing</button>
+              </>
+            )}
+          </div>
         </GoogleMap>
       </LoadScript>
     </div>
