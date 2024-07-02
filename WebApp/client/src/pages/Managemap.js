@@ -55,6 +55,7 @@ const Managemap = () => {
       });
       console.log('Save response:', response.data);
       alert("Partition polygons saved successfully!");
+      window.location.reload();
     } catch (error) {
       console.error("Error saving partition polygons:", error);
       alert("Failed to save partition polygons.");
@@ -79,6 +80,8 @@ const Managemap = () => {
           partitionPolygons: updatedPolygons,
         });
         alert("Partition polygon deleted successfully!");
+        //refresh the page
+        window.location.reload();
       } catch (error) {
         console.error("Error deleting partition polygon:", error);
         alert("Failed to delete partition polygon.");
@@ -128,6 +131,7 @@ const Managemap = () => {
   const finishEditing = () => {
     setEditingPolygonIndex(null);
     setUndoStack([]);
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -166,7 +170,7 @@ const Managemap = () => {
         <GoogleMap 
           mapContainerStyle={containerStyle} 
           center={center} 
-          zoom={17}
+          zoom={35}
           mapTypeId={mapTypeId}
           options={{
             mapTypeControl: false,
