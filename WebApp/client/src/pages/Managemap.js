@@ -13,22 +13,22 @@ import { useParams } from 'react-router-dom';
 
 const Managemap = () => {
   const { templateId } = useParams();
-
-  const apiKey = "AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"; // Replace with your Google Maps API key
+  const apiKey = "AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U";
   const [points, setPoints] = useState([]);
+  const [partitionPoints, setPartitionPoints] = useState([]);
   const [drawingEnabled, setDrawingEnabled] = useState(false);
-  const drawingManagerRef = useRef(null); // Ref to DrawingManager instance
+  const drawingManagerRef = useRef(null);
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
 
   const handleGeofenceComplete = (polygon) => {
-    polygon.setEditable(true); // Make the drawn polygon editable
+    polygon.setEditable(true);
     const newPoints = polygon
       .getPath()
       .getArray()
-      .map((latLng) => ({ lat: latLng.lat(), lng: latLng.lng() }));
+      .map((latLng) => ({ latitude: latLng.lat(), longitude: latLng.lng() }));
 
-    setPoints((prevPoints) => [...prevPoints, ...newPoints]);
-    setDrawingEnabled(false); // Disable drawing mode after completing polygon
+    setPartitionPoints((prevPoints) => [...prevPoints, ...newPoints]);
+    setDrawingEnabled(false);
   };
 
   const enableDrawingMode = () => {
@@ -37,31 +37,34 @@ const Managemap = () => {
 
   const disableDrawingMode = () => {
     setDrawingEnabled(false);
-    // Manually remove any drawing mode by clearing the drawing manager's drawing mode
-    if (
-      drawingManagerRef.current &&
-      drawingManagerRef.current.state.drawingControlPosition
-    ) {
+    if (drawingManagerRef.current && drawingManagerRef.current.state.drawingControlPosition) {
       drawingManagerRef.current.state.setDrawingMode(null);
+    }
+  };
+
+  const savePartitionPoints = async () => {
+    try {
+      await AxiosInstance.put(`/api/auth/mapTemplate/savePartitionPoints/${templateId}`, {
+        partitionPoints,
+      });
+      alert("Partition points saved successfully!");
+    } catch (error) {
+      console.error("Error saving partition points:", error);
+      alert("Failed to save partition points.");
     }
   };
 
   useEffect(() => {
     const fetchTemplateData = async () => {
-      console.log("Template ID:", templateId);
-
-      // Fetch template data using the templateId
       try {
         const response = await AxiosInstance.get(`/api/auth/mapTemplate/getOneTemplate/${templateId}`);
-        const points = response.data.locationPoints;
-        setPoints(points);
-        console.log(points);
+        const fetchedPoints = response.data.locationPoints;
+        const fetchedPartitionPoints = response.data.partitionPoints || [];
+        setPoints(fetchedPoints);
+        setPartitionPoints(fetchedPartitionPoints);
 
-        // Calculate the average latitude and longitude
-        const avgLatitude =
-          points.reduce((total, point) => total + point.latitude, 0) / points.length;
-        const avgLongitude =
-          points.reduce((total, point) => total + point.longitude, 0) / points.length;
+        const avgLatitude = fetchedPoints.reduce((total, point) => total + point.latitude, 0) / fetchedPoints.length;
+        const avgLongitude = fetchedPoints.reduce((total, point) => total + point.longitude, 0) / fetchedPoints.length;
 
         setCenter({ lat: avgLatitude, lng: avgLongitude });
       } catch (error) {
@@ -78,20 +81,16 @@ const Managemap = () => {
         <SideNavbar />
       </div>
 
-      <LoadScript
-        googleMapsApiKey={apiKey}
-        libraries={["places", "drawing", "geometry"]}
-      >
+      <LoadScript googleMapsApiKey={apiKey} libraries={["places", "drawing", "geometry"]}>
         <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={17}>
           {points.map((point, index) => (
             <Marker
               key={index}
               position={{ lat: point.latitude, lng: point.longitude }}
-              zIndex={10} // Ensure markers are on top
+              zIndex={10}
             />
           ))}
 
-          {/* Polygon to connect the points */}
           {points.length > 1 && (
             <Polygon
               path={points.map(point => ({ lat: point.latitude, lng: point.longitude }))}
@@ -106,7 +105,20 @@ const Managemap = () => {
             />
           )}
 
-          {/* DrawingManager only when drawingEnabled is true */}
+          {partitionPoints.length > 1 && (
+            <Polygon
+              path={partitionPoints.map(point => ({ lat: point.latitude, lng: point.longitude }))}
+              options={{
+                strokeColor: "#0000FF",
+                strokeOpacity: 1.0,
+                strokeWeight: 2,
+                fillColor: "rgba(0, 0, 255, 0.2)",
+                fillOpacity: 0.4,
+                zIndex: 2
+              }}
+            />
+          )}
+
           {drawingEnabled && (
             <DrawingManager
               ref={drawingManagerRef}
@@ -117,21 +129,20 @@ const Managemap = () => {
                   position: window.google.maps.ControlPosition.TOP_CENTER,
                 },
                 polygonOptions: {
-                  fillColor: "#FF0000",
+                  fillColor: "#0000FF",
                   fillOpacity: 0.4,
-                  strokeColor: "#FF0000",
+                  strokeColor: "#0000FF",
                   strokeOpacity: 1,
                   strokeWeight: 2,
-                  editable: true, // Make the drawn polygon editable
+                  editable: true,
                   clickable: true,
-                  zIndex: 1,
+                  zIndex: 2,
                 },
                 drawingMode: window.google.maps.drawing.OverlayType.POLYGON,
               }}
             />
           )}
 
-          {/* Button to enable drawing mode */}
           {!drawingEnabled && (
             <button
               onClick={enableDrawingMode}
@@ -146,7 +157,6 @@ const Managemap = () => {
             </button>
           )}
 
-          {/* Button to disable drawing mode */}
           {drawingEnabled && (
             <button
               onClick={disableDrawingMode}
@@ -160,6 +170,18 @@ const Managemap = () => {
               Disable Drawing Mode
             </button>
           )}
+
+          <button
+            onClick={savePartitionPoints}
+            style={{
+              position: "absolute",
+              top: "50px",
+              left: "10px",
+              zIndex: 1,
+            }}
+          >
+            Save Partition Points
+          </button>
         </GoogleMap>
       </LoadScript>
     </div>

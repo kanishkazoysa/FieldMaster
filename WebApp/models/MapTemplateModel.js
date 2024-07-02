@@ -44,6 +44,10 @@ const MapTemplateSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  partitionPoints: {
+    type: [PointSchema],
+    default: [],
+  },
 });
 
 module.exports = mongoose.model('MapTemplate', MapTemplateSchema);
