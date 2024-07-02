@@ -14,7 +14,7 @@ import { shareAsync } from 'expo-sharing';
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import {styles} from './FertilizingDetailsStyles';
-
+import { Appbar, Button } from "react-native-paper";
 
 export default function FertilizationDetails({ route }) {
   const { params } = route;
@@ -54,6 +54,8 @@ export default function FertilizationDetails({ route }) {
   useEffect(() =>{
     setTotal((plantcount*totalAmount/1000));
   })
+
+
 
 
 
@@ -153,6 +155,10 @@ export default function FertilizationDetails({ route }) {
   const navigation = useNavigation();
   const handleFertilizationDetails = () => {
     navigation.navigate("Fence");
+  };
+
+  const backToHome = () => {
+    navigation.navigate("Home");
   };
 
 
@@ -309,23 +315,77 @@ export default function FertilizationDetails({ route }) {
         {/* Bottom section */}
 
         <View style={styles.bottom}>
-
-          <CustomButton
-            onPress={print}
-            text="Save As PDF"
-            iconName="content-save-outline" 
-            iconColor="white" 
-            buttonColor="#E41E3F"
-          />
-
-          <CustomButton
-            onPress={printToFile}
-            text="Share PDF"
-            iconName="share-variant" 
-            iconColor="white" 
-            buttonColor="#007BFF" 
-          />
-        </View>
+            <View style={styles.buttonContainer}>
+              <View style={styles.buttonWrapper}>
+                <Button
+                  style={{
+                    height: 40,
+                    marginTop: 10,
+                    borderRadius: 18,
+                    borderColor: "red", // Add this line for the border color
+                    borderWidth: 1, // Ensure the border is visible by setting the borderWidth
+                  }}
+                  mode="elevated"
+                  onPress={print}
+                  labelStyle={{ color: "red", fontSize: 14 }}
+                  icon={() => (
+                    <MaterialCommunityIcons
+                      name="content-save-outline"
+                      size={20}
+                      color="red"
+                    />
+                  )}
+                >
+                  Save As PDF
+                </Button>
+              </View>
+              <View style={styles.buttonWrapper}>
+                <Button
+                  style={{
+                    height: 40,
+                    marginTop: 10,
+                    borderRadius: 18,
+                    borderColor: "#007BFF", // Add this line for the border color
+                    borderWidth: 1, // Ensure the border is visible by setting the borderWidth
+                  }}
+                  mode="elevated"
+                  onPress={printToFile}
+                  labelStyle={{ color: "#007BFF", fontSize: 14 }}
+                  icon={() => (
+                    <MaterialCommunityIcons
+                      name="share-variant"
+                      size={20}
+                      color="#007BFF"
+                    />
+                  )}
+                >
+                 Share PDF
+                </Button>
+              </View>
+            </View>
+            <Button
+              style={{
+                height: 40,
+                marginTop: 10,
+                borderRadius: 18,
+                width: "87%",
+                borderColor: "black", // Add this line for the border color
+                borderWidth: 0.2, // Ensure the border is visible by setting the borderWidth
+              }}
+              mode="contained-tonal"
+              onPress={backToHome}
+              labelStyle={{  fontSize: 14 }}
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="home-import-outline"
+                  size={20}
+                  color="black"
+                />
+              )}
+            >
+              Back To Home
+            </Button>
+          </View>
       </ScrollView>
 
 

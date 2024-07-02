@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   StatusBar,
+  ActivityIndicator,
 } from "react-native";
 import { Polyline } from "react-native-maps";
 import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
@@ -33,12 +34,13 @@ const ResizeMapScreen = ({ navigation, route }) => {
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [currentLocation, setCurrentLocation] = useState(null);
   const mapRef = React.useRef(null);
-  
+  const [loading, setLoading] = useState(true);
+
   const [isButtonPressed, setIsButtonPressed] = useState(false);
   const [isMarkerMoved, setIsMarkerMoved] = useState(false);
   const [undoStack, setUndoStack] = useState([]);
   const [calculatedArea, setCalculatedArea] = useState(parseFloat(Area) || 0);
-const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) || 0);
+  const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) || 0);
 
   const closeModal = () => {
     setModalVisible(false);
@@ -100,7 +102,7 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
         .then((response) => {
           setPoints(response.data.locationPoints.map(point => ({ ...point, isMain: true })));
           console.log(response.data.locationPoints);
-
+           
           // Calculate the average latitude and longitude
           const avgLatitude =
             response.data.locationPoints.reduce(
@@ -119,12 +121,16 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
             latitudeDelta: 0.0005,
             longitudeDelta: 0.0005,
           });
+          setTimeout(() => {
+            setLoading(false);
+          }, 2000);
         })
         .catch((error) => {
           console.error(
             "An error occurred while fetching the template:",
             error
           );
+          setLoading(false);
         });
     })();
   }, []);
@@ -309,6 +315,17 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
         Perimeter: {polygonPerimeter.toFixed(3)} km
       </Text>
     </View>
+    {loading ? (
+        <View style={styles.loadingScreen}>
+          <View style={styles.dotsWrapper}>
+        <ActivityIndicator 
+           color="#007BFF" 
+           size={45} 
+           />
+      </View>
+        </View>
+      ) : (
+        <View style={{ flex: 1 }}>
       {region && (
         <View style={{ flex: 1 }}>
           <MapView
@@ -410,6 +427,8 @@ const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) |
             </TouchableOpacity>
           </View>
         </View>
+      )}
+      </View>
       )}
     </>
   );
