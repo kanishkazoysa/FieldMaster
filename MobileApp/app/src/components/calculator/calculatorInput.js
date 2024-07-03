@@ -24,7 +24,7 @@ import { useFocusEffect } from "@react-navigation/native";
 const convertAreaToSqMeters = (area, unit) => {
   const conversionRates = {
     "sqm": 1,         // 1 square meter = 1 square meter
-    "Perches": 25.29,  // 1 Perch = 25.2929 sq meters
+    "Perches": 25.29,  // 1 Perch = 25.29 sq meters
     "acres": 4046.86,  // 1 Acre = 4046.86 sq meters
   };
   return area * (conversionRates[unit] || 1);

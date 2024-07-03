@@ -11,9 +11,9 @@ import Select from "react-select";
 import AxiosInstance from "../../../AxiosInstance";
 import axios from "axios";
 import PlantationDetailsManual from "../PlantationDetailsManual/PlantationDetailsManual";
+import { message } from "antd";
+export default function Plantation({ onBackToSidebar, area, perimeter, PerimeterUnitselectedValue, AreaUnitselectedValue }) {
 
-export default function Plantation({ onBackToSidebar,area,perimeter,PerimeterUnitselectedValue,AreaUnitselectedValue }) {
- 
   const [textPlant, settextPlant] = useState(null);
   const [PlantSpaceUnitselectedValue, setPlantSpaceUnitselectedValue] =
     useState("");
@@ -30,7 +30,24 @@ export default function Plantation({ onBackToSidebar,area,perimeter,PerimeterUni
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
 
+  let plantSpaceInMeters = textplantspace;
+  let rowSpaceInMeters = textRowspace;
 
+  // Convert to meters if the selected unit is 'cm'
+  if (PlantSpaceUnitselectedValue === "cm") {
+    plantSpaceInMeters = parseFloat(textplantspace) / 100;
+  }
+  if (PlantSpaceUnitselectedValue === "m") {
+    plantSpaceInMeters = plantSpaceInMeters;
+  }
+
+  if (PlantSpaceUnitselectedValue === "cm") {
+    rowSpaceInMeters = parseFloat(textRowspace) / 100;
+  }
+  if (PlantSpaceUnitselectedValue === "m") {
+    rowSpaceInMeters = rowSpaceInMeters;
+    ;
+  }
   const handleInput1Change = (event) => {
     settextplantspace(event.target.value);
   };
@@ -56,7 +73,8 @@ export default function Plantation({ onBackToSidebar,area,perimeter,PerimeterUni
 
   const handlePlantationDetails = async (e) => {
     e.preventDefault();
-  
+
+
     // Validate required fields
     if (
       !PlantSpaceUnitselectedValue ||
@@ -65,10 +83,18 @@ export default function Plantation({ onBackToSidebar,area,perimeter,PerimeterUni
       !textplantspace ||
       !textRowspace
     ) {
-      Swal.fire("Error: Please fill in all fields");
+      message.error("Error: Please fill in all fields");
       return;
     }
-  
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(textplantspace)) {
+      message.error("Error: Please enter a valid value for plant space")
+      return;
+    }
+    if (!regex.test(textRowspace)) {
+      message.error("Error: Please enter a valid value for row space")
+      return;
+    }
     const requestData = {
       textPlant,
       textplantspace,
@@ -76,8 +102,15 @@ export default function Plantation({ onBackToSidebar,area,perimeter,PerimeterUni
       PlantSpaceUnitselectedValue,
       RowSpaceUnitselectedValue
     };
-  
-    AxiosInstance.post("/api/plantation/plantationFromManualCalculator", requestData)
+
+    AxiosInstance.post("/api/plantation/plantationFromManualCalculator",
+      {
+        area,
+        textPlant,
+        textplantspace: plantSpaceInMeters,
+        textRowspace: rowSpaceInMeters,
+        PlantSpaceUnitselectedValue: "m"
+      })
       .then((response) => {
         console.log("Response:", response.data);
         setCurrentPage("PlantationDetailsManual");
@@ -96,40 +129,37 @@ export default function Plantation({ onBackToSidebar,area,perimeter,PerimeterUni
     }, 300);
   };
 
-// calculating the number of plants and density
-function calculateNumberOfPlants(area, plantSpacing, rowSpacing) {
- 
-  const areaPerPlant = plantSpacing * rowSpacing;
-  const numberOfPlants = Math.floor(area / areaPerPlant);
-  return numberOfPlants;
-}
+  // calculating the number of plants and density
+  function calculateNumberOfPlants(area, plantSpacing, rowSpacing) {
 
-function RoundToTwoDecimals(number) {
-  return Math.round(number * 100) / 100;
-}
-function calculatePlantationDensity(area, plantSpacing, rowSpacing) {
-  const areaInSquareMeters = parseFloat(area) ;
-
-  // const plantSpacing = parseFloat(plantSpacingInMeters);
-  // const rowSpacing = parseFloat(rowSpacingInMeters);
-
-  const areaPerPlant = plantSpacing * rowSpacing;
-  const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
-  const plantationDensity = RoundToTwoDecimals(numberOfPlants / areaInSquareMeters);
-
-  return plantationDensity;
-}
-function convertToCommonUnit(value, unit) {
-  if (unit === 'cm') {
-      return value / 100;
-  } else {
-      return value;
+    const areaPerPlant = plantSpacing * rowSpacing;
+    const numberOfPlants = Math.floor(area / areaPerPlant);
+    return numberOfPlants;
   }
-}
-        const plantSpacing = convertToCommonUnit(textplantspace, PlantSpaceUnitselectedValue);
-        const rowSpacing = convertToCommonUnit(textRowspace,PlantSpaceUnitselectedValue );
-        const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
-        const calculatedPlantDensity = calculatePlantationDensity(area, plantSpacing, rowSpacing);
+
+  function RoundToTwoDecimals(number) {
+    return Math.round(number * 100) / 100;
+  }
+  function calculatePlantationDensity(area, plantSpacing, rowSpacing) {
+    const areaInSquareMeters = parseFloat(area);
+
+    const areaPerPlant = plantSpacing * rowSpacing;
+    const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
+    const plantationDensity = RoundToTwoDecimals(numberOfPlants / areaInSquareMeters);
+
+    return plantationDensity;
+  }
+  function convertToCommonUnit(value, unit) {
+    if (unit === 'cm') {
+      return value / 100;
+    } else {
+      return value;
+    }
+  }
+  const plantSpacing = convertToCommonUnit(textplantspace, PlantSpaceUnitselectedValue);
+  const rowSpacing = convertToCommonUnit(textRowspace, PlantSpaceUnitselectedValue);
+  const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
+  const calculatedPlantDensity = calculatePlantationDensity(area, plantSpacing, rowSpacing);
 
 
 
@@ -163,7 +193,7 @@ function convertToCommonUnit(value, unit) {
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {/* {area} m<sup>2</sup> */}{area } {AreaUnitselectedValue}
+                    {area} {AreaUnitselectedValue}
                   </p>
                 </div>
               </div>
@@ -202,7 +232,7 @@ function convertToCommonUnit(value, unit) {
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="number"
+                  type="text"
                   style={styles.box3input}
                   placeholder="0"
                   value={textplantspace}
@@ -212,7 +242,7 @@ function convertToCommonUnit(value, unit) {
                   placeholder="m"
                   options={[
                     { value: "m", label: "m" },
-                   // { value: "cm", label: "cm" },
+                    { value: "cm", label: "cm" },
                   ]}
                   value={PlantSpaceUnitselectedValue1}
                   onChange={handlePlantSpaceUnitChange}
@@ -241,7 +271,7 @@ function convertToCommonUnit(value, unit) {
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="number"
+                  type="text"
                   style={styles.box3input}
                   placeholder="0"
                   value={textRowspace}
@@ -251,7 +281,7 @@ function convertToCommonUnit(value, unit) {
                   placeholder="m"
                   options={[
                     { value: "m", label: "m" },
-                    //{ value: "cm", label: "cm" },
+                    { value: "cm", label: "cm" },
                   ]}
                   value={RowSpaceUnitselectedValue1}
                   onChange={handleRowSpaceUnitChange}

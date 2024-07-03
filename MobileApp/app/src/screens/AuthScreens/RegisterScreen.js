@@ -31,7 +31,6 @@ export default function RegisterScreen() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigation = useNavigation();
   const [passwordError, setPasswordError] = useState("");
-  const [emailError, setEmailError] = useState("");
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -164,7 +163,6 @@ export default function RegisterScreen() {
                 activeOutlineColor="#007BFF"
                 style={{
                   width: responsiveWidth(87),
-                  height: responsiveHeight(6),
                   fontSize: responsiveFontSize(1.9),
                 }}
                 theme={{ roundness: 10 }}
@@ -195,7 +193,6 @@ export default function RegisterScreen() {
                 theme={{ roundness: 10 }}
                 style={{
                   width: responsiveWidth(87),
-                  height: responsiveHeight(6),
                   fontSize: responsiveFontSize(1.9),
                 }}
                 value={confirmPassword}
@@ -336,7 +333,6 @@ const styles = StyleSheet.create({
   },
   inputButton: {
     width: responsiveWidth(87),
-    height: responsiveHeight(6),
     fontSize: responsiveFontSize(1.9),
     marginBottom: 10,
   },

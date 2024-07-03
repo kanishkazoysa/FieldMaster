@@ -104,7 +104,6 @@ export default function LoginScreen() {
               theme={{ roundness: 10 }}
               style={{
                 width: responsiveWidth(87),
-                height: responsiveHeight(6.5),
                 fontSize: responsiveFontSize(1.9),
               }}
               value={email}
@@ -121,7 +120,6 @@ export default function LoginScreen() {
               activeOutlineColor="#007BFF"
               style={{
                 width: responsiveWidth(87),
-                height: responsiveHeight(6.5),
                 fontSize: responsiveFontSize(1.9),
               }}
               secureTextEntry

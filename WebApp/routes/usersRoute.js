@@ -5,6 +5,7 @@ const nodemailer = require("nodemailer");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const UserLogin = require("../models/userLogin");
 const { PassThrough } = require("nodemailer/lib/xoauth2");
 const auth = require("../middleware/middleware");
 const multer = require('multer');
@@ -37,7 +38,7 @@ router.post("/register", async (req, res) => {
     subject: "FieldMaster Email Verification",
     html: `
       <div style="text-align: center;">
-        <img src="https://drive.google.com/uc?export=view&id=180piTLBcaAil8Nfn7hcmADai01Wej4XJ" alt="FieldMaster Logo" style="width: 200px;"/>
+        <img src="https://i.ibb.co/JzHBV01/logo.png" alt="FieldMaster Logo" style="width: 200px;"/>
         <h1>Welcome to FieldMaster</h1>
         <p>Click the link below to verify your FieldMaster account:</p>
         <a href="http://localhost:5000/api/users/emailVerification/${email}/${VerifyId}" style="background-color: #4CAF50; color: white; padding: 14px 20px; text-align: center; text-decoration: none; display: inline-block;">Verify</a>
@@ -153,6 +154,22 @@ router.post("/login", async (req, res) => {
       token: token,
       message: "User logged in successfully",
     });
+
+    //update user login details in login table
+    let type = "User";
+
+    if(user.isAdmin){
+      type = "Admin"
+    }
+    const userLogin = new UserLogin({
+      userId: user._id,
+      userType: type,
+      ipAddress: req.ip,
+  });
+  
+  await userLogin.save();
+
+
   } catch (error) {
     console.error(error);
     return res
@@ -313,5 +330,31 @@ router.post('/removeProfilePicture', auth, async (req, res) => {
     res.status(500).send({ success: false, message: 'Server error' });
   }
 });
+
+router.post("/loginData", async (req, res) => {
+  try {
+      const loginData = await UserLogin.aggregate([
+          {
+              $group: {
+                  _id: {
+                      $dateToString: {
+                          format: "%Y-%m-%d",
+                          date: "$timestamp",
+                      },
+                  },
+
+                  count: { $sum: 1 },
+              },
+          },
+          { $sort: { _id: 1 } },
+      ]);
+
+      res.json(loginData);
+  } catch (error) {
+      console.error("Error fetching login data:", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 module.exports = router;

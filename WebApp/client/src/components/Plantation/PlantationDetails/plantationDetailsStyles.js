@@ -87,7 +87,7 @@ export const styles = {
     propertyDetails: {
       flexDirection: "column",
       marginLeft: 5,
-      width: "70%",
+      width: "90%",
       //height: 40,
       backgroundColor: "white",
     },

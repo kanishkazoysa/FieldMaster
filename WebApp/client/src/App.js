@@ -13,7 +13,7 @@ import Navbar from "./components/HomeComponents/navbar/Navbar";
 import Hero from "./components/HomeComponents/Hero/Hero";
 import About from "./components/HomeComponents/About";
 import Pricing from "./components/HomeComponents/Pricing";
-import Setup from "./components/HomeComponents/SetupCard";
+import Setup from "./components/HomeComponents/Setup";
 import ContactForm from "./components/HomeComponents/contact/contact";
 import "./index.css";
 import Home from "./pages/Home/Home";
@@ -27,6 +27,7 @@ import OtpPage from "./pages/auth/ForgotPassowrd/OtpPage";
 import CPPage from "./pages/auth/ForgotPassowrd/CPPage";
 import Admin from "./pages/Admin/AdminDashboard";
 import { jwtDecode } from "jwt-decode";
+import ResizeMap from "./components/ResizeMap/ResizeMap"
 
 const checkTokenExpired = (token) => {
   if (!token) {
@@ -43,48 +44,45 @@ const checkTokenExpired = (token) => {
   }
 };
 
+
 const UserRouteGuard = ({ children }) => {
   const token = localStorage.getItem("UserToken");
   const AdminToken = localStorage.getItem("AdminToken");
 
-  if (checkTokenExpired(token)) {
-    localStorage.removeItem("UserToken");
-    return <Navigate to="/login" />;
+  React.useEffect(() => {
+    if (checkTokenExpired(token)) {
+      localStorage.removeItem("UserToken");
+    }
+    if (checkTokenExpired(AdminToken)) {
+      localStorage.removeItem("AdminToken");
+    }
+  }, [token, AdminToken]);
+
+  if (!token && !AdminToken) {
+    return <Navigate to="/login" replace />;
   }
 
-  if (checkTokenExpired(AdminToken)) {
-    localStorage.removeItem("AdminToken");
-    return <Navigate to="/login" />;
-  }
-
-  if (token || AdminToken) {
-    return children;
-  } else {
-    return <Navigate to="/login" />;
-  }
+  return children;
 };
 
 const AdminRouteGuard = ({ children }) => {
   const AdminToken = localStorage.getItem("AdminToken");
   const UserToken = localStorage.getItem("UserToken");
 
-  if (checkTokenExpired(AdminToken)) {
-    localStorage.removeItem("AdminToken");
-    return <Navigate to="/login" />;
+  React.useEffect(() => {
+    if (checkTokenExpired(AdminToken)) {
+      localStorage.removeItem("AdminToken");
+    }
+    if (checkTokenExpired(UserToken)) {
+      localStorage.removeItem("UserToken");
+    }
+  }, [AdminToken, UserToken]);
+
+  if (!AdminToken) {
+    return <Navigate to="/login" replace />;
   }
 
-  if (checkTokenExpired(UserToken)) {
-    localStorage.removeItem("UserToken");
-    return <Navigate to="/login" />;
-  }
-
-  if (AdminToken) {
-    return children;
-  } else if (UserToken) {
-    return <Navigate to="/home" />;
-  } else {
-    return <Navigate to="/login" />;
-  }
+  return children;
 };
 
 const AuthRouteGuard = ({ children }) => {
@@ -200,6 +198,7 @@ export default function App() {
         />
         <Route path="/emailVerification" element={<EmailVerified />} />
         <Route path="/managemap" element={<Managemap />} />
+        <Route path="/resizemap" element={<ResizeMap />} />
       </Routes>
     </Router>
   );

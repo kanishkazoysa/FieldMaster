@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Polygon } from "react-native-maps";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { View, Text, FlatList, TouchableOpacity, Modal } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Modal,ActivityIndicator } from "react-native";
 import { TextInput, Alert } from "react-native";
 import { Polyline } from "react-native-maps";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -33,6 +33,7 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [isButtonPressed, setIsButtonPressed] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   /* the closeModal function is used to close the modal */
   const closeModal = () => {
@@ -79,6 +80,7 @@ const PointAddingScreen = ({ navigation, route }) => {
         longitudeDelta: 0.0005,
       });
       setCurrentLocation(location);
+      setLoading(false);
     })();
   }, []);
 
@@ -209,6 +211,18 @@ const PointAddingScreen = ({ navigation, route }) => {
 
   return (
     <>
+    
+    {loading ? (
+        <View style={styles.loadingScreen}>
+          <View style={styles.dotsWrapper}>
+        <ActivityIndicator 
+           color="#007BFF" 
+           size={45} 
+           />
+      </View>
+        </View>
+      ) : (
+        <View style={{ flex: 1 }}>
       <View style={styles.searchbar}>
         <View style={styles.locationIconContainer}>
           <MaterialIcons
@@ -282,6 +296,7 @@ const PointAddingScreen = ({ navigation, route }) => {
         </View>
       </Modal>
       {/* including map view */}
+      <View style={{ flex: 1 }}>
       {region && (
         <View style={{ flex: 1 }}>
           <MapView
@@ -406,6 +421,10 @@ const PointAddingScreen = ({ navigation, route }) => {
           </View>
         </View>
       )}
+      </View>
+      </View>
+      )}
+      
     </>
   );
 };

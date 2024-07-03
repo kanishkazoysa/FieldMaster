@@ -212,8 +212,8 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
                   color="#65676B"
                 />
                 <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Area(m{"\u00B2"})</Text>
-                  <Text style={styles.Box2PropertyValue}>{area} </Text>
+                  <Text style={styles.Box2PropertyLabel}>Area</Text>
+                  <Text style={styles.Box2PropertyValue}>{area} m{"\u00B2"}</Text>
                 </View>
               </View>
             </View>
@@ -233,7 +233,7 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
                       size={30}
                       color="#65676B"
                     />
-                    <Text style={styles.LeftText}>Plant :</Text>
+                    <Text style={styles.LeftText}>Plant               :</Text>
                   </View>
                   <View style={styles.innersquareright}>
                     <Text style={styles.RightText}>{textPlant}</Text>
@@ -247,7 +247,7 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
                       size={30}
                       color="#65676B"
                     />
-                    <Text style={styles.LeftText}>Plant Spaing :</Text>
+                    <Text style={styles.LeftText}>Plant Spacing :</Text>
                   </View>
                   <View style={styles.innersquareright}>
                     <Text style={styles.RightText}>
@@ -263,7 +263,7 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
                       size={30}
                       color="#65676B"
                     />
-                    <Text style={styles.LeftText}>Row Spaing :</Text>
+                    <Text style={styles.LeftText}>Row Spacing   :</Text>
                   </View>
                   <View style={styles.innersquareright}>
                     <Text style={styles.RightText}>

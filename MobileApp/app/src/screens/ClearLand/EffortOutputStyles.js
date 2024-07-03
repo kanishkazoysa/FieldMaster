@@ -6,6 +6,34 @@ import {
   } from "react-native-responsive-dimensions";
 
 export const styles = StyleSheet.create({
+  loadingScreen: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  dotsWrapper: {
+    width: 100,
+  },
+
+  top_Bar: {
+    justifyContent:"space-between",
+    height: responsiveHeight(6.5),
+    backgroundColor: '#007BFF',
+
+    ...Platform.select({
+      android: {
+        marginTop: responsiveHeight(3),
+      },
+    }),
+  },
+
+  headerText: {
+    fontSize: responsiveFontSize(2.3),
+    marginRight: responsiveWidth(3.5),
+    textAlign: "center",
+    color: "white",
+  },
     topSection: {
       flexDirection: "row",
       marginTop: responsiveHeight(0.5),
@@ -21,6 +49,7 @@ export const styles = StyleSheet.create({
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
+      marginTop:50,
     },
     card1: {
       height: responsiveHeight(15),
@@ -72,7 +101,7 @@ export const styles = StyleSheet.create({
       height: responsiveHeight(10),
       marginTop: responsiveHeight(1.5),
       backgroundColor: "#fff",
-      width: "93%",
+      width: "87%",
       borderRadius: 11,
     },
     card2Content: {
@@ -137,11 +166,20 @@ export const styles = StyleSheet.create({
       marginLeft: responsiveWidth(1),
       fontWeight: "bold",
     },
-    customButtons: {
-      display: "flex",
-      flexDirection: "column",
-      marginTop: responsiveHeight(10),
-      justifyContent: "space-between",
+    bottom: {
+      flexDirection:"column",
+      alignItems: "center",
+      justifyContent:  "center",
+      marginTop: responsiveHeight(20),
+    },
+
+    buttonContainer: {
+      flexDirection: 'row',
+      width: '86%',
+      justifyContent: 'space-between',      
+    },
+    buttonWrapper: {
+      width: '48%',
     },
   });
   
