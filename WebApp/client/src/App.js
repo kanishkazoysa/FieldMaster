@@ -27,6 +27,7 @@ import OtpPage from "./pages/auth/ForgotPassowrd/OtpPage";
 import CPPage from "./pages/auth/ForgotPassowrd/CPPage";
 import Admin from "./pages/Admin/AdminDashboard";
 import { jwtDecode } from "jwt-decode";
+import ResizeMap from "./components/ResizeMap/ResizeMap"
 
 const checkTokenExpired = (token) => {
   if (!token) {
@@ -42,6 +43,7 @@ const checkTokenExpired = (token) => {
     return true;
   }
 };
+
 
 const UserRouteGuard = ({ children }) => {
   const token = localStorage.getItem("UserToken");
@@ -196,6 +198,7 @@ export default function App() {
         />
         <Route path="/emailVerification" element={<EmailVerified />} />
         <Route path="/managemap" element={<Managemap />} />
+        <Route path="/resizemap" element={<ResizeMap />} />
       </Routes>
     </Router>
   );
