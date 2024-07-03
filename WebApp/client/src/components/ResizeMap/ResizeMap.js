@@ -180,7 +180,6 @@ const ResizeMapScreen = () => {
 
   return (
     <div style={styles.container}>
-      <SideNavbar />
       <div style={styles.mapContainer}>
         <LoadScript
           googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
