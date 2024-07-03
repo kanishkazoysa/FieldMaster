@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
   StatusBar,
+  ActivityIndicator
 } from "react-native";
 import { Appbar } from "react-native-paper";
 import { styles } from "./SavedTemplatesScreenStyles";
@@ -33,6 +34,7 @@ const CustomDeleteIcon = (props) => (
 
 const SavedTemplatesScreen = ({ navigation }) => {
   const [templates, setTemplates] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchData = () => {
     console.log("calling api to get all templates...");
@@ -40,9 +42,11 @@ const SavedTemplatesScreen = ({ navigation }) => {
       .then((response) => {
         setTemplates(response.data);
         console.log("fetching successful");
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
+        setLoading(false);
       });
   };
 
@@ -89,7 +93,18 @@ const SavedTemplatesScreen = ({ navigation }) => {
             titleStyle={styles.title_text}
           />
         </Appbar.Header>
+
       </View>
+      {loading ? (
+        <View style={styles.loadingScreen}>
+          <View style={styles.dotsWrapper}>
+        <ActivityIndicator 
+           color="#007BFF" 
+           size={45} 
+           />
+      </View>
+        </View>
+      ) : (
       <View style={styles.low_outer}>
         {/* template */}
         <View style={styles.scrollViewOuterStyle}>
@@ -153,6 +168,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
           </ScrollView>
         </View>
       </View>
+      )}
     </>
   );
 };

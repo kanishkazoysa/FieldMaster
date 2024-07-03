@@ -11,6 +11,34 @@ export const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
+
+    loadingScreen: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    dotsWrapper: {
+      width: 100,
+    },
+    top_Bar: {
+      justifyContent:"space-between",
+      height: responsiveHeight(6.5),
+      backgroundColor: '#007BFF',
+  
+      ...Platform.select({
+        android: {
+          marginTop: responsiveHeight(3),
+        },
+      }),
+    },
+  
+    headerText: {
+      fontSize: responsiveFontSize(2.3),
+      marginRight: responsiveWidth(3.5),
+      textAlign: "center",
+      color: "white",
+    },
   
     /*Top Section*/
   
@@ -41,24 +69,24 @@ export const styles = StyleSheet.create({
       flexDirection: "column",
       backgroundColor: "white",
       width: responsiveWidth(86),
-      height: responsiveHeight(15),
-      marginTop: responsiveHeight(1),
+      height: responsiveHeight(13),
+      marginTop: responsiveHeight(6),
       alignItems: "center",
       borderRadius: 11,
       shadowColor: "#000",
       shadowOpacity: 0.1,
       shadowRadius: 5,
-      elevation: 6,
+      elevation: 8,
     },
   
     titleText: {
-      fontSize: responsiveFontSize(2),
+      fontSize: responsiveFontSize(1.9),
       fontWeight: "bold",
       marginTop: responsiveHeight(1),
     },
   
     propertyBox: {
-      width: "95%",
+      width: "98%",
       height: "70%",
       backgroundColor: "white",
       flexDirection: "row",
@@ -72,7 +100,6 @@ export const styles = StyleSheet.create({
       justifyContent: "center", // or remove it for default behavior
       backgroundColor: "white",
       width: "46%",
-      height: responsiveHeight(8.5),
       padding: responsiveWidth(2),
     },
   
@@ -80,17 +107,16 @@ export const styles = StyleSheet.create({
       flexDirection: "column",
       marginLeft: responsiveWidth(2),
       width: "70%",
-      height: responsiveHeight(6),
       backgroundColor: "white",
     },
   
     propertyLabel: {
-        fontSize: responsiveFontSize(1.6),
+        fontSize: responsiveFontSize(1.7),
         
     },
   
     propertyValue: {
-        fontSize: responsiveFontSize(1.6),
+        fontSize: responsiveFontSize(1.8),
         fontWeight: "bold",
     },
   
@@ -101,13 +127,14 @@ export const styles = StyleSheet.create({
       height: responsiveHeight(9),
       alignItems: "center",
       justifyContent: "center",
+      padding: responsiveWidth(2),
       backgroundColor: "white",
-      marginTop: responsiveHeight(1),
+      marginTop: responsiveHeight(1.5),
       borderRadius: 11,
       shadowColor: "#000",
       shadowOpacity: 0.1,
       shadowRadius: 5,
-      elevation: 6,
+      elevation: 8,
     },
   
     box2Inner: {
@@ -124,7 +151,6 @@ export const styles = StyleSheet.create({
       justifyContent: "left",
       backgroundColor: "white",
       width: "46%",
-      height: responsiveHeight(8.5),
     },
     box2PropertyDetails: {
       flexDirection: "column",
@@ -134,11 +160,10 @@ export const styles = StyleSheet.create({
       backgroundColor: "white",
     },
     Box2PropertyLabel: {
-      fontSize: responsiveFontSize(1.6),
-      paddingTop: responsiveWidth(3),
+      fontSize: responsiveFontSize(1.7),
     },
     Box2PropertyValue: {
-      fontSize: responsiveFontSize(1.6),
+      fontSize: responsiveFontSize(1.8),
       fontWeight: "bold",
     },
   
@@ -146,16 +171,16 @@ export const styles = StyleSheet.create({
   
     box3: {
       width: "87%",
-      height: responsiveHeight(30),
+      height: responsiveHeight(26),
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "white",
-      marginTop: responsiveHeight(1),
+      marginTop: responsiveHeight(1.5),
       borderRadius: 11,
       shadowColor: "#000",
       shadowOpacity: 0.1,
       shadowRadius: 5,
-      elevation: 6,
+      elevation: 8,
     },
   
     inner: {
@@ -176,11 +201,10 @@ export const styles = StyleSheet.create({
     innercenter: {
       flexDirection: "row",
       width: "100%",
-      height: responsiveHeight(5.5),
       alignItems: "center",
       justifyContent: "space-between",
       backgroundColor: "white",
-      marginVertical: responsiveHeight(1),
+      marginVertical: responsiveHeight(0.3),
     },
   
     innersquareleft: {
@@ -214,6 +238,15 @@ export const styles = StyleSheet.create({
     bottom: {
       alignItems: "center",
       bottom: responsiveHeight(3),
+    },
+
+    buttonContainer: {
+      flexDirection: 'row',
+      width: '86%',
+      justifyContent: 'space-between',      
+    },
+    buttonWrapper: {
+      width: '48%',
     },
   
   });

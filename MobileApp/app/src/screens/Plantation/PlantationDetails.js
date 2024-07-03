@@ -7,21 +7,19 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
-
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useCallback } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation ,useFocusEffect} from "@react-navigation/native";
-import * as Print from 'expo-print';
-import { shareAsync } from 'expo-sharing';
-import {styles} from "./PlantationDetailsStyles";
-import Headersection from "../../components/Headersection";
-import CustomButton from "../../components/CustomButton";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import * as Print from "expo-print";
+import { Appbar, Button } from "react-native-paper";
+import { shareAsync } from "expo-sharing";
+import { styles } from "./PlantationDetailsStyles";
 import AxiosInstance from "../../AxiosInstance";
 
 export default function PlantationDetails({ route }) {
-
-  const { id , item } = route.params;
+  const { id, item } = route.params;
   const [numberOfPlants, setnumberOfPlants] = useState(null);
   const [PlantationDensity, setPlantDensity] = useState(null);
   const [textPlant, setTextPlant] = useState(textPlant);
@@ -30,79 +28,91 @@ export default function PlantationDetails({ route }) {
   const [textRowspace, setTextRowSpace] = useState(null);
   const [area, setArea] = useState(null);
   const [perimeter, setPerimeter] = useState(null);
+  const [loading, setLoading] = useState(true);
 
- 
-    const fetchData = async (id) => {
-        try{
-          const response = await AxiosInstance.get(`/api/plantation/numberOfPlants/${id}`);
-          setnumberOfPlants(response.data.numberOfPlants);
-          setPlantDensity(response.data.PlantDensity);
-          setTextPlant(response.data.PlnatType);
-          setSelectedValue(response.data.Unit);
-          setTextPlantSpace(response.data.plantspace);
-          setTextRowSpace(response.data.rowSpace);
-          setArea(response.data.area);
-          setPerimeter(response.data.perimeter);
-          console.log('numberOfPlants:', response.data.numberOfPlants);
-          console.log('PlantDensity:', response.data.PlantDensity);
-        }
-        catch (error) {
-          console.error(error);
-        }
-    };
-  
-   //Refresh the screen
-   useFocusEffect(
+  const fetchData = async (id) => {
+    try {
+      const response = await AxiosInstance.get(
+        `/api/plantation/numberOfPlants/${id}`
+      );
+      setnumberOfPlants(response.data.numberOfPlants);
+      setPlantDensity(response.data.PlantDensity);
+      setTextPlant(response.data.PlnatType);
+      setSelectedValue(response.data.Unit);
+      setTextPlantSpace(response.data.plantspace);
+      setTextRowSpace(response.data.rowSpace);
+      setArea(response.data.area);
+      setPerimeter(response.data.perimeter);
+      setLoading(false);
+      console.log("numberOfPlants:", response.data.numberOfPlants);
+      console.log("PlantDensity:", response.data.PlantDensity);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
+  //Refresh the screen
+  useFocusEffect(
     useCallback(() => {
       fetchData(id);
     }, [id])
   );
 
-
-
-    const PlantationDelete = async (id) => {
-      try {
-        const response = await AxiosInstance.delete(`/api/plantation/deletePlantation/${id}`);
-        console.log(response);
-        return response;
-      } catch (error) {
-        // Log the detailed error response
-        console.error('Error deleting Plantation:', error.response ? error.response.data : error.message);
-        throw error; // Re-throw the error to handle it in the caller function
-      }
-    };
-    
-    // edit button pressed function
-    const handleEditIconPress = () => {
-      Alert.alert(
-        'Update Data',
-        'Do you want to update data?',
-        [
-          {
-            text: 'No',
-            onPress: () => console.log('No pressed'),
-            style: 'cancel',
-          },
-          {
-            text: 'Yes',
-            onPress: async () => {
-              try {
-                await PlantationDelete(id);
-                navigation.navigate('Plantation', { id: id, area: area, perimeter: perimeter,item: item  });
-              } catch (error) {
-                const errorMessage = error.response ? error.response.data.message : error.message;
-              }
-            },
-          },
-        ],
-        { cancelable: false }
+  const PlantationDelete = async (id) => {
+    try {
+      const response = await AxiosInstance.delete(
+        `/api/plantation/deletePlantation/${id}`
       );
-    };
+      console.log(response);
+      return response;
+    } catch (error) {
+      // Log the detailed error response
+      console.error(
+        "Error deleting Plantation:",
+        error.response ? error.response.data : error.message
+      );
+      throw error; // Re-throw the error to handle it in the caller function
+    }
+  };
 
-    const BackToHome = () => {
-      navigation.navigate('Home');
-    };
+  // edit button pressed function
+  const handleEditIconPress = () => {
+    Alert.alert(
+      "Update Data",
+      "Do you want to update data?",
+      [
+        {
+          text: "No",
+          onPress: () => console.log("No pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: async () => {
+            try {
+              await PlantationDelete(id);
+              navigation.navigate("Plantation", {
+                id: id,
+                area: area,
+                perimeter: perimeter,
+                item: item,
+              });
+            } catch (error) {
+              const errorMessage = error.response
+                ? error.response.data.message
+                : error.message;
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
+  const backToHome = () => {
+    navigation.navigate("Home");
+  };
 
   const html = `
     <!DOCTYPE html>
@@ -202,7 +212,6 @@ export default function PlantationDetails({ route }) {
   
   `;
 
-  
   const navigation = useNavigation();
   const handleFertilization = () => {
     navigation.navigate("Fertilization", {
@@ -213,9 +222,10 @@ export default function PlantationDetails({ route }) {
       area:area
 
     });
-    console.log("sending" + numberOfPlants + " " + PlantationDensity+" "+textPlant);
+    console.log(
+      "sending" + numberOfPlants + " " + PlantationDensity + " " + textPlant
+    );
   };
-
 
   const [selectedPrinter, setSelectedPrinter] = React.useState();
 
@@ -230,8 +240,8 @@ export default function PlantationDetails({ route }) {
   const printToFile = async () => {
     // On iOS/android prints the given html. On web prints the HTML from the current page.
     const { uri } = await Print.printToFileAsync({ html });
-    console.log('File has been saved to:', uri);
-    await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+    console.log("File has been saved to:", uri);
+    await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
   };
 
   const selectPrinter = async () => {
@@ -249,109 +259,117 @@ export default function PlantationDetails({ route }) {
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
       {/*Header section*/}
-      <Headersection navigation={navigation} title="Plantation Details" />
+      <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
+        <Appbar.BackAction
+          onPress={() => {
+            navigation.goBack();
+            color = "white";
+          }}
+        />
 
+        <Text style={styles.headerText}>Plantation Details</Text>
 
-
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-
-        <View style={styles.top}>
-          {/* <AlertButton></AlertButton> */}
-          <View style={styles.topSection}>
-          <TouchableOpacity style={styles.iconButton} onPress={BackToHome}>
+        {/* pencil/ pen icon  */}
+        <TouchableOpacity onPress={handleEditIconPress}>
           <MaterialCommunityIcons
-          name="home"
-          size={26}
-          color="#007BFF"
-        />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.iconButton} onPress={handleEditIconPress}>
-        <MaterialCommunityIcons
-          name="square-edit-outline"
-          size={26}
-          color="#007BFF"
-        />
-      </TouchableOpacity>
-    </View>  
+            name="square-edit-outline"
+            size={23}
+            color="white"
+            style={{ marginRight: 5 }}
+          />
+        </TouchableOpacity>
+      </Appbar.Header>
 
-          {/* Top section */}
-          <View style={styles.box1}>
-            <Text style={styles.titleText}>Total Plants</Text>
-            <View style={styles.propertyBox}>
-              <View style={styles.property}>
-                <MaterialCommunityIcons
-                  name="grass"
-                  size={40}
-                  color="#65676B"
-                />
-                <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyLabel}>Plants count</Text>
-                  <Text style={styles.propertyValue}>{numberOfPlants}</Text>
+      {loading ? (
+        <View style={styles.loadingScreen}>
+          <View style={styles.dotsWrapper}>
+            <ActivityIndicator color="#007BFF" size={45} />
+          </View>
+        </View>
+      ) : (
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View style={styles.top}>
+            {/* <AlertButton></AlertButton> */}
+            {/* Top section */}
+            <View style={styles.box1}>
+              <Text style={styles.titleText}>Total Plants</Text>
+              <View style={styles.propertyBox}>
+                <View style={styles.property}>
+                  <MaterialCommunityIcons
+                    name="grass"
+                    size={40}
+                    color="#65676B"
+                  />
+                  <View style={styles.propertyDetails}>
+                    <Text style={styles.propertyLabel}>Plants count</Text>
+                    <Text style={styles.propertyValue}>{numberOfPlants}</Text>
+                  </View>
                 </View>
-              </View>
-              <View style={styles.property}>
-                <MaterialCommunityIcons
-                  name="square-opacity"
-                  size={40}
-                  color="#65676B"
-                />
-                <View style={styles.propertyDetails}>
-                  <Text style={styles.propertyLabel}>Density</Text>
-                  <Text style={styles.propertyValue}>{PlantationDensity}/m{"\u00B2"}</Text>
+                <View style={styles.property}>
+                  <MaterialCommunityIcons
+                    name="square-opacity"
+                    size={40}
+                    color="#65676B"
+                  />
+                  <View style={styles.propertyDetails}>
+                    <Text style={styles.propertyLabel}>Density</Text>
+                    <Text style={styles.propertyValue}>
+                      {PlantationDensity}/m{"\u00B2"}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
 
-          {/* Second section */}
+            {/* Second section */}
 
-          <View style={styles.box2}>
-            <View style={styles.box2Inner}>
-              <View style={styles.box2Property}>
-                <MaterialCommunityIcons
-                  name="vector-square"
-                  size={36}
-                  color="#65676B"
-                />
-                <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                  <Text style={styles.Box2PropertyValue}>{perimeter}Km</Text>
+            <View style={styles.box2}>
+              <View style={styles.box2Inner}>
+                <View style={styles.box2Property}>
+                  <MaterialCommunityIcons
+                    name="vector-square"
+                    size={36}
+                    color="#65676B"
+                  />
+                  <View style={styles.box2PropertyDetails}>
+                    <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
+                    <Text style={styles.Box2PropertyValue}>{perimeter}Km</Text>
+                  </View>
                 </View>
-              </View>
-              <View style={styles.box2Property}>
-                <MaterialCommunityIcons
-                  name="texture-box"
-                  size={36}
-                  color="#65676B"
-                />
-                <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Area </Text>
-                  <Text style={styles.Box2PropertyValue}>{area} perches</Text>
+                <View style={styles.box2Property}>
+                  <MaterialCommunityIcons
+                    name="texture-box"
+                    size={36}
+                    color="#65676B"
+                  />
+                  <View style={styles.box2PropertyDetails}>
+                    <Text style={styles.Box2PropertyLabel}>Area </Text>
+                    <Text style={styles.Box2PropertyValue}>{area} perches</Text>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
 
-          {/* Third section */}
+            {/* Third section */}
 
-          <View style={styles.box3}>
-            <View style={styles.inner}>
-              <Text style={styles.innertopText}>Results based on</Text>
+            <View style={styles.box3}>
+              <View style={styles.inner}>
+                <Text style={styles.innertopText}>Results based on</Text>
 
-              <View style={styles.center}>
-                <View style={styles.innercenter}>
-                  <View style={styles.innersquareleft}>
-                    <MaterialCommunityIcons
-                      name="sprout"
-                      size={30}
-                      color="#65676B"
-                    />
-                    <Text style={styles.LeftText}>Plant               :</Text>
+                <View style={styles.center}>
+                  <View style={styles.innercenter}>
+                    <View style={styles.innersquareleft}>
+                      <MaterialCommunityIcons
+                        name="sprout"
+                        size={30}
+                        color="#65676B"
+                      />
+                      <Text style={styles.LeftText}>Plant :</Text>
+                    </View>
+                    <View style={styles.innersquareright}>
+                      <Text style={styles.RightText}>{textPlant}</Text>
+                    </View>
                   </View>
-                  <View style={styles.innersquareright}>
-                    <Text style={styles.RightText}>{textPlant}</Text>
-                  </View>
-                </View>
 
                 <View style={styles.innercenter}>
                   <View style={styles.innersquareleft}>
@@ -385,29 +403,85 @@ export default function PlantationDetails({ route }) {
           </View>
         </View>
 
-        {/* Bottom section */}
-        <View style={styles.bottom}>
+          {/* Bottom section */}
+          <View style={styles.bottom}>
+            
+            <View style={styles.buttonContainer}>
+              <View style={styles.buttonWrapper}>
+                <Button
+                  style={{
+                    height: 40,
+                    marginTop: 10,
+                    borderRadius: 18,
+                    borderColor: "red", // Add this line for the border color
+                    borderWidth: 1, // Ensure the border is visible by setting the borderWidth
+                  }}
+                  mode="elevated"
+                  onPress={print}
+                  labelStyle={{ color: "red", fontSize: 14 }}
+                  icon={() => (
+                    <MaterialCommunityIcons
+                      name="content-save-outline"
+                      size={20}
+                      color="red"
+                    />
+                  )}
+                >
+                  Save As PDF
+                </Button>
+              </View>
+              <View style={styles.buttonWrapper}>
+                <Button
+                  style={{
+                    height: 40,
+                    marginTop: 10,
+                    borderRadius: 18,
+                    borderColor: "#007BFF", // Add this line for the border color
+                    borderWidth: 1, // Ensure the border is visible by setting the borderWidth
+                  }}
+                  mode="elevated"
+                  onPress={printToFile}
+                  labelStyle={{ color: "#007BFF", fontSize: 14 }}
+                  icon={() => (
+                    <MaterialCommunityIcons
+                      name="share-variant"
+                      size={20}
+                      color="#007BFF"
+                    />
+                  )}
+                >
+                  Share PDF
+                </Button>
+              </View>
+            </View>
+            <Button
+              style={{
+                height: 40,
+                marginTop: 10,
+                borderRadius: 18,
+                width: "87%",
+                borderColor: "white",
+                borderWidth: 1,
+                backgroundColor: "#007BFF",
+                color: "white",
+              }}
+              mode="contained-tonal"
+              onPress={handleFertilization}
+              labelStyle={{ color: "white", fontSize: 15 }}
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="flask-outline"
+                  size={20}
+                  color="white"
+                />
+              )}
+            >
+              Fertilizing
+            </Button>
 
-          <CustomButton
-            onPress={handleFertilization}
-            text="Fertilizing"
-            iconName="flask-outline" 
-            iconColor="white" 
-            buttonColor="#15A49B"
-          />
-
-          <CustomButton
-            onPress={print}
-            text="Save As PDF"
-            iconName="content-save-outline"
-            iconColor="white" 
-            buttonColor="#E41E3F"
-          />
-
-        </View>
-
-      </ScrollView>
+          </View>
+        </ScrollView>
+      )}
     </KeyboardAvoidingView>
   );
 }
-
