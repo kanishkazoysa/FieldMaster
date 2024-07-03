@@ -115,6 +115,7 @@ export const styles = {
     backgroundColor: "#fff",
     cursor: "pointer",
     gap: "5px",
+    width:"110px"
   },
   toolButtonHover: {
     backgroundColor: "#f0f0f0",

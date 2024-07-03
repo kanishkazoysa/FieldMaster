@@ -10,8 +10,13 @@ import { styles, containerStyle } from "./ManagemapStyles";
 import AxiosInstance from "../AxiosInstance";
 import { useParams } from "react-router-dom";
 import { FiMapPin, FiGrid, FiEdit, FiX,FiSave } from "react-icons/fi";
+import { MdDeleteForever } from "react-icons/md";
+import { GrUndo } from "react-icons/gr";
 import { message, Button,Modal } from "antd";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { TbTopologyComplex } from "react-icons/tb";
+import { GrCompliance } from "react-icons/gr";
+
 
 const { confirm } = Modal;
 
@@ -162,7 +167,7 @@ const handlePolygonClick = (index) => {
       // Confirm before deleting
       confirm({
         title: 'Are you sure?',
-        content: 'Do you want to update Fence?',
+        content: 'Do you want to Delete partition?',
         icon: <ExclamationCircleOutlined />,
         okText: 'Yes',
         okType: 'primary',
@@ -294,6 +299,10 @@ const handlePolygonClick = (index) => {
     );
   };
 
+  const handleCancel = () => {
+    window.location.reload();
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.sidebar}>
@@ -390,10 +399,10 @@ const handlePolygonClick = (index) => {
             <hr style={styles.toolHr}></hr>
             <Button
               onClick={toggleDrawingMode}
-              icon={<FiMapPin />}
+              icon={<FiGrid />}
               style={styles.toolButton}
             >
-              {drawingEnabled ? "Disable Drawing Mode" : "Enable Drawing Mode"}
+              {drawingEnabled ? "Draw Polygon" : "Draw Polygon"}
             </Button>
             <Button 
                onClick={savePartitionPoints}
@@ -405,32 +414,32 @@ const handlePolygonClick = (index) => {
             {selectedPolygonIndex !== null && (
               <>
                 <Button onClick={deleteSelectedPolygon}
-                icon={<FiSave />}
+                icon={<MdDeleteForever />}
                 style={styles.toolButton}>
-                  Delete Selected Partition
+                  Delete Partition
                 </Button>
                 <Button onClick={editSelectedPolygon}
-                icon={<FiSave />}
+                icon={< FiEdit />}
                 style={styles.toolButton}>
-                  Edit Selected Partition
+                  Edit Partition
                 </Button>
               </>
             )}
             {editingPolygonIndex !== null && (
               <>
                 <Button onClick={undoEdit} disabled={undoStack.length <= 1}
-                icon={<FiSave />}
+                icon={<GrUndo />}
                 style={styles.toolButton}>
                   Undo
                 </Button>
                 <Button onClick={finishEditing}
-                icon={<FiSave />}
+                icon={<GrCompliance />}
                 style={styles.toolButton}>Finish Editing</Button>
               </>
             )}
             <div style={styles.buttonContainer}>
-              <Button style={styles.saveButton}>Save</Button>
-              <Button style={styles.cancelButton}>Cancel</Button>
+              <Button style={styles.saveButton}  onClick={savePartitionPoints}>Save</Button>
+              <Button style={styles.cancelButton} onClick={handleCancel} >Cancel</Button>
             </div>
           </div>
         </GoogleMap>
