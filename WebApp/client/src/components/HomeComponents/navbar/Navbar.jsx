@@ -4,7 +4,8 @@ import MobileNav from "../MobileNav/MobileNav";
 import { Link } from "react-scroll";
 import logo from "../../../images/logo.png"
 import GetStarted from "../../GetStarted"; 
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 
 function NavBar() {
@@ -41,7 +42,7 @@ function NavBar() {
               <Link activeClass="active" to="about"  className="menu-item">About</Link>
             </li>
             <li>
-              <Link activeClass="active" to="setsetup-card" className="menu-item">Setup</Link>
+              <Link activeClass="active" to="Setup" className="menu-item">Setup</Link>
             </li>
 
             <li>
@@ -59,13 +60,11 @@ function NavBar() {
           </div>
           {isModalOpen && <GetStarted toggleModal={toggleModal}/>}
 
-          <button class="menu-btn" onClick={toggleMenu}>
-            <span
-              class={"material-icons-outlined"}
-              style={{ fontSize: "1.8rem" }}
-            >
-              {openMenu ? "close" : "menu"}
-            </span>
+          <button className="menu-btn" onClick={toggleMenu}>
+            <FontAwesomeIcon
+              icon={openMenu ? faTimes : faBars}
+              style={{ fontSize: "1.2rem" }}
+            />
           </button>
         </div>
       </nav>

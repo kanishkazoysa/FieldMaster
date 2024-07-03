@@ -113,17 +113,17 @@ export const styles = StyleSheet.create({
     box2PropertyDetails: {
       flexDirection: "column",
       marginLeft: responsiveWidth(2),
-      width: "50%",
+      width: "70%",
       height: responsiveHeight(8.5),
       backgroundColor: "white",
     },
     Box2PropertyLabel: {
-      fontSize: responsiveFontSize(1.7),
+      fontSize: responsiveFontSize(1.6),
       paddingTop: responsiveWidth(3),
       
     },
     Box2PropertyValue: {
-      fontSize: responsiveFontSize(1.8),
+      fontSize: responsiveFontSize(1.6),
       fontWeight: "bold",
     },
   

@@ -7,7 +7,7 @@ import { MdGrass } from "react-icons/md";
 import { GiGrassMushroom } from "react-icons/gi";
 import { SlChemistry } from "react-icons/sl";
 import { FaClockRotateLeft } from "react-icons/fa6";
-
+import { message } from "antd";
 import { styles } from "./FetilizingManualStyles";
 import Select from "react-select";
 // import AxiosInstance from "../../../AxiosInstance";
@@ -77,10 +77,19 @@ const handleFrequencyChange = (selectedFrequency) => {
       !textFertilizationType ||
       !FertilizerAmountUnitselectedValue
     ) {
-      alert("Please fill in all fields");
+      message.error("Please fill in all fields");
       return;
     }
-  
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(textFertilizationAmount)) {
+      message.error("Error: Please enter a valid value for amount");
+      return;
+    }
+    if (!regex.test(textFertilizationNUmberoftime)) {
+      message.error("Error: Please enter a valid value for number of times");
+      return;
+    }
+    
     // Transition to the next page or section
     setCurrentPage("FertilizingDetailsManual");
     setAnimatePage(true);
@@ -232,7 +241,7 @@ const handleFrequencyChange = (selectedFrequency) => {
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="number"
+                  type="text"
                   style={styles.box3input}
                   placeholder="00"
                   value={textFertilizationNUmberoftime}
@@ -259,7 +268,7 @@ const handleFrequencyChange = (selectedFrequency) => {
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="number"
+                  type="text"
                   style={styles.box3input}
                   placeholder="100"
                   value={textFertilizationAmount}

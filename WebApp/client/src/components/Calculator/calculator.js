@@ -5,11 +5,11 @@ import { BsBoundingBox } from "react-icons/bs";
 import Select from "react-select";
 import { styles } from "./calculatorStyles.js";
 import CalculatorSelect from "./calculatorSelect"; // Import CalculatorSelect component
-
+import { message } from "antd";
 const convertAreaToSqMeters = (area, unit) => {
     const conversionRates = {
         "Acres": 4046.86,  // 1 Acre = 4046.86 sq meters
-        "Perch": 25.29,  // 1 Perch = 25.2929 sq meters
+        "Perch": 25.29,  // 1 Perch = 25.29 sq meters
         "m²": 1            // 1 sq meter = 1 sq meter
     };
 
@@ -57,19 +57,23 @@ export default function Calculator({ onBackToSidebar }) {
         try {
             // Check for missing inputs
             if (!area.trim() || !perimeter.trim() || !AreaUnitselectedValue || !PerimeterUnitselectedValue) {
-                throw new Error("Please fill in all fields");
+                message.error("Please fill in all fields");
+                return;
             }
 
             // Check for non-numeric values in area and perimeter
             const areaNumeric = parseFloat(area);
             const perimeterNumeric = parseFloat(perimeter);
-
-            if (isNaN(areaNumeric)) {
-                throw new Error("Please enter a valid numeric value for area");
+           
+            const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+            if (!regex.test(area)) {
+                message.error("Please enter a valid numeric value for area");
+                return;
             }
 
-            if (isNaN(perimeterNumeric)) {
-                throw new Error("Please enter a valid numeric value for perimeter");
+            if (!regex.test(perimeter)) {
+                message.error("Please enter a valid numeric value for perimeter");
+                return;
             }
 
             // Convert area to square meters
@@ -122,7 +126,7 @@ export default function Calculator({ onBackToSidebar }) {
                         <div style={styles.box3Property}>
                             <div style={styles.box3inputContainer}>
                                 <input
-                                    type="number"
+                                    type="text"
                                     style={styles.box3input}
                                     placeholder="25"
                                     value={area}
@@ -167,7 +171,7 @@ export default function Calculator({ onBackToSidebar }) {
                         <div style={styles.box3Property}>
                             <div style={styles.box3inputContainer}>
                                 <input
-                                    type="number"
+                                    type="text"
                                     style={styles.box3input}
                                     placeholder="25"
                                     value={perimeter}

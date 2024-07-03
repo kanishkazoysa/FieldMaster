@@ -112,7 +112,7 @@
   
   .contact-btn:hover {
     color: white;
-    background:#073763;
+    background:#6fa8dc;
     outline: 1.5px solid #007bff;
   }
   
@@ -135,7 +135,7 @@
   
   .menu-btn:hover {
     color: #007bff;
-    background: #000;
+    background: #e7e4e4;
     border: 1px solid #6fa8dc;
   }
   

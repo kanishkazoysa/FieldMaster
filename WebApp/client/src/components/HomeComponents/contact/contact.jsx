@@ -3,6 +3,7 @@ import "./contact.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faGithub, faFacebook, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import video3 from "../../../assets/contact_video.mp4";
+import axios from 'axios';
 
 function ContactForm() {
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ function ContactForm() {
     setStatus('Sending...');
 
     try {
-      const response = await fetch('http://192.168.1.6:3000/api/contact/send', {
+      const response = await fetch('/api/contact/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

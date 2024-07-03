@@ -61,7 +61,9 @@ export default function PlantationDetails({
     }, 300);
   };
 
-  
+  const formatArea = (area) => {
+    return area.toFixed(2);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -212,14 +214,14 @@ export default function PlantationDetails({
             <BsBoundingBox color="gray" size={28} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>{area} Km</p>
+              <p style={styles.propertyValue}>{perimeter} Km</p>
             </div>
           </div>
           <div className="property" style={styles.property}>
             <PiSquareDuotone color="gray" size={40} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
-              <p style={styles.propertyValue}>{perimeter} Perches</p>
+              <p style={styles.propertyValue}>{formatArea(area)} Perches</p>
             </div>
           </div>
         </div>

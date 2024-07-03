@@ -218,6 +218,9 @@ export default function PlantationDetails({ route }) {
       numberOfPlants: numberOfPlants,
       PlantationDensity: PlantationDensity,
       plantType: textPlant,
+      perimeter:perimeter,
+      area:area
+
     });
     console.log(
       "sending" + numberOfPlants + " " + PlantationDensity + " " + textPlant
@@ -368,41 +371,37 @@ export default function PlantationDetails({ route }) {
                     </View>
                   </View>
 
-                  <View style={styles.innercenter}>
-                    <View style={styles.innersquareleft}>
-                      <MaterialCommunityIcons
-                        name="apps"
-                        size={30}
-                        color="#65676B"
-                      />
-                      <Text style={styles.LeftText}>Plant Spaing :</Text>
-                    </View>
-                    <View style={styles.innersquareright}>
-                      <Text style={styles.RightText}>
-                        {textplantspace} {selectedValue}
-                      </Text>
-                    </View>
+                <View style={styles.innercenter}>
+                  <View style={styles.innersquareleft}>
+                    <MaterialCommunityIcons
+                      name="apps"
+                      size={30}
+                      color="#65676B"
+                    />
+                    <Text style={styles.LeftText}>Plant Spaing  :</Text>
                   </View>
+                  <View style={styles.innersquareright}>
+                    <Text style={styles.RightText}>{textplantspace} m</Text>
+                  </View>
+                </View>
 
-                  <View style={styles.innercenter}>
-                    <View style={styles.innersquareleft}>
-                      <MaterialCommunityIcons
-                        name="format-line-spacing"
-                        size={30}
-                        color="#65676B"
-                      />
-                      <Text style={styles.LeftText}>Row Spaing :</Text>
-                    </View>
-                    <View style={styles.innersquareright}>
-                      <Text style={styles.RightText}>
-                        {textRowspace} {selectedValue}
-                      </Text>
-                    </View>
+                <View style={styles.innercenter}>
+                  <View style={styles.innersquareleft}>
+                    <MaterialCommunityIcons
+                      name="format-line-spacing"
+                      size={30}
+                      color="#65676B"
+                    />
+                    <Text style={styles.LeftText}>Row Spaing    :</Text>
+                  </View>
+                  <View style={styles.innersquareright}>
+                    <Text style={styles.RightText}>{textRowspace} m</Text>
                   </View>
                 </View>
               </View>
             </View>
           </View>
+        </View>
 
           {/* Bottom section */}
           <View style={styles.bottom}>
