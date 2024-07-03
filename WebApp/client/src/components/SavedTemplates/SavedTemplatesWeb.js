@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MdArrowBack } from 'react-icons/md';
 import '../SavedTemplates/SavedTemplatesWeb.css';
-import Card from './Card';
+import Card from './Card.js';
 import { FaSearch } from 'react-icons/fa';
 import AxiosInstance from '../../AxiosInstance';
 
@@ -55,7 +55,9 @@ const SavedTemplatesWeb = ({
   return (
     <>
       <div className='innerDiv'>
-        <MdArrowBack onClick={onBackToSidebar} className='backBtn' />
+        <div className='backBtnDiv'>
+          <MdArrowBack onClick={onBackToSidebar} className='backBtn' />
+        </div>
         <div className='headingDiv'>
           <div className='search-container'>
             <input
