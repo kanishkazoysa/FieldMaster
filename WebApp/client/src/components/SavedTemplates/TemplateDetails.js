@@ -16,6 +16,7 @@ import Plantation from "../Plantation/PlantationPage/plantation";
 import PlantationDetails from "../Plantation/PlantationDetails/plantationDetails";
 import AxiosInstance from "../../AxiosInstance";
 import { Button, Flex } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const TemplateDetails = ({
   onBackToSidebar,
@@ -25,6 +26,7 @@ const TemplateDetails = ({
   const id = template._id;
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
+  const navigate = useNavigate();
 
   const handleEdit = (e) => {
     e.stopPropagation();
@@ -106,6 +108,12 @@ const TemplateDetails = ({
     }
   };
 
+  const handleResizeMapClick = () => {
+    navigate("/resizemap", {
+      state: { templateId: template._id, templateArea: template.area, templatePerimeter: template.perimeter }, 
+    });
+  };
+
   return (
     <div>
       {!currentPage && (
@@ -128,7 +136,7 @@ const TemplateDetails = ({
                 <Button type="primary" className="action-btn">
                   Manage Map
                 </Button>
-                <Button type="primary" className="action-btn">
+                <Button type="primary" className="action-btn" onClick={handleResizeMapClick}>
                   Resize Map
                 </Button>
               </div>

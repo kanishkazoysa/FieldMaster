@@ -20,6 +20,7 @@ import LoginPage from "./pages/auth/Login/LoginPage";
 import FPPage from "./pages/auth/ForgotPassowrd/FPPage";
 import OtpPage from "./pages/auth/ForgotPassowrd/OtpPage";
 import CPPage from "./pages/auth/ForgotPassowrd/CPPage";
+import ResizeMap from "./components/ResizeMap/ResizeMap"
 
 const UserRouteGuard = ({ children }) => {
   const token = localStorage.getItem('UserToken');
@@ -126,6 +127,7 @@ export default function App() {
         <Route path="/Home" element={<UserRouteGuard><Home /></UserRouteGuard>} />
         <Route path="/emailVerification" element={<EmailVerified />} />
         <Route path="/managemap" element={<Managemap />} />
+        <Route path="/resizemap" element={<ResizeMap />} />
       </Routes>
     </Router>
   );
