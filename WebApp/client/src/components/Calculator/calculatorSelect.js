@@ -6,11 +6,12 @@ import { TbBackhoe } from "react-icons/tb";
 import { styles } from "./calculatorSelectStyles";
 import PlantationManul from "../PlantationManual/PlantationPageManual/PlantationManul";
 import FenceManual from '../Fence Manual/Fence/fenceManual';
+import { Button, Flex } from 'antd';
 
 const convertAreaToSqMeters = (area, unit) => {
     const conversionRates = {
         "Acres": 4046.86,  // 1 Acre = 4046.86 sq meters
-        "Perch": 25.2929,  // 1 Perch = 25.2929 sq meters
+        "Perch": 25.29,  // 1 Perch = 25.29 sq meters
         "m²": 1            // 1 sq meter = 1 sq meter
     };
 
@@ -87,93 +88,34 @@ export default function CalculatorSelect({ onBackToSidebar, area, perimeter, Per
                         <p style={styles.para}>Based on the area and perimeter values you have given now you can calculate the following</p>
                     </div>
                     <div style={styles.bottom}>
-                        <button
-                            style={{
-                                ...styles.Button1,
-                                ...(isHovered1 && styles.Button1Hover),
-                            }}
-                            onMouseEnter={() => setIsHovered1(true)}
-                            onMouseLeave={() => setIsHovered1(false)}
-                            onClick={() => handlePageChange('PlantationManul')}
-                        >
+                    
+                        <Button type="primary" block onClick={() => handlePageChange('PlantationManul')}>
                             <PiTreePalmFill
                                 name="plant"
                                 size={25}
-                                color='green'
-                                style={{
-                                    ...styles.icon,
-                                    ...(isHovered1 && styles.iconHover),
-                                }}
-                            />
-                            <p
-                                style={{
-                                    ...styles.Box4ButtonText,
-                                    ...(isHovered1 && styles.Box4ButtonTextHover),
-                                }}
-                            >
-                                Plantation
-                            </p>
-                        </button>
+                                color='white'/>
+                            <p>Plantation</p>
+                        </Button>
                     </div>
         
                     <div style={styles.bottom}>
-                        <button
-                            style={{
-                                ...styles.Button1,
-                                ...(isHovered2 && styles.Button1Hover),
-                            }}
-                            onMouseEnter={() => setIsHovered2(true)}
-                            onMouseLeave={() => setIsHovered2(false)}
-                            onClick={() => handlePageChange('ClearLand')}
-                        >
+                        <Button type="primary" block onClick={() => handlePageChange('ClearLand')}>
                             <TbBackhoe
                                 name="clear"
                                 size={25}
-                                color='brown'
-                                style={{
-                                    ...styles.icon,
-                                    ...(isHovered2 && styles.iconHover),
-                                }}
-                            />
-                            <p
-                                style={{
-                                    ...styles.Box4ButtonText,
-                                    ...(isHovered2 && styles.Box4ButtonTextHover),
-                                }}
-                            >
-                                Clear Land
-                            </p>
-                        </button>
+                                color='white'/>
+                            <p>Clear Land</p>
+                        </Button>
                     </div>
         
                     <div style={styles.bottom}>
-                        <button
-                            style={{
-                                ...styles.Button1,
-                                ...(isHovered3 && styles.Button1Hover),
-                            }}
-                            onMouseEnter={() => setIsHovered3(true)}
-                            onMouseLeave={() => setIsHovered3(false)}
-                            onClick={() => handlePageChange('FenceManual')}
-                        >
+                        <Button type="primary" block onClick={() => handlePageChange('FenceManual')}>
                             <MdFence
                                 name="fence"
                                 size={25}
-                                color='black'
-                                style={{
-                                    ...styles.icon,
-                                    ...(isHovered3 && styles.iconHover),
-                                }}
-                            />
-                            <p
-                                style={{
-                                    ...styles.Box4ButtonText,
-                                    ...(isHovered3 && styles.Box4ButtonTextHover),
-                                }}
-                            >
-                                Fence Setup
-                            </p>
-                        </button>
+                                color='white'/>
+                            <p>Fence Setup</p>
+                        </Button>
                     </div>
                 </div>
             )}

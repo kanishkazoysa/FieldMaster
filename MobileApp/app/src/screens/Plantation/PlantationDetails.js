@@ -208,7 +208,10 @@ export default function PlantationDetails({ route }) {
     navigation.navigate("Fertilization", {
       numberOfPlants: numberOfPlants,
       PlantationDensity: PlantationDensity,
-      plantType: textPlant
+      plantType: textPlant,
+      perimeter:perimeter,
+      area:area
+
     });
     console.log("sending" + numberOfPlants + " " + PlantationDensity+" "+textPlant);
   };
@@ -360,7 +363,7 @@ export default function PlantationDetails({ route }) {
                     <Text style={styles.LeftText}>Plant Spaing  :</Text>
                   </View>
                   <View style={styles.innersquareright}>
-                    <Text style={styles.RightText}>{textplantspace} {selectedValue}</Text>
+                    <Text style={styles.RightText}>{textplantspace} m</Text>
                   </View>
                 </View>
 
@@ -374,7 +377,7 @@ export default function PlantationDetails({ route }) {
                     <Text style={styles.LeftText}>Row Spaing    :</Text>
                   </View>
                   <View style={styles.innersquareright}>
-                    <Text style={styles.RightText}>{textRowspace} {selectedValue}</Text>
+                    <Text style={styles.RightText}>{textRowspace} m</Text>
                   </View>
                 </View>
               </View>

@@ -247,8 +247,8 @@ export default function FertilizationDetailsFromManualCalculator({ route}) {
                 color="#65676B"
               />
               <View style={styles.box2PropertyDetails}>
-                <Text style={styles.Box2PropertyLabel}>Area ( m{"\u00B2"})</Text>
-                <Text style={styles.Box2PropertyValue}>{area}</Text>
+                <Text style={styles.Box2PropertyLabel}>Area</Text>
+                <Text style={styles.Box2PropertyValue}>{area} m{"\u00B2"}</Text>
               </View>
             </View>
           </View>

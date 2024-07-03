@@ -129,7 +129,7 @@ export const styles = StyleSheet.create({
     box2PropertyDetails: {
       flexDirection: "column",
       marginLeft: 5,
-      width: "50%",
+      width: "70%",
       height: responsiveHeight(8.5),
       backgroundColor: "white",
     },
