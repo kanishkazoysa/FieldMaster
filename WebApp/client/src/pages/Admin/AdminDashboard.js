@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./AdminDashboard.css";
 import logo from "../../images/logo.png";
+import AnalyticsSection from "./AnalyticsSection";
 import { Icon } from "@iconify/react";
 import { BeatLoader } from "react-spinners";
 import {message } from "antd";
@@ -272,6 +273,10 @@ function AdminDashboard() {
                         />
                         </div>
                     </div>
+                    <hr />
+                    <AnalyticsSection
+                    users = {userList}
+                    setLoading = {setIsLoading} />
                     <hr />
                     {isModalOpen && (
                         <ProfileModal
