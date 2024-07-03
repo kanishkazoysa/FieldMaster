@@ -338,7 +338,8 @@ export default function FenceDetails({ route }) {
                 marginTop: 15,
                 borderRadius: 18,
                 width: "87%",
-                borderColor: "#007BFF", // Add this line for the border color
+                backgroundColor:"#007BFF",
+                borderColor: "black",
                 borderWidth: 0.2, // Ensure the border is visible by setting the borderWidth
               }}
               mode="contained-tonal"
