@@ -197,7 +197,7 @@ export default function EffortOutput({ route }) {
           <View style={styles.container2}>
             <Card style={styles.card1}>
               <Card.Content style={styles.card1Content}>
-                <Text style={styles.card1Text1}>Total Effort Cout</Text>
+                <Text style={styles.card1Text1}>Total Effort Count</Text>
                 <AlertButton></AlertButton>
                 <View style={styles.card1Left}>
                   <Image
@@ -243,7 +243,9 @@ export default function EffortOutput({ route }) {
                   ></Image>
                   <View style={{ display: "flex", flexDirection: "column" }}>
                     <Text style={styles.card2Text1}>Perimeter</Text>
-                    <Text style={styles.card2Text2}>{Perimeter} km</Text>
+                    {/* should display perimeter to 2 floating points */}
+                    
+                    <Text style={styles.card2Text2}>{parseFloat(Perimeter).toFixed(3)} km</Text>
                   </View>
                 </View>
 
@@ -257,7 +259,7 @@ export default function EffortOutput({ route }) {
                   ></Image>
                   <View style={{ display: "flex", flexDirection: "column" }}>
                     <Text style={styles.card2Text3}>Area</Text>
-                    <Text style={styles.card2Text4}>{Area} perches</Text>
+                    <Text style={styles.card2Text4}>{parseFloat(Area).toFixed(1)} perch</Text>
                   </View>
                 </View>
               </Card.Content>
@@ -358,24 +360,25 @@ export default function EffortOutput({ route }) {
             <Button
               style={{
                 height: 40,
-                marginTop: 10,
+                marginTop: 15,
                 borderRadius: 18,
                 width: "87%",
+                backgroundColor:"#007BFF",
                 borderColor: "black", // Add this line for the border color
                 borderWidth: 0.2, // Ensure the border is visible by setting the borderWidth
               }}
               mode="contained-tonal"
               onPress={backToHome}
-              labelStyle={{  fontSize: 14 }}
+              labelStyle={{  fontSize: 14 , color:"white" }}
               icon={() => (
                 <MaterialCommunityIcons
                   name="home-import-outline"
                   size={20}
-                  color="black"
+                  color="white"
                 />
               )}
             >
-              Back To Home
+            Back To Home
             </Button>
           </View>
           
