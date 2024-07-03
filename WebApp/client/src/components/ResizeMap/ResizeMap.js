@@ -1,14 +1,10 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import {
-  GoogleMap,
-  LoadScript,
-  PolygonF,
-  MarkerF,
-} from "@react-google-maps/api";
+import { GoogleMap, LoadScript, PolygonF } from "@react-google-maps/api";
 import SideNavbar from "../SideNavbar/sideNavbar";
 import { styles } from "./ResizeMapStyles";
 import AxiosInstance from "../../AxiosInstance";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Button } from "antd";
 
 const ResizeMapScreen = () => {
   const location = useLocation();
@@ -20,7 +16,7 @@ const ResizeMapScreen = () => {
   const [perimeter, setPerimeter] = useState(
     parseFloat(templatePerimeter) || 0
   );
-  const [history, setHistory] = useState([]); // State to keep track of the history
+  const [history, setHistory] = useState([]);
 
   const containerStyle = {
     width: "100%",
@@ -29,13 +25,17 @@ const ResizeMapScreen = () => {
 
   const MapOptions = {
     zoomControl: true,
-    mapTypeControl: false,
-    scaleControl: true,
-    // streetViewControl: false,
-    rotateControl: true,
+    mapTypeControl: true,
+    scaleControl: false,
+    rotateControl: false,
     fullscreenControl: true,
     scrollwheel: true,
-    mapTypeId: "satellite",
+    mapTypeId: 'satellite',
+    mapTypeControlOptions: {
+      mapTypeIds: ['satellite', 'hybrid'],
+      style: window.google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+      position: window.google.maps.ControlPosition.TOP_LEFT,
+    }
   };
 
   useEffect(() => {
@@ -45,10 +45,16 @@ const ResizeMapScreen = () => {
         const { locationPoints } = response.data;
         console.log(response.data);
 
-          // Calculate average latitude and longitude
+        // Calculate average latitude and longitude
         const totalPoints = locationPoints.length;
-        const sumLat = locationPoints.reduce((acc, point) => acc + parseFloat(point.latitude), 0);
-        const sumLng = locationPoints.reduce((acc, point) => acc + parseFloat(point.longitude), 0);
+        const sumLat = locationPoints.reduce(
+          (acc, point) => acc + parseFloat(point.latitude),
+          0
+        );
+        const sumLng = locationPoints.reduce(
+          (acc, point) => acc + parseFloat(point.longitude),
+          0
+        );
         const avgLat = sumLat / totalPoints;
         const avgLng = sumLng / totalPoints;
 
@@ -62,43 +68,28 @@ const ResizeMapScreen = () => {
         // setInitialArray(paths);
         setAppArray([{ path: paths, color: "#FF0000" }]);
         setHistory([{ path: paths, color: "#FF0000" }]); // Initialize history with the initial points
-    //     let latArr = [];
-    // let lngArr = [];
-    // paths.forEach((data) => {
-    //   latArr.push(data.lat);
-    //   lngArr.push(data.lng);
-    // });
-
-    // const getCenterLat = latArr.sort((a, b) => b - a);
-    // const calCenterlat =
-    //   (getCenterLat[0] + getCenterLat[getCenterLat.length - 1]) / 2;
-
-    // const getCenterLng = lngArr.sort((a, b) => b - a);
-    // const calCenterlng =
-    //   (getCenterLng[0] + getCenterLng[getCenterLng.length - 1]) / 2;
-    // const centerDict = { lat: calCenterlat, lng: calCenterlng };
-
-    // setCenter(centerDict);
-
       })
       .catch((error) => {
         console.error("Error fetching template:", error);
       });
   }, [templateId]);
 
-  const onLoad = useCallback((map) => {
-  if (appArray.length > 0 && appArray[0].path.length > 0) {
-    const bounds = new window.google.maps.LatLngBounds();
-    appArray[0].path.forEach((coord) => {
-      bounds.extend(new window.google.maps.LatLng(coord.lat, coord.lng));
-    });
-    map.fitBounds(bounds);
+  const onLoad = useCallback(
+    (map) => {
+      if (appArray.length > 0 && appArray[0].path.length > 0) {
+        const bounds = new window.google.maps.LatLngBounds();
+        appArray[0].path.forEach((coord) => {
+          bounds.extend(new window.google.maps.LatLng(coord.lat, coord.lng));
+        });
+        map.fitBounds(bounds);
 
-    // Optional: add a slight padding to the bounds
-    const paddings = { top: 50, right: 50, bottom: 50, left: 50 };
-    map.fitBounds(bounds, paddings);
-  }
-}, [appArray]);
+        // Optional: add a slight padding to the bounds
+        const paddings = { top: 50, right: 50, bottom: 50, left: 50 };
+        map.fitBounds(bounds, paddings);
+      }
+    },
+    [appArray]
+  );
 
   const saveMapPoints = async () => {
     try {
@@ -191,7 +182,6 @@ const ResizeMapScreen = () => {
     <div style={styles.container}>
       <SideNavbar />
       <div style={styles.mapContainer}>
-        
         <LoadScript
           googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
           libraries={["places"]}
@@ -208,7 +198,7 @@ const ResizeMapScreen = () => {
                 <React.Fragment key={i}>
                   <PolygonF
                     options={{
-                      fillColor: "blue",
+                      fillColor: "#007BFF",
                       fillOpacity: 0.3,
                       strokeColor: "white",
                       strokeWeight: 2,
@@ -228,19 +218,32 @@ const ResizeMapScreen = () => {
         </LoadScript>
       </div>
       <div style={styles.top}>
-          <div style={styles.area}>Area: {area} perches </div>
-          <div style={styles.perimeter}>Perimeter: {perimeter} kilometers</div>
-        </div>
+        <div style={styles.area}>Area: {area} perches </div>
+        <div style={styles.perimeter}>Perimeter: {perimeter} kilometers</div>
+      </div>
       <div style={styles.controls}>
-        <button style={styles.controlBtn} onClick={handleCancel}>
+        <Button
+          type="primary"
+          style={styles.controlBtn}
+          onClick={handleCancel}
+          danger
+        >
           Cancel
-        </button>
-        <button style={styles.controlBtn} onClick={saveMapPoints}>
+        </Button>
+        <Button
+          type="primary"
+          style={styles.controlBtn}
+          onClick={saveMapPoints}
+        >
           Save
-        </button>
-        <button style={styles.controlBtn} onClick={undoLastAction}>
+        </Button>
+        <Button
+          type="primary"
+          style={styles.controlBtn}
+          onClick={undoLastAction}
+        >
           Undo
-        </button>
+        </Button>
       </div>
     </div>
   );

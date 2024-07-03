@@ -15,7 +15,7 @@ import EffortOutput from "../ClearLand/EffortOutput/effortOutput";
 import Plantation from "../Plantation/PlantationPage/plantation";
 import PlantationDetails from "../Plantation/PlantationDetails/plantationDetails";
 import AxiosInstance from "../../AxiosInstance";
-import { Button, Flex } from "antd";
+import { Button} from "antd";
 import { useNavigate } from "react-router-dom";
 
 const TemplateDetails = ({
