@@ -369,17 +369,18 @@ const navigation = useNavigation();
                 marginTop: 10,
                 borderRadius: 18,
                 width: "87%",
-                borderColor: "black", // Add this line for the border color
+                backgroundColor:"#007BFF",
+                borderColor: "black",
                 borderWidth: 0.2, // Ensure the border is visible by setting the borderWidth
               }}
               mode="contained-tonal"
               onPress={backToHome}
-              labelStyle={{  fontSize: 14 }}
+              labelStyle={{  fontSize: 14 , color:"white"}}
               icon={() => (
                 <MaterialCommunityIcons
                   name="home-import-outline"
                   size={20}
-                  color="black"
+                  color="white"
                 />
               )}
             >
