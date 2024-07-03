@@ -37,7 +37,7 @@ router.post("/register", async (req, res) => {
     subject: "FieldMaster Email Verification",
     html: `
       <div style="text-align: center;">
-        <img src="https://drive.google.com/uc?export=view&id=180piTLBcaAil8Nfn7hcmADai01Wej4XJ" alt="FieldMaster Logo" style="width: 200px;"/>
+        <img src="https://i.ibb.co/JzHBV01/logo.png" alt="FieldMaster Logo" style="width: 200px;"/>
         <h1>Welcome to FieldMaster</h1>
         <p>Click the link below to verify your FieldMaster account:</p>
         <a href="http://localhost:5000/api/users/emailVerification/${email}/${VerifyId}" style="background-color: #4CAF50; color: white; padding: 14px 20px; text-align: center; text-decoration: none; display: inline-block;">Verify</a>
