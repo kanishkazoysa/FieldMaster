@@ -19,7 +19,7 @@ import CustomButton from "../../components/CustomButton";
 import AxiosInstance from "../../AxiosInstance";
 
 export default function PlantationFromManualCalculator({ route }) {
-  const { area, perimeter } = route.params;
+  const {area, perimeter } = route.params;
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   route = useRoute();
   console.log(area, perimeter);
@@ -58,7 +58,7 @@ export default function PlantationFromManualCalculator({ route }) {
   };
 
   const PlantSpaceUnitOptions = [
-    // { label: "cm", value: "cm" },
+    { label: "cm", value: "cm" },
     { label: "m", value: "m" },
   ];
 
@@ -69,10 +69,27 @@ export default function PlantationFromManualCalculator({ route }) {
   };
 
   const RowSpacingUnitOptions = [
-    //{ label: "cm", value: "cm" },
+    { label: "cm", value: "cm" },
     { label: "m", value: "m" },
   ];
+  let plantSpaceInMeters = textplantspace;
+  let rowSpaceInMeters = textRowspace;
 
+  // Convert to meters if the selected unit is 'cm'
+  if (PlantSpaceUnitselectedValue === "cm") {
+    plantSpaceInMeters = parseFloat(textplantspace) / 100;
+  }
+  if (PlantSpaceUnitselectedValue === "m") {
+    plantSpaceInMeters = plantSpaceInMeters;
+  }
+
+  if (PlantSpaceUnitselectedValue === "cm") {
+    rowSpaceInMeters = parseFloat(textRowspace) / 100;
+  }
+  if (PlantSpaceUnitselectedValue === "m") {
+    rowSpaceInMeters = rowSpaceInMeters ;
+;
+  }
   const handlePlantationDetailsFromManualCalculator = async () => {
     if (
       !textPlant ||
@@ -89,10 +106,11 @@ export default function PlantationFromManualCalculator({ route }) {
         "/api/plantation/plantationFromManualCalculator",
         {
           textPlant,
-          textplantspace,
-          textRowspace,
-          PlantSpaceUnitselectedValue,
+          textplantspace: plantSpaceInMeters,
+          textRowspace: rowSpaceInMeters,
+          PlantSpaceUnitselectedValue: "m", // Send 'm' as the unit   
           area,
+          perimeter
         }
       );
 
@@ -152,7 +170,7 @@ export default function PlantationFromManualCalculator({ route }) {
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>Area</Text>
-                  <Text style={styles.propertyValue}>{area} acres</Text>
+                  <Text style={styles.propertyValue}>{area} m{"\u00B2"}</Text>
                 </View>
               </View>
             </View>

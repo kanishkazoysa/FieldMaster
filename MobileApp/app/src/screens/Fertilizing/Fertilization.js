@@ -24,7 +24,7 @@ import { styles } from "./FertilizingStyles";
 
 export default function Fertilization({ route }) {
   const { params } = route;
-  const { numberOfPlants, PlantationDensity, plantType } = params;
+  const { numberOfPlants, PlantationDensity, plantType,area ,perimeter} = params;
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -55,6 +55,8 @@ export default function Fertilization({ route }) {
             plantcount: numberOfPlants,
             count: lmn,
             Total: totalAmountForPlantation,
+            area:area,
+            perimeter:perimeter,
             FertilizerType: textFertilizationType,
             NumberOfTime: textFertilizationNUmberoftime,
             FertilizerAmount: textFertilizationAmount,
@@ -148,7 +150,7 @@ export default function Fertilization({ route }) {
                     />
                     <View style={styles.propertyDetails}>
                       <Text style={styles.propertyLabel}>Area</Text>
-                      <Text style={styles.propertyValue}>2 acres</Text>
+                      <Text style={styles.propertyValue}>{area}perches</Text>
                     </View>
                   </View>
                 </View>

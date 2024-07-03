@@ -18,6 +18,10 @@ const CPForm = () => {
                 newPassword: password,
             })
             .then(() => {
+                // if token in localstorage navigate to Home
+                if (localStorage.getItem("token")) {
+                    navigate("/home");
+                }
                 navigate("/login");
             })
             .catch((error) => {

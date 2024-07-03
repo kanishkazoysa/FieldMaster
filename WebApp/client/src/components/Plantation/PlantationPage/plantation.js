@@ -63,6 +63,23 @@ export default function Plantation({
     setRowSpaceUnitselectedValue(selectedOption.value);
   };
 
+  let plantSpaceInMeters = textplantspace;
+  let rowSpaceInMeters = textRowspace;
+  
+  if (PlantSpaceUnitselectedValue === "cm") {
+    plantSpaceInMeters = parseFloat(textplantspace) / 100;
+  }
+  if (PlantSpaceUnitselectedValue === "m") {
+    plantSpaceInMeters = plantSpaceInMeters;
+  }
+
+  if (PlantSpaceUnitselectedValue === "cm") {
+    rowSpaceInMeters = parseFloat(textRowspace) / 100;
+  }
+  if (PlantSpaceUnitselectedValue === "m") {
+    rowSpaceInMeters = rowSpaceInMeters ;
+;
+  }
 
 
 
@@ -92,10 +109,10 @@ export default function Plantation({
       id,
       area,
       textPlant,
-      textplantspace,
-      textRowspace,
-      PlantSpaceUnitselectedValue,
-      RowSpaceUnitselectedValue,
+      textplantspace: plantSpaceInMeters,
+        textRowspace: rowSpaceInMeters,
+        PlantSpaceUnitselectedValue: "m", // Send 'm' as the unit   
+      //RowSpaceUnitselectedValue,
 
     })
       .then((response) => {
@@ -118,8 +135,7 @@ export default function Plantation({
       setCurrentPage(null);
     }, 300);
   };
-
-
+  
 
 
 
@@ -153,7 +169,7 @@ export default function Plantation({
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {/* {area} m<sup>2</sup> */}{area } Acres
+                    {area } Perches
                   </p>
                 </div>
               </div>
@@ -192,7 +208,7 @@ export default function Plantation({
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="number"
+                  type="text"
                   style={styles.box3input}
                   placeholder="0"
                   value={textplantspace}
@@ -231,7 +247,7 @@ export default function Plantation({
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="number"
+                  type="text"
                   style={styles.box3input}
                   placeholder="0"
                   value={textRowspace}
@@ -241,7 +257,7 @@ export default function Plantation({
                   placeholder="m"
                   options={[
                     { value: "m", label: "m" },
-                    { value: "cm", label: "cm" },
+                   { value: "cm", label: "cm" },
                   ]}
                   value={RowSpaceUnitselectedValue1}
                   onChange={handleRowSpaceUnitChange}

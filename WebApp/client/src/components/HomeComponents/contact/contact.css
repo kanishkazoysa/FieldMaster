@@ -1,22 +1,22 @@
 * {
   margin: 0;
-  
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
-footer-container {
+
+.footer-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+
   overflow-x: hidden;
   width: 100vw;
-  
 }
 
 .container1 {
   flex: 1;
   width: 100vw;
 }
-.newsletter{
+
+.newsletter {
   display: flex;
   flex-direction: column;
   width: 500px;
@@ -26,7 +26,7 @@ footer-container {
   text-align: left;
 }
 
-.contactSupport{
+.contactSupport {
   display: flex;
   flex-direction: column;
   width: 70%;
@@ -34,13 +34,13 @@ footer-container {
   border-radius: 2rem;
   text-align: left;
   font-size: 2rem;
+}
 
-}
-.contactForm{
+.contactForm {
   width: 20%;
-  
 }
-.contactInput{
+
+.contactInput {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -50,18 +50,17 @@ footer-container {
   border: 0;
   border-radius: 0.5rem;
 }
-.inputName{
+
+.inputName {
   display: flex;
   flex-direction: column;
-  width: 500px;
   color: black;
   text-align: left;
   border: 0;
-  
 }
-.input1{
+
+.input1 {
   border: 0;
-  /* border-bottom: 1px solid #007bff; */
   padding: 1rem;
   font-size: 1rem;
   background-color: rgb(242, 243, 244);
@@ -72,7 +71,6 @@ footer-container {
 textarea {
   border: 0;
   border-radius: 0.5rem;
-  /* border-bottom: 1px solid #007bff; */
   padding: 1rem;
   font-size: 1rem;
   background-color: rgb(242, 243, 244);
@@ -91,8 +89,6 @@ footer {
   overflow-x: hidden;
 }
 
-/* Bottom - copyright and legal stuff */
-
 footer .info {
   padding: 1rem 1rem;
   display: flex;
@@ -102,10 +98,9 @@ footer .info {
   padding-right: 100px;
   padding-left: 80px;
   color: aliceblue;
-  
 }
-.social-icon{
-  
+
+.social-icon {
   text-align: center;
   background: rgb(29, 29, 29);
 }
@@ -119,8 +114,6 @@ footer .info .legal {
 footer .info .legal > a {
   margin-right: 15px;
 }
-
-/* Middle - social media links */
 
 footer .social {
   padding: 1.5rem 0;
@@ -141,14 +134,11 @@ footer .social:before {
   transform: translateX(-50%);
 }
 
-/* Top - pages, email newsletter form ... */
-
 footer .top {
   padding: 2rem 0;
   display: flex;
   justify-content: space-evenly;
   flex-direction: row;
-  
 }
 
 .submit-button {
@@ -170,19 +160,27 @@ footer .top {
 footer .top .pages {
   display: flex;
   flex-direction: row;
-  
 }
 
-
-
-/* Responsive adjustments */
 @media screen and (max-width: 768px) {
   footer .top {
     flex-direction: column;
+    align-items: center;
   }
+
+  .contactForm {
+    width: 80%;
+  }
+
+  .contactSupport {
+    width: 100%;
+    text-align: center;
+  }
+
   footer .top .newsletter {
     padding-top: 1rem;
   }
+
   footer .top .pages ul {
     margin: 10px;
   }
@@ -191,15 +189,20 @@ footer .top .pages {
 @media screen and (max-width: 600px) {
   footer .top .pages {
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: center;
   }
 
   footer .info {
     flex-direction: column;
+    align-items: center;
   }
 
   footer .info > .copyright {
     margin-top: 10px;
+  }
+
+  .contactInput, .inputName, .input1, textarea, .submit-button {
+    width: 100%;
   }
 }
 
@@ -217,4 +220,26 @@ footer .top .pages {
     margin: 0;
     text-align: center;
   }
+
+  .contactInput, .inputName, .input1, textarea, .submit-button {
+    width: 100%;
+  }
+}
+.contact-video-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.contact-video {
+  width: 100%;
+  max-width: 650px; 
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.contact-video video {
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
 }

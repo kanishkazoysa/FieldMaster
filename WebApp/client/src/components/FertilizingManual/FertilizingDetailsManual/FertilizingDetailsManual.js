@@ -10,6 +10,7 @@ import { IoTimeSharp } from "react-icons/io5";
 import { GiWeight, GiChemicalDrop } from "react-icons/gi";
 import { Tb24Hours } from "react-icons/tb";
 import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
+import { getFertilizerDetailsHtml } from "./FertilizerDetailsTemplate.js";
 
 export default function FertilizingDetails({
   route,
@@ -94,24 +95,13 @@ export default function FertilizingDetails({
     setTotal((plantcount * totalAmount) / 1000);
   }, [plantcount, totalAmount]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "http://192.168.1.2:3000/api/fertilizers/FertilizerAmountNeeded"
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        //setNumberOfPlants(data.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
+  const handleSave = () => {
+    const htmlContent = getFertilizerDetailsHtml(selectedFrequency,FertilizerAmountUnitselectedValue,textFertilizationAmount,textFertilizationNUmberoftime,textFertilizationType,perimeter,area);
+    const newWindow = window.open();
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
+    newWindow.print();
+  };
   const calculateFertilizerAmountForPlantation = (totalAmount, numberOfPlants) => {
     return totalAmount * numberOfPlants;
   };
@@ -226,7 +216,7 @@ export default function FertilizingDetails({
           </div>
 
           <div style={styles.bottom2}>
-            <button style={styles.Button2}>
+            <button style={styles.Button2} onClick={handleSave}>
               <p style={styles.Box4ButtonText}>Save as PDF</p>
             </button>
           </div>

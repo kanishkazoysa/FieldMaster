@@ -2,10 +2,8 @@ import React from "react";
 import { View } from "react-native";
 import { Avatar } from "react-native-paper";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-import AxiosInstance from "../AxiosInstance";
 
 const ProfileAvatar = ({ userData, textSize , image }) => {
-  const serverUrl = AxiosInstance.defaults.baseURL; // Replace with your server URL
 
   const getEmailColor = (email) => {
     if (!email) {
@@ -23,22 +21,31 @@ const ProfileAvatar = ({ userData, textSize , image }) => {
     return color;
   };
 
+  const getInitials = (fname, lname) => {
+    return `${(fname ? fname[0] : "").toUpperCase()}${(lname ? lname[0] : "").toUpperCase()}`;
+  };
+
+  const getImageSource = () => {
+    if (image) {
+      return { uri: image };
+    } else if (userData && userData.imageUrl) {
+      return { uri: userData.imageUrl };
+    }
+    return null;
+  };
+
   return (
     <View>
       {userData ? (
-        image || userData.imageUrl ? (
+        getImageSource() ? (
           <Avatar.Image
             size={responsiveFontSize(textSize)}
-            source={{
-              uri: image || `${serverUrl}/${userData.imageUrl}`, // Use the new image if it exists, otherwise use the existing one
-            }}
+            source={getImageSource()}
           />
         ) : (
           <Avatar.Text
             size={responsiveFontSize(textSize)}
-            label={`${(userData.fname ? userData.fname[0] : "").toUpperCase()}${
-              (userData.lname ? userData.lname[0] : "").toUpperCase()
-            }`}
+            label={getInitials(userData.fname, userData.lname)}
             backgroundColor={getEmailColor(userData.email)}
           />
         )

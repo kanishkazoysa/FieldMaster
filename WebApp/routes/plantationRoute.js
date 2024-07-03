@@ -4,21 +4,32 @@ const plantationModel = require("../models/plantation");
 const MapTemplateModel = require("../models/MapTemplateModel");
 
 function calculateNumberOfPlants(area, plantSpacing, rowSpacing) {
-    const areaInSquareMeters = parseFloat(area) * 4046.86;
+    const areaInSquareMeters = parseFloat(area) * 25.29;//converting perch to square m
     const areaPerPlant = plantSpacing * rowSpacing;
     const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
     return numberOfPlants;
 }
-
+function calculateNumberOfPlantsManual(area, plantSpacing, rowSpacing) {
+    const areaInSquareMeters = parseFloat(area) ;
+    const areaPerPlant = plantSpacing * rowSpacing;
+    const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
+    return numberOfPlants;
+}
 function RoundToTwoDecimals(number) {
     return Math.round(number * 100) / 100;
 }
 function calculatePlantationDensity(area, plantSpacing, rowSpacing) {
-    const areaInSquareMeters = parseFloat(area) * 4046.86;
+    const areaInSquareMeters = parseFloat(area) * 25.29;//converting perch to square m
 
-    // const plantSpacing = parseFloat(plantSpacingInMeters);
-    // const rowSpacing = parseFloat(rowSpacingInMeters);
 
+    const areaPerPlant = plantSpacing * rowSpacing;
+    const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
+    const plantationDensity = RoundToTwoDecimals(numberOfPlants / areaInSquareMeters);
+
+    return plantationDensity;
+}
+function calculatePlantationDensityManual(area, plantSpacing, rowSpacing) {
+    const areaInSquareMeters = parseFloat(area) ;
     const areaPerPlant = plantSpacing * rowSpacing;
     const numberOfPlants = Math.floor(areaInSquareMeters / areaPerPlant);
     const plantationDensity = RoundToTwoDecimals(numberOfPlants / areaInSquareMeters);
@@ -35,8 +46,8 @@ function convertToCommonUnit(value, unit) {
 
 router.post("/plantation", async (req, res) => {
     try {
-        const { textplantspace, textRowspace, textPlant, PlantSpaceUnitselectedValue,id } = req.body;
-        const area = 2;
+        const { textplantspace, textRowspace, textPlant, PlantSpaceUnitselectedValue,id , area } = req.body;
+        
 
         const plantSpacing = convertToCommonUnit(textplantspace, PlantSpaceUnitselectedValue);
         const rowSpacing = convertToCommonUnit(textRowspace,PlantSpaceUnitselectedValue );
@@ -71,8 +82,8 @@ router.post("/plantationFromManualCalculator", async (req, res) => {
       const { textplantspace, textRowspace, textPlant, PlantSpaceUnitselectedValue, area } = req.body;
       const plantSpacing = convertToCommonUnit(textplantspace, PlantSpaceUnitselectedValue);
       const rowSpacing = convertToCommonUnit(textRowspace, PlantSpaceUnitselectedValue);
-      const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
-      const calculatedPlantDensity = calculatePlantationDensity(area, plantSpacing, rowSpacing);
+      const numberOfPlants = calculateNumberOfPlantsManual(area, plantSpacing, rowSpacing);
+      const calculatedPlantDensity = calculatePlantationDensityManual(area, plantSpacing, rowSpacing);
   
       // Log and send data
       console.log("Number of plants:", numberOfPlants);
