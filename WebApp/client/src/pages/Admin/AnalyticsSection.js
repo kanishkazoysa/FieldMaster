@@ -14,12 +14,12 @@ const AnalyticsSection = ({users, setLoading}) => {
     const [totalUnverified, setTotalUnverified] = useState(0);
 
     const chartData = {
-        labels: ["Customer", "Admin"],
+        labels: ["Customer", "Admin", "Unverified"],
         datasets: [
             {
-                data: [totalCustomers, totalAdmins],
-                backgroundColor: ["#FF6384", "#36A2EB"],
-                hoverBackgroundColor: ["#FF6384", "#36A2EB"]
+                data: [totalCustomers, totalAdmins, totalUnverified],
+                backgroundColor: ["#4bc0c0", "#36A2EB", "#ff6384"],
+                hoverBackgroundColor: ["#4bc0c0", "#36A2EB", "#ff6384"]
             }
         ]
     }
@@ -40,7 +40,7 @@ const AnalyticsSection = ({users, setLoading}) => {
         users.forEach((user) => {
             if (user.isAdmin === true) {
                 admins++;
-            } else {
+            } else if (user.isVerified === true){
                 customers++;
             }
 
@@ -248,7 +248,7 @@ const AnalyticsSection = ({users, setLoading}) => {
                             <div className="legend-item">
                                 <div
                                     className="legend-color"
-                                    style={{ backgroundColor: "#FF6384" }}
+                                    style={{ backgroundColor: "#4bc0c0" }}
                                 ></div>
                                 <p>Customers</p>
                             </div>
@@ -258,6 +258,13 @@ const AnalyticsSection = ({users, setLoading}) => {
                                     style={{ backgroundColor: "#36A2EB" }}
                                 ></div>
                                 <p>Admins</p>
+                            </div>
+                            <div className="legend-item">
+                                <div
+                                    className="legend-color"
+                                    style={{ backgroundColor: "#ff6384" }}
+                                ></div>
+                                <p>Unverified</p>
                             </div>
                         </div>
                     </div>
