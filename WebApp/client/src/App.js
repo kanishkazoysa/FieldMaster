@@ -47,44 +47,40 @@ const UserRouteGuard = ({ children }) => {
   const token = localStorage.getItem("UserToken");
   const AdminToken = localStorage.getItem("AdminToken");
 
-  if (checkTokenExpired(token)) {
-    localStorage.removeItem("UserToken");
-    return <Navigate to="/login" />;
+  React.useEffect(() => {
+    if (checkTokenExpired(token)) {
+      localStorage.removeItem("UserToken");
+    }
+    if (checkTokenExpired(AdminToken)) {
+      localStorage.removeItem("AdminToken");
+    }
+  }, [token, AdminToken]);
+
+  if (!token && !AdminToken) {
+    return <Navigate to="/login" replace />;
   }
 
-  if (checkTokenExpired(AdminToken)) {
-    localStorage.removeItem("AdminToken");
-    return <Navigate to="/login" />;
-  }
-
-  if (token || AdminToken) {
-    return children;
-  } else {
-    return <Navigate to="/login" />;
-  }
+  return children;
 };
 
 const AdminRouteGuard = ({ children }) => {
   const AdminToken = localStorage.getItem("AdminToken");
   const UserToken = localStorage.getItem("UserToken");
 
-  if (checkTokenExpired(AdminToken)) {
-    localStorage.removeItem("AdminToken");
-    return <Navigate to="/login" />;
+  React.useEffect(() => {
+    if (checkTokenExpired(AdminToken)) {
+      localStorage.removeItem("AdminToken");
+    }
+    if (checkTokenExpired(UserToken)) {
+      localStorage.removeItem("UserToken");
+    }
+  }, [AdminToken, UserToken]);
+
+  if (!AdminToken) {
+    return <Navigate to="/login" replace />;
   }
 
-  if (checkTokenExpired(UserToken)) {
-    localStorage.removeItem("UserToken");
-    return <Navigate to="/login" />;
-  }
-
-  if (AdminToken) {
-    return children;
-  } else if (UserToken) {
-    return <Navigate to="/home" />;
-  } else {
-    return <Navigate to="/login" />;
-  }
+  return children;
 };
 
 const AuthRouteGuard = ({ children }) => {
