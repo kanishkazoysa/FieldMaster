@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import AxiosInstance from '../../AxiosInstance';
 import LoginCountChart from './LoginCountChart';
+import { Doughnut } from "react-chartjs-2";
 
 
 const AnalyticsSection = ({users, setLoading}) => {
@@ -11,6 +12,25 @@ const AnalyticsSection = ({users, setLoading}) => {
     const [totalAdmins, setTotalAdmins] = useState(0);
     const [totalLogins, setTotalLogins] = useState(0);
     const [totalUnverified, setTotalUnverified] = useState(0);
+
+    const chartData = {
+        labels: ["Customer", "Admin"],
+        datasets: [
+            {
+                data: [totalCustomers, totalAdmins],
+                backgroundColor: ["#FF6384", "#36A2EB"],
+                hoverBackgroundColor: ["#FF6384", "#36A2EB"]
+            }
+        ]
+    }
+
+    const options = {
+        plugins: {
+            legend: {
+                display: false, // Hide the legend
+            },
+        },
+    };
 
     useEffect(() => {
         let customers = 0;
@@ -221,8 +241,28 @@ const AnalyticsSection = ({users, setLoading}) => {
             <hr />
             <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div style={{ flex: 1 }}>
-                    
+                <h3 style={{marginLeft : "30px"}}>Users by Type</h3>
+                <div className="chart-container">
+                        <Doughnut data={chartData} options={options} />
+                        <div className="chart-legend">
+                            <div className="legend-item">
+                                <div
+                                    className="legend-color"
+                                    style={{ backgroundColor: "#FF6384" }}
+                                ></div>
+                                <p>Customers</p>
+                            </div>
+                            <div className="legend-item">
+                                <div
+                                    className="legend-color"
+                                    style={{ backgroundColor: "#36A2EB" }}
+                                ></div>
+                                <p>Admins</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <div style={{ width: '3px', backgroundColor: '#000000', height: '100%' }}></div>
                 <div style={{ flex: 1 }}>
                     <h3>Logins in past 30 Days</h3>
                     <div style={{padding:"10px 10px 20px 0", marginRight : "30px", height : "370px"}}>
