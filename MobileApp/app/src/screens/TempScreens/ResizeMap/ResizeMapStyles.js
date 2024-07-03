@@ -6,6 +6,16 @@ import {
 } from "react-native-responsive-dimensions";
 
 export const styles = StyleSheet.create({
+  loadingScreen: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  dotsWrapper: {
+    width: 100,
+  },
+  
   buttonContainer: {
     position: "absolute",
     bottom: responsiveHeight(1),

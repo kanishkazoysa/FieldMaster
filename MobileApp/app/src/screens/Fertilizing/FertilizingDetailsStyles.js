@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
       backgroundColor: "white",
       width: responsiveWidth(86),
       height: responsiveHeight(15),
-      marginTop: responsiveHeight(2),
+      marginTop: responsiveHeight(5),
       alignItems: "center",
       borderRadius: 11,
       shadowColor: "#000",
@@ -197,8 +197,19 @@ export const styles = StyleSheet.create({
     /* bottom section */
   
     bottom: {
+      flexDirection:"column",
       alignItems: "center",
-      bottom: responsiveHeight(3),
+      justifyContent:  "center",
+      bottom: responsiveHeight(4),
+    },
+
+    buttonContainer: {
+      flexDirection: 'row',
+      width: '86%',
+      justifyContent: 'space-between',      
+    },
+    buttonWrapper: {
+      width: '48%',
     },
   
   
