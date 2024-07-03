@@ -18,8 +18,6 @@ import { shareAsync } from "expo-sharing";
 import { Appbar, Button } from "react-native-paper";
 
 import { styles } from "./FenceDetailsStyles";
-import Headersection from "../../../components/Headersection";
-import CustomButton from "../../../components/CustomButton";
 import AxiosInstance from "../../../AxiosInstance";
 import { getFenceDetailsHtml } from "./fenceDetailPrint";
 
@@ -146,11 +144,6 @@ export default function FenceDetails({ route }) {
     const { uri } = await Print.printToFileAsync({ html });
     console.log("File has been saved to:", uri);
     await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
-  };
-
-  const selectPrinter = async () => {
-    const printer = await Print.selectPrinterAsync(); // iOS only
-    setSelectedPrinter(printer);
   };
 
   return (
@@ -342,20 +335,20 @@ export default function FenceDetails({ route }) {
             <Button
               style={{
                 height: 40,
-                marginTop: 10,
+                marginTop: 15,
                 borderRadius: 18,
                 width: "87%",
-                borderColor: "black", // Add this line for the border color
+                borderColor: "#007BFF", // Add this line for the border color
                 borderWidth: 0.2, // Ensure the border is visible by setting the borderWidth
               }}
               mode="contained-tonal"
               onPress={backToHome}
-              labelStyle={{  fontSize: 14 }}
+              labelStyle={{  fontSize: 14 , color:"white" }}
               icon={() => (
                 <MaterialCommunityIcons
                   name="home-import-outline"
                   size={20}
-                  color="black"
+                  color="white"
                 />
               )}
             >

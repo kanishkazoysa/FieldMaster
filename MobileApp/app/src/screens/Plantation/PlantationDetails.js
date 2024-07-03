@@ -16,8 +16,6 @@ import * as Print from "expo-print";
 import { Appbar, Button } from "react-native-paper";
 import { shareAsync } from "expo-sharing";
 import { styles } from "./PlantationDetailsStyles";
-import Headersection from "../../components/Headersection";
-import CustomButton from "../../components/CustomButton";
 import AxiosInstance from "../../AxiosInstance";
 
 export default function PlantationDetails({ route }) {
@@ -465,7 +463,7 @@ export default function PlantationDetails({ route }) {
                 width: "87%",
                 borderColor: "white",
                 borderWidth: 1,
-                backgroundColor: "#15A49B",
+                backgroundColor: "#007BFF",
                 color: "white",
               }}
               mode="contained-tonal"
