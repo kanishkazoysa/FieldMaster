@@ -4,13 +4,15 @@ import './SaveScreenWebStyles.css';
 import { FaVectorSquare } from 'react-icons/fa6';
 import { RiPieChart2Fill } from 'react-icons/ri';
 import { FaRegSave } from 'react-icons/fa';
+import axios from 'axios';
+import AxiosInstance from '../../AxiosInstance';
 
 const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
   const [area, setArea] = useState('0');
   const [perimeter, setPerimeter] = useState('0');
   const [locationPoints, setLocationPoints] = useState([]);
+  const [imageUrl, setImageUrl] = useState('');
 
-  // New state variables for inputs
   const [templateName, setTemplateName] = useState('myTemplate');
   const [measureName, setMeasureName] = useState('tea');
   const [landType, setLandType] = useState('slope');
@@ -22,6 +24,7 @@ const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
       setArea(landInfo.area);
       setPerimeter(landInfo.perimeter);
       setLocationPoints(landInfo.locationPoints);
+      setImageUrl(landInfo.imageUrl);
     }
   }, [landInfo]);
 
@@ -31,19 +34,41 @@ const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
   const handleLocationChange = (e) => setLocation(e.target.value);
   const handleDescriptionChange = (e) => setDescription(e.target.value);
 
-  const handleSave = () => {
-    console.log({
-      templateName,
-      measureName,
-      landType,
-      location,
-      description,
-      area,
-      perimeter,
-      locationPoints,
-    });
-  };
+  const handleSave = async () => {
+    try {
+      const response = await AxiosInstance.post(
+        '/api/auth/mapTemplate/saveTemplate',
+        {
+          perimeter,
+          area,
+          templateName,
+          measureName,
+          landType,
+          location,
+          description,
+          locationPoints,
+          imageUrl,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
+      if (response.status === 200) {
+        console.log('Template saved successfully:', response.data);
+        alert('Template saved successfully');
+      } else {
+        console.error('Unexpected response status:', response.status);
+      }
+    } catch (error) {
+      console.error(
+        'Error saving template:',
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
   return (
     <div className='outer-div'>
       <div className='save-screen'>
@@ -121,6 +146,11 @@ const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
             onChange={handleDescriptionChange}
           />
         </div>
+        {imageUrl && (
+          <div className='map-snapshot'>
+            <img src={imageUrl} alt='Map Snapshot' height={'150px'} />
+          </div>
+        )}
         <div className='save-button-div'>
           <button className='save-button' onClick={handleSave}>
             <FaRegSave />

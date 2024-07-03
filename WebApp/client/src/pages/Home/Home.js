@@ -16,8 +16,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Avatar, message, Button } from 'antd';
 import { MdOutlineAddHome } from 'react-icons/md';
 import * as turf from '@turf/turf';
-import html2canvas from 'html2canvas';
 import { LuUndo2 } from 'react-icons/lu';
+import axios from 'axios';
+import html2canvas from 'html2canvas';
 
 export default function Home() {
   const location = useLocation();
@@ -25,7 +26,6 @@ export default function Home() {
   const messageShownRef = useRef(false);
   const [showMapButtons, setShowMapButtons] = useState(false);
   const [landInfo, setLandInfo] = useState(null);
-  const [mapSnapshot, setMapSnapshot] = useState(null);
 
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
@@ -139,14 +139,41 @@ export default function Home() {
             }
           );
 
-          const newLandInfo = {
-            area: areaInPerches.toFixed(2),
-            perimeter: perimeterInKm.toFixed(2),
-            locationPoints: updatedMarkers,
-          };
+          // Capture the map snapshot
+          html2canvas(document.querySelector('.map-container')).then(
+            (canvas) => {
+              canvas.toBlob(async (blob) => {
+                const formData = new FormData();
+                formData.append('image', blob, 'map_snapshot.png');
 
-          setLandInfo(newLandInfo);
-          console.log('Land Info:', newLandInfo);
+                try {
+                  const response = await axios.post(
+                    'https://api.imgbb.com/1/upload',
+                    formData,
+                    {
+                      params: {
+                        key: 'a08fb8cde558efecce3f05b7f97d4ef7',
+                      },
+                    }
+                  );
+
+                  const imageUrl = response.data.data.url;
+
+                  const newLandInfo = {
+                    area: areaInPerches.toFixed(2),
+                    perimeter: perimeterInKm.toFixed(2),
+                    locationPoints: updatedMarkers,
+                    imageUrl: imageUrl,
+                  };
+
+                  setLandInfo(newLandInfo);
+                  console.log('Land Info:', newLandInfo);
+                } catch (error) {
+                  console.error('Error uploading image:', error);
+                }
+              });
+            }
+          );
         } catch (error) {
           console.error('Error creating polygon:', error);
         }
@@ -157,7 +184,6 @@ export default function Home() {
       alert('You need at least 3 points to complete a polygon');
     }
   };
-
   const handleMapClick = useCallback(
     (event) => {
       if (isPointEdgesMode && !isPolygonComplete) {
@@ -273,6 +299,7 @@ export default function Home() {
           zoom={2}
           options={mapOptions()}
           onClick={handleMapClick}
+          mapContainerClassName='map-container'
         >
           {markers.map((marker, index) => (
             <Marker
