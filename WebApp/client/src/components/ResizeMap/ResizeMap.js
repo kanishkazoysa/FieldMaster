@@ -11,19 +11,15 @@ import AxiosInstance from "../../AxiosInstance";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ResizeMapScreen = () => {
-  const [zoomMap, setZoomMap] = useState(20);
   const location = useLocation();
   const navigate = useNavigate();
   const { templateId, templateArea, templatePerimeter } = location.state;
   const [center, setCenter] = useState({ lat: null, lng: null });
   const [appArray, setAppArray] = useState([]);
-  const [newPoint, setNewPoint] = useState(null);
-  const [initialArray, setInitialArray] = useState([]);
   const [area, setArea] = useState(parseFloat(templateArea) || 0);
   const [perimeter, setPerimeter] = useState(
     parseFloat(templatePerimeter) || 0
   );
-  const [initialPointsLength, setInitialPointsLength] = useState(0);
   const [history, setHistory] = useState([]); // State to keep track of the history
 
   const containerStyle = {
@@ -90,17 +86,19 @@ const ResizeMapScreen = () => {
       });
   }, [templateId]);
 
-  const onLoad = (map) => {
+  const onLoad = useCallback((map) => {
+  if (appArray.length > 0 && appArray[0].path.length > 0) {
     const bounds = new window.google.maps.LatLngBounds();
-    appArray.forEach((data) => {
-      data.path.forEach((coord) => {
-        bounds.extend(new window.google.maps.LatLng(coord.lat, coord.lng));
-      });
+    appArray[0].path.forEach((coord) => {
+      bounds.extend(new window.google.maps.LatLng(coord.lat, coord.lng));
     });
     map.fitBounds(bounds);
 
-    
-  };
+    // Optional: add a slight padding to the bounds
+    const paddings = { top: 50, right: 50, bottom: 50, left: 50 };
+    map.fitBounds(bounds, paddings);
+  }
+}, [appArray]);
 
   const saveMapPoints = async () => {
     try {
@@ -193,32 +191,28 @@ const ResizeMapScreen = () => {
     <div style={styles.container}>
       <SideNavbar />
       <div style={styles.mapContainer}>
-        <div style={styles.top}>
-          <div style={styles.area}>Area: {area} perches </div>
-          <div style={styles.perimeter}>Perimeter: {perimeter} kilometers</div>
-        </div>
+        
         <LoadScript
           googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
           libraries={["places"]}
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            zoom={15}
+            zoom={19}
             center={center}
             options={MapOptions}
             onLoad={onLoad}
-            // onClick={addPoint}
           >
             {appArray &&
               appArray.map((data, i) => (
                 <React.Fragment key={i}>
                   <PolygonF
                     options={{
-                      fillColor: data.color,
-                      fillOpacity: 0.6,
-                      strokeColor: "black",
-                      strokeOpacity: 0.4,
-                      strokeWeight: 0.5,
+                      fillColor: "blue",
+                      fillOpacity: 0.3,
+                      strokeColor: "white",
+                      strokeWeight: 2,
+                      strokeOpacity: 0.7,
                       clickable: true,
                       draggable: false,
                       editable: true,
@@ -228,14 +222,15 @@ const ResizeMapScreen = () => {
                     paths={data.path}
                     onLoad={onPolygonLoad}
                   />
-                  {data.path.map((coord, index) => (
-                    <MarkerF key={index} position={coord} />
-                  ))}
                 </React.Fragment>
               ))}
           </GoogleMap>
         </LoadScript>
       </div>
+      <div style={styles.top}>
+          <div style={styles.area}>Area: {area} perches </div>
+          <div style={styles.perimeter}>Perimeter: {perimeter} kilometers</div>
+        </div>
       <div style={styles.controls}>
         <button style={styles.controlBtn} onClick={handleCancel}>
           Cancel
