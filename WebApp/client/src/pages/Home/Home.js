@@ -16,8 +16,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Avatar, message, Button } from 'antd';
 import { MdOutlineAddHome } from 'react-icons/md';
 import * as turf from '@turf/turf';
-import SaveScreenWeb from '../../components/SaveScreen/SaveScreenWeb';
-
+import html2canvas from 'html2canvas';
 import { LuUndo2 } from 'react-icons/lu';
 
 export default function Home() {
@@ -26,6 +25,7 @@ export default function Home() {
   const messageShownRef = useRef(false);
   const [showMapButtons, setShowMapButtons] = useState(false);
   const [landInfo, setLandInfo] = useState(null);
+  const [mapSnapshot, setMapSnapshot] = useState(null);
 
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
@@ -285,9 +285,9 @@ export default function Home() {
             <Polyline
               path={getPolylinePath()}
               options={{
-                strokeColor: '#FF0000',
+                strokeColor: '#000000',
                 strokeOpacity: 1.0,
-                strokeWeight: 2,
+                strokeWeight: 0.5,
               }}
             />
           )}
@@ -295,9 +295,9 @@ export default function Home() {
             <Polygon
               paths={getPolylinePath()}
               options={{
-                strokeColor: '#FF0000',
+                strokeColor: '#000000',
                 strokeOpacity: 1.0,
-                strokeWeight: 2,
+                strokeWeight: 0.5,
                 fillColor: '#ADD8E6',
                 fillOpacity: 0.35,
               }}

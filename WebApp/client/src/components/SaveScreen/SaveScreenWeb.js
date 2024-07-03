@@ -11,11 +11,11 @@ const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
   const [locationPoints, setLocationPoints] = useState([]);
 
   // New state variables for inputs
-  const [templateName, setTemplateName] = useState('');
-  const [measureName, setMeasureName] = useState('');
-  const [landType, setLandType] = useState('');
-  const [location, setLocation] = useState('');
-  const [description, setDescription] = useState('');
+  const [templateName, setTemplateName] = useState('myTemplate');
+  const [measureName, setMeasureName] = useState('tea');
+  const [landType, setLandType] = useState('slope');
+  const [location, setLocation] = useState('Kandy');
+  const [description, setDescription] = useState('testing description');
 
   useEffect(() => {
     if (landInfo) {
