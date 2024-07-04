@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-import React, { useState, useCallback } from "react";
 import {
   Text,
   View,
@@ -13,14 +12,12 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
 import { Appbar, Button } from "react-native-paper";
 
 import { styles } from "./FenceDetailsStyles";
 import AxiosInstance from "../../../AxiosInstance";
-import { getFenceDetailsHtml } from "./fenceDetailPrint";
 import { getFenceDetailsHtml } from "./fenceDetailPrint";
 
 export default function FenceDetails({ route }) {
