@@ -275,22 +275,30 @@ const Managemap = () => {
             latitude: latLng.lat(),
             longitude: latLng.lng(),
           }));
-
+  
         const stats = calculatePolygonStats(polygon);
-
+  
         const updatedPolygon = {
           points: newPoints,
           area: stats.area,
           perimeter: stats.perimeter,
+          label: partitionPolygons[index].label, // Preserve the label
         };
-
+  
         setUndoStack((prevStack) => [...prevStack, updatedPolygon]);
-
+  
         setPartitionPolygons((prevPolygons) => {
           const updatedPolygons = [...prevPolygons];
           updatedPolygons[index] = updatedPolygon;
           return updatedPolygons;
         });
+  
+        // Update the polygon on the map
+        polygon.setPath(
+          newPoints.map(
+            (point) => new window.google.maps.LatLng(point.latitude, point.longitude)
+          )
+        );
       }
     }
   };
@@ -319,6 +327,7 @@ const Managemap = () => {
   const finishEditing = () => {
     setEditingPolygonIndex(null);
     setUndoStack([]);
+    savePartitionPoints();
     window.location.reload();
   };
 
@@ -402,27 +411,26 @@ const Managemap = () => {
           {partitionPolygons.map((polygon, index) => (
             <React.Fragment key={index}>
               <Polygon
-                key={index}
-                path={polygon.points.map((point) => ({
-                  lat: point.latitude,
-                  lng: point.longitude,
-                }))}
-                options={{
-                  strokeColor: "#0000FF",
-                  strokeOpacity: 1.0,
-                  strokeWeight: 2,
-                  fillColor: "rgba(0, 0, 255, 0.2)",
-                  fillOpacity: 0.4,
-                  zIndex: 2,
-                  editable: editingPolygonIndex === index,
-                  clickable: true,
-                }}
-                onClick={() => handlePolygonClick(index)}
-                onMouseUp={() => handlePolygonEdit(index)}
-                onLoad={(polygon) => {
-                  polygonRefs.current[index] = polygon;
-                }}
-              />
+      path={polygon.points.map((point) => ({
+        lat: point.latitude,
+        lng: point.longitude,
+      }))}
+      options={{
+        strokeColor: "#0000FF",
+        strokeOpacity: 1.0,
+        strokeWeight: 2,
+        fillColor: "rgba(0, 0, 255, 0.2)",
+        fillOpacity: 0.4,
+        zIndex: 2,
+        editable: editingPolygonIndex === index,
+        clickable: true,
+      }}
+      onClick={() => handlePolygonClick(index)}
+      onMouseUp={() => handlePolygonEdit(index)}
+      onLoad={(polygon) => {
+        polygonRefs.current[index] = polygon;
+      }}
+    />
               {polygon.label && (
                 <OverlayView
                   position={calculatePolygonCenter(polygon.points)}
