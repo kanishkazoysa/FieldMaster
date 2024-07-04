@@ -27,22 +27,38 @@ export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userMaps, setUserMaps] = useState([]);
+  const [selectedMapId, setSelectedMapId] = useState(null);
 
   useEffect(() => {
-    if (userMaps.length > 0 && mapRef.current && mapRef.current.state.map) {
+    if (mapRef.current && mapRef.current.state.map) {
       const bounds = new window.google.maps.LatLngBounds();
-      userMaps.forEach(map => {
-        map.locationPoints.forEach(point => {
-          bounds.extend(new window.google.maps.LatLng(point.latitude, point.longitude));
+  
+      if (selectedMapId) {
+        const selectedMap = userMaps.find(map => map._id === selectedMapId);
+        if (selectedMap) {
+          selectedMap.locationPoints.forEach(point => {
+            bounds.extend(new window.google.maps.LatLng(point.latitude, point.longitude));
+          });
+        }
+      } else {
+        userMaps.forEach(map => {
+          map.locationPoints.forEach(point => {
+            bounds.extend(new window.google.maps.LatLng(point.latitude, point.longitude));
+          });
         });
-      });
+      }
+  
       mapRef.current.state.map.fitBounds(bounds);
-      
+  
       // Add some padding to the bounds
       const padding = { top: 50, right: 50, bottom: 50, left: 50 };
       mapRef.current.state.map.fitBounds(bounds, padding);
+  
+      // Animate zoom
+      mapRef.current.state.map.setZoom(mapRef.current.state.map.getZoom());
     }
-  }, [userMaps]);
+  }, [userMaps, selectedMapId]);
+
 
   useEffect(() => {
     fetchUserDetails();
@@ -75,6 +91,10 @@ export default function Home() {
     const centerLng = (Math.min(...longitudes) + Math.max(...longitudes)) / 2;
     return { lat: centerLat, lng: centerLng };
   };
+
+  const handleLabelClick = useCallback((mapId) => {
+    setSelectedMapId(mapId === selectedMapId ? null : mapId);
+  }, [selectedMapId]);
 
   useEffect(() => {
     // Check if we navigated here after a successful login and if the message hasn't been shown yet
@@ -186,38 +206,42 @@ export default function Home() {
         >
         {userMaps.map((map, index) => (
           <React.Fragment key={map._id}>
-            <Polygon
-              paths={map.locationPoints.map(point => ({ lat: point.latitude, lng: point.longitude }))}
-              options={{
-                fillColor: `#${Math.floor(Math.random()*16777215).toString(16)}`,
-                fillOpacity: 0.4,
-                strokeColor: "#000000",
-                strokeOpacity: 1,
-                strokeWeight: 2,
-              }}
-            />
+          <Polygon
+          paths={map.locationPoints.map(point => ({ lat: point.latitude, lng: point.longitude }))}
+          options={{
+            fillColor: selectedMapId === map._id ? '#FF0000' : `#${Math.floor(Math.random()*16777215).toString(16)}`,
+            fillOpacity: selectedMapId === map._id ? 0.6 : 0.4,
+            strokeColor: "#000000",
+            strokeOpacity: 1,
+            strokeWeight: 2,
+          }}
+        />
             <OverlayView
-              position={getCenterOfPolygon(map.locationPoints)}
-              mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-            >
-            <div style={{
-              background: 'black',
-              color: 'white',
-              border: '1px solid #ccc',
-              borderRadius: '50%',
-              width: '30px',
-              height: '30px',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              display: 'flex',           // Add this
-              alignItems: 'center',      // Add this
-              justifyContent: 'center',  // Add this
-              padding: 0,                // Change this
-              lineHeight: 1,             // Add this
-            }}>
-                {index + 1}
-              </div>
-            </OverlayView>
+  position={getCenterOfPolygon(map.locationPoints)}
+  mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+>
+  <div 
+    onClick={() => handleLabelClick(map._id)}
+    style={{
+      background: 'black',
+      color: 'white',
+      border: '1px solid #ccc',
+      borderRadius: '50%',
+      width: '30px',
+      height: '30px',
+      fontSize: '14px',
+      fontWeight: 'bold',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 0,
+      lineHeight: 1,
+      cursor: 'pointer',  // Add this to show it's clickable
+    }}
+  >
+    {index + 1}
+  </div>
+</OverlayView>
           </React.Fragment>
         ))}
           {selectedLocation && (
