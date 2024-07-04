@@ -7,8 +7,8 @@ const ContactSubmission = require('../models/ContactSubmission');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: "ugshenali@gmail.com",
-    pass: "cpof djmp nwqh kcgw",
+    user: "fieldmasterteam@gmail.com",
+    pass: "yhkn pfjk dchz nult",
   },
 });
 
@@ -24,7 +24,7 @@ transporter.verify((error, success) => {
 // Function to send email
 const sendEmail = (toEmail, subject, text) => {
   const mailOptions = {
-    from: 'ugshenali@gmail.com',
+    from: 'fieldmasterteam@gmail.com',
     to: toEmail,
     subject: subject,
     text: text,
@@ -51,7 +51,7 @@ router.post('/send', async (req, res) => {
 
   try {
     await newSubmission.save();
-    sendEmail('ugshenali@gmail.com', 'New Contact Form Submission from FieldMaster', `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+    sendEmail('fieldmasterteam@gmail.com', 'New Contact Form Submission from FieldMaster', `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
     res.status(200).json({ success: 'Submission saved and email sent successfully' });
   } catch (error) {
     console.error('Database Save Error:', error);
@@ -84,7 +84,7 @@ router.post('/reply', async (req, res) => {
 
     // Send reply email
     const mailOptions = {
-      from: 'ugshenali@gmail.com',
+      from: 'fieldmasterteam@gmail.com',
       to: toEmail,
       subject: 'Reply to your message from Fieldmaster',
       text: replyMessage,
