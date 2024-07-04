@@ -9,7 +9,7 @@ import {
 import SideNavbar from "../components/SideNavbar/sideNavbar";
 import { styles, containerStyle } from "./ManagemapStyles";
 import AxiosInstance from "../AxiosInstance";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { FiMapPin, FiGrid, FiEdit, FiX, FiSave, FiTag } from "react-icons/fi";
 import { MdDeleteForever } from "react-icons/md";
 import { GrUndo } from "react-icons/gr";
@@ -37,6 +37,7 @@ const Managemap = () => {
   const [labelText, setLabelText] = useState("");
   const [showLabelInput, setShowLabelInput] = useState(false);
   const [currentLabel, setCurrentLabel] = useState("");
+  const navigate = useNavigate();
 
   const handleAddLabel = () => {
     if (selectedPolygonIndex !== null) {
@@ -356,7 +357,7 @@ const Managemap = () => {
   };
 
   const handleCancel = () => {
-    window.location.reload();
+    navigate('/home');
   };
 
   return (
