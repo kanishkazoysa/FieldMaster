@@ -150,20 +150,20 @@ const AnalyticsSection = ({users, setLoading}) => {
                         to="#"
                         style={{ textDecoration: "none" }}
                     >
-                        <h3>see more</h3>
+                       
                     </Link>
                 </div>
                 <div className="admin_dashboard_card card2">
                     <h1>Customers</h1>
                     <h2 style={{ fontSize: "32px" }}>
                         {totalCustomers}{" "}
-                        <span style={{ fontSize: "14px" }}>LKR</span>
+                        
                     </h2>
                     <Link
                         to="#"
                         style={{ textDecoration: "none" }}
                     >
-                        <h3>see more</h3>
+                        
                     </Link>
                 </div>
                 <div className="admin_dashboard_card card3">
@@ -173,7 +173,7 @@ const AnalyticsSection = ({users, setLoading}) => {
                         to="#"
                         style={{ textDecoration: "none" }}
                     >
-                        <h3>see more</h3>
+                        
                     </Link>
                 </div>
                 <div className="admin_dashboard_card card4">
@@ -183,7 +183,7 @@ const AnalyticsSection = ({users, setLoading}) => {
                         to="#"
                         style={{ textDecoration: "none" }}
                     >
-                        <h3>see more</h3>
+                        
                     </Link>
                 </div>
                 <div className="admin_dashboard_card card5">
@@ -193,7 +193,7 @@ const AnalyticsSection = ({users, setLoading}) => {
                         to="#"
                         style={{ textDecoration: "none" }}
                     >
-                        <h3>see more</h3>
+                        
                     </Link>
                 </div>
                 <div className="main_dashboard_realtime_insights_container center">

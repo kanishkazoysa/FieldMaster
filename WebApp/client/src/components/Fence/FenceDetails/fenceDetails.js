@@ -9,7 +9,7 @@ import { styles } from "./fenceDetailsStyles";
 import { RiEditBoxLine } from "react-icons/ri"; 
 import AxiosInstance from "../../../AxiosInstance";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Modal } from "antd";
+import { Modal,Button } from "antd";
 import Fence from "../Fence/fence";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails";
 import { getFenceDetailsHtml } from "./FenceDetailsTemplate";
@@ -131,7 +131,7 @@ export default function FenceDetails({
     <div>
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '85vh' }}>
-          <BeatLoader color="#007BFF" loading={loading} size={20} />
+          <BeatLoader color="#007BFF" loading={loading} size={12} />
         </div>
       ) : (
         !currentPage && (
@@ -230,12 +230,13 @@ export default function FenceDetails({
             </div>
   
             <div style={styles.bottom}>
-              <button style={styles.Button1} onClick={handleSave}>
-                <p style={styles.Box4ButtonText}>Save Data</p>
-              </button>
-              <button style={styles.Button2} onClick={handleback}>
-                <p style={styles.Box4ButtonText}>Back to Template</p>
-              </button>
+               
+              <Button type="primary" style={styles.Button1} onClick={handleSave}>
+                <p style={{fontSize: 13}}>Save Data</p>
+              </Button>
+              <Button style={styles.Button2} onClick={handleback}>
+              <p style={{fontSize: 13}}>Back to Template</p>
+              </Button>
             </div>
           </div>
         )

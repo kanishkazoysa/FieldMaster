@@ -32,6 +32,10 @@ const TemplateDetails = ({
     e.stopPropagation();
     handleEditTemplateClick(template);
   };
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [points, setPoints] = useState([]);
+  const [region, setRegion] = useState(null);
+
 
   const handleBackClick = () => {
     setAnimatePage(false);
@@ -39,6 +43,13 @@ const TemplateDetails = ({
       setCurrentPage(null);
     }, 300);
   };
+
+  
+
+  const navigateToRegister = () => {
+    navigate(`/Managemap/${id}`); // Navigate to ManageMap page with template ID
+  };
+
 
   const checkIdClearLand = async (id) => {
     try {
@@ -133,7 +144,7 @@ const TemplateDetails = ({
                 className="map-img"
               />
               <div className="button-container">
-                <Button type="primary" className="action-btn">
+                <Button type="primary" className="action-btn" onClick={navigateToRegister}>
                   Manage Map
                 </Button>
                 <Button type="primary" className="action-btn" onClick={handleResizeMapClick}>

@@ -29,7 +29,7 @@ export const styles = {
       fontWeight: "bold",
       marginBottom: 0,
       color: "white",
-      marginLeft: "95px",
+      marginLeft: "85px",
     },
   
     Box1: {
@@ -382,15 +382,11 @@ export const styles = {
     },
   
     Button1: {
-      display: "flex",
       width: "100%",
-      height: 35,
-      backgroundColor: "#0866FF",
       alignItems: "center",
-      justifyContent: "center",
       marginTop: 65,
       borderRadius: 11,
-      borderWidth: 0,
+      padding: '17px',
     },
   
     //frequency

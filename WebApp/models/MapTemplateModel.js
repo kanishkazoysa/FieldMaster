@@ -5,6 +5,26 @@ const PointSchema = new mongoose.Schema({
   latitude: Number,
 });
 
+const PartitionPolygonSchema = new mongoose.Schema({
+  points: {
+    type: [PointSchema],
+    default: [],
+  },
+  area: {
+    type: Number,
+    required: true,
+  },
+  perimeter: {
+    type: Number,
+    required: true,
+  },
+
+  label: {
+    type: String,
+    default: '',
+  },
+});
+
 /* this schema is used to save map template */
 const MapTemplateSchema = new mongoose.Schema({
   perimeter: {
@@ -40,9 +60,13 @@ const MapTemplateSchema = new mongoose.Schema({
     type: [PointSchema],
     default: [],
   },
-   userId: {
+  userId: {
     type: String,
     required: true,
+  },
+  partitionPolygons: {
+    type: [PartitionPolygonSchema],
+    default: [],
   },
 });
 
