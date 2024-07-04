@@ -20,12 +20,17 @@ const LoginForm = () => {
       })
       .then((response) => {
         //get token and store it on local storage
-        const token= response.data.token; 
-        localStorage.setItem("UserToken", token);
+        const token= response.data.token;
+        const isAdmin = response.data.isAdmin;
 
-        // Use navigate for redirection after successful login
-        navigate('/Home', { replace: true, state: { loginSuccess: true } });
-        // No need to show message here, it will be handled in Home component
+        if (isAdmin) {
+          localStorage.setItem("AdminToken", token);
+          localStorage.setItem("UserToken", token);
+          navigate('/admin', { replace: true, state: { loginSuccess: true } });
+        } else {
+          localStorage.setItem("UserToken", token);
+          navigate('/Home', { replace: true, state: { loginSuccess: true } });
+        }
       })
       .catch((error) => {
         if (error.response && error.response.data && error.response.data.error) {

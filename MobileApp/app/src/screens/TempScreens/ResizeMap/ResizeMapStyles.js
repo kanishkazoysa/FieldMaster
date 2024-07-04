@@ -1,30 +1,55 @@
 import { StyleSheet } from "react-native";
 import {
+  responsiveFontSize,
   responsiveHeight,
   responsiveWidth,
 } from "react-native-responsive-dimensions";
 
 export const styles = StyleSheet.create({
+  loadingScreen: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  dotsWrapper: {
+    width: 100,
+  },
+  
   buttonContainer: {
     position: "absolute",
-    bottom: responsiveHeight(0),
+    bottom: responsiveHeight(1),
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-around",
     backgroundColor: "transparent",
     marginBottom: responsiveHeight(2),
   },
+  overlay: {
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "rgba(0,0,0, 0.7)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 5,
+  },
+  overlayText: {
+    color: "#fff",
+    fontSize: responsiveFontSize(2),
+    marginHorizontal: 20,
+  },
   btnStyle: {
     backgroundColor: "#0866FF",
     paddingVertical: responsiveHeight(1.5),
     margin: responsiveHeight(1.25),
     borderRadius: 17,
-    width: responsiveWidth(38),
+    width: responsiveWidth(32),
+    height: responsiveHeight(5.6),
     alignItems: "center",
   },
   cancelBtnStyle: {
-    backgroundColor: "#990C15",
-    width: responsiveWidth(38),
+    backgroundColor: "#B8222C",
+    width: responsiveWidth(32),
     paddingVertical: responsiveHeight(1.5),
     margin: responsiveHeight(1.25),
     borderRadius:17,
@@ -58,7 +83,6 @@ export const styles = StyleSheet.create({
   },
   dropdownContainer: {
     position: "absolute",
-    top: responsiveHeight(0),
     right: responsiveWidth(13),
     backgroundColor: "rgba(0,0,0, 0.7)",
     borderRadius: responsiveWidth(1.25),
@@ -70,6 +94,22 @@ export const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+  },
+  mainMarker: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    borderWidth: 2,
+    borderColor: 'black',
+  },
+  intermediateMarker: {
+    width: 13,
+    height: 13,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'black',
   },
   button2: {
     position: "absolute",
@@ -93,7 +133,7 @@ export const styles = StyleSheet.create({
     padding: responsiveHeight(1.25),
     borderRadius: responsiveWidth(1.25),
     right: responsiveWidth(5),
-    top: Platform.OS === "android" ? "65%" : "27%",
+    top: Platform.OS === "android" ? "63%" : "27%",
     zIndex: 1,
     flexDirection: "row",
     alignItems: "center",

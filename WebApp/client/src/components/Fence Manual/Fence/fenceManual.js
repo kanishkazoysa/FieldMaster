@@ -1,23 +1,30 @@
-// SideNavbar.js
 import React, { useState, useRef } from "react";
-import { FaBars} from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import { MdArrowBack, MdFence } from "react-icons/md";
 import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import {  BsBoundingBox } from "react-icons/bs";
+import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 import { styles } from "./fenceManualStyles";
 import Select from "react-select";
 import FenceDetailsManual from "../FenceDetails/fenceDetailsManual";
 import AxiosInstance from "../../../AxiosInstance";
+import { message } from "antd";
 
-export default function FenceManual({ onBackToSidebar,area,Perimeter,AreaUnitselectedValue,PerimeterUnitselectedValue }) {
-  
+export default function FenceManual({
+  onBackToSidebar,
+  area,
+  Perimeter,
+  AreaUnitselectedValue,
+  PerimeterUnitselectedValue,
+}) {
   const [FenceTypeselectedValue, setFenceTypeselectedValue] = useState(null);
   const [FenceTypeselectedValue1, setFenceTypeselectedValue1] = useState(null);
-  const [PostSpaceUnitselectedValue, setPostSpaceUnitselectedValue] = useState("");
-  const [PostSpaceUnitselectedValue1, setPostSpaceUnitselectedValue1] = useState("");
+  const [PostSpaceUnitselectedValue, setPostSpaceUnitselectedValue] =
+    useState("");
+  const [PostSpaceUnitselectedValue1, setPostSpaceUnitselectedValue1] =
+    useState("");
   const [inputValuePostspace, setInputValuePostspace] = useState("");
   const [inputValueFenceLength, setInputValueFenceLength] = useState("");
   const [inputValueFenceAmount, setInputValueFenceAmount] = useState("");
@@ -28,9 +35,7 @@ export default function FenceManual({ onBackToSidebar,area,Perimeter,AreaUnitsel
   const [NumberOfSticks, setNumberOfSticks] = useState(0);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
- 
 
-  
   const handleFenceLengthChange = (event) => {
     setInputValueFenceLength(event.target.value);
   };
@@ -55,19 +60,19 @@ export default function FenceManual({ onBackToSidebar,area,Perimeter,AreaUnitsel
 
   const handleAdd = () => {
     if (!inputValueFenceLength.trim() || !inputValueFenceAmount.trim()) {
-      Swal.fire("Please fill both input fields");
+      message.error("Please fill both input fields");
       return;
     }
 
     const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
     if (!regex.test(inputValueFenceLength)) {
-      Swal.fire("Error: Please enter a valid Length");      
+      message.error("Error: Please enter a valid Length");
       return;
     }
 
     const regex2 = /^\d+$/; // allow only decimal numbers
     if (!regex2.test(inputValueFenceAmount)) {
-      Swal.fire("Error: Please enter a valid count");      
+      message.error("Error: Please enter a valid Count");
       return;
     }
 
@@ -100,15 +105,19 @@ export default function FenceManual({ onBackToSidebar,area,Perimeter,AreaUnitsel
   const handleFenceDetails = async (e) => {
     e.preventDefault();
 
-       // Validate the data
-    if (!PostSpaceUnitselectedValue || !FenceTypeselectedValue || !inputValuePostspace) {
-      Swal.fire("Error: Please fill in all fields");
+    // Validate the data
+    if (
+      !PostSpaceUnitselectedValue ||
+      !FenceTypeselectedValue ||
+      !inputValuePostspace
+    ) {
+      message.error("Error: Please fill all input fields");
       return;
     }
 
     const regex = /^\d+(\.\d+)?$/; // allow decimal and float numbers
     if (!regex.test(inputValuePostspace)) {
-      Swal.fire("Error: Please enter a valid Post Space");
+      message.error("Error: Please enter a valid Post Space");
       return;
     }
 
@@ -121,14 +130,14 @@ export default function FenceManual({ onBackToSidebar,area,Perimeter,AreaUnitsel
       fenceLengthsArray,
       Perimeter,
     })
-     .then((response) => {
-      setNumberOfSticks(response.data.numberOfSticks);
-      setCurrentPage("FenceDetailsManual"); // Update this line
-      setAnimatePage(true);
-
+      .then((response) => {
+        setNumberOfSticks(response.data.numberOfSticks);
+        setCurrentPage("FenceDetailsManual"); // Update this line
+        setAnimatePage(true);
       })
-     .catch((error) => {
+      .catch((error) => {
         console.error("Error:", error.response.data);
+        message.error("Error", "Failed to create fence. Please try again.");
         alert("Error", "Failed to create fence. Please try again.");
       });
   };
@@ -162,7 +171,10 @@ export default function FenceManual({ onBackToSidebar,area,Perimeter,AreaUnitsel
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{Perimeter}{PerimeterUnitselectedValue}</p>
+                  <p style={styles.propertyValue}>
+                    {Perimeter}
+                    {PerimeterUnitselectedValue}
+                  </p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -324,10 +336,10 @@ export default function FenceManual({ onBackToSidebar,area,Perimeter,AreaUnitsel
             PostSpaceUnitselectedValue={PostSpaceUnitselectedValue}
             FenceTypeselectedValue={FenceTypeselectedValue}
             NumberOfSticks={NumberOfSticks}
-            area = {area}
-            Perimeter = {Perimeter}
-            AreaUnitselectedValue = {AreaUnitselectedValue}
-            PerimeterUnitselectedValue = {PerimeterUnitselectedValue}
+            area={area}
+            Perimeter={Perimeter}
+            AreaUnitselectedValue={AreaUnitselectedValue}
+            PerimeterUnitselectedValue={PerimeterUnitselectedValue}
           />
         )}
       </div>

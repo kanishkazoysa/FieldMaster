@@ -11,7 +11,9 @@ export const styles = StyleSheet.create({
     },
   
     /*Top Section*/
-  
+    Box5bottomText: {
+      fontSize: responsiveFontSize(0.9),
+    },
     scrollContent: {
       flexDirection: "column",
       justifyContent: "space-between",
@@ -113,7 +115,7 @@ export const styles = StyleSheet.create({
     box2PropertyDetails: {
       flexDirection: "column",
       marginLeft: responsiveWidth(2),
-      width: "50%",
+      width: "65%",
       height: responsiveHeight(8.5),
       backgroundColor: "white",
     },

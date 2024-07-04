@@ -58,74 +58,76 @@ const tiers = [
 
 function Pricing() {
   return (
-   <div id="pricing" className="pricing">  
-    <Container maxWidth="md" component="main" style={{marginBottom:"1rem"}}>
-       <div style={{ textAlign: "center", color: "#007BFF", margin:"2rem"}}><h2>Pricing</h2></div>
-      <Grid container spacing={5} alignItems="flex-end">
-        {tiers.map((tier) => (
-          <Grid
-            item
-            key={tier.title}
-            xs={12}
-            sm={tier.title === "Enterprise" ? 12 : 6}
-            md={4}
-          >
-            <Card>
-              <CardHeader
-                title={tier.title}
-                subheader={tier.subheader}
-                titleTypographyProps={{ align: "center" }}
-                action={tier.title === "Pro" ? <StarIcon /> : null}
-                subheaderTypographyProps={{
-                  align: "center",
-                }}
-                sx={{
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === "light"
-                      ? theme.palette.grey[200]
-                      : theme.palette.grey[700],
-                }}
-              />
-              <CardContent>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "baseline",
-                    mb: 2,
+    <div id="pricing" className="pricing">
+      <Container maxWidth="md" component="main" style={{ marginBottom: "1rem" }}>
+        <div style={{ textAlign: "center", color: "#007BFF", margin: "2rem" }}>
+          <h2>Pricing</h2>
+        </div>
+        <Grid container spacing={3} justifyContent="center">
+          {tiers.map((tier) => (
+            <Grid
+              item
+              key={tier.title}
+              xs={12}
+              sm={6}
+              md={4}
+            >
+              <Card>
+                <CardHeader
+                  title={tier.title}
+                  subheader={tier.subheader}
+                  titleTypographyProps={{ align: "center" }}
+                  action={tier.title === "Pro" ? <StarIcon /> : null}
+                  subheaderTypographyProps={{
+                    align: "center",
                   }}
-                >
-                  <Typography component="h2" variant="h3" color="text.primary">
-                    ${tier.price}
-                  </Typography>
-                  <Typography variant="h6" color="text.secondary">
-                    /mo
-                  </Typography>
-                </Box>
-                <PricingList>
-                  {tier.description.map((line) => (
-                    <Typography
-                      component="li"
-                      variant="subtitle1"
-                      align="center"
-                      key={line}
-                    >
-                      {line}
+                  sx={{
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === "light"
+                        ? theme.palette.grey[200]
+                        : theme.palette.grey[700],
+                  }}
+                />
+                <CardContent>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "baseline",
+                      mb: 2,
+                    }}
+                  >
+                    <Typography component="h2" variant="h3" color="text.primary">
+                      ${tier.price}
                     </Typography>
-                  ))}
-                </PricingList>
-              </CardContent>
-              <CardActions>
-                <Button fullWidth variant={tier.buttonVariant}>
-                  {tier.buttonText}
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
-    </div>  
+                    <Typography variant="h6" color="text.secondary" sx={{ ml: 1 }}>
+                      /mo
+                    </Typography>
+                  </Box>
+                  <PricingList>
+                    {tier.description.map((line) => (
+                      <Typography
+                        component="li"
+                        variant="subtitle1"
+                        align="center"
+                        key={line}
+                      >
+                        {line}
+                      </Typography>
+                    ))}
+                  </PricingList>
+                </CardContent>
+                <CardActions>
+                  <Button fullWidth variant={tier.buttonVariant}>
+                    {tier.buttonText}
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </div>
   );
 }
 

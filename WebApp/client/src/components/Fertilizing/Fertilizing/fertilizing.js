@@ -9,7 +9,6 @@ import { SlChemistry } from "react-icons/sl";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import { styles } from "./fertilizingStyles.js";
 import Select from "react-select";
-import axios from "axios";
 import { FaTree } from "react-icons/fa";
 import FertilizingDetails from "../FertilizingDetails/fertilizingDetails";
 import { message,Button } from "antd";
@@ -17,7 +16,7 @@ import AxiosInstance from "../../../AxiosInstance";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
 export default function Fertilizing(
   {
-    onBackToSidebar,
+  onBackToSidebar,
   id,
   Perimeter,
   area,
@@ -27,15 +26,10 @@ export default function Fertilizing(
   numberOfPlants,
   PlantDensity
   }) {
-    
-    
-   
-  const [textFertilizationType, setTextFertilizationType] =
-    useState("");
-  const [textFertilizationNUmberoftime, setTextFertilizationNUmberoftime] =
-    useState("");
-  const [textFertilizationAmount, setTextFertilizationAmount] =
-    useState("");
+ 
+  const [textFertilizationType, setTextFertilizationType] =useState("");
+  const [textFertilizationNUmberoftime, setTextFertilizationNUmberoftime] =useState("");
+  const [textFertilizationAmount, setTextFertilizationAmount] =useState("");
   const [FertilizerAmountUnitselectedValue, setFertilizerAmountUnitselectedValue] = useState(null);
   const [FertilizerAmountUnitselectedValue1, setFertilizerAmountUnitselectedValue1] = useState(null);
 
@@ -66,7 +60,7 @@ const handleFrequencyChange = (selectedFrequency) => {
   };
 
   const backtotemp = () =>{
-    setCurrentPage("TemplateDetails"); // Update this line
+    setCurrentPage("TemplateDetails"); 
     setAnimatePage(true);
   }
   const handleFertilizingDetails = async (e) => {
@@ -94,34 +88,6 @@ const handleFrequencyChange = (selectedFrequency) => {
         FertilizerAmountUnitselectedValue
       })
 
-    //   setCurrentPage("fertilizingDetails");
-    //   setAnimatePage(true);
-    //   e.preventDefault();
-
-    //   // Prepare data for the request
-    //   const requestData = {
-    //     textPlant,
-    //     textFertilizationNUmberoftime,
-    //     textFertilizationAmount,
-    //     textFertilizationType,
-    //     FertilizerAmountUnitselectedValue
-
-
-    //   };
-
-    //   // Make POST request to the backend
-    //   const response = await axios.post(
-    //     "http://192.168.1.2:3000/api/fertilizers/fertilizers",
-    //     requestData
-    //   );
-
-    //   // Handle successful response
-    //   console.log("Response:", response.data);
-    // } catch (error) {
-    //   // Handle errors
-    //   console.error("Error:", error.message);
-    //   alert("Error: " + error.message);
-    // }
     .then((response) => {
       // If backend response is successful, navigate to detail page
       setCurrentPage("fertilizingDetails");

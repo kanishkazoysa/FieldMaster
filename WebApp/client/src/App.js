@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,7 +13,7 @@ import Navbar from "./components/HomeComponents/navbar/Navbar";
 import Hero from "./components/HomeComponents/Hero/Hero";
 import About from "./components/HomeComponents/About";
 import Pricing from "./components/HomeComponents/Pricing";
-import Setup from "./components/HomeComponents/SetupCard";
+import Setup from "./components/HomeComponents/Setup";
 import ContactForm from "./components/HomeComponents/contact/contact";
 import "./index.css";
 import Home from "./pages/Home/Home";
@@ -20,21 +25,73 @@ import LoginPage from "./pages/auth/Login/LoginPage";
 import FPPage from "./pages/auth/ForgotPassowrd/FPPage";
 import OtpPage from "./pages/auth/ForgotPassowrd/OtpPage";
 import CPPage from "./pages/auth/ForgotPassowrd/CPPage";
+import Admin from "./pages/Admin/AdminDashboard";
+import { jwtDecode } from "jwt-decode";
+import ResizeMap from "./components/ResizeMap/ResizeMap"
 
-const UserRouteGuard = ({ children }) => {
-  const token = localStorage.getItem('UserToken');
+const checkTokenExpired = (token) => {
+  if (!token) {
+    return true;
+  }
 
-  if (token) {
-    return children;
-  } else {
-    return <Navigate to="/login" />;
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    return decodedToken.exp < currentTime;
+  } catch (error) {
+    console.error("Error decoding token: ", error);
+    return true;
   }
 };
 
+
+const UserRouteGuard = ({ children }) => {
+  const token = localStorage.getItem("UserToken");
+  const AdminToken = localStorage.getItem("AdminToken");
+
+  React.useEffect(() => {
+    if (checkTokenExpired(token)) {
+      localStorage.removeItem("UserToken");
+    }
+    if (checkTokenExpired(AdminToken)) {
+      localStorage.removeItem("AdminToken");
+    }
+  }, [token, AdminToken]);
+
+  if (!token && !AdminToken) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+const AdminRouteGuard = ({ children }) => {
+  const AdminToken = localStorage.getItem("AdminToken");
+  const UserToken = localStorage.getItem("UserToken");
+
+  React.useEffect(() => {
+    if (checkTokenExpired(AdminToken)) {
+      localStorage.removeItem("AdminToken");
+    }
+    if (checkTokenExpired(UserToken)) {
+      localStorage.removeItem("UserToken");
+    }
+  }, [AdminToken, UserToken]);
+
+  if (!AdminToken) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
 const AuthRouteGuard = ({ children }) => {
-  const token = localStorage.getItem('UserToken');
+  const token = localStorage.getItem("UserToken");
+  const AdminToken = localStorage.getItem("AdminToken");
   if (token) {
     return <Navigate to="/home" />;
+  } else if(AdminToken) {
+    return <Navigate to="/admin" />;
   } else {
     return children;
   }
@@ -48,14 +105,14 @@ export default function App() {
           path="/register"
           element={
             <AuthRouteGuard>
-            <div className="main-container">
-              <div className="page-container">
-                <RegisterPage />
+              <div className="main-container">
+                <div className="page-container">
+                  <RegisterPage />
+                </div>
+                <div className="auth-layout">
+                  <AuthLayout />
+                </div>
               </div>
-              <div className="auth-layout">
-                <AuthLayout />
-              </div>
-            </div>
             </AuthRouteGuard>
           }
         />
@@ -64,14 +121,14 @@ export default function App() {
           path="/login"
           element={
             <AuthRouteGuard>
-            <div className="main-container">
-              <div className="page-container">
-                <LoginPage />
+              <div className="main-container">
+                <div className="page-container">
+                  <LoginPage />
+                </div>
+                <div className="auth-layout">
+                  <AuthLayout />
+                </div>
               </div>
-              <div className="auth-layout">
-                <AuthLayout />
-              </div>
-            </div>
             </AuthRouteGuard>
           }
         />
@@ -80,14 +137,14 @@ export default function App() {
           path="/forgot-password"
           element={
             <AuthRouteGuard>
-            <div className="main-container">
-              <div className="page-container">
-                <FPPage />
+              <div className="main-container">
+                <div className="page-container">
+                  <FPPage />
+                </div>
+                <div className="auth-layout">
+                  <AuthLayout />
+                </div>
               </div>
-              <div className="auth-layout">
-                <AuthLayout />
-              </div>
-            </div>
             </AuthRouteGuard>
           }
         />
@@ -119,11 +176,26 @@ export default function App() {
             </div>
           }
         />
+        <Route
+          path="/admin"
+          element={
+            <AdminRouteGuard>
+              <Admin />
+            </AdminRouteGuard>
+          }
+        />
 
         {/* Route for the main content */}
         <Route path="/" element={<MainContent />} />
 
-        <Route path="/Home" element={<UserRouteGuard><Home /></UserRouteGuard>} />
+        <Route
+          path="/Home"
+          element={
+            <UserRouteGuard>
+              <Home />
+            </UserRouteGuard>
+          }
+        />
         <Route path="/emailVerification" element={<EmailVerified />} />
         <Route path="/managemap/:templateId" element={<Managemap />} />
       </Routes>

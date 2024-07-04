@@ -2,25 +2,22 @@ import {
   View,
   Text,
   StatusBar,
-  StyleSheet,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
 import { Appbar, TextInput, Button } from "react-native-paper";
-import {
-  responsiveHeight,
-  responsiveWidth,
-  responsiveFontSize,
-} from "react-native-responsive-dimensions";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import ProfileAvatar from "../components/ProfileAvatar";
+import ProfileAvatar from "../../components/ProfileAvatar";
 import * as ImagePicker from "expo-image-picker";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import { Alert } from "react-native";
-import AxiosInstance from "../AxiosInstance";
+import AxiosInstance from "../../AxiosInstance";
 import { ActivityIndicator } from "react-native";
+import styles from "./ProfileManageStyles";
+import { AntDesign } from '@expo/vector-icons';
 
 const ProfileManagement = () => {
   const [user, setUser] = useState({});
@@ -29,6 +26,7 @@ const ProfileManagement = () => {
   const [image, setImage] = useState(null);
   const [forceUpdate, setForceUpdate] = useState(0);
 
+  // Update the image when the user changes it
   useEffect(() => {
     setForceUpdate((prevValue) => prevValue + 1);
   }, [user.imageUrl]);
@@ -58,16 +56,25 @@ const ProfileManagement = () => {
   };
   const handlePressAvatar = () => {
     Alert.alert(
+      "Profile Picture",
       "Choose an option",
-      "Would you like to open the gallery or use the camera?",
       [
         {
-          text: "Open Gallery",
+          text: "Take Photo",
+          onPress: takeImage,
+        },
+        {
+          text: "Choose from Gallery",
           onPress: pickImage,
         },
         {
-          text: "Open Camera",
-          onPress: takeImage,
+          text: "Remove Profile Picture",
+          onPress: removeProfilePicture,
+          style: 'destructive',
+        },
+        {
+          text: "Cancel",
+          style: 'cancel',
         },
       ],
       { cancelable: true }
@@ -107,9 +114,27 @@ const ProfileManagement = () => {
       });
   };
 
+  const removeProfilePicture = async () => {
+    setLoading(true);
+    try {
+      const response = await AxiosInstance.post("/api/users/removeProfilePicture");
+      if (response.data.success) {
+        setUser(prevUser => ({ ...prevUser, imageUrl: null }));
+        setImage(null);
+        Alert.alert("Success", "Profile picture removed successfully");
+      } else {
+        Alert.alert("Error", "Failed to remove profile picture");
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "An error occurred while removing the profile picture");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleConfirm = async () => {
     setLoading(true);
-    const token = await AsyncStorage.getItem("token");
     let localUri = image;
     let filename;
 
@@ -129,20 +154,27 @@ const ProfileManagement = () => {
     }
 
     try {
-      const response = AxiosInstance.post(
+      const response = await AxiosInstance.post(
         "/api/users/updateProfile",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      setTimeout(() => {
-        setLoading(false);
-        navigation.navigate("Home");
-      }, 2000);
+
+      // Update the user state with the new data from the server
+      setUser(response.data.user);
+
+      // Update the image state with the new image URL
+      setImage(response.data.user.imageUrl);
+
+      setLoading(false);
+      navigation.navigate("Home");
     } catch (error) {
       console.log(error);
       alert("An error occurred");
+      setLoading(false);
     }
   };
+
   return (
     <View style={{ flex: 1 }}>
       {loading && (
@@ -191,14 +223,14 @@ const ProfileManagement = () => {
                 <ProfileAvatar
                   userData={user}
                   textSize={responsiveFontSize(2)}
-                  image={image}
+                  image={image || (user && user.imageUrl)}
                 />
               </View>
-              <Fontisto
-                style={styles.cameraIcon}
-                name="camera"
-                size={responsiveFontSize(2.4)}
-                color="#007BFF"
+              <AntDesign 
+              style={styles.editIcon}
+              name="edit" 
+              size={responsiveFontSize(3.4)} 
+              color="black" 
               />
             </TouchableOpacity>
             <Text style={styles.avtarTxt}>
@@ -241,16 +273,14 @@ const ProfileManagement = () => {
                 onChangeText={(text) => setUser({ ...user, email: text })}
               />
             </View>
-           
+
             <Button
               onPress={handleChangePassword}
               mode="contained"
               loading={loading}
               style={styles.button1}
             >
-            <Text>
-            Change Password
-            </Text>
+              <Text>Change Password</Text>
             </Button>
             <Button
               onPress={handleConfirm}
@@ -266,79 +296,5 @@ const ProfileManagement = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  header: {
-    height: responsiveHeight(6),
-    backgroundColor: "#007BFF",
-    zIndex: 1,
-    ...Platform.select({
-      android: {
-        marginTop: StatusBar.currentHeight,
-      },
-    }),
-  },
-  appbarText: {
-    alignItems: "center",
-    marginRight: responsiveWidth(12),
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-  section1: {
-    flex: 1,
-    borderRadius: 30,
-    marginTop: responsiveHeight(3),
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  section2: {
-    flex: 2,
-  },
-  text1: {
-    fontSize: responsiveFontSize(2.5),
-    fontWeight: "bold",
-    marginTop: responsiveHeight(3),
-    marginLeft: responsiveWidth(8),
-  },
-  inputContainer: {
-    marginTop: responsiveHeight(3),
-    alignItems: "center",
-  },
-  inputField: {
-    width: responsiveWidth(82),
-    height: responsiveHeight(6),
-    fontSize: responsiveFontSize(1.9),
-    marginBottom: responsiveHeight(2),
-    borderRadius: 15,
-  },
-  button1: {
-    marginTop: responsiveHeight(1),
-    width: responsiveWidth(82),
-    height: responsiveHeight(5.7),
-    alignSelf: "center",
-    justifyContent: "center",
-    borderRadius: 10,
-    borderColor: "#007BFF",
-  },
-  button: {
-    marginTop: responsiveHeight(5),
-    backgroundColor: "#007BFF",
-    width: responsiveWidth(60),
-    padding: responsiveHeight(0),
-    alignSelf: "center",
-  },
-  cameraIcon: {
-    top: responsiveHeight(-2.8),
-    right: responsiveWidth(-28),
-  },
-  avtarTxt: {
-    fontSize: responsiveFontSize(3),
-    marginTop: responsiveHeight(-2),
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-});
 
 export default ProfileManagement;

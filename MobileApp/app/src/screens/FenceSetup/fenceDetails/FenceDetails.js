@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Text,
   View,
@@ -12,14 +13,14 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
-
+import { Appbar, Button } from "react-native-paper";
 
 import { styles } from "./FenceDetailsStyles";
-import Headersection from "../../../components/Headersection";
-import CustomButton from "../../../components/CustomButton";
 import AxiosInstance from "../../../AxiosInstance";
+import { getFenceDetailsHtml } from "./fenceDetailPrint";
 import { getFenceDetailsHtml } from "./fenceDetailPrint";
 
 export default function FenceDetails({ route }) {
@@ -38,7 +39,9 @@ export default function FenceDetails({ route }) {
   // Fetch data from database
   const fetchData = async (id) => {
     try {
-      const response = await AxiosInstance.get(`/api/fence/numberOfSticks/${id}`);
+      const response = await AxiosInstance.get(
+        `/api/fence/numberOfSticks/${id}`
+      );
       setNumberOfSticks(response.data.numberOfSticks);
       setFenceType(response.data.fenceType);
       setPostSpace(response.data.postSpace);
@@ -63,38 +66,52 @@ export default function FenceDetails({ route }) {
   // Delete Fence model from the database
   const fenceDelete = async (id) => {
     try {
-      const response = await AxiosInstance.delete(`/api/fence/deleteFence/${id}`);
+      const response = await AxiosInstance.delete(
+        `/api/fence/deleteFence/${id}`
+      );
       console.log(response);
       return response;
     } catch (error) {
       // Log the detailed error response
-      console.error('Error deleting fence:', error.response ? error.response.data : error.message);
+      console.error(
+        "Error deleting fence:",
+        error.response ? error.response.data : error.message
+      );
       throw error; // Re-throw the error to handle it in the caller function
     }
   };
 
   // Edit button pressed function
+
+  // Edit button pressed function
   const handleIconPress = () => {
     Alert.alert(
-      'Update Data',
-      'Do you want to update data?',
+      "Update Data",
+      "Do you want to update data?",
       [
         {
-          text: 'No',
-          onPress: () => console.log('No pressed'),
-          style: 'cancel',
+          text: "No",
+          onPress: () => console.log("No pressed"),
+          style: "cancel",
         },
         {
-          text: 'Yes',
+          text: "Yes",
           onPress: async () => {
             try {
               await fenceDelete(id);
               // Alert.alert('Success', 'Fence deleted successfully.');
-              navigation.navigate('Fence', { id: id, Area: area, Perimeter: perimeter, item: item });
+              navigation.navigate("Fence", {
+                id: id,
+                Area: area,
+                Perimeter: perimeter,
+                item: item,
+              });
             } catch (error) {
               // Show detailed error message
-              const errorMessage = error.response ? error.response.data.message : error.message;
-              Alert.alert('Error', `Failed to delete fence: ${errorMessage}`);
+              const errorMessage = error.response
+                ? error.response.data.message
+                : error.message;
+              Alert.alert("Error", `Failed to delete fence: ${errorMessage}`);
             }
           },
         },
@@ -105,11 +122,17 @@ export default function FenceDetails({ route }) {
 
   // Back to home function
   const backToHome = () => {
-    navigation.navigate('Home');
+    navigation.navigate("Home");
   };
 
   // HTML file to be printed
-  const html = getFenceDetailsHtml(fenceType, numberOfSticks, postSpace, postSpaceUnit, data1);
+  const html = getFenceDetailsHtml(
+    fenceType,
+    numberOfSticks,
+    postSpace,
+    postSpaceUnit,
+    data1
+  );
 
   // Print
   const [selectedPrinter, setSelectedPrinter] = useState();
@@ -125,11 +148,6 @@ export default function FenceDetails({ route }) {
     const { uri } = await Print.printToFileAsync({ html });
     console.log("File has been saved to:", uri);
     await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
-  };
-
-  const selectPrinter = async () => {
-    const printer = await Print.selectPrinterAsync(); // iOS only
-    setSelectedPrinter(printer);
   };
 
   return (
@@ -205,6 +223,9 @@ export default function FenceDetails({ route }) {
             {/* Third section */}
             <View style={styles.box3}>
               <Text style={styles.innertopText}>Result based on</Text>
+            {/* Third section */}
+            <View style={styles.box3}>
+              <Text style={styles.innertopText}>Result based on</Text>
 
               <View style={styles.innercenter}>
                 <View style={styles.innersquareleft}>
@@ -232,20 +253,76 @@ export default function FenceDetails({ route }) {
 
           {/* Bottom section */}
           <View style={styles.bottom}>
-            <CustomButton
-              onPress={print}
-              text="Save a PDF"
-              iconName="content-save-outline"
-              iconColor="white"
-              buttonColor="#E41E3F"
-            />
-            <CustomButton
-              onPress={printToFile}
-              text="Share As PDF"
-              iconName="share-variant"
-              iconColor="white"
-              buttonColor="#007BFF"
-            />
+            <View style={styles.buttonContainer}>
+              <View style={styles.buttonWrapper}>
+                <Button
+                  style={{
+                    height: 40,
+                    marginTop: 10,
+                    borderRadius: 18,
+                    borderColor: "red", // Add this line for the border color
+                    borderWidth: 1, // Ensure the border is visible by setting the borderWidth
+                  }}
+                  mode="elevated"
+                  onPress={print}
+                  labelStyle={{ color: "red", fontSize: 14 }}
+                  icon={() => (
+                    <MaterialCommunityIcons
+                      name="content-save-outline"
+                      size={20}
+                      color="red"
+                    />
+                  )}
+                >
+                  Save As PDF
+                </Button>
+              </View>
+              <View style={styles.buttonWrapper}>
+                <Button
+                  style={{
+                    height: 40,
+                    marginTop: 10,
+                    borderRadius: 18,
+                    borderColor: "#007BFF", // Add this line for the border color
+                    borderWidth: 1, // Ensure the border is visible by setting the borderWidth
+                  }}
+                  mode="elevated"
+                  onPress={printToFile}
+                  labelStyle={{ color: "#007BFF", fontSize: 14 }}
+                  icon={() => (
+                    <MaterialCommunityIcons
+                      name="share-variant"
+                      size={20}
+                      color="#007BFF"
+                    />
+                  )}
+                >
+                 Share PDF
+                </Button>
+              </View>
+            </View>
+            <Button
+              style={{
+                height: 40,
+                marginTop: 15,
+                borderRadius: 18,
+                width: "87%",
+                borderColor: "#007BFF", // Add this line for the border color
+                borderWidth: 0.2, // Ensure the border is visible by setting the borderWidth
+              }}
+              mode="contained-tonal"
+              onPress={backToHome}
+              labelStyle={{  fontSize: 14 , color:"white" }}
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="home-import-outline"
+                  size={20}
+                  color="white"
+                />
+              )}
+            >
+              Back To Home
+            </Button>
           </View>
         </ScrollView>
       )}

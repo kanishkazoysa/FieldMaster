@@ -28,8 +28,8 @@ const Card = ({ templateName, location, date, onClick, onDelete, onEdit }) => {
         </div>
         <div className='card-content'>
           <div className='templateName'>{templateName}</div>
-          <p className='templateLocation'>{location}</p>
-          <p className='dateText'>{date}</p>
+          <p className='templateLocation'>Location : {location}</p>
+          <p className='dateText'>Date : {date}</p>
         </div>
       </div>
     </div>

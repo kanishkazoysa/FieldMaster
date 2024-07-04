@@ -13,7 +13,6 @@ import { Modal,Button } from "antd";
 import Fence from "../Fence/fence";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails";
 import { getFenceDetailsHtml } from "./FenceDetailsTemplate";
-import { LoadingOutlined } from '@ant-design/icons';
 import { BeatLoader } from 'react-spinners';
 
 

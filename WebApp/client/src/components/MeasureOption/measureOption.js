@@ -132,7 +132,7 @@ export default function StartMeasurePage  ({ onBackToSidebar }) {
 
 const styles = {
   hoverEffect: {
-    transform: 'scale(1.11)',
+    backgroundColor: '#0D2B7A',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
     transition: 'transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out',
     cursor: 'pointer',
