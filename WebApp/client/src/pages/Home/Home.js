@@ -5,6 +5,7 @@ import {
   StandaloneSearchBox,
   Marker,
   Polygon,
+  OverlayView,
 } from "@react-google-maps/api";
 import SideNavbar from "../../components/SideNavbar/sideNavbar";
 import { MdLocationOn, MdSearch } from "react-icons/md";
@@ -26,23 +27,22 @@ export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userMaps, setUserMaps] = useState([]);
-  const [mapCenter, setMapCenter] = useState(center);
-const [mapZoom, setMapZoom] = useState(2);
-const [selectedMapId, setSelectedMapId] = useState(null);
 
-useEffect(() => {
-  if (userMaps.length > 0) {
-    const bounds = new window.google.maps.LatLngBounds();
-    userMaps.forEach(map => {
-      map.locationPoints.forEach(point => {
-        bounds.extend(new window.google.maps.LatLng(point.latitude, point.longitude));
+  useEffect(() => {
+    if (userMaps.length > 0 && mapRef.current && mapRef.current.state.map) {
+      const bounds = new window.google.maps.LatLngBounds();
+      userMaps.forEach(map => {
+        map.locationPoints.forEach(point => {
+          bounds.extend(new window.google.maps.LatLng(point.latitude, point.longitude));
+        });
       });
-    });
-    if (mapRef.current && mapRef.current.state.map) {
       mapRef.current.state.map.fitBounds(bounds);
+      
+      // Add some padding to the bounds
+      const padding = { top: 50, right: 50, bottom: 50, left: 50 };
+      mapRef.current.state.map.fitBounds(bounds, padding);
     }
-  }
-}, [userMaps]);
+  }, [userMaps]);
 
   useEffect(() => {
     fetchUserDetails();
@@ -66,6 +66,14 @@ useEffect(() => {
     } catch (error) {
       console.error("Failed to fetch user maps:", error);
     }
+  };
+
+  const getCenterOfPolygon = (points) => {
+    const latitudes = points.map(p => p.latitude);
+    const longitudes = points.map(p => p.longitude);
+    const centerLat = (Math.min(...latitudes) + Math.max(...latitudes)) / 2;
+    const centerLng = (Math.min(...longitudes) + Math.max(...longitudes)) / 2;
+    return { lat: centerLat, lng: centerLng };
   };
 
   useEffect(() => {
@@ -177,18 +185,40 @@ useEffect(() => {
           options={mapOptions()}
         >
         {userMaps.map((map, index) => (
-          <Polygon
-            key={map._id}
-            paths={map.locationPoints.map(point => ({ lat: point.latitude, lng: point.longitude }))}
-            options={{
-              fillColor: `#${Math.floor(Math.random()*16777215).toString(16)}`,
-              fillOpacity: 0.4,
-              strokeColor: "#000000",
-              strokeOpacity: 1,
-              strokeWeight: 2,
-            }}
-            // onClick={() => handleMapClick(map)}
-          />
+          <React.Fragment key={map._id}>
+            <Polygon
+              paths={map.locationPoints.map(point => ({ lat: point.latitude, lng: point.longitude }))}
+              options={{
+                fillColor: `#${Math.floor(Math.random()*16777215).toString(16)}`,
+                fillOpacity: 0.4,
+                strokeColor: "#000000",
+                strokeOpacity: 1,
+                strokeWeight: 2,
+              }}
+            />
+            <OverlayView
+              position={getCenterOfPolygon(map.locationPoints)}
+              mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+            >
+            <div style={{
+              background: 'black',
+              color: 'white',
+              border: '1px solid #ccc',
+              borderRadius: '50%',
+              width: '30px',
+              height: '30px',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              display: 'flex',           // Add this
+              alignItems: 'center',      // Add this
+              justifyContent: 'center',  // Add this
+              padding: 0,                // Change this
+              lineHeight: 1,             // Add this
+            }}>
+                {index + 1}
+              </div>
+            </OverlayView>
+          </React.Fragment>
         ))}
           {selectedLocation && (
             <Marker position={selectedLocation} onClick={handleMarkerClick} />
