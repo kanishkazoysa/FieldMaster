@@ -251,6 +251,7 @@ export default function FenceDetails({ route }) {
             </View>
           </View>
 
+
           {/* Bottom section */}
           <View style={styles.bottom}>
             <View style={styles.buttonContainer}>
@@ -324,7 +325,10 @@ export default function FenceDetails({ route }) {
               Back To Home
             </Button>
           </View>
+
+          </View>
         </ScrollView>
+
       )}
     </KeyboardAvoidingView>
   );
