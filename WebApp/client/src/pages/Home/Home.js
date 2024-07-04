@@ -4,6 +4,7 @@ import {
   LoadScript,
   StandaloneSearchBox,
   Marker,
+  Polygon,
 } from "@react-google-maps/api";
 import SideNavbar from "../../components/SideNavbar/sideNavbar";
 import { MdLocationOn, MdSearch } from "react-icons/md";
@@ -24,9 +25,28 @@ export default function Home() {
   const searchBoxRef = useRef(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userMaps, setUserMaps] = useState([]);
+  const [mapCenter, setMapCenter] = useState(center);
+const [mapZoom, setMapZoom] = useState(2);
+const [selectedMapId, setSelectedMapId] = useState(null);
+
+useEffect(() => {
+  if (userMaps.length > 0) {
+    const bounds = new window.google.maps.LatLngBounds();
+    userMaps.forEach(map => {
+      map.locationPoints.forEach(point => {
+        bounds.extend(new window.google.maps.LatLng(point.latitude, point.longitude));
+      });
+    });
+    if (mapRef.current && mapRef.current.state.map) {
+      mapRef.current.state.map.fitBounds(bounds);
+    }
+  }
+}, [userMaps]);
 
   useEffect(() => {
     fetchUserDetails();
+    fetchUserMaps();
   }, []);
   
   const fetchUserDetails = async () => {
@@ -35,6 +55,16 @@ export default function Home() {
       setUser(response.data.user);
     } catch (error) {
       console.error("Failed to fetch user details:", error);
+    }
+  };
+
+  const fetchUserMaps = async () => {
+    try {
+      const response = await AxiosInstance.get("/api/auth/mapTemplate/getAllTemplates");
+      console.log("User maps:", response.data); 
+      setUserMaps(response.data);
+    } catch (error) {
+      console.error("Failed to fetch user maps:", error);
     }
   };
 
@@ -146,6 +176,20 @@ export default function Home() {
           zoom={2}
           options={mapOptions()}
         >
+        {userMaps.map((map, index) => (
+          <Polygon
+            key={map._id}
+            paths={map.locationPoints.map(point => ({ lat: point.latitude, lng: point.longitude }))}
+            options={{
+              fillColor: `#${Math.floor(Math.random()*16777215).toString(16)}`,
+              fillOpacity: 0.4,
+              strokeColor: "#000000",
+              strokeOpacity: 1,
+              strokeWeight: 2,
+            }}
+            // onClick={() => handleMapClick(map)}
+          />
+        ))}
           {selectedLocation && (
             <Marker position={selectedLocation} onClick={handleMarkerClick} />
           )}
