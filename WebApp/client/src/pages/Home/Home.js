@@ -16,7 +16,6 @@ import { message } from "antd";
 import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
 import AxiosInstance from "../../AxiosInstance";
 
-
 export default function Home() {
   const location = useLocation();
   const navigate = useNavigate(); // Use useNavigate hook
@@ -28,43 +27,54 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userMaps, setUserMaps] = useState([]);
   const [selectedMapId, setSelectedMapId] = useState(null);
+  const [selectedMapDetails, setSelectedMapDetails] = useState(null);
+  const [zoomLevel, setZoomLevel] = useState(2);
+
+  const handleZoomChanged = () => {
+    if (mapRef.current && mapRef.current.state.map) {
+      setZoomLevel(mapRef.current.state.map.getZoom());
+    }
+  };
 
   useEffect(() => {
     if (mapRef.current && mapRef.current.state.map) {
       const bounds = new window.google.maps.LatLngBounds();
-  
+
       if (selectedMapId) {
-        const selectedMap = userMaps.find(map => map._id === selectedMapId);
+        const selectedMap = userMaps.find((map) => map._id === selectedMapId);
         if (selectedMap) {
-          selectedMap.locationPoints.forEach(point => {
-            bounds.extend(new window.google.maps.LatLng(point.latitude, point.longitude));
+          selectedMap.locationPoints.forEach((point) => {
+            bounds.extend(
+              new window.google.maps.LatLng(point.latitude, point.longitude)
+            );
           });
         }
       } else {
-        userMaps.forEach(map => {
-          map.locationPoints.forEach(point => {
-            bounds.extend(new window.google.maps.LatLng(point.latitude, point.longitude));
+        userMaps.forEach((map) => {
+          map.locationPoints.forEach((point) => {
+            bounds.extend(
+              new window.google.maps.LatLng(point.latitude, point.longitude)
+            );
           });
         });
       }
-  
+
       mapRef.current.state.map.fitBounds(bounds);
-  
+
       // Add some padding to the bounds
       const padding = { top: 50, right: 50, bottom: 50, left: 50 };
       mapRef.current.state.map.fitBounds(bounds, padding);
-  
+
       // Animate zoom
       mapRef.current.state.map.setZoom(mapRef.current.state.map.getZoom());
     }
   }, [userMaps, selectedMapId]);
 
-
   useEffect(() => {
     fetchUserDetails();
     fetchUserMaps();
   }, []);
-  
+
   const fetchUserDetails = async () => {
     try {
       const response = await AxiosInstance.get("/api/users/details");
@@ -76,8 +86,10 @@ export default function Home() {
 
   const fetchUserMaps = async () => {
     try {
-      const response = await AxiosInstance.get("/api/auth/mapTemplate/getAllTemplates");
-      console.log("User maps:", response.data); 
+      const response = await AxiosInstance.get(
+        "/api/auth/mapTemplate/getAllTemplates"
+      );
+      console.log("User maps:", response.data);
       setUserMaps(response.data);
     } catch (error) {
       console.error("Failed to fetch user maps:", error);
@@ -85,16 +97,59 @@ export default function Home() {
   };
 
   const getCenterOfPolygon = (points) => {
-    const latitudes = points.map(p => p.latitude);
-    const longitudes = points.map(p => p.longitude);
+    const latitudes = points.map((p) => p.latitude);
+    const longitudes = points.map((p) => p.longitude);
     const centerLat = (Math.min(...latitudes) + Math.max(...latitudes)) / 2;
     const centerLng = (Math.min(...longitudes) + Math.max(...longitudes)) / 2;
     return { lat: centerLat, lng: centerLng };
   };
 
-  const handleLabelClick = useCallback((mapId) => {
-    setSelectedMapId(mapId === selectedMapId ? null : mapId);
-  }, [selectedMapId]);
+  const MapDetailsPanel = ({ mapDetails, onClose }) => {
+    if (!mapDetails) return null;
+
+    return (
+      <div
+        style={{
+          position: "absolute",
+          right: "10px",
+          top: "10px",
+          background: "white",
+          padding: "10px",
+          borderRadius: "5px",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+          maxWidth: "300px",
+        }}
+      >
+        <h3>{mapDetails.templateName}</h3>
+        <p>Area: {mapDetails.area}</p>
+        <p>Perimeter: {mapDetails.perimeter}</p>
+        <p>Land Type: {mapDetails.landType}</p>
+        <p>Location: {mapDetails.location}</p>
+        <p>Description: {mapDetails.description}</p>
+        <button onClick={onClose}>Close</button>
+      </div>
+    );
+  };
+
+  const handleLabelClick = useCallback(
+    async (mapId) => {
+      if (mapId === selectedMapId) {
+        setSelectedMapId(null);
+        setSelectedMapDetails(null);
+      } else {
+        setSelectedMapId(mapId);
+        try {
+          const response = await AxiosInstance.get(
+            `/api/auth/mapTemplate/getOneTemplate/${mapId}`
+          );
+          setSelectedMapDetails(response.data);
+        } catch (error) {
+          console.error("Failed to fetch map details:", error);
+        }
+      }
+    },
+    [selectedMapId]
+  );
 
   useEffect(() => {
     // Check if we navigated here after a successful login and if the message hasn't been shown yet
@@ -107,8 +162,6 @@ export default function Home() {
       navigate(location.pathname, { state: {}, replace: true });
     }
   }, [location, navigate]); // Dependency array
-
-  
 
   const handlePlacesChanged = useCallback(() => {
     if (!searchBoxRef.current) return;
@@ -203,47 +256,65 @@ export default function Home() {
           center={center}
           zoom={2}
           options={mapOptions()}
+          onZoomChanged={handleZoomChanged}
         >
-        {userMaps.map((map, index) => (
-          <React.Fragment key={map._id}>
-          <Polygon
-          paths={map.locationPoints.map(point => ({ lat: point.latitude, lng: point.longitude }))}
-          options={{
-            fillColor: selectedMapId === map._id ? '#FF0000' : `#${Math.floor(Math.random()*16777215).toString(16)}`,
-            fillOpacity: selectedMapId === map._id ? 0.6 : 0.4,
-            strokeColor: "#000000",
-            strokeOpacity: 1,
-            strokeWeight: 2,
-          }}
-        />
-            <OverlayView
-  position={getCenterOfPolygon(map.locationPoints)}
-  mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
->
-  <div 
-    onClick={() => handleLabelClick(map._id)}
-    style={{
-      background: 'black',
-      color: 'white',
-      border: '1px solid #ccc',
-      borderRadius: '50%',
-      width: '30px',
-      height: '30px',
-      fontSize: '14px',
-      fontWeight: 'bold',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: 0,
-      lineHeight: 1,
-      cursor: 'pointer',  // Add this to show it's clickable
-    }}
-  >
-    {index + 1}
-  </div>
-</OverlayView>
-          </React.Fragment>
-        ))}
+          {userMaps.map((map, index) => (
+            <React.Fragment key={map._id}>
+              <Polygon
+                paths={map.locationPoints.map((point) => ({
+                  lat: point.latitude,
+                  lng: point.longitude,
+                }))}
+                options={{
+                  fillColor:
+                    selectedMapId === map._id
+                      ? "#FF0000"
+                      : `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+                  fillOpacity: selectedMapId === map._id ? 0.6 : 0.4,
+                  strokeColor: "#000000",
+                  strokeOpacity: 1,
+                  strokeWeight: 2,
+                }}
+              />
+              <OverlayView
+                position={getCenterOfPolygon(map.locationPoints)}
+                mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+              >
+                <div
+                  onClick={() => handleLabelClick(map._id)}
+                  style={{
+                    background: "black",
+                    color: "white",
+                    border: "1px solid #ccc",
+                    borderRadius: "50%",
+                    width: "30px",
+                    height: "30px",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: 0,
+                    lineHeight: 1,
+                    cursor: "pointer", // Add this to show it's clickable
+                  }}
+                >
+                  {index + 1}
+                </div>
+              </OverlayView>
+            </React.Fragment>
+          ))}
+
+          {zoomLevel > 10 && selectedMapDetails && (
+            <MapDetailsPanel 
+              mapDetails={selectedMapDetails} 
+              onClose={() => {
+                setSelectedMapId(null);
+                setSelectedMapDetails(null);
+              }}
+            />
+          )}
+
           {selectedLocation && (
             <Marker position={selectedLocation} onClick={handleMarkerClick} />
           )}
@@ -265,12 +336,8 @@ export default function Home() {
                 style={styles.searchBox}
                 onKeyDown={handleKeyDown}
               />
-              <div style={styles.avatar}  onClick={handleAvatarClick}>
-                <Avatar 
-                userData={user} 
-                size={30}
-                
-                />
+              <div style={styles.avatar} onClick={handleAvatarClick}>
+                <Avatar userData={user} size={30} />
               </div>
             </div>
           </StandaloneSearchBox>
