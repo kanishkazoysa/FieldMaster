@@ -5,15 +5,18 @@ import { MdLocationOn } from 'react-icons/md';
 import { FaCalculator } from 'react-icons/fa6';
 import { useState } from 'react';
 import Calculator from '../Calculator/calculator';
+import { useNavigate } from 'react-router-dom';
 
-export default function StartMeasurePage({
-  onBackToSidebar,
-  onPointEdgesClick,
-}) {
+export default function StartMeasurePage({ onBackToSidebar }) {
   const [hoveredOption, setHoveredOption] = useState(null);
+  const navigate = useNavigate();
 
   const handleOptionHover = (option) => {
     setHoveredOption(option);
+  };
+
+  const handlePointEdgesClick = () => {
+    navigate('/pointAddingWeb');
   };
 
   const handleOptionLeave = () => {
@@ -33,9 +36,6 @@ export default function StartMeasurePage({
   const handlemanualCalculatorClik = () => {
     setCurrentPage('Calculator');
     setAnimatePage(true);
-  };
-  const handlePointEdgesClick = () => {
-    onPointEdgesClick();
   };
 
   return (
@@ -155,7 +155,7 @@ export default function StartMeasurePage({
 
 const styles = {
   hoverEffect: {
-    transform: 'scale(1.11)',
+    backgroundColor: '#0D2B7A',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
     transition: 'transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out',
     cursor: 'pointer',

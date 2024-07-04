@@ -8,7 +8,7 @@ import {
 import SideNavbar from '../../components/SideNavbar/sideNavbar';
 import { MdLocationOn, MdSearch } from 'react-icons/md';
 import ProfileModal from '../../components/profileManage/ProfileModal/ProfileModal';
-import { styles, containerStyle, center } from './HomeStyles';
+import { styles, containerStyle, center } from './PointAddingWebStyles';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import Avatar from '../../components/profileManage/ProfileManageModal/Avatar';
@@ -129,9 +129,6 @@ export default function Home() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.sidebar}>
-        <SideNavbar />
-      </div>
       <LoadScript
         googleMapsApiKey='AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U'
         libraries={['places']}

@@ -14,23 +14,13 @@ import TemplateDetails from '../SavedTemplates/TemplateDetails.js';
 import SaveScreenWeb from '../SaveScreen/SaveScreenWeb.js';
 import EditTemplateWeb from '../SavedTemplates/EditTemplateWeb.js';
 
-export default function SideNavbar({
-  toggleMapButtons,
-  hideMapButtons,
-  landInfo,
-}) {
+export default function SideNavbar() {
   const [collapsed, setCollapsed] = useState(true);
   const [hoveredMenuItem, setHoveredMenuItem] = useState(null);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [isEditingTemplate, setIsEditingTemplate] = useState(false);
-  const [showMapButtons, setShowMapButtons] = useState(false);
-
-  const handlePointEdgesClick = () => {
-    toggleMapButtons(true);
-    setCurrentPage('SaveScreen');
-  };
 
   const handleMouseEnter = (item) => {
     setHoveredMenuItem(item);
@@ -138,6 +128,7 @@ export default function SideNavbar({
               <IoBookmarks fontSize={18} style={{ marginRight: '15px' }} />
               {!collapsed && 'Templates'}
             </MenuItem>
+            {/* 
             <MenuItem
               onClick={() => {
                 handleSaveScreenClick();
@@ -153,6 +144,7 @@ export default function SideNavbar({
             >
               {!collapsed && 'SaveScreen'}
             </MenuItem>
+            */}
           </Menu>
         )}
         <div
@@ -166,10 +158,7 @@ export default function SideNavbar({
           }}
         >
           {currentPage === 'StartMeasure' && (
-            <StartMeasurePage
-              onBackToSidebar={handleBackClick}
-              onPointEdgesClick={handlePointEdgesClick}
-            />
+            <StartMeasurePage onBackToSidebar={handleBackClick} />
           )}
           {currentPage === 'ClearLand' && (
             <ClearLand onBackToSidebar={handleBackClick} />
@@ -192,11 +181,7 @@ export default function SideNavbar({
             />
           )}
           {currentPage === 'SaveScreen' && (
-            <SaveScreenWeb
-              onBackToSidebar={handleBackClick}
-              hideMapButtons={hideMapButtons}
-              landInfo={landInfo}
-            />
+            <SaveScreenWeb onBackToSidebar={handleBackClick} />
           )}
           {currentPage === 'EditTemplateWeb' && (
             <EditTemplateWeb
