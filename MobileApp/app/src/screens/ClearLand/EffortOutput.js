@@ -163,9 +163,9 @@ export default function EffortOutput({ route }) {
 
   return (
     <PaperProvider>
-      
 
-<Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
+
+      <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
         <Appbar.BackAction
           onPress={() => {
             navigation.goBack();
@@ -195,126 +195,113 @@ export default function EffortOutput({ route }) {
       ) : (
         <ScrollView>
           <View style={styles.container2}>
-            <Card style={styles.card1}>
-              <Card.Content style={styles.card1Content}>
-                <Text style={styles.card1Text1}>Total Effort Count</Text>
-                <AlertButton></AlertButton>
-                <View style={styles.card1Left}>
-                  <Image
-                    style={{
-                      marginLeft: responsiveWidth(1.6),
-                      marginTop: responsiveHeight(0.4),
-                    }}
-                    source={require("../../../assets/Clock.png")}
-                  ></Image>
-                  <View style={{ display: "flex", flexDirection: "column" }}>
-                    <Text style={styles.card1Text2}>Total Hours</Text>
-                    <Text style={styles.card1Text3}>{effortOutput}</Text>
-                  </View>
-                </View>
-
-                <View style={styles.card1Right}>
-                  <Image
-                    style={{
-                      marginLeft: responsiveWidth(45),
-                      marginTop: responsiveHeight(-5),
-                    }}
-                    source={require("../../../assets/Calendar.png")}
-                  ></Image>
-                  <View style={{ display: "flex", flexDirection: "column" }}>
-                    <Text style={styles.card1Text4}>
-                      {workHours} hrs per day
-                    </Text>
-                    <Text style={styles.card1Text5}>{workDays} days</Text>
-                  </View>
-                </View>
-              </Card.Content>
-            </Card>
-
-            <Card style={styles.card2}>
-              <Card.Content style={styles.card2Content}>
-                <View style={styles.card2Left}>
-                  <Image
-                    style={{
-                      marginLeft: responsiveWidth(3),
-                      marginTop: responsiveHeight(4.5),
-                    }}
-                    source={require("../../../assets/Perimeter.png")}
-                  ></Image>
-                  <View style={{ display: "flex", flexDirection: "column" }}>
-                    <Text style={styles.card2Text1}>Perimeter</Text>
-                    {/* should display perimeter to 2 floating points */}
+            {/* section 1 */}
+            <View style={styles.box1}>
+              <Text style={styles.titleText}>Total Effort Count</Text>
+              <AlertButton></AlertButton>
+              <View style={styles.propertyBox}>
+                <View style={styles.property}>
+                  <MaterialCommunityIcons
+                    name="timer-sand"
+                    size={40}
+                    color="#65676B"
+                  />
+                  <View style={styles.propertyDetails}>
+                    <Text style={styles.propertyLabel}>Total Hours</Text>
                     
-                    <Text style={styles.card2Text2}>{parseFloat(Perimeter).toFixed(3)} km</Text>
+                    <Text style={styles.propertyValue}>{effortOutput}</Text>
                   </View>
                 </View>
-
-                <View style={styles.card2Right}>
-                  <Image
-                    style={{
-                      marginLeft: responsiveWidth(50),
-                      marginTop: responsiveHeight(-5),
-                    }}
-                    source={require("../../../assets/Calendar.png")}
-                  ></Image>
-                  <View style={{ display: "flex", flexDirection: "column" }}>
-                    <Text style={styles.card2Text3}>Area</Text>
-                    <Text style={styles.card2Text4}>{parseFloat(Area).toFixed(1)} perch</Text>
+                <View style={styles.property}>
+                  <MaterialCommunityIcons
+                    name="timer-outline"
+                    size={40}
+                    color="#65676B"
+                  />
+                  <View style={styles.propertyDetails}>
+                    <Text style={styles.propertyLabel}>{workHours} hrs per day</Text>
+                    <Text style={styles.propertyValue}>{workDays} days</Text>
                   </View>
                 </View>
-              </Card.Content>
-            </Card>
+              </View>
+            </View>
 
-            <Card style={styles.card3}>
-              <Card.Content style={{ display: "flex", flexDirection: "colum" }}>
-                <Text style={styles.card3Text1}>Result Based on</Text>
-
-                <View style={{ display: "flex", flexDirection: "row" }}>
-                  <MaterialCommunityIcons
-                    name="account-hard-hat"
-                    size={20}
-                    color="#65676B"
-                    marginLeft={20}
-                    marginTop={23}
-                  />
-
-                  <Text style={styles.card3Text2}>Labors :</Text>
-                  <Text style={styles.card3Text3}>{laborCount}</Text>
+            {/* section 2 */}
+            <View style={styles.box2}>
+              <View style={styles.box2Property}>
+                <MaterialCommunityIcons
+                  name="vector-square"
+                  size={36}
+                  color="#65676B"
+                />
+                <View style={styles.box2PropertyDetails}>
+                  <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
+                  <Text style={styles.Box2PropertyValue}>{Perimeter}Km</Text>
                 </View>
+              </View>
+              <View style={styles.box2Property}>
+                <MaterialCommunityIcons
+                  name="texture-box"
+                  size={36}
+                  color="#65676B"
+                />
+                <View style={styles.box2PropertyDetails}>
+                  <Text style={styles.Box2PropertyLabel}>Area</Text>
+                  <Text style={styles.Box2PropertyValue}>{Area}perches</Text>
+                </View>
+              </View>
+            </View>
 
-                <View style={{ display: "flex", flexDirection: "row" }}>
-                  <MaterialCommunityIcons
-                    name="excavator"
-                    size={20}
-                    color="#65676B"
-                    marginLeft={20}
-                    marginTop={24}
-                  />
-                  <View style={{ marginTop: responsiveHeight(3) }}>
-                    <Text style={styles.card3Text4}>Machinery :</Text>
+            {/* section 3 */}
+            <View style={styles.box3}>
+              <View style={styles.inner}>
+                <Text style={styles.innertopText}>Results based on</Text>
 
-                    <View
-                      style={{
-                        marginTop: responsiveHeight(-2.7),
-                        marginLeft: responsiveWidth(25),
-                      }}
-                    >
-                      {data1.map((machine, index) => (
-                        <Text key={index}>{machine}</Text>
-                      ))}
+                <View style={styles.center}>
+                  <View style={styles.innercenter}>
+                    <View style={styles.innersquareleft}>
+                      <MaterialCommunityIcons
+                        name="account-hard-hat"
+                        size={30}
+                        color="#65676B"
+                      />
+                      <Text style={styles.LeftText}>Labors            :</Text>
+                    </View>
+                    <View style={styles.innersquareright}>
+                      <Text style={styles.RightText}>{laborCount}</Text>
                     </View>
                   </View>
+
+
+                  <View style={styles.innercenter}>
+                    <View style={styles.innersquareleft}>
+                      <MaterialCommunityIcons
+                        name="shovel"
+                        size={30}
+                        color="#65676B"
+                      />
+                      <Text style={styles.LeftText}>Machinery      :</Text>
+                    </View>
+                    <View style={styles.innersquareright}>
+                      <Text style={styles.RightText}>{data1.map((machine, index) => (
+                        <Text key={index}>{machine}</Text>
+                      ))}</Text>
+                    </View>
+                  </View>
+
+           
                 </View>
-              </Card.Content>
-            </Card>
+              </View>
             </View>
-            <View style={styles.bottom}>
+          </View>
+
+          <View style={styles.bottom}>
             <View style={styles.buttonContainer}>
               <View style={styles.buttonWrapper}>
                 <Button
                   style={{
                     height: 40,
-                    marginTop: 10,
+                    marginTop: 145,
                     borderRadius: 18,
                     borderColor: "red", // Add this line for the border color
                     borderWidth: 1, // Ensure the border is visible by setting the borderWidth
@@ -337,10 +324,10 @@ export default function EffortOutput({ route }) {
                 <Button
                   style={{
                     height: 40,
-                    marginTop: 10,
+                    marginTop: 145,
                     borderRadius: 18,
-                    borderColor: "#007BFF", // Add this line for the border color
-                    borderWidth: 1, // Ensure the border is visible by setting the borderWidth
+                    borderColor: "#007BFF",
+                    borderWidth: 1,
                   }}
                   mode="elevated"
                   onPress={printToFile}
@@ -353,7 +340,7 @@ export default function EffortOutput({ route }) {
                     />
                   )}
                 >
-                 Share PDF
+                  Share PDF
                 </Button>
               </View>
             </View>
@@ -363,13 +350,13 @@ export default function EffortOutput({ route }) {
                 marginTop: 15,
                 borderRadius: 18,
                 width: "87%",
-                backgroundColor:"#007BFF",
+                backgroundColor: "#007BFF",
                 borderColor: "black", // Add this line for the border color
                 borderWidth: 0.2, // Ensure the border is visible by setting the borderWidth
               }}
               mode="contained-tonal"
               onPress={backToHome}
-              labelStyle={{  fontSize: 14 , color:"white" }}
+              labelStyle={{ fontSize: 14, color: "white" }}
               icon={() => (
                 <MaterialCommunityIcons
                   name="home-import-outline"
@@ -378,10 +365,10 @@ export default function EffortOutput({ route }) {
                 />
               )}
             >
-            Back To Home
+              Back To Home
             </Button>
           </View>
-          
+
         </ScrollView>
       )}
     </PaperProvider>
