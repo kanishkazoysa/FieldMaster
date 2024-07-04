@@ -198,6 +198,7 @@ export default function App() {
         />
         <Route path="/emailVerification" element={<EmailVerified />} />
         <Route path="/managemap/:templateId" element={<Managemap />} />
+        <Route path="/resizemap" element={<ResizeMap />} />
       </Routes>
     </Router>
   );
