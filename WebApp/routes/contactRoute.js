@@ -25,7 +25,7 @@ transporter.verify((error, success) => {
 const sendEmail = (name, email, message) => {
   const mailOptions = {
     from: email,
-    to: 'ugshenali@gmail.com', 
+    to: 'ugshenali@gmail.com',
     subject: 'New Contact Form Submission from FieldMaster',
     text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
   };
@@ -39,6 +39,24 @@ const sendEmail = (name, email, message) => {
   });
 };
 
+// Function to reply to an email
+const replyEmail = (toEmail, replyMessage) => {
+  const mailOptions = {
+    from: 'ugshenali@gmail.com',
+    to: toEmail,
+    subject: 'Reply from FieldMaster',
+    text: replyMessage,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('SendMail Error:', error);
+    } else {
+      console.log('Reply email sent: ' + info.response);
+    }
+  });
+};
+
 // Route to handle sending email and saving submission
 router.post('/send', async (req, res) => {
   const { name, email, message } = req.body;
@@ -48,6 +66,7 @@ router.post('/send', async (req, res) => {
     name,
     email,
     message,
+    status: 'new',
   });
 
   try {
@@ -62,6 +81,36 @@ router.post('/send', async (req, res) => {
   } catch (error) {
     console.error('Database Save Error:', error);
     res.status(500).json({ error: 'Failed to save submission', details: error.message });
+  }
+});
+
+// Route to fetch all contact submissions
+router.get('/submissions', async (req, res) => {
+  try {
+    const submissions = await ContactSubmission.find();
+    res.status(200).json(submissions);
+  } catch (error) {
+    console.error('Database Fetch Error:', error);
+    res.status(500).json({ error: 'Failed to fetch submissions', details: error.message });
+  }
+});
+
+// Route to handle replying to a contact submission
+router.post('/reply', async (req, res) => {
+  const { id, toEmail, replyMessage } = req.body;
+
+  try {
+    // Send reply email
+    replyEmail(toEmail, replyMessage);
+
+    // Update submission status
+    await ContactSubmission.findByIdAndUpdate(id, { status: 'replied' });
+
+    // Respond to client
+    res.status(200).json({ success: 'Reply email sent and status updated successfully' });
+  } catch (error) {
+    console.error('Reply Email Error:', error);
+    res.status(500).json({ error: 'Failed to send reply email', details: error.message });
   }
 });
 

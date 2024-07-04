@@ -26,6 +26,7 @@ import FPPage from "./pages/auth/ForgotPassowrd/FPPage";
 import OtpPage from "./pages/auth/ForgotPassowrd/OtpPage";
 import CPPage from "./pages/auth/ForgotPassowrd/CPPage";
 import Admin from "./pages/Admin/AdminDashboard";
+import ContactSubmissionDashBoard from "./pages/Admin/ContactSubmissionDashboard"
 import { jwtDecode } from "jwt-decode";
 import ResizeMap from "./components/ResizeMap/ResizeMap"
 
