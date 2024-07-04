@@ -36,9 +36,18 @@ const Managemap = () => {
   const [toolButtonHovered, setToolButtonHovered] = useState(null);
   const [labelText, setLabelText] = useState("");
   const [showLabelInput, setShowLabelInput] = useState(false);
+  const [currentLabel, setCurrentLabel] = useState("");
 
   const handleAddLabel = () => {
-    setShowLabelInput(true);
+    if (selectedPolygonIndex !== null) {
+      const currentPolygon = partitionPolygons[selectedPolygonIndex];
+      if (currentPolygon.label) {
+        setLabelText(currentPolygon.label);
+      } else {
+        setLabelText("");
+      }
+      setShowLabelInput(true);
+    }
   };
 
   const handleLabelSubmit = () => {
@@ -482,59 +491,68 @@ const Managemap = () => {
               Save Partition
             </Button>
             {selectedPolygonIndex !== null && (
-              <>
-                <Button
-                  onClick={deleteSelectedPolygon}
-                  icon={<MdDeleteForever />}
-                  style={styles.toolButton}
-                >
-                  Delete Partition
-                </Button>
-                <Button
-                  onClick={editSelectedPolygon}
-                  icon={<FiEdit />}
-                  style={styles.toolButton}
-                >
-                  Edit Partition
-                </Button>
-                <Button
-                  onClick={handleAddLabel}
-                  icon={<FiTag />}
-                  style={styles.toolButton}
-                >
-                  Add Label
-                </Button>
-              </>
-            )}
-            {showLabelInput && (
-              <div>
-                <Input
-                  value={labelText}
-                  onChange={(e) => setLabelText(e.target.value)}
-                  placeholder="Enter label"
-                  style={{
-                    ...styles.toolButton,
-                    borderColor: '#4CAF50',  // Green border color
-                    borderWidth: '1px',      // Border width
-                    borderStyle: 'solid',    // Solid border
-                    outline: 'none',         // Remove default focus outline
-                    boxShadow: 'none',       // Remove default focus shadow
-                  }}
-                
-                />
-                <Button
-                  onClick={handleLabelSubmit}
-                  style={{
-                    ...styles.toolButton,
-                    backgroundColor: "#4CAF50", // Green color
-                    borderColor: "#4CAF50",
-                    color: "white", // White text
-                  }}
-                >
-                  Submit Label
-                </Button>
-              </div>
-            )}
+  <>
+    <Button
+      onClick={deleteSelectedPolygon}
+      icon={<MdDeleteForever />}
+      style={styles.toolButton}
+    >
+      Delete Partition
+    </Button>
+    <Button
+      onClick={editSelectedPolygon}
+      icon={<FiEdit />}
+      style={styles.toolButton}
+    >
+      Edit Partition
+    </Button>
+    {partitionPolygons[selectedPolygonIndex].label ? (
+      <Button
+        onClick={handleAddLabel}
+        icon={<FiTag />}
+        style={styles.toolButton}
+      >
+        Edit Label
+      </Button>
+    ) : (
+      <Button
+        onClick={handleAddLabel}
+        icon={<FiTag />}
+        style={styles.toolButton}
+      >
+        Add Label
+      </Button>
+    )}
+  </>
+)}
+           {showLabelInput && (
+  <div>
+    <Input
+      value={labelText}
+      onChange={(e) => setLabelText(e.target.value)}
+      placeholder="Enter label"
+      style={{
+        ...styles.toolButton,
+        borderColor: '#4CAF50',
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        outline: 'none',
+        boxShadow: 'none',
+      }}
+    />
+    <Button
+      onClick={handleLabelSubmit}
+      style={{
+        ...styles.toolButton,
+        backgroundColor: "#4CAF50",
+        borderColor: "#4CAF50",
+        color: "white",
+      }}
+    >
+      {partitionPolygons[selectedPolygonIndex].label ? "Update Label" : "Submit Label"}
+    </Button>
+  </div>
+)}
             {editingPolygonIndex !== null && (
               <>
                 <Button
