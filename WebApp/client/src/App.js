@@ -188,9 +188,7 @@ export default function App() {
         <Route
           path="/email-manage"
           element={
-            <AdminRouteGuard>
               <EmailManage />
-            </AdminRouteGuard>
           }
         />
 
