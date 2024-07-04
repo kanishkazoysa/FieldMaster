@@ -15,6 +15,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { message } from "antd";
 import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
 import AxiosInstance from "../../AxiosInstance";
+import MapDetailsPanel from './MapDetailsPanel';
 
 export default function Home() {
   const location = useLocation();
@@ -104,32 +105,7 @@ export default function Home() {
     return { lat: centerLat, lng: centerLng };
   };
 
-  const MapDetailsPanel = ({ mapDetails, onClose }) => {
-    if (!mapDetails) return null;
-
-    return (
-      <div
-        style={{
-          position: "absolute",
-          right: "10px",
-          top: "10px",
-          background: "white",
-          padding: "10px",
-          borderRadius: "5px",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-          maxWidth: "300px",
-        }}
-      >
-        <h3>{mapDetails.templateName}</h3>
-        <p>Area: {mapDetails.area}</p>
-        <p>Perimeter: {mapDetails.perimeter}</p>
-        <p>Land Type: {mapDetails.landType}</p>
-        <p>Location: {mapDetails.location}</p>
-        <p>Description: {mapDetails.description}</p>
-        <button onClick={onClose}>Close</button>
-      </div>
-    );
-  };
+  
 
   const handleLabelClick = useCallback(
     async (mapId) => {
@@ -212,6 +188,7 @@ export default function Home() {
     return {
       minZoom: 2,
       maxZoom: 40,
+      mapTypeId: window.google.maps.MapTypeId.SATELLITE,  // Add this line
       restriction: {
         latLngBounds: {
           north: 85,
@@ -260,22 +237,19 @@ export default function Home() {
         >
           {userMaps.map((map, index) => (
             <React.Fragment key={map._id}>
-              <Polygon
-                paths={map.locationPoints.map((point) => ({
-                  lat: point.latitude,
-                  lng: point.longitude,
-                }))}
-                options={{
-                  fillColor:
-                    selectedMapId === map._id
-                      ? "#FF0000"
-                      : `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-                  fillOpacity: selectedMapId === map._id ? 0.6 : 0.4,
-                  strokeColor: "#000000",
-                  strokeOpacity: 1,
-                  strokeWeight: 2,
-                }}
-              />
+            <Polygon
+            paths={map.locationPoints.map((point) => ({
+              lat: point.latitude,
+              lng: point.longitude,
+            }))}
+            options={{
+              fillColor:"#064dbe",
+              fillOpacity: 0.1,
+              strokeColor: "#032864",
+              strokeOpacity: 1,
+              strokeWeight: 2,
+            }}
+          />
               <OverlayView
                 position={getCenterOfPolygon(map.locationPoints)}
                 mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
@@ -307,12 +281,12 @@ export default function Home() {
 
           {zoomLevel > 10 && selectedMapDetails && (
             <MapDetailsPanel 
-              mapDetails={selectedMapDetails} 
-              onClose={() => {
-                setSelectedMapId(null);
-                setSelectedMapDetails(null);
-              }}
-            />
+            mapDetails={selectedMapDetails} 
+            onClose={() => {
+              setSelectedMapId(null);
+              setSelectedMapDetails(null);
+            }}
+          />
           )}
 
           {selectedLocation && (
