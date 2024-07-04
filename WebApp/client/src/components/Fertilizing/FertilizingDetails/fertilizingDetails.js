@@ -9,6 +9,7 @@ import { FaClockRotateLeft } from "react-icons/fa6";
 import { IoTimeSharp } from "react-icons/io5";
 import { GiWeight, GiChemicalDrop } from "react-icons/gi";
 import { Tb24Hours } from "react-icons/tb";
+import { message,Button } from "antd";
 import AxiosInstance from "../../../AxiosInstance.js";
 import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
@@ -244,9 +245,9 @@ export default function FertilizingDetails({
           </div>
 
           <div style={styles.bottom2}>
-            <button style={styles.Button2}onClick={handleSave}>
-              <p style={styles.Box4ButtonText}>Save as PDF</p>
-            </button>
+            <Button type="primary" style={styles.Button2}onClick={handleSave}>
+              <p style={{fontSize: 13}}>Save as PDF</p>
+            </Button>
             {/* <button style={styles.Button3} onClick={handleback}>
                 <p style={styles.Box4ButtonText}>Back to Template</p>
               </button> */}

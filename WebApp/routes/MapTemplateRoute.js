@@ -133,4 +133,54 @@ router.get('/getAllMapPoints', async (req, res) => {
   }
 });
 
+/* this route is used to save partition points */
+router.put('/savePartitionPoints/:id', async (req, res) => {
+  try {
+    const { partitionPolygons } = req.body;
+    const updatedTemplate = await MapTemplateModel.findByIdAndUpdate(
+      req.params.id,
+      { $set: { partitionPolygons } },
+      { new: true }
+    );
+    
+    if (!updatedTemplate) {
+      return res.status(404).send('Template not found');
+    }
+    
+    res.json(updatedTemplate);
+  } catch (error) {
+    console.error('Error saving partition points:', error);
+    res.status(500).send('Error while saving partition points.');
+  }
+});
+
+router.put('/deletePartitionPolygon/:templateId/:polygonIndex', async (req, res) => {
+  try {
+    const { templateId, polygonIndex } = req.params;
+
+    // Find the map template by ID
+    const mapTemplate = await MapTemplateModel.findById(templateId);
+
+    if (!mapTemplate) {
+      return res.status(404).send('Template not found');
+    }
+
+    // Ensure polygonIndex is within bounds
+    if (polygonIndex < 0 || polygonIndex >= mapTemplate.partitionPolygons.length) {
+      return res.status(400).send('Invalid polygon index');
+    }
+
+    // Remove the specified partition polygon
+    mapTemplate.partitionPolygons.splice(polygonIndex, 1);
+
+    // Save the updated map template
+    await mapTemplate.save();
+
+    res.json(mapTemplate);
+  } catch (error) {
+    console.error('Error deleting partition polygon:', error);
+    res.status(500).send('Error while deleting partition polygon.');
+  }
+});
+
 module.exports = router;

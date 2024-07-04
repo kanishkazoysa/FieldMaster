@@ -203,26 +203,18 @@ export const styles = {
     },
   
     Button1: {
-      display: "flex",
       width: "100%",
-      height: 38,
-      backgroundColor: "red",
+      padding: '18px',
       alignItems: "center",
-      justifyContent: "center",
-      marginTop: 10,
+      marginTop: 20,
       borderRadius: 11,
-      borderWidth: 0,
     },
     Button2: {
-      display: "flex",
       width: "100%",
-      height: 38,
-      backgroundColor: "#007BFF",
+      padding: '18px',
       alignItems: "center",
-      justifyContent: "center",
-      marginTop: 10,
       borderRadius: 11,
-      borderWidth: 0,
+      marginTop: 10,
     },
   };
   

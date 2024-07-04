@@ -367,14 +367,10 @@ export const styles = {
   },
 
   Button1: {
-    display: "flex",
     width: "100%",
-    height: 35,
-    backgroundColor: "#0866FF",
+    padding: '17px',
     alignItems: "center",
-    justifyContent: "center",
-    marginTop: 40,
+    marginTop: 45,
     borderRadius: 11,
-    borderWidth: 0,
   },
 };

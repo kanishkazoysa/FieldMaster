@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Text,
   View,
@@ -8,10 +9,10 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
-  ActivityIndicator,
-  // Import ActivityIndicator
+  ActivityIndicator,  // Import ActivityIndicator
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
@@ -19,6 +20,7 @@ import { Appbar, Button } from "react-native-paper";
 
 import { styles } from "./FenceDetailsStyles";
 import AxiosInstance from "../../../AxiosInstance";
+import { getFenceDetailsHtml } from "./fenceDetailPrint";
 import { getFenceDetailsHtml } from "./fenceDetailPrint";
 
 export default function FenceDetails({ route }) {
@@ -78,6 +80,8 @@ export default function FenceDetails({ route }) {
       throw error; // Re-throw the error to handle it in the caller function
     }
   };
+
+  // Edit button pressed function
 
   // Edit button pressed function
   const handleIconPress = () => {
@@ -156,65 +160,43 @@ export default function FenceDetails({ route }) {
       <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
       {/* Header section */}
-      <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
-        <Appbar.BackAction
-          onPress={() => {
-            navigation.goBack();
-            color = "white";
-          }}
-        />
-
-        <Text style={styles.headerText}>Fence Details</Text>
-
-        {/* pencil/ pen icon  */}
-        <TouchableOpacity onPress={handleIconPress}>
-          <MaterialCommunityIcons
-            name="square-edit-outline"
-            size={23}
-            color="white"
-            style={{ marginRight: 5 }}
-          />
-        </TouchableOpacity>
-      </Appbar.Header>
+      <Headersection navigation={navigation} title="Fence Details" />
 
       {loading ? (
         <View style={styles.loadingScreen}>
           <View style={styles.dotsWrapper}>
-            <ActivityIndicator color="#007BFF" size={45} />
-          </View>
+        <ActivityIndicator 
+           color="#007BFF" 
+           size={45} 
+           />
+      </View>
         </View>
       ) : (
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.top}>
+            <View style={styles.topSection}>
+              <TouchableOpacity style={styles.iconButton} onPress={backToHome}>
+                <MaterialCommunityIcons name="home" size={26} color="#007BFF" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.iconButton} onPress={handleIconPress}>
+                <MaterialCommunityIcons name="square-edit-outline" size={26} color="#007BFF" />
+              </TouchableOpacity>
+            </View>
             <View style={styles.box1}>
               <Text style={styles.titleText}>Total posts / Sticks</Text>
               <View style={styles.propertyBox}>
                 <View style={styles.property}>
-                  <MaterialCommunityIcons
-                    name="format-align-justify"
-                    size={36}
-                    color="#65676B"
-                    rotation={270}
-                  />
+                  <MaterialCommunityIcons name="format-align-justify" size={36} color="#65676B" rotation={270} />
                   <View style={styles.propertyDetails}>
                     <Text style={styles.propertyLabel}>Total Amount</Text>
-                    <Text style={styles.propertyValue}>
-                      {numberOfSticks} Stick
-                    </Text>
+                    <Text style={styles.propertyValue}>{numberOfSticks} Stick</Text>
                   </View>
                 </View>
                 <View style={styles.property}>
-                  <MaterialCommunityIcons
-                    name="format-line-spacing"
-                    size={36}
-                    color="#65676B"
-                    rotation={270}
-                  />
+                  <MaterialCommunityIcons name="format-line-spacing" size={36} color="#65676B" rotation={270} />
                   <View style={styles.propertyDetails}>
                     <Text style={styles.propertyLabel}>Post Gap</Text>
-                    <Text style={styles.propertyValue}>
-                      {postSpace} {postSpaceUnit}{" "}
-                    </Text>
+                    <Text style={styles.propertyValue}>{postSpace} {postSpaceUnit}{" "}</Text>
                   </View>
                 </View>
               </View>
@@ -223,25 +205,17 @@ export default function FenceDetails({ route }) {
             {/* Second section */}
             <View style={styles.box2}>
               <View style={styles.box2Property}>
-                <MaterialCommunityIcons
-                  name="vector-square"
-                  size={36}
-                  color="#65676B"
-                />
+                <MaterialCommunityIcons name="vector-square" size={36} color="#65676B" />
                 <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                  <Text style={styles.Box2PropertyValue}>{perimeter} km</Text>
+                  <Text style={styles.box2PropertyLabel}>Perimeter</Text>
+                  <Text style={styles.box2PropertyValue}>{perimeter} km</Text>
                 </View>
               </View>
               <View style={styles.box2Property}>
-                <MaterialCommunityIcons
-                  name="texture-box"
-                  size={36}
-                  color="#65676B"
-                />
+                <MaterialCommunityIcons name="texture-box" size={36} color="#65676B" />
                 <View style={styles.box2PropertyDetails}>
-                  <Text style={styles.Box2PropertyLabel}>Area</Text>
-                  <Text style={styles.Box2PropertyValue}>{area} perches</Text>
+                  <Text style={styles.box2PropertyLabel}>Area</Text>
+                  <Text style={styles.box2PropertyValue}>{area} perches</Text>
                 </View>
               </View>
             </View>
@@ -249,14 +223,13 @@ export default function FenceDetails({ route }) {
             {/* Third section */}
             <View style={styles.box3}>
               <Text style={styles.innertopText}>Result based on</Text>
+            {/* Third section */}
+            <View style={styles.box3}>
+              <Text style={styles.innertopText}>Result based on</Text>
 
               <View style={styles.innercenter}>
                 <View style={styles.innersquareleft}>
-                  <MaterialCommunityIcons
-                    name="gate"
-                    size={36}
-                    color="#65676B"
-                  />
+                  <MaterialCommunityIcons name="gate" size={36} color="#65676B" />
                   <Text style={styles.perimeterText}>Fence Type :</Text>
                 </View>
                 <View style={styles.innersquareright}>
@@ -266,11 +239,7 @@ export default function FenceDetails({ route }) {
 
               <View style={styles.innercenter}>
                 <View style={styles.innersquareleft}>
-                  <MaterialCommunityIcons
-                    name="boom-gate"
-                    size={36}
-                    color="#65676B"
-                  />
+                  <MaterialCommunityIcons name="boom-gate" size={36} color="#65676B" />
                   <Text style={styles.perimeterText}>Gates :</Text>
                 </View>
                 <View style={styles.innersquareright1}>
@@ -281,6 +250,7 @@ export default function FenceDetails({ route }) {
               </View>
             </View>
           </View>
+
 
           {/* Bottom section */}
           <View style={styles.bottom}>
@@ -355,7 +325,10 @@ export default function FenceDetails({ route }) {
               Back To Home
             </Button>
           </View>
+
+          </View>
         </ScrollView>
+
       )}
     </KeyboardAvoidingView>
   );
