@@ -1,3 +1,4 @@
+// routes/contact.js
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
@@ -25,7 +26,7 @@ transporter.verify((error, success) => {
 const sendEmail = (name, email, message) => {
   const mailOptions = {
     from: email,
-    to: 'ugshenali@gmail.com', 
+    to: 'ugshenali@gmail.com',
     subject: 'New Contact Form Submission from FieldMaster',
     text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
   };
@@ -43,25 +44,31 @@ const sendEmail = (name, email, message) => {
 router.post('/send', async (req, res) => {
   const { name, email, message } = req.body;
 
-  // Create a new instance of ContactSubmission
   const newSubmission = new ContactSubmission({
     name,
     email,
     message,
+    status: 'pending', // Ensure default status is set correctly
   });
 
   try {
-    // Save the submission to the database
     await newSubmission.save();
-
-    // Send email to your email address
     sendEmail(name, email, message);
-
-    // Respond to client
     res.status(200).json({ success: 'Submission saved and email sent successfully' });
   } catch (error) {
     console.error('Database Save Error:', error);
     res.status(500).json({ error: 'Failed to save submission', details: error.message });
+  }
+});
+
+// Route to fetch submissions
+router.get('/submissions', async (req, res) => {
+  try {
+    const submissions = await ContactSubmission.find();
+    res.status(200).json(submissions);
+  } catch (error) {
+    console.error('Fetch Submissions Error:', error);
+    res.status(500).json({ error: 'Failed to fetch submissions', details: error.message });
   }
 });
 
