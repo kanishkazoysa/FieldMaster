@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Tag, Row, Col, Statistic, Card } from 'antd';
+import { Table, Button, Modal, Form, Input, Tag, Row, Col, Statistic, Card, Popconfirm, message, Space } from 'antd';
+import { DeleteOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const { TextArea } = Input;
 
 const EmailManage = () => {
   const [submissions, setSubmissions] = useState([]);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isReplyModalVisible, setIsReplyModalVisible] = useState(false);
+  const [isViewModalVisible, setIsViewModalVisible] = useState(false);
   const [replyMessage, setReplyMessage] = useState('');
+  const [searchEmail, setSearchEmail] = useState('');
 
   useEffect(() => {
-    // Fetch submissions from the backend
     const fetchSubmissions = async () => {
       try {
-        const response = await fetch('/api/submissions');
+        const response = await fetch('/api/contact/submissions');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        const data = await response.json();
+        let data = await response.json();
+        // Sort submissions by createdAt in descending order
+        data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setSubmissions(data);
       } catch (error) {
         console.error('Failed to fetch submissions:', error);
@@ -28,13 +33,12 @@ const EmailManage = () => {
 
   const handleReply = (submission) => {
     setSelectedSubmission(submission);
-    setIsModalVisible(true);
+    setIsReplyModalVisible(true);
   };
 
   const handleSendReply = async () => {
     try {
-      // Send reply and update status
-      await fetch('/api/reply', {
+      const response = await fetch('/api/contact/reply', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,25 +49,68 @@ const EmailManage = () => {
           replyMessage,
         }),
       });
-  
-      // Update status locally
-      setSubmissions(submissions.map(sub =>
-        sub._id === selectedSubmission._id ? { ...sub, status: 'replied' } : sub
-      ));
-  
-      // Clear modal and reply message
-      setIsModalVisible(false);
-      setReplyMessage('');
+
+      if (response.ok) {
+        setSubmissions(submissions.map(sub =>
+          sub._id === selectedSubmission._id ? { ...sub, status: 'replied', replyMessage } : sub
+        ));
+        setIsReplyModalVisible(false);
+        setReplyMessage('');
+        message.success('Reply sent successfully');
+      } else {
+        throw new Error('Failed to send reply');
+      }
     } catch (error) {
       console.error('Failed to send reply:', error);
+      message.error('Failed to send reply');
     }
   };
-  
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/contact/submissions/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setSubmissions(submissions.filter(sub => sub._id !== id));
+        message.success('Submission deleted successfully');
+      } else {
+        throw new Error('Failed to delete submission');
+      }
+    } catch (error) {
+      console.error('Failed to delete submission:', error);
+      message.error('Failed to delete submission');
+    }
+  };
+
+  const handleView = (submission) => {
+    setSelectedSubmission(submission);
+    setIsViewModalVisible(true);
+  };
+
+  const handleSearch = (value) => {
+    setSearchEmail(value);
+  };
+
+  const filteredSubmissions = searchEmail
+    ? submissions.filter(submission => submission.email.toLowerCase().includes(searchEmail.toLowerCase()))
+    : submissions;
+
   const columns = [
+    {
+      title: '#',
+      dataIndex: 'index',
+      key: 'index',
+      render: (text, record, index) => index + 1,
+    },
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+      onFilter: (value, record) => record.name.toLowerCase().includes(value.toLowerCase()),
     },
     {
       title: 'Email Address',
@@ -89,9 +136,17 @@ const EmailManage = () => {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
-        <Button type="primary" danger onClick={() => handleReply(record)}>
-          Reply
-        </Button>
+        <div>
+          <Button type="primary" onClick={() => handleReply(record)} style={{ backgroundColor: 'blue', borderColor: 'blue', marginRight: 8 }}>
+            Reply
+          </Button>
+          <Button type="default" icon={<EyeOutlined />} onClick={() => handleView(record)} style={{ marginRight: 8 }}>
+            View
+          </Button>
+          <Popconfirm title="Are you sure to delete this submission?" onConfirm={() => handleDelete(record._id)} okText="Yes" cancelText="No">
+            <Button type="danger" icon={<DeleteOutlined />} style={{ color: 'red' }} />
+          </Popconfirm>
+        </div>
       ),
     },
   ];
@@ -101,29 +156,36 @@ const EmailManage = () => {
   const toReplyEmails = totalEmails - repliedEmails;
 
   return (
-    <div>
-      <h3>Email Manage</h3>
-      <Row gutter={16}>
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <h3 style={{ textAlign: 'center', marginBottom: '20px' }}>Email Manage - Admin Dashboard</h3>
+
+      <Row gutter={16} style={{ marginBottom: '20px' }}>
         <Col span={8}>
           <Card>
-            <Statistic title="Total Emails" value={totalEmails} />
+            <Statistic title="Total" value={totalEmails} valueStyle={{ color: '#1890ff', fontSize: '36px' }} />
           </Card>
         </Col>
         <Col span={8}>
           <Card>
-            <Statistic title="Replied Emails" value={repliedEmails} />
+            <Statistic title="Replied" value={repliedEmails} valueStyle={{ color: '#52c41a', fontSize: '36px' }} />
           </Card>
         </Col>
         <Col span={8}>
           <Card>
-            <Statistic title="To Reply Emails" value={toReplyEmails} />
+            <Statistic title="To Reply" value={toReplyEmails} valueStyle={{ color: '#f5222d', fontSize: '36px' }} />
           </Card>
         </Col>
       </Row>
 
+      <Input.Search
+        placeholder="Search by sender's email"
+        onSearch={handleSearch}
+        style={{ marginBottom: 16 }}
+      />
+
       <Table
         columns={columns}
-        dataSource={submissions}
+        dataSource={filteredSubmissions}
         rowKey="_id"
         onRow={(record) => ({
           onClick: () => setSelectedSubmission(record),
@@ -133,40 +195,40 @@ const EmailManage = () => {
 
       <Modal
         title="Reply to Email"
-        open={isModalVisible}
+        visible={isReplyModalVisible}
         onOk={handleSendReply}
-        onCancel={() => setIsModalVisible(false)}
+        onCancel={() => setIsReplyModalVisible(false)}
       >
         <Form>
           <Form.Item label="To">
             <Input value={selectedSubmission?.email} disabled />
           </Form.Item>
           <Form.Item label="Reply Message">
-            <TextArea 
-              value={replyMessage} 
-              onChange={(e) => setReplyMessage(e.target.value)} 
+            <TextArea
+              value={replyMessage}
+              onChange={(e) => setReplyMessage(e.target.value)}
             />
           </Form.Item>
         </Form>
       </Modal>
 
-      {selectedSubmission && (
-        <div style={{ marginTop: 20 }}>
-          <h2>Conversation with {selectedSubmission.email}</h2>
-          <Row gutter={16}>
-            <Col span={12}>
-              <h3>Sent Messages</h3>
-              <p>{selectedSubmission.message}</p>
-            </Col>
-            <Col span={12}>
-              <h3>Replied Messages</h3>
-              {selectedSubmission.status === 'replied' && (
-                <p>{replyMessage}</p>
-              )}
-            </Col>
-          </Row>
-        </div>
-      )}
+      <Modal
+        title="View Conversation"
+        visible={isViewModalVisible}
+        onOk={() => setIsViewModalVisible(false)}
+        onCancel={() => setIsViewModalVisible(false)}
+      >
+        <Row gutter={16}>
+          <Col span={12}>
+            <h3>Received Message</h3>
+            <p>{selectedSubmission?.message}</p>
+          </Col>
+          <Col span={12}>
+            <h3>Reply Sent</h3>
+            <p>{selectedSubmission?.replyMessage}</p>
+          </Col>
+        </Row>
+      </Modal>
     </div>
   );
 };

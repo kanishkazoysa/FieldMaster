@@ -1,4 +1,3 @@
-// routes/contact.js
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
@@ -23,12 +22,12 @@ transporter.verify((error, success) => {
 });
 
 // Function to send email
-const sendEmail = (name, email, message) => {
+const sendEmail = (toEmail, subject, text) => {
   const mailOptions = {
-    from: email,
-    to: 'ugshenali@gmail.com',
-    subject: 'New Contact Form Submission from FieldMaster',
-    text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+    from: 'ugshenali@gmail.com',
+    to: toEmail,
+    subject: subject,
+    text: text,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -48,12 +47,11 @@ router.post('/send', async (req, res) => {
     name,
     email,
     message,
-    status: 'pending', // Ensure default status is set correctly
   });
 
   try {
     await newSubmission.save();
-    sendEmail(name, email, message);
+    sendEmail('ugshenali@gmail.com', 'New Contact Form Submission from FieldMaster', `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
     res.status(200).json({ success: 'Submission saved and email sent successfully' });
   } catch (error) {
     console.error('Database Save Error:', error);
@@ -69,6 +67,58 @@ router.get('/submissions', async (req, res) => {
   } catch (error) {
     console.error('Fetch Submissions Error:', error);
     res.status(500).json({ error: 'Failed to fetch submissions', details: error.message });
+  }
+});
+
+// Route to handle sending reply and updating status
+router.post('/reply', async (req, res) => {
+  const { id, toEmail, replyMessage } = req.body;
+
+  try {
+    // Find the submission by id
+    const submission = await ContactSubmission.findById(id);
+
+    if (!submission) {
+      return res.status(404).json({ message: 'Submission not found' });
+    }
+
+    // Send reply email
+    const mailOptions = {
+      from: 'ugshenali@gmail.com',
+      to: toEmail,
+      subject: 'Reply to your message from Fieldmaster',
+      text: replyMessage,
+    };
+
+    // Send email using transporter
+    transporter.sendMail(mailOptions, async (error, info) => {
+      if (error) {
+        console.error('Failed to send reply:', error);
+        return res.status(500).json({ message: 'Failed to send reply' });
+      }
+      
+      // Update submission status and reply message
+      submission.status = 'replied';
+      submission.replyMessage = replyMessage;
+      await submission.save();
+
+      res.status(200).json({ message: 'Reply sent successfully' });
+    });
+
+  } catch (error) {
+    console.error('Failed to send reply:', error);
+    res.status(500).json({ message: 'Failed to send reply' });
+  }
+});
+
+// Route to delete a submission
+router.delete('/submissions/:id', async (req, res) => {
+  try {
+    await ContactSubmission.findByIdAndDelete(req.params.id);
+    res.status(200).json({ success: 'Submission deleted successfully' });
+  } catch (error) {
+    console.error('Delete Submission Error:', error);
+    res.status(500).json({ error: 'Failed to delete submission', details: error.message });
   }
 });
 
