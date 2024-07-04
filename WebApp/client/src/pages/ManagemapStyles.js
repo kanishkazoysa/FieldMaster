@@ -182,6 +182,16 @@ export const styles = {
     cursor: "pointer",
     outline: "none",
   },
+
+  label: {
+    background: 'white',
+    border: '1px solid #ccc',
+    padding: '5px',
+    borderRadius: '3px',
+    boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+    fontSize: '12px',
+    fontWeight: 'bold',
+  },
 };
 
 export const containerStyle = {

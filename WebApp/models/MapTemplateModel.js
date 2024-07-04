@@ -18,6 +18,11 @@ const PartitionPolygonSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+
+  label: {
+    type: String,
+    default: '',
+  },
 });
 
 /* this schema is used to save map template */
