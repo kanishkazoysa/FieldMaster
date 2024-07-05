@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Input, Select, message } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 const { Option } = Select;
 
-const PlantationSetupModal = ({ visible, onClose, area, perimeter ,onSave  }) => {
+const PlantationSetupModal = ({ visible, onClose, area, perimeter ,onSave, existingData  }) => {
   const [plantType, setPlantType] = useState("");
   const [plantSpacing, setPlantSpacing] = useState("");
   const [rowSpacing, setRowSpacing] = useState("");
@@ -22,6 +22,33 @@ const [totalFertilizerPerYear, setTotalFertilizerPerYear] = useState(null);
   const hasPlantationResults =
     numberOfPlants !== null && plantationDensity !== null;
 
+    useEffect(() => {
+      if (existingData) {
+        setPlantType(existingData.plantType);
+        setPlantSpacing(existingData.plantSpacing.toString());
+        setRowSpacing(existingData.rowSpacing.toString());
+        setNumberOfPlants(existingData.numberOfPlants);
+        setPlantationDensity(existingData.plantationDensity);
+        setShowFertilizer(!!existingData.fertilizerData);
+        
+        if (existingData.fertilizerData) {
+          setFertilizerType(existingData.fertilizerData.fertilizerType);
+          setFertilizerFrequency(existingData.fertilizerData.fertilizerFrequency);
+          setFertilizerTimes(existingData.fertilizerData.fertilizerTimes.toString());
+          setFertilizerAmount(existingData.fertilizerData.fertilizerAmount.toString());
+          setFertilizerUnit(existingData.fertilizerData.fertilizerUnit);
+          setTotalFertilizerPerYear(existingData.fertilizerData.totalFertilizerPerYear);
+          setFertilizerPerPlant(existingData.fertilizerData.fertilizerPerPlant);
+        }
+      }
+    }, [existingData]);
+
+    useEffect(() => {
+      // Recalculate when area or perimeter changes
+      if (plantSpacing && rowSpacing) {
+        handleCalculatePlantation();
+      }
+    }, [area, perimeter]);
   
       const handleSave = () => {
         if (!plantType || !plantSpacing || !rowSpacing) {
@@ -316,30 +343,11 @@ const [totalFertilizerPerYear, setTotalFertilizerPerYear] = useState(null);
         </Button>
         <Button onClick={handleClearResults}>Clear</Button>
 
-        {hasPlantationResults && (
-          <div style={{marginTop: "0px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between", }}>
-          <Button
-            onClick={() => setShowFertilizer(!showFertilizer)}
-            style={{
-              width: "47%",
-              marginBottom: "10px",
-              marginTop: "10px",
-              backgroundColor: "lightgreen",
-              color: "white",
-            }}
-          >
-            {showFertilizer ? "Hide Fertilizer" : "Show Fertilizer"}
-          </Button>
-          <Button style={{ width: "47%", }} onClick={handleSave}>save</Button>
-          </div>
-        )}
+      
 
         {showFertilizer && hasPlantationResults && (
           <div>
-            <h4>Fertilizer</h4>
+            <h4 style={{ marginTop: "8px" }}>Fertilizer</h4>
             <div
               style={{
                 marginTop: "10px",
@@ -435,6 +443,27 @@ const [totalFertilizerPerYear, setTotalFertilizerPerYear] = useState(null);
         <p>Fertilizer per plantation per year: {fertilizerPerPlant.toFixed(2)} kg</p>
       </div>
     )}
+          </div>
+        )}
+
+{hasPlantationResults && (
+          <div style={{marginTop: "0px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between", }}>
+          <Button
+            onClick={() => setShowFertilizer(!showFertilizer)}
+            style={{
+              width: "47%",
+              marginBottom: "10px",
+              marginTop: "10px",
+              backgroundColor: "lightgreen",
+              color: "white",
+            }}
+          >
+            {showFertilizer ? "Hide Fertilizer" : "Show Fertilizer"}
+          </Button>
+          <Button style={{ width: "47%", }} onClick={handleSave}>save</Button>
           </div>
         )}
       </div>

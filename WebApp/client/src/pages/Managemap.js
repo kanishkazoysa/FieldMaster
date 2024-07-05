@@ -44,13 +44,41 @@ const Managemap = () => {
   const [selectedPolygonData, setSelectedPolygonData] = useState(null);
   const [fenceSetupData, setFenceSetupData] = useState({});
   const [plantationSetupData, setPlantationSetupData] = useState({});
+  const [isEditingPlantation, setIsEditingPlantation] = useState(false);
+
+
+  const handleEditPlantation = () => {
+    if (selectedPolygonIndex !== null) {
+      const selectedPolygon = partitionPolygons[selectedPolygonIndex];
+      setIsEditingPlantation(true);
+      setPlantationSetupModalVisible(true);
+      setSelectedPolygonData({
+        area: selectedPolygon.area,
+        perimeter: selectedPolygon.perimeter
+      });
+    }
+  }
 
   const handlePlantationSetupSave = (data) => {
     setPlantationSetupData(prevData => ({
       ...prevData,
       [selectedPolygonIndex]: data
     }));
-    message.success("Fence setup data saved successfully!");
+  
+    // Update the partitionPolygons state
+    setPartitionPolygons(prevPolygons => {
+      const updatedPolygons = [...prevPolygons];
+      updatedPolygons[selectedPolygonIndex] = {
+        ...updatedPolygons[selectedPolygonIndex],
+        plantationSetup: data
+      };
+      return updatedPolygons;
+    });
+  
+    // Save the updated data to the backend
+    savePartitionPoints();
+  
+    message.success("Plantation setup data saved successfully!");
     setPlantationSetupModalVisible(false);
   };
 
@@ -174,21 +202,22 @@ const Managemap = () => {
 
   const savePartitionPoints = async () => {
     try {
-      try {
-        const response = await AxiosInstance.put(
-          `/api/auth/mapTemplate/savePartitionPoints/${templateId}`,
-          {
-            partitionPolygons,
-          }
-        );
-        console.log("Save response:", response.data);
-        message.success("Partition polygons saved successfully!");
-      } catch (error) {
-        console.error("Error saving partition polygons:", error);
-        message.error("Failed to save partition polygons.");
-      }
+      const updatedPartitionPolygons = partitionPolygons.map((polygon, index) => ({
+        ...polygon,
+        plantationSetup: plantationSetupData[index] || {},
+      }));
+  
+      const response = await AxiosInstance.put(
+        `/api/auth/mapTemplate/savePartitionPoints/${templateId}`,
+        {
+          partitionPolygons: updatedPartitionPolygons,
+        }
+      );
+      console.log("Save response:", response.data);
+      message.success("Partition polygons saved successfully!");
     } catch (error) {
-      console.error("Error showing confirmation dialog:", error);
+      console.error("Error saving partition polygons:", error);
+      message.error("Failed to save partition polygons.");
     }
   };
 
@@ -402,23 +431,31 @@ const Managemap = () => {
         const fetchedPartitionPolygons = response.data.partitionPolygons || [];
         setPoints(fetchedPoints);
         setPartitionPolygons(fetchedPartitionPolygons);
-
+  
+        // Set plantation setup data
+        const fetchedPlantationSetupData = {};
+        fetchedPartitionPolygons.forEach((polygon, index) => {
+          if (polygon.plantationSetup) {
+            fetchedPlantationSetupData[index] = polygon.plantationSetup;
+          }
+        });
+        setPlantationSetupData(fetchedPlantationSetupData);
+  
         const avgLatitude =
           fetchedPoints.reduce((total, point) => total + point.latitude, 0) /
           fetchedPoints.length;
         const avgLongitude =
           fetchedPoints.reduce((total, point) => total + point.longitude, 0) /
           fetchedPoints.length;
-
+  
         setCenter({ lat: avgLatitude, lng: avgLongitude });
       } catch (error) {
         console.error("An error occurred while fetching the template:", error);
       }
     };
-
+  
     fetchTemplateData();
   }, [templateId]);
-
   const toggleMapType = () => {
     setMapTypeId((prevType) =>
       prevType === "roadmap" ? "satellite" : "roadmap"
@@ -599,7 +636,18 @@ const Managemap = () => {
                   Plantation
                 </Button>
               </>
+              
             )}
+
+{plantationSetupData[selectedPolygonIndex] && (
+  <Button
+    onClick={handleEditPlantation}
+    icon={<PiPlantLight />}
+    style={styles.toolButton}
+  >
+    Edit Plantation
+  </Button>
+)}
             {showLabelInput && (
               <div>
                 <Input
@@ -663,10 +711,14 @@ const Managemap = () => {
 
           <PlantationSetupModal
   visible={PlantationSetupModalVisible}
-  onClose={() => setPlantationSetupModalVisible(false)}
+  onClose={() => {
+    setPlantationSetupModalVisible(false);
+    setIsEditingPlantation(false);
+  }}
   area={selectedPolygonData?.area}
   perimeter={selectedPolygonData?.perimeter}
   onSave={handlePlantationSetupSave}
+  existingData={isEditingPlantation ? plantationSetupData[selectedPolygonIndex] : null}
 />
 
         </GoogleMap>

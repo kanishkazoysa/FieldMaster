@@ -23,6 +23,23 @@ const PartitionPolygonSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+
+  plantationSetup: {
+    plantType: String,
+    plantSpacing: Number,
+    rowSpacing: Number,
+    numberOfPlants: Number,
+    plantationDensity: Number,
+    fertilizerData: {
+      fertilizerType: String,
+      fertilizerFrequency: String,
+      fertilizerTimes: Number,
+      fertilizerAmount: Number,
+      fertilizerUnit: String,
+      totalFertilizerPerYear: Number,
+      fertilizerPerPlant: Number,
+    },
+  },
 });
 
 /* this schema is used to save map template */
