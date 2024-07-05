@@ -11,12 +11,14 @@ import { styles, containerStyle } from "./ManagemapStyles";
 import AxiosInstance from "../AxiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
 import { FiMapPin, FiGrid, FiEdit, FiX, FiSave, FiTag } from "react-icons/fi";
+import { PiPlantLight } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
 import { GrUndo } from "react-icons/gr";
 import { message, Button, Modal, Input } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { TbTopologyComplex } from "react-icons/tb";
 import { GrCompliance } from "react-icons/gr";
+import PlantationSetupModal from './PlantationSetupModal';
 
 const { confirm } = Modal;
 
@@ -37,7 +39,34 @@ const Managemap = () => {
   const [labelText, setLabelText] = useState("");
   const [showLabelInput, setShowLabelInput] = useState(false);
   const [currentLabel, setCurrentLabel] = useState("");
+  const [PlantationSetupModalVisible, setPlantationSetupModalVisible] = useState(false);
   const navigate = useNavigate();
+  const [selectedPolygonData, setSelectedPolygonData] = useState(null);
+  const [fenceSetupData, setFenceSetupData] = useState({});
+  const [plantationSetupData, setPlantationSetupData] = useState({});
+
+  const handlePlantationSetupSave = (data) => {
+    setPlantationSetupData(prevData => ({
+      ...prevData,
+      [selectedPolygonIndex]: data
+    }));
+    message.success("Fence setup data saved successfully!");
+    setPlantationSetupModalVisible(false);
+  };
+
+  const handlePlantationSetup = () => {
+    if (selectedPolygonIndex !== null) {
+      const selectedPolygon = partitionPolygons[selectedPolygonIndex];
+      setPlantationSetupModalVisible(true);
+      // Pass only the area and perimeter to the modal
+      setSelectedPolygonData({
+        area: selectedPolygon.area,
+        perimeter: selectedPolygon.perimeter
+      });
+    } else {
+      message.warning("Please select a partition first.");
+    }
+  };
 
   const handleAddLabel = () => {
     if (selectedPolygonIndex !== null) {
@@ -201,17 +230,47 @@ const Managemap = () => {
     setSelectedPolygonIndex(index);
     setEditingPolygonIndex(null);
     setShowLabelInput(false);
-
+  
     const selectedPolygon = partitionPolygons[index];
-    Modal.info({
-      title: "Selected Partition Statistics",
-      content: (
+    const fenceData = plantationSetupData[index];
+  
+    let modalContent = (
+      <div>
+        <p>Area: {selectedPolygon.area} sq meters</p>
+        <p>Perimeter: {selectedPolygon.perimeter} meters</p>
+        <p>Label: {selectedPolygon.label || "No label"}</p>
+      </div>
+    );
+  
+    if (fenceData) {
+      modalContent = (
         <div>
-          <p>Area: {selectedPolygon.area} sq meters</p>
-          <p>Perimeter: {selectedPolygon.perimeter} meters</p>
-          <p>Label: {selectedPolygon.label || "No label"}</p>
+          {modalContent}
+          <h4>Plantation Data:</h4>
+          <p>Plant Type: {fenceData.plantType || 'N/A'}</p>
+          <p>Plant Spacing: {fenceData.plantSpacing ? fenceData.plantSpacing.toFixed(2) : 'N/A'} meters</p>
+          <p>Row Spacing: {fenceData.rowSpacing ? fenceData.rowSpacing.toFixed(2) : 'N/A'} meters</p>
+          <p>Number of Plants: {fenceData.numberOfPlants || 'N/A'}</p>
+          <p>Plantation Density: {fenceData.plantationDensity ? fenceData.plantationDensity.toFixed(2) : 'N/A'} plants/sq m</p>
+          {fenceData.fertilizerData && (
+            <>
+              <h4>Fertilizer Data:</h4>
+              <p>Fertilizer Type: {fenceData.fertilizerData.fertilizerType || 'N/A'}</p>
+              <p>Frequency: {fenceData.fertilizerData.fertilizerFrequency || 'N/A'}</p>
+              <p>Times: {fenceData.fertilizerData.fertilizerTimes || 'N/A'}</p>
+              <p>Amount: {fenceData.fertilizerData.fertilizerAmount || 'N/A'} {fenceData.fertilizerData.fertilizerUnit || ''}</p>
+              <p>Total Fertilizer per Year: {fenceData.fertilizerData.totalFertilizerPerYear ? fenceData.fertilizerData.totalFertilizerPerYear.toFixed(2) : 'N/A'} kg</p>
+              <p>Fertilizer per Plant: {fenceData.fertilizerData.fertilizerPerPlant ? fenceData.fertilizerData.fertilizerPerPlant.toFixed(2) : 'N/A'} kg</p>
+            </>
+          )}
         </div>
-      ),
+      );
+    }
+  
+    Modal.info({
+      title: "Partition Statistics",
+      content: modalContent,
+      width: 500,
       onOk() {},
     });
   };
@@ -275,28 +334,29 @@ const Managemap = () => {
             latitude: latLng.lat(),
             longitude: latLng.lng(),
           }));
-  
+
         const stats = calculatePolygonStats(polygon);
-  
+
         const updatedPolygon = {
           points: newPoints,
           area: stats.area,
           perimeter: stats.perimeter,
           label: partitionPolygons[index].label, // Preserve the label
         };
-  
+
         setUndoStack((prevStack) => [...prevStack, updatedPolygon]);
-  
+
         setPartitionPolygons((prevPolygons) => {
           const updatedPolygons = [...prevPolygons];
           updatedPolygons[index] = updatedPolygon;
           return updatedPolygons;
         });
-  
+
         // Update the polygon on the map
         polygon.setPath(
           newPoints.map(
-            (point) => new window.google.maps.LatLng(point.latitude, point.longitude)
+            (point) =>
+              new window.google.maps.LatLng(point.latitude, point.longitude)
           )
         );
       }
@@ -366,7 +426,7 @@ const Managemap = () => {
   };
 
   const handleCancel = () => {
-    navigate('/home');
+    navigate("/home");
   };
 
   return (
@@ -411,26 +471,26 @@ const Managemap = () => {
           {partitionPolygons.map((polygon, index) => (
             <React.Fragment key={index}>
               <Polygon
-      path={polygon.points.map((point) => ({
-        lat: point.latitude,
-        lng: point.longitude,
-      }))}
-      options={{
-        strokeColor: "#0000FF",
-        strokeOpacity: 1.0,
-        strokeWeight: 2,
-        fillColor: "rgba(0, 0, 255, 0.2)",
-        fillOpacity: 0.4,
-        zIndex: 2,
-        editable: editingPolygonIndex === index,
-        clickable: true,
-      }}
-      onClick={() => handlePolygonClick(index)}
-      onMouseUp={() => handlePolygonEdit(index)}
-      onLoad={(polygon) => {
-        polygonRefs.current[index] = polygon;
-      }}
-    />
+                path={polygon.points.map((point) => ({
+                  lat: point.latitude,
+                  lng: point.longitude,
+                }))}
+                options={{
+                  strokeColor: "#0000FF",
+                  strokeOpacity: 1.0,
+                  strokeWeight: 2,
+                  fillColor: "rgba(0, 0, 255, 0.2)",
+                  fillOpacity: 0.4,
+                  zIndex: 2,
+                  editable: editingPolygonIndex === index,
+                  clickable: true,
+                }}
+                onClick={() => handlePolygonClick(index)}
+                onMouseUp={() => handlePolygonEdit(index)}
+                onLoad={(polygon) => {
+                  polygonRefs.current[index] = polygon;
+                }}
+              />
               {polygon.label && (
                 <OverlayView
                   position={calculatePolygonCenter(polygon.points)}
@@ -438,16 +498,15 @@ const Managemap = () => {
                 >
                   <div
                     style={{
-  background: "rgba(255, 255, 255, 0.9)", // Slight transparency for a modern look
-  padding: "10px 15px", // More padding for better spacing
-  border: "1px solid #ddd", // Light gray border for a softer appearance
-  borderRadius: "8px", // Slightly more rounded corners
-  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
-  position: "absolute",
-  transform: "translate(-50%, -50%)",
-  whiteSpace: "nowrap",
-}}
-
+                      background: "rgba(255, 255, 255, 0.9)", // Slight transparency for a modern look
+                      padding: "10px 15px", // More padding for better spacing
+                      border: "1px solid #ddd", // Light gray border for a softer appearance
+                      borderRadius: "8px", // Slightly more rounded corners
+                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
+                      position: "absolute",
+                      transform: "translate(-50%, -50%)",
+                      whiteSpace: "nowrap",
+                    }}
                   >
                     {polygon.label}
                   </div>
@@ -500,68 +559,79 @@ const Managemap = () => {
               Save Partition
             </Button>
             {selectedPolygonIndex !== null && (
-  <>
-    <Button
-      onClick={deleteSelectedPolygon}
-      icon={<MdDeleteForever />}
-      style={styles.toolButton}
-    >
-      Delete Partition
-    </Button>
-    <Button
-      onClick={editSelectedPolygon}
-      icon={<FiEdit />}
-      style={styles.toolButton}
-    >
-      Edit Partition
-    </Button>
-    {partitionPolygons[selectedPolygonIndex].label ? (
-      <Button
-        onClick={handleAddLabel}
-        icon={<FiTag />}
-        style={styles.toolButton}
-      >
-        Edit Label
-      </Button>
-    ) : (
-      <Button
-        onClick={handleAddLabel}
-        icon={<FiTag />}
-        style={styles.toolButton}
-      >
-        Add Label
-      </Button>
-    )}
-  </>
-)}
-           {showLabelInput && (
-  <div>
-    <Input
-      value={labelText}
-      onChange={(e) => setLabelText(e.target.value)}
-      placeholder="Enter label"
-      style={{
-        ...styles.toolButton,
-        borderColor: '#4CAF50',
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        outline: 'none',
-        boxShadow: 'none',
-      }}
-    />
-    <Button
-      onClick={handleLabelSubmit}
-      style={{
-        ...styles.toolButton,
-        backgroundColor: "#4CAF50",
-        borderColor: "#4CAF50",
-        color: "white",
-      }}
-    >
-      {partitionPolygons[selectedPolygonIndex].label ? "Update Label" : "Submit Label"}
-    </Button>
-  </div>
-)}
+              <>
+                <Button
+                  onClick={deleteSelectedPolygon}
+                  icon={<MdDeleteForever />}
+                  style={styles.toolButton}
+                >
+                  Delete Partition
+                </Button>
+                <Button
+                  onClick={editSelectedPolygon}
+                  icon={<FiEdit />}
+                  style={styles.toolButton}
+                >
+                  Edit Partition
+                </Button>
+                {partitionPolygons[selectedPolygonIndex].label ? (
+                  <Button
+                    onClick={handleAddLabel}
+                    icon={<FiTag />}
+                    style={styles.toolButton}
+                  >
+                    Edit Label
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleAddLabel}
+                    icon={<FiTag />}
+                    style={styles.toolButton}
+                  >
+                    Add Label
+                  </Button>
+                )}
+                <Button
+                  onClick={handlePlantationSetup}
+                  icon={<PiPlantLight />}
+                  style={styles.toolButton}
+                >
+                  Plantation
+                </Button>
+              </>
+            )}
+            {showLabelInput && (
+              <div>
+                <Input
+                  value={labelText}
+                  onChange={(e) => setLabelText(e.target.value)}
+                  placeholder="Enter label"
+                  style={{
+                    ...styles.toolButton,
+                    borderColor: "#4CAF50",
+                    borderWidth: "1px",
+                    borderStyle: "solid",
+                    outline: "none",
+                    boxShadow: "none",
+                  }}
+                />
+                <Button
+                  onClick={handleLabelSubmit}
+                  style={{
+                    ...styles.toolButton,
+                    backgroundColor: "#4CAF50",
+                    borderColor: "#4CAF50",
+                    color: "white",
+                  }}
+                >
+                  {partitionPolygons[selectedPolygonIndex].label
+                    ? "Update Label"
+                    : "Submit Label"}
+                </Button>
+              </div>
+            )}
+
+            
             {editingPolygonIndex !== null && (
               <>
                 <Button
@@ -590,6 +660,15 @@ const Managemap = () => {
               </Button>
             </div>
           </div>
+
+          <PlantationSetupModal
+  visible={PlantationSetupModalVisible}
+  onClose={() => setPlantationSetupModalVisible(false)}
+  area={selectedPolygonData?.area}
+  perimeter={selectedPolygonData?.perimeter}
+  onSave={handlePlantationSetupSave}
+/>
+
         </GoogleMap>
       </LoadScript>
     </div>
