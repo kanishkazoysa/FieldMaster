@@ -1,15 +1,17 @@
 const mongoose = require("mongoose");
 
 const InputSchema = mongoose.Schema(
-    {  
+    {
         Type: {
-            type: String,
+          type: String,
+          required: true,
         },
         Name: {
-            type: String,
+          type: String,
+          required: true,
         },
-        
-    }
+      },
+      { timestamps: true }
 ); 
 
 const InputModel = mongoose.model("inputs", InputSchema);
