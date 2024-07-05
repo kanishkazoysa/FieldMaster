@@ -281,6 +281,15 @@ useEffect(() => {
                             </Link>
                         </div>
                             <h1 className="admin-dashboard-header-center">Admin Dashboard</h1>
+
+                            <Button
+                                type="primary"
+                                onClick={() => {
+                                    window.location.href = "/inputcontrol";
+                                }}
+                            >
+                            Input
+                            </Button>
                      
                         <div className="avatar-container"   onClick={handleAvatarClick} >
                         <Avatar 
