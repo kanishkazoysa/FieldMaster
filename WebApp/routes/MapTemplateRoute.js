@@ -183,4 +183,24 @@ router.put('/deletePartitionPolygon/:templateId/:polygonIndex', async (req, res)
   }
 });
 
+router.get('/getLocationAnalytics', async (req, res) => {
+  try {
+    const locationAnalytics = await MapTemplateModel.aggregate([
+      {
+        $group: {
+          _id: "$location",
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { count: -1 }
+      }
+    ]);
+    res.json(locationAnalytics);
+  } catch (error) {
+    console.error('Error fetching location analytics:', error);
+    res.status(500).send('Error while fetching location analytics.');
+  }
+});
+
 module.exports = router;
