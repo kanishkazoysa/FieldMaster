@@ -628,26 +628,29 @@ const Managemap = () => {
                     Add Label
                   </Button>
                 )}
-                <Button
-                  onClick={handlePlantationSetup}
-                  icon={<PiPlantLight />}
-                  style={styles.toolButton}
-                >
-                  Plantation
-                </Button>
+                {plantationSetupData[selectedPolygonIndex] ? (
+      <Button
+        onClick={handleEditPlantation}
+        icon={<PiPlantLight />}
+        style={styles.toolButton}
+      >
+        Edit Plantation
+      </Button>
+    ) : (
+      <Button
+        onClick={handlePlantationSetup}
+        icon={<PiPlantLight />}
+        style={styles.toolButton}
+      >
+        Plantation
+      </Button>
+    )}
+
               </>
               
             )}
 
-{plantationSetupData[selectedPolygonIndex] && (
-  <Button
-    onClick={handleEditPlantation}
-    icon={<PiPlantLight />}
-    style={styles.toolButton}
-  >
-    Edit Plantation
-  </Button>
-)}
+
             {showLabelInput && (
               <div>
                 <Input
