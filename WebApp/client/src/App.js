@@ -28,7 +28,7 @@ import CPPage from "./pages/auth/ForgotPassowrd/CPPage";
 import Admin from "./pages/Admin/AdminDashboard";
 import { jwtDecode } from "jwt-decode";
 import ResizeMap from "./components/ResizeMap/ResizeMap"
-import InputContril from "./pages/Admin/InputContril";
+import InputControl from "./pages/Admin/InputControl";
 
 const checkTokenExpired = (token) => {
   if (!token) {
@@ -190,7 +190,7 @@ export default function App() {
           path="/inputcontrol"
           element={
             <AdminRouteGuard>
-              <InputContril />
+              <InputControl />
             </AdminRouteGuard>
           }
         />
