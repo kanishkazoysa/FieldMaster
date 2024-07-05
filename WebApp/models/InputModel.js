@@ -12,5 +12,5 @@ const InputSchema = mongoose.Schema(
     }
 ); 
 
-const InputModel = mongoose.model("fence", InputSchema);
+const InputModel = mongoose.model("inputs", InputSchema);
 module.exports = InputModel;

@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const router = express.Router();
 const MapTemplateModel = require('../models/MapTemplateModel');
+const InputModel = require('../models/InputModel');
 const turf = require('@turf/turf');
 const MapModel = require('../models/MapModel');
 
@@ -200,6 +201,38 @@ router.get('/getLocationAnalytics', async (req, res) => {
   } catch (error) {
     console.error('Error fetching location analytics:', error);
     res.status(500).send('Error while fetching location analytics.');
+  }
+});
+
+
+router.get('/getPlants', async (req, res) => {
+  try {
+    const plants = await InputModel.find({ Type: 'Plants' });
+    res.json(plants);
+  } catch (error) {
+    res.status(500).send('Error while getting plants.');
+  }
+});
+
+// Add a new plant
+router.post('/addPlant', async (req, res) => {
+  try {
+    const { Type, Name } = req.body;
+    const newPlant = new InputModel({ Type, Name });
+    const savedPlant = await newPlant.save();
+    res.json(savedPlant);
+  } catch (error) {
+    res.status(500).send('Error while adding plant.');
+  }
+});
+
+// Delete a plant
+router.delete('/deletePlant/:id', async (req, res) => {
+  try {
+    await InputModel.findByIdAndDelete(req.params.id);
+    res.send('Plant deleted successfully.');
+  } catch (error) {
+    res.status(500).send('Error while deleting plant.');
   }
 });
 
