@@ -35,6 +35,8 @@ export const styles = {
     width: "50%",
     boxSizing: "border-box",
     borderRight: "5px solid #f1f1f1",
+    display: 'flex',
+    flexDirection: 'column',
   },
   header: {
     width: "100%",
@@ -45,9 +47,16 @@ export const styles = {
     backgroundColor: "#15314f",
     borderBottom: "1px solid #f1f1f1",
   },
+  listWrapper: {
+    flex: 1,
+    overflowY: 'auto',
+    border: '1px solid #e8e8e8',
+    borderRadius: '4px',
+    margin: '20px',
+  },
   headertxt: {
     margin: 0,
-    color: "gray",
+    color: "white",
   },
   InnerHeader: {
     color: "gray",
@@ -58,8 +67,9 @@ export const styles = {
     width: "100%",
     borderBottom: "5px solid #f1f1f1",
   },
+ 
   leftHeader: {
-    color: "gray",
+    color: "white",
     alignItems: "center",
     backgroundColor: "#15314f",
     justifyContent: "center",
