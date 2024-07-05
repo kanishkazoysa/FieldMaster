@@ -1,5 +1,6 @@
 // SideNavbar.js
 import React from "react";
+import { FiTrash2 } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import { MdArrowBack } from "react-icons/md";
 import { BsBoundingBox } from "react-icons/bs";
@@ -107,7 +108,7 @@ export default function PlantationDetails({
   const handleIconPress = (e) => {
     confirm({
       title: 'Are you sure?',
-      content: 'Do you want to update Plantation?',
+      content: 'Do you want to delete Plantation?',
       icon: <ExclamationCircleOutlined />,
       okText: 'Yes',
       okType: 'primary',
@@ -166,7 +167,7 @@ export default function PlantationDetails({
           fontSize={20}
         />
         <p style={styles.titleText1}>Plantation Details</p>
-        <RiEditBoxLine
+        <FiTrash2
                 onClick={handleIconPress}
                 style={styles.editorbutton}
                 fontSize={19}
