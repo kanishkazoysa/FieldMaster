@@ -16,14 +16,15 @@ import Avatar from '../../components/profileManage/ProfileManageModal/Avatar';
 import AxiosInstance from '../../AxiosInstance';
 import * as turf from '@turf/turf';
 import html2canvas from 'html2canvas';
+import axios from 'axios';
 
 const { Option } = Select;
 
 const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
-  const [templateName, setTemplateName] = useState('');
-  const [measureName, setMeasureName] = useState('');
-  const [landType, setLandType] = useState('');
-  const [description, setDescription] = useState('');
+  const [templateName, setTemplateName] = useState('myTemplate');
+  const [measureName, setMeasureName] = useState('tea');
+  const [landType, setLandType] = useState('slope');
+  const [description, setDescription] = useState('testingDesc');
   const [area, setArea] = useState(calculatedData.area);
   const [perimeter, setPerimeter] = useState(calculatedData.perimeter);
   const [location, setLocation] = useState(calculatedData.location);
@@ -406,16 +407,48 @@ export default function Home() {
       }
     });
   };
-  const handlePopupSave = (data) => {
-    console.log('Saved data:', data);
-    // Add your logic to save the data here
-    setIsPopupOpen(false);
+  const handlePopupSave = async (data) => {
+    try {
+      // Convert area and perimeter to numbers
+      const area = parseFloat(data.area.split(' ')[0]);
+      const perimeter = parseFloat(data.perimeter.split(' ')[0]);
+
+      // Prepare the data to be sent to the backend
+      const templateData = {
+        perimeter,
+        area,
+        templateName: data.templateName,
+        measureName: data.measureName,
+        landType: data.landType,
+        location: data.location,
+        description: data.description,
+        imageUrl: data.screenshot,
+        locationPoints: markers.map((marker) => ({
+          longitude: marker.lng,
+          latitude: marker.lat,
+        })),
+      };
+
+      // Make the API call
+      const response = await AxiosInstance.post(
+        '/api/auth/mapTemplate/saveTemplate',
+        templateData
+      );
+
+      console.log('Template saved successfully:', response.data);
+      message.success('Template saved successfully!');
+      setIsPopupOpen(false);
+      // Reset the map or do any other necessary cleanup
+      handleCancel();
+    } catch (error) {
+      console.error('Error saving template:', error);
+      message.error('Failed to save template. Please try again.');
+    }
   };
   const handleComplete = () => {
     if (markers.length > 2) {
       setIsPolygonComplete(true);
 
-      // Capture the map screenshot
       if (mapRef.current && mapRef.current.state.map) {
         const map = mapRef.current.state.map;
 
@@ -427,45 +460,86 @@ export default function Home() {
           fullscreenControl: false,
         });
 
-        // Create a custom overlay
-        const overlay = new window.google.maps.OverlayView();
-        overlay.draw = function () {};
-        overlay.setMap(map);
+        const uploadToImgbb = async (imageDataUrl) => {
+          const apiKey = 'a08fb8cde558efecce3f05b7f97d4ef7';
+          const formData = new FormData();
+          formData.append('image', imageDataUrl.split(',')[1]);
 
-        // Wait for the overlay to be added to the map
-        overlay.addListener('add', () => {
-          // Wait for the next frame to ensure UI is hidden and overlay is ready
-          requestAnimationFrame(() => {
-            if (overlay.getPanes() && overlay.getPanes().overlayLayer) {
-              html2canvas(overlay.getPanes().overlayLayer).then((canvas) => {
-                const screenshot = canvas.toDataURL('image/png');
-                setCalculatedData((prev) => ({ ...prev, screenshot }));
+          try {
+            const response = await axios.post(
+              `https://api.imgbb.com/1/upload?key=${apiKey}`,
+              formData,
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              }
+            );
+            console.log(response.data.data.url);
+            return response.data.data.url;
+          } catch (error) {
+            console.error('Error uploading image to imgbb:', error);
+            throw error;
+          }
+        };
+        // Capture the map
+        html2canvas(mapRef.current.state.map.getDiv()).then(async (canvas) => {
+          const screenshot = canvas.toDataURL('image/png');
+          console.log('Captured image data URL:', screenshot);
 
-                // Restore UI elements
-                map.setOptions({
-                  disableDefaultUI: false,
-                  zoomControl: true,
-                  streetViewControl: true,
-                  fullscreenControl: false,
-                });
-              });
-            } else {
-              console.error('Overlay layer not available');
-              // Restore UI elements even if screenshot fails
-              map.setOptions({
-                disableDefaultUI: false,
-                zoomControl: true,
-                streetViewControl: true,
-                fullscreenControl: false,
-              });
-            }
-          });
+          try {
+            // Upload to imgbb
+            const imageUrl = await uploadToImgbb(screenshot);
+            console.log('Uploaded image URL:', imageUrl);
+
+            // Calculate area and perimeter
+            const polygon = turf.polygon([
+              [
+                ...markers.map((m) => [m.lng, m.lat]),
+                [markers[0].lng, markers[0].lat],
+              ],
+            ]);
+            const areaMeters = turf.area(polygon);
+            const perimeterMeters =
+              turf.length(
+                turf.lineString([
+                  ...markers.map((m) => [m.lng, m.lat]),
+                  [markers[0].lng, markers[0].lat],
+                ])
+              ) * 1000;
+
+            const areaPerches = areaMeters / 25.29285264;
+            const perimeterKilometers = perimeterMeters / 1000;
+
+            setCalculatedData({
+              area: `${areaPerches.toFixed(2)} perches`,
+              perimeter: `${perimeterKilometers.toFixed(2)} km`,
+              screenshot: imageUrl,
+            });
+
+            // Open the save popup
+            setIsPopupOpen(true);
+          } catch (error) {
+            console.error('Error processing map:', error);
+            message.error(
+              'An error occurred while processing the map. Please try again.'
+            );
+          } finally {
+            // Restore UI elements
+            map.setOptions({
+              disableDefaultUI: false,
+              zoomControl: true,
+              streetViewControl: true,
+              fullscreenControl: false,
+            });
+          }
         });
       }
     } else {
       message.error('Please add at least 3 points to complete the polygon.');
     }
   };
+
   const buttonStyles = {
     buttonsContainer: {
       position: 'absolute',
@@ -607,7 +681,10 @@ export default function Home() {
         isOpen={isPopupOpen}
         onClose={() => setIsPopupOpen(false)}
         onSave={handlePopupSave}
-        calculatedData={calculatedData}
+        calculatedData={{
+          ...calculatedData,
+          screenshot: calculatedData.screenshot,
+        }}
       />
     </div>
   );
