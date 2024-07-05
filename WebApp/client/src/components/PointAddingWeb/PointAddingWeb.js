@@ -33,7 +33,9 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
   useEffect(() => {
     setArea(calculatedData.area);
     setPerimeter(calculatedData.perimeter);
-    setLocation(calculatedData.location);
+    if (calculatedData.location) {
+      setLocation(calculatedData.location);
+    }
     setScreenshot(calculatedData.screenshot);
   }, [calculatedData]);
 
@@ -193,10 +195,22 @@ export default function Home() {
       setIsPolygonComplete(false);
     }
     if (markers.length > 0) {
-      setCalculatedData((prev) => ({
-        ...prev,
-        location: `${markers[0].lat.toFixed(6)}, ${markers[0].lng.toFixed(6)}`,
-      }));
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode({ location: markers[0] }, (results, status) => {
+        if (status === 'OK' && results[0]) {
+          setCalculatedData((prevData) => ({
+            ...prevData,
+            location: results[0].formatted_address,
+          }));
+        } else {
+          setCalculatedData((prevData) => ({
+            ...prevData,
+            location:
+              prevData.location ||
+              `${markers[0].lat.toFixed(6)}, ${markers[0].lng.toFixed(6)}`,
+          }));
+        }
+      });
     }
   }, [markers]);
 
@@ -376,35 +390,35 @@ export default function Home() {
             formattedLocation = 'Unknown location';
           }
 
-          setCalculatedData((prev) => ({
-            ...prev,
+          setCalculatedData((prevData) => ({
+            ...prevData,
             area: `${areaInPerches.toFixed(2)} perches`,
             perimeter: `${perimeterInKilometers.toFixed(2)} km`,
             location: formattedLocation,
           }));
-
-          // Open the popup after all calculations are done
-          setIsPopupOpen(true);
         } else {
           console.error('No results found');
-          setCalculatedData((prev) => ({
-            ...prev,
+          setCalculatedData((prevData) => ({
+            ...prevData,
             area: `${areaInPerches.toFixed(2)} perches`,
             perimeter: `${perimeterInKilometers.toFixed(2)} km`,
-            location: 'Unknown location',
+            location:
+              prevData.location ||
+              `${markers[0].lat.toFixed(6)}, ${markers[0].lng.toFixed(6)}`,
           }));
-          setIsPopupOpen(true);
         }
       } else {
         console.error('Geocoder failed due to: ' + status);
-        setCalculatedData((prev) => ({
-          ...prev,
+        setCalculatedData((prevData) => ({
+          ...prevData,
           area: `${areaInPerches.toFixed(2)} perches`,
           perimeter: `${perimeterInKilometers.toFixed(2)} km`,
-          location: 'Unknown location',
+          location:
+            prevData.location ||
+            `${markers[0].lat.toFixed(6)}, ${markers[0].lng.toFixed(6)}`,
         }));
-        setIsPopupOpen(true);
       }
+      setIsPopupOpen(true);
     });
   };
   const handlePopupSave = async (data) => {
