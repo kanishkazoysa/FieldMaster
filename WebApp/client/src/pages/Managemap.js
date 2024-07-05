@@ -19,6 +19,8 @@ import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { TbTopologyComplex } from "react-icons/tb";
 import { GrCompliance } from "react-icons/gr";
 import PlantationSetupModal from "./PlantationSetupModal";
+import { TbFence } from "react-icons/tb";
+import FenceSetupModal from "./FenceSetupModal";
 
 const { confirm } = Modal;
 
@@ -46,6 +48,43 @@ const Managemap = () => {
   const [fenceSetupData, setFenceSetupData] = useState({});
   const [plantationSetupData, setPlantationSetupData] = useState({});
   const [isEditingPlantation, setIsEditingPlantation] = useState(false);
+  const [fenceSetupModalVisible, setFenceSetupModalVisible] = useState(false);
+
+  const handleFenceSetup = () => {
+    if (selectedPolygonIndex !== null) {
+      const selectedPolygon = partitionPolygons[selectedPolygonIndex];
+      setSelectedPolygonData({
+        area: selectedPolygon.area,
+        perimeter: selectedPolygon.perimeter,
+      });
+      setFenceSetupModalVisible(true);
+    } else {
+      message.warning("Please select a partition first.");
+    }
+  };
+
+  const handleFenceSetupSave = (data) => {
+    setFenceSetupData((prevData) => ({
+      ...prevData,
+      [selectedPolygonIndex]: data,
+    }));
+
+    // Update the partitionPolygons state
+    setPartitionPolygons((prevPolygons) => {
+      const updatedPolygons = [...prevPolygons];
+      updatedPolygons[selectedPolygonIndex] = {
+        ...updatedPolygons[selectedPolygonIndex],
+        fenceSetup: data,
+      };
+      return updatedPolygons;
+    });
+
+    // Save the updated data to the backend
+    savePartitionPoints();
+
+    message.success("Fence setup data saved successfully!");
+    setFenceSetupModalVisible(false);
+  };
 
   const handleEditPlantation = () => {
     if (selectedPolygonIndex !== null) {
@@ -263,7 +302,8 @@ const Managemap = () => {
     setShowLabelInput(false);
 
     const selectedPolygon = partitionPolygons[index];
-    const fenceData = plantationSetupData[index];
+    const PlantationData = plantationSetupData[index];
+    const fenceData = fenceSetupData[index];
 
     let modalContent = (
       <div>
@@ -273,62 +313,91 @@ const Managemap = () => {
       </div>
     );
 
-    if (fenceData) {
+    if (PlantationData) {
       modalContent = (
         <div>
           {modalContent}
           <h4>Plantation Data:</h4>
-          <p>Plant Type: {fenceData.plantType || "N/A"}</p>
+          <p>Plant Type: {PlantationData.plantType || "N/A"}</p>
           <p>
             Plant Spacing:{" "}
-            {fenceData.plantSpacing ? fenceData.plantSpacing.toFixed(2) : "N/A"}{" "}
+            {PlantationData.plantSpacing
+              ? PlantationData.plantSpacing.toFixed(2)
+              : "N/A"}{" "}
             meters
           </p>
           <p>
             Row Spacing:{" "}
-            {fenceData.rowSpacing ? fenceData.rowSpacing.toFixed(2) : "N/A"}{" "}
+            {PlantationData.rowSpacing
+              ? PlantationData.rowSpacing.toFixed(2)
+              : "N/A"}{" "}
             meters
           </p>
-          <p>Number of Plants: {fenceData.numberOfPlants || "N/A"}</p>
+          <p>Number of Plants: {PlantationData.numberOfPlants || "N/A"}</p>
           <p>
             Plantation Density:{" "}
-            {fenceData.plantationDensity
-              ? fenceData.plantationDensity.toFixed(2)
+            {PlantationData.plantationDensity
+              ? PlantationData.plantationDensity.toFixed(2)
               : "N/A"}{" "}
             plants/sq m
           </p>
-          {fenceData.fertilizerData && (
+          {PlantationData.fertilizerData && (
             <>
               <h4>Fertilizer Data:</h4>
               <p>
                 Fertilizer Type:{" "}
-                {fenceData.fertilizerData.fertilizerType || "N/A"}
+                {PlantationData.fertilizerData.fertilizerType || "N/A"}
               </p>
               <p>
                 Frequency:{" "}
-                {fenceData.fertilizerData.fertilizerFrequency || "N/A"}
+                {PlantationData.fertilizerData.fertilizerFrequency || "N/A"}
               </p>
-              <p>Times: {fenceData.fertilizerData.fertilizerTimes || "N/A"}</p>
               <p>
-                Amount: {fenceData.fertilizerData.fertilizerAmount || "N/A"}{" "}
-                {fenceData.fertilizerData.fertilizerUnit || ""}
+                Times: {PlantationData.fertilizerData.fertilizerTimes || "N/A"}
+              </p>
+              <p>
+                Amount:{" "}
+                {PlantationData.fertilizerData.fertilizerAmount || "N/A"}{" "}
+                {PlantationData.fertilizerData.fertilizerUnit || ""}
               </p>
               <p>
                 Total Fertilizer per Year:{" "}
-                {fenceData.fertilizerData.totalFertilizerPerYear
-                  ? fenceData.fertilizerData.totalFertilizerPerYear.toFixed(2)
+                {PlantationData.fertilizerData.totalFertilizerPerYear
+                  ? PlantationData.fertilizerData.totalFertilizerPerYear.toFixed(
+                      2
+                    )
                   : "N/A"}{" "}
                 kg
               </p>
               <p>
                 Fertilizer per Plant:{" "}
-                {fenceData.fertilizerData.fertilizerPerPlant
-                  ? fenceData.fertilizerData.fertilizerPerPlant.toFixed(2)
+                {PlantationData.fertilizerData.fertilizerPerPlant
+                  ? PlantationData.fertilizerData.fertilizerPerPlant.toFixed(2)
                   : "N/A"}{" "}
                 kg
               </p>
             </>
           )}
+        </div>
+      );
+    }
+
+    if (fenceData) {
+      modalContent = (
+        <div>
+          {modalContent}
+          <h4>Fence Data:</h4>
+          <p>Fence Type: {fenceData.fenceType}</p>
+          <p>
+            Post Spacing: {fenceData.postSpacing} {fenceData.postSpacingUnit}
+          </p>
+          <p>Number of Sticks: {fenceData.numberOfSticks}</p>
+          <h5>Gates:</h5>
+          {fenceData.gates.map((gate, idx) => (
+            <p key={idx}>
+              Gate {idx + 1}: {gate.length}m x {gate.count}
+            </p>
+          ))}
         </div>
       );
     }
@@ -684,6 +753,23 @@ const Managemap = () => {
                 )}
               </>
             )}
+            {fenceSetupData[selectedPolygonIndex] ? (
+              <Button
+                onClick={handleFenceSetup}
+                icon={<TbFence />}
+                style={styles.toolButton}
+              >
+                Edit Fence
+              </Button>
+            ) : (
+              <Button
+                onClick={handleFenceSetup}
+                icon={<TbFence />}
+                style={styles.toolButton}
+              >
+                Fence Setup
+              </Button>
+            )}
 
             {showLabelInput && (
               <div>
@@ -759,6 +845,15 @@ const Managemap = () => {
                 ? plantationSetupData[selectedPolygonIndex]
                 : null
             }
+          />
+
+          <FenceSetupModal
+            visible={fenceSetupModalVisible}
+            onClose={() => setFenceSetupModalVisible(false)}
+            area={selectedPolygonData?.area}
+            perimeter={selectedPolygonData?.perimeter}
+            onSave={handleFenceSetupSave}
+            existingData={fenceSetupData[selectedPolygonIndex]}
           />
         </GoogleMap>
       </LoadScript>
