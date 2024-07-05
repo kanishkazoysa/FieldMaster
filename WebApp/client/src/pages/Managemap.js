@@ -245,6 +245,7 @@ const Managemap = () => {
         (polygon, index) => ({
           ...polygon,
           plantationSetup: plantationSetupData[index] || {},
+          fenceSetup: fenceSetupData[index] || {},
         })
       );
 
@@ -537,29 +538,35 @@ const Managemap = () => {
         const fetchedPartitionPolygons = response.data.partitionPolygons || [];
         setPoints(fetchedPoints);
         setPartitionPolygons(fetchedPartitionPolygons);
-
+  
         // Set plantation setup data
         const fetchedPlantationSetupData = {};
+        // Set fence setup data
+        const fetchedFenceSetupData = {};
         fetchedPartitionPolygons.forEach((polygon, index) => {
           if (polygon.plantationSetup) {
             fetchedPlantationSetupData[index] = polygon.plantationSetup;
           }
+          if (polygon.fenceSetup) {
+            fetchedFenceSetupData[index] = polygon.fenceSetup;
+          }
         });
         setPlantationSetupData(fetchedPlantationSetupData);
-
+        setFenceSetupData(fetchedFenceSetupData);
+  
         const avgLatitude =
           fetchedPoints.reduce((total, point) => total + point.latitude, 0) /
           fetchedPoints.length;
         const avgLongitude =
           fetchedPoints.reduce((total, point) => total + point.longitude, 0) /
           fetchedPoints.length;
-
+  
         setCenter({ lat: avgLatitude, lng: avgLongitude });
       } catch (error) {
         console.error("An error occurred while fetching the template:", error);
       }
     };
-
+  
     fetchTemplateData();
   }, [templateId]);
   const toggleMapType = () => {
@@ -751,9 +758,8 @@ const Managemap = () => {
                     Plantation
                   </Button>
                 )}
-              </>
-            )}
-            {fenceSetupData[selectedPolygonIndex] ? (
+
+{fenceSetupData[selectedPolygonIndex] ? (
               <Button
                 onClick={handleFenceSetup}
                 icon={<TbFence />}
@@ -770,6 +776,9 @@ const Managemap = () => {
                 Fence Setup
               </Button>
             )}
+              </>
+            )}
+            
 
             {showLabelInput && (
               <div>

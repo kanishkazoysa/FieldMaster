@@ -5,6 +5,19 @@ const PointSchema = new mongoose.Schema({
   latitude: Number,
 });
 
+const GateSchema = new mongoose.Schema({
+  length: Number,
+  count: Number,
+});
+
+const FenceSetupSchema = new mongoose.Schema({
+  fenceType: String,
+  postSpacing: Number,
+  postSpacingUnit: String,
+  gates: [GateSchema],
+  numberOfSticks: Number,
+});
+
 const PartitionPolygonSchema = new mongoose.Schema({
   points: {
     type: [PointSchema],
@@ -40,6 +53,8 @@ const PartitionPolygonSchema = new mongoose.Schema({
       fertilizerPerPlant: Number,
     },
   },
+
+  fenceSetup: FenceSetupSchema,
 });
 
 /* this schema is used to save map template */

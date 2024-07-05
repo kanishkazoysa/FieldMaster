@@ -32,13 +32,34 @@ const FenceSetupModal = ({
         existingData.postSpacing ? existingData.postSpacing.toString() : ""
       );
       setPostSpacingUnit(existingData.postSpacingUnit || "m");
-      setGateCount(
-        existingData.gateCount ? existingData.gateCount.toString() : ""
-      );
-      setGateLength(
-        existingData.gateLength ? existingData.gateLength.toString() : ""
-      );
-      setGateLengthUnit(existingData.gateLengthUnit || "m");
+      setNumberOfSticks(existingData.numberOfSticks || 0);
+  
+      // Handle gates
+      if (existingData.gates && existingData.gates.length > 0) {
+        const newFenceLengthsArray = [];
+        const newFenceAmountsArray = [];
+        const newDisplayValues = [];
+  
+        existingData.gates.forEach(gate => {
+          newFenceLengthsArray.push(gate.length);
+          newFenceAmountsArray.push(gate.count);
+          newDisplayValues.push(`${gate.length}m x ${gate.count}`);
+        });
+  
+        setFenceLengthsArray(newFenceLengthsArray);
+        setFenceAmountsArray(newFenceAmountsArray);
+        setDisplayValues(newDisplayValues);
+      } else {
+        // Reset gate-related states if no gates exist
+        setFenceLengthsArray([]);
+        setFenceAmountsArray([]);
+        setDisplayValues([]);
+      }
+  
+      // Reset individual gate input fields
+      setGateLength("");
+      setGateCount("");
+      setGateLengthUnit("m");
     }
   }, [existingData]);
 
