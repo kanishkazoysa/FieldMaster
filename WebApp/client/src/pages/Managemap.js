@@ -18,7 +18,7 @@ import { message, Button, Modal, Input } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { TbTopologyComplex } from "react-icons/tb";
 import { GrCompliance } from "react-icons/gr";
-import PlantationSetupModal from './PlantationSetupModal';
+import PlantationSetupModal from "./PlantationSetupModal";
 
 const { confirm } = Modal;
 
@@ -39,13 +39,13 @@ const Managemap = () => {
   const [labelText, setLabelText] = useState("");
   const [showLabelInput, setShowLabelInput] = useState(false);
   const [currentLabel, setCurrentLabel] = useState("");
-  const [PlantationSetupModalVisible, setPlantationSetupModalVisible] = useState(false);
+  const [PlantationSetupModalVisible, setPlantationSetupModalVisible] =
+    useState(false);
   const navigate = useNavigate();
   const [selectedPolygonData, setSelectedPolygonData] = useState(null);
   const [fenceSetupData, setFenceSetupData] = useState({});
   const [plantationSetupData, setPlantationSetupData] = useState({});
   const [isEditingPlantation, setIsEditingPlantation] = useState(false);
-
 
   const handleEditPlantation = () => {
     if (selectedPolygonIndex !== null) {
@@ -54,30 +54,30 @@ const Managemap = () => {
       setPlantationSetupModalVisible(true);
       setSelectedPolygonData({
         area: selectedPolygon.area,
-        perimeter: selectedPolygon.perimeter
+        perimeter: selectedPolygon.perimeter,
       });
     }
-  }
+  };
 
   const handlePlantationSetupSave = (data) => {
-    setPlantationSetupData(prevData => ({
+    setPlantationSetupData((prevData) => ({
       ...prevData,
-      [selectedPolygonIndex]: data
+      [selectedPolygonIndex]: data,
     }));
-  
+
     // Update the partitionPolygons state
-    setPartitionPolygons(prevPolygons => {
+    setPartitionPolygons((prevPolygons) => {
       const updatedPolygons = [...prevPolygons];
       updatedPolygons[selectedPolygonIndex] = {
         ...updatedPolygons[selectedPolygonIndex],
-        plantationSetup: data
+        plantationSetup: data,
       };
       return updatedPolygons;
     });
-  
+
     // Save the updated data to the backend
     savePartitionPoints();
-  
+
     message.success("Plantation setup data saved successfully!");
     setPlantationSetupModalVisible(false);
   };
@@ -89,7 +89,7 @@ const Managemap = () => {
       // Pass only the area and perimeter to the modal
       setSelectedPolygonData({
         area: selectedPolygon.area,
-        perimeter: selectedPolygon.perimeter
+        perimeter: selectedPolygon.perimeter,
       });
     } else {
       message.warning("Please select a partition first.");
@@ -202,11 +202,13 @@ const Managemap = () => {
 
   const savePartitionPoints = async () => {
     try {
-      const updatedPartitionPolygons = partitionPolygons.map((polygon, index) => ({
-        ...polygon,
-        plantationSetup: plantationSetupData[index] || {},
-      }));
-  
+      const updatedPartitionPolygons = partitionPolygons.map(
+        (polygon, index) => ({
+          ...polygon,
+          plantationSetup: plantationSetupData[index] || {},
+        })
+      );
+
       const response = await AxiosInstance.put(
         `/api/auth/mapTemplate/savePartitionPoints/${templateId}`,
         {
@@ -259,10 +261,10 @@ const Managemap = () => {
     setSelectedPolygonIndex(index);
     setEditingPolygonIndex(null);
     setShowLabelInput(false);
-  
+
     const selectedPolygon = partitionPolygons[index];
     const fenceData = plantationSetupData[index];
-  
+
     let modalContent = (
       <div>
         <p>Area: {selectedPolygon.area} sq meters</p>
@@ -270,32 +272,67 @@ const Managemap = () => {
         <p>Label: {selectedPolygon.label || "No label"}</p>
       </div>
     );
-  
+
     if (fenceData) {
       modalContent = (
         <div>
           {modalContent}
           <h4>Plantation Data:</h4>
-          <p>Plant Type: {fenceData.plantType || 'N/A'}</p>
-          <p>Plant Spacing: {fenceData.plantSpacing ? fenceData.plantSpacing.toFixed(2) : 'N/A'} meters</p>
-          <p>Row Spacing: {fenceData.rowSpacing ? fenceData.rowSpacing.toFixed(2) : 'N/A'} meters</p>
-          <p>Number of Plants: {fenceData.numberOfPlants || 'N/A'}</p>
-          <p>Plantation Density: {fenceData.plantationDensity ? fenceData.plantationDensity.toFixed(2) : 'N/A'} plants/sq m</p>
+          <p>Plant Type: {fenceData.plantType || "N/A"}</p>
+          <p>
+            Plant Spacing:{" "}
+            {fenceData.plantSpacing ? fenceData.plantSpacing.toFixed(2) : "N/A"}{" "}
+            meters
+          </p>
+          <p>
+            Row Spacing:{" "}
+            {fenceData.rowSpacing ? fenceData.rowSpacing.toFixed(2) : "N/A"}{" "}
+            meters
+          </p>
+          <p>Number of Plants: {fenceData.numberOfPlants || "N/A"}</p>
+          <p>
+            Plantation Density:{" "}
+            {fenceData.plantationDensity
+              ? fenceData.plantationDensity.toFixed(2)
+              : "N/A"}{" "}
+            plants/sq m
+          </p>
           {fenceData.fertilizerData && (
             <>
               <h4>Fertilizer Data:</h4>
-              <p>Fertilizer Type: {fenceData.fertilizerData.fertilizerType || 'N/A'}</p>
-              <p>Frequency: {fenceData.fertilizerData.fertilizerFrequency || 'N/A'}</p>
-              <p>Times: {fenceData.fertilizerData.fertilizerTimes || 'N/A'}</p>
-              <p>Amount: {fenceData.fertilizerData.fertilizerAmount || 'N/A'} {fenceData.fertilizerData.fertilizerUnit || ''}</p>
-              <p>Total Fertilizer per Year: {fenceData.fertilizerData.totalFertilizerPerYear ? fenceData.fertilizerData.totalFertilizerPerYear.toFixed(2) : 'N/A'} kg</p>
-              <p>Fertilizer per Plant: {fenceData.fertilizerData.fertilizerPerPlant ? fenceData.fertilizerData.fertilizerPerPlant.toFixed(2) : 'N/A'} kg</p>
+              <p>
+                Fertilizer Type:{" "}
+                {fenceData.fertilizerData.fertilizerType || "N/A"}
+              </p>
+              <p>
+                Frequency:{" "}
+                {fenceData.fertilizerData.fertilizerFrequency || "N/A"}
+              </p>
+              <p>Times: {fenceData.fertilizerData.fertilizerTimes || "N/A"}</p>
+              <p>
+                Amount: {fenceData.fertilizerData.fertilizerAmount || "N/A"}{" "}
+                {fenceData.fertilizerData.fertilizerUnit || ""}
+              </p>
+              <p>
+                Total Fertilizer per Year:{" "}
+                {fenceData.fertilizerData.totalFertilizerPerYear
+                  ? fenceData.fertilizerData.totalFertilizerPerYear.toFixed(2)
+                  : "N/A"}{" "}
+                kg
+              </p>
+              <p>
+                Fertilizer per Plant:{" "}
+                {fenceData.fertilizerData.fertilizerPerPlant
+                  ? fenceData.fertilizerData.fertilizerPerPlant.toFixed(2)
+                  : "N/A"}{" "}
+                kg
+              </p>
             </>
           )}
         </div>
       );
     }
-  
+
     Modal.info({
       title: "Partition Statistics",
       content: modalContent,
@@ -431,7 +468,7 @@ const Managemap = () => {
         const fetchedPartitionPolygons = response.data.partitionPolygons || [];
         setPoints(fetchedPoints);
         setPartitionPolygons(fetchedPartitionPolygons);
-  
+
         // Set plantation setup data
         const fetchedPlantationSetupData = {};
         fetchedPartitionPolygons.forEach((polygon, index) => {
@@ -440,20 +477,20 @@ const Managemap = () => {
           }
         });
         setPlantationSetupData(fetchedPlantationSetupData);
-  
+
         const avgLatitude =
           fetchedPoints.reduce((total, point) => total + point.latitude, 0) /
           fetchedPoints.length;
         const avgLongitude =
           fetchedPoints.reduce((total, point) => total + point.longitude, 0) /
           fetchedPoints.length;
-  
+
         setCenter({ lat: avgLatitude, lng: avgLongitude });
       } catch (error) {
         console.error("An error occurred while fetching the template:", error);
       }
     };
-  
+
     fetchTemplateData();
   }, [templateId]);
   const toggleMapType = () => {
@@ -629,27 +666,24 @@ const Managemap = () => {
                   </Button>
                 )}
                 {plantationSetupData[selectedPolygonIndex] ? (
-      <Button
-        onClick={handleEditPlantation}
-        icon={<PiPlantLight />}
-        style={styles.toolButton}
-      >
-        Edit Plantation
-      </Button>
-    ) : (
-      <Button
-        onClick={handlePlantationSetup}
-        icon={<PiPlantLight />}
-        style={styles.toolButton}
-      >
-        Plantation
-      </Button>
-    )}
-
+                  <Button
+                    onClick={handleEditPlantation}
+                    icon={<PiPlantLight />}
+                    style={styles.toolButton}
+                  >
+                    Edit Plantation
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handlePlantationSetup}
+                    icon={<PiPlantLight />}
+                    style={styles.toolButton}
+                  >
+                    Plantation
+                  </Button>
+                )}
               </>
-              
             )}
-
 
             {showLabelInput && (
               <div>
@@ -682,7 +716,6 @@ const Managemap = () => {
               </div>
             )}
 
-            
             {editingPolygonIndex !== null && (
               <>
                 <Button
@@ -713,17 +746,20 @@ const Managemap = () => {
           </div>
 
           <PlantationSetupModal
-  visible={PlantationSetupModalVisible}
-  onClose={() => {
-    setPlantationSetupModalVisible(false);
-    setIsEditingPlantation(false);
-  }}
-  area={selectedPolygonData?.area}
-  perimeter={selectedPolygonData?.perimeter}
-  onSave={handlePlantationSetupSave}
-  existingData={isEditingPlantation ? plantationSetupData[selectedPolygonIndex] : null}
-/>
-
+            visible={PlantationSetupModalVisible}
+            onClose={() => {
+              setPlantationSetupModalVisible(false);
+              setIsEditingPlantation(false);
+            }}
+            area={selectedPolygonData?.area}
+            perimeter={selectedPolygonData?.perimeter}
+            onSave={handlePlantationSetupSave}
+            existingData={
+              isEditingPlantation
+                ? plantationSetupData[selectedPolygonIndex]
+                : null
+            }
+          />
         </GoogleMap>
       </LoadScript>
     </div>
