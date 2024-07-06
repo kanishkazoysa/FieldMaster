@@ -7,7 +7,7 @@ const Card = ({
   templateName,
   location,
   date,
-  imageUrl, // Changed from capturedImageBase64
+  imageUrl,
   onClick,
   onDelete,
   onEdit,
@@ -28,11 +28,7 @@ const Card = ({
       <RiDeleteBin6Line className='delete-icon' onClick={handleDelete} />
       <div className='card-flex'>
         <div className='card-image-container'>
-          <img
-            src={imageUrl} // Changed this line
-            className='card-image'
-            alt='mapImg'
-          />
+          <img src={imageUrl} className='card-image' alt='mapImg' />
         </div>
         <div className='card-content'>
           <div className='templateName'>{templateName}</div>

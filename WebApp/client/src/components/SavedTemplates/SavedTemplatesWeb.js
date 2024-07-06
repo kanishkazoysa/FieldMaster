@@ -4,7 +4,7 @@ import '../SavedTemplates/SavedTemplatesWeb.css';
 import Card from './Card.js';
 import { FaSearch } from 'react-icons/fa';
 import AxiosInstance from '../../AxiosInstance';
-import { message } from 'antd';
+import { message, Empty, Modal, Button } from 'antd';
 
 const SavedTemplatesWeb = ({
   onBackToSidebar,
@@ -13,6 +13,8 @@ const SavedTemplatesWeb = ({
 }) => {
   const [templates, setTemplates] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [templateToDelete, setTemplateToDelete] = useState(null);
 
   const getAllTemplates = () => {
     AxiosInstance.get(`/api/auth/mapTemplate/getAllTemplates`)
@@ -23,22 +25,40 @@ const SavedTemplatesWeb = ({
       })
       .catch((error) => {
         console.error('Failed to fetch templates:', error);
+        message.error('Failed to fetch templates');
       });
   };
 
-  const handleDelete = (deletingTemplate) => {
-    AxiosInstance.delete(
-      `/api/auth/mapTemplate/deleteTemplate/${deletingTemplate._id}`
-    )
-      .then(() => {
-        message.success('Template deleted successfully');
-        setTemplates(
-          templates.filter((template) => template._id !== deletingTemplate._id)
-        );
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const showDeleteConfirm = (template) => {
+    setTemplateToDelete(template);
+    setDeleteModalVisible(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (templateToDelete) {
+      AxiosInstance.delete(
+        `/api/auth/mapTemplate/deleteTemplate/${templateToDelete._id}`
+      )
+        .then(() => {
+          message.success('Template deleted successfully');
+          setTemplates(
+            templates.filter(
+              (template) => template._id !== templateToDelete._id
+            )
+          );
+          setDeleteModalVisible(false);
+          setTemplateToDelete(null);
+        })
+        .catch((error) => {
+          console.error(error);
+          message.error('Failed to delete template');
+        });
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModalVisible(false);
+    setTemplateToDelete(null);
   };
 
   useEffect(() => {
@@ -72,21 +92,50 @@ const SavedTemplatesWeb = ({
           </div>
 
           <div className='cardsDiv'>
-            {filteredTemplates.map((template) => (
-              <Card
-                key={template._id}
-                templateName={template.templateName}
-                location={template.location}
-                date={template.date}
-                imageUrl={template.imageUrl} // Change this line
-                onClick={() => onCardClick(template)}
-                onDelete={() => handleDelete(template)}
-                onEdit={() => handleEditTemplateClick(template)}
+            {filteredTemplates.length > 0 ? (
+              filteredTemplates.map((template) => (
+                <Card
+                  key={template._id}
+                  templateName={template.templateName}
+                  location={template.location}
+                  date={template.date}
+                  imageUrl={template.imageUrl}
+                  onClick={() => onCardClick(template)}
+                  onDelete={() => showDeleteConfirm(template)}
+                  onEdit={() => handleEditTemplateClick(template)}
+                />
+              ))
+            ) : (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={<span>You don't have any templates yet</span>}
               />
-            ))}
+            )}
           </div>
         </div>
       </div>
+
+      <Modal
+        title='Confirm Delete'
+        visible={deleteModalVisible}
+        onCancel={handleDeleteCancel}
+        centered
+        footer={[
+          <Button key='cancel' onClick={handleDeleteCancel}>
+            Cancel
+          </Button>,
+          <Button
+            key='delete'
+            type='primary'
+            danger
+            onClick={handleDeleteConfirm}
+          >
+            Delete
+          </Button>,
+        ]}
+      >
+        <p>Are you sure you want to delete this template?</p>
+      </Modal>
     </>
   );
 };
