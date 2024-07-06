@@ -148,7 +148,7 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
           style={{ ...inputStyle, height: 'auto' }}
         />
       </div>
-      {screenshot && (
+      {/*  {screenshot && (
         <div style={{ marginTop: '20px' }}>
           <label
             style={{ ...labelStyle, display: 'block', marginBottom: '10px' }}
@@ -161,7 +161,7 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
             style={{ width: '100%', maxHeight: '300px', objectFit: 'contain' }}
           />
         </div>
-      )}
+      )} */}
     </Modal>
   );
 };
