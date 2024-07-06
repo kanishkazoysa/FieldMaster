@@ -530,9 +530,6 @@ export default function Home() {
               perimeter: `${perimeterKilometers.toFixed(2)} km`,
               screenshot: imageUrl,
             });
-
-            // Open the save popup
-            setIsPopupOpen(true);
           } catch (error) {
             console.error('Error processing map:', error);
             message.error(
