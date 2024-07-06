@@ -243,11 +243,11 @@ export default function Home() {
               lng: point.longitude,
             }))}
             options={{
-              fillColor:"#064dbe",
-              fillOpacity: 0.1,
-              strokeColor: "#032864",
+              fillColor:"white",
+              fillOpacity: 0.5,
+              strokeColor: "black",
               strokeOpacity: 1,
-              strokeWeight: 2,
+              strokeWeight: 3,
             }}
           />
               <OverlayView
