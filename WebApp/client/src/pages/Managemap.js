@@ -65,6 +65,7 @@ const Managemap = () => {
       message.warning("Please select a partition first.");
     }
   };
+  
 
   const handleClearLandSetupSave = (data) => {
     setClearLandSetupData((prevData) => ({
@@ -475,31 +476,43 @@ const Managemap = () => {
       );
     }
   
-    if (fenceData) {
-      modalContent = (
-        <div style={styles.modalContent}>
-          {modalContent}
-          <div style={styles.section}>
-            <h4 style={styles.heading}>Fence Data:</h4>
-            <p style={styles.paragraph}>
-              Fence Type: <span style={styles.highlight}>{fenceData.fenceType}</span>
-            </p>
-            <p style={styles.paragraph}>
-              Post Spacing: <span style={styles.highlight}>{fenceData.postSpacing} {fenceData.postSpacingUnit}</span> 
-            </p>
-            <p style={styles.paragraph}>
-              Number of Sticks: <span style={styles.highlight}>{fenceData.numberOfSticks}</span>
-            </p>
+    if (fenceData && Object.keys(fenceData).length > 0 && 
+    (fenceData.fenceType || fenceData.postSpacing || fenceData.numberOfSticks || 
+     (fenceData.gates && fenceData.gates.length > 0))) {
+  modalContent = (
+    <div style={styles.modalContent}>
+      {modalContent}
+      <div style={styles.section}>
+        <h4 style={styles.heading}>Fence Data:</h4>
+        {fenceData.fenceType && (
+          <p style={styles.paragraph}>
+            Fence Type: <span style={styles.highlight}>{fenceData.fenceType}</span>
+          </p>
+        )}
+        {fenceData.postSpacing && (
+          <p style={styles.paragraph}>
+            Post Spacing: <span style={styles.highlight}>{fenceData.postSpacing} {fenceData.postSpacingUnit}</span> 
+          </p>
+        )}
+        {fenceData.numberOfSticks && (
+          <p style={styles.paragraph}>
+            Number of Sticks: <span style={styles.highlight}>{fenceData.numberOfSticks}</span>
+          </p>
+        )}
+        {fenceData.gates && fenceData.gates.length > 0 && (
+          <>
             <h5 style={styles.heading}>Gates:</h5>
             {fenceData.gates.map((gate, idx) => (
               <p key={idx} style={styles.paragraph}>
                 Gate {idx + 1}: <span style={styles.highlight}>{gate.length}m x {gate.count}</span>
               </p>
             ))}
-          </div>
-        </div>
-      );
-    }
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
   
     Modal.info({
       title: "Partition Statistics",
@@ -906,23 +919,24 @@ const Managemap = () => {
                   </Button>
                 )}
 
-{fenceSetupData[selectedPolygonIndex] ? (
-              <Button
-                onClick={handleFenceSetup}
-                icon={<TbFence />}
-                style={styles.toolButton}
-              >
-                Edit Fence
-              </Button>
-            ) : (
-              <Button
-                onClick={handleFenceSetup}
-                icon={<TbFence />}
-                style={styles.toolButton}
-              >
-                Fence Setup
-              </Button>
-            )}
+{fenceSetupData[selectedPolygonIndex] && 
+     Object.keys(fenceSetupData[selectedPolygonIndex]).length > 0 ? (
+      <Button
+        onClick={handleFenceSetup}
+        icon={<TbFence />}
+        style={styles.toolButton}
+      >
+        Edit Fence
+      </Button>
+    ) : (
+      <Button
+        onClick={handleFenceSetup}
+        icon={<TbFence />}
+        style={styles.toolButton}
+      >
+        Fence Setup
+      </Button>
+    )}
 
 <Button
   onClick={handleClearLandSetup}
