@@ -15,7 +15,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { message } from "antd";
 import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
 import AxiosInstance from "../../AxiosInstance";
-import MapDetailsPanel from './MapDetailsPanel';
+import MapDetailsPanel from "./MapDetailsPanel";
 
 export default function Home() {
   const location = useLocation();
@@ -30,6 +30,8 @@ export default function Home() {
   const [selectedMapId, setSelectedMapId] = useState(null);
   const [selectedMapDetails, setSelectedMapDetails] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(2);
+  const sriLankaCenter = { lat: 7.8731, lng: 80.7718 };
+  const defaultZoom = 7;
 
   const handleZoomChanged = () => {
     if (mapRef.current && mapRef.current.state.map) {
@@ -39,35 +41,41 @@ export default function Home() {
 
   useEffect(() => {
     if (mapRef.current && mapRef.current.state.map) {
-      const bounds = new window.google.maps.LatLngBounds();
+      if (userMaps.length > 0) {
+        const bounds = new window.google.maps.LatLngBounds();
 
-      if (selectedMapId) {
-        const selectedMap = userMaps.find((map) => map._id === selectedMapId);
-        if (selectedMap) {
-          selectedMap.locationPoints.forEach((point) => {
-            bounds.extend(
-              new window.google.maps.LatLng(point.latitude, point.longitude)
-            );
+        if (selectedMapId) {
+          const selectedMap = userMaps.find((map) => map._id === selectedMapId);
+          if (selectedMap) {
+            selectedMap.locationPoints.forEach((point) => {
+              bounds.extend(
+                new window.google.maps.LatLng(point.latitude, point.longitude)
+              );
+            });
+          }
+        } else {
+          userMaps.forEach((map) => {
+            map.locationPoints.forEach((point) => {
+              bounds.extend(
+                new window.google.maps.LatLng(point.latitude, point.longitude)
+              );
+            });
           });
         }
+
+        mapRef.current.state.map.fitBounds(bounds);
+
+        // Add some padding to the bounds
+        const padding = { top: 50, right: 50, bottom: 50, left: 50 };
+        mapRef.current.state.map.fitBounds(bounds, padding);
+
+        // Animate zoom
+        mapRef.current.state.map.setZoom(mapRef.current.state.map.getZoom());
       } else {
-        userMaps.forEach((map) => {
-          map.locationPoints.forEach((point) => {
-            bounds.extend(
-              new window.google.maps.LatLng(point.latitude, point.longitude)
-            );
-          });
-        });
+        // If no maps, center on Sri Lanka
+        mapRef.current.state.map.setCenter(sriLankaCenter);
+        mapRef.current.state.map.setZoom(defaultZoom);
       }
-
-      mapRef.current.state.map.fitBounds(bounds);
-
-      // Add some padding to the bounds
-      const padding = { top: 50, right: 50, bottom: 50, left: 50 };
-      mapRef.current.state.map.fitBounds(bounds, padding);
-
-      // Animate zoom
-      mapRef.current.state.map.setZoom(mapRef.current.state.map.getZoom());
     }
   }, [userMaps, selectedMapId]);
 
@@ -104,8 +112,6 @@ export default function Home() {
     const centerLng = (Math.min(...longitudes) + Math.max(...longitudes)) / 2;
     return { lat: centerLat, lng: centerLng };
   };
-
-  
 
   const handleLabelClick = useCallback(
     async (mapId) => {
@@ -188,7 +194,7 @@ export default function Home() {
     return {
       minZoom: 2,
       maxZoom: 40,
-      mapTypeId: window.google.maps.MapTypeId.SATELLITE,  // Add this line
+      mapTypeId: window.google.maps.MapTypeId.SATELLITE, // Add this line
       restriction: {
         latLngBounds: {
           north: 85,
@@ -230,26 +236,26 @@ export default function Home() {
         <GoogleMap
           ref={mapRef}
           mapContainerStyle={containerStyle}
-          center={center}
-          zoom={2}
+          center={userMaps.length > 0 ? center : sriLankaCenter}
+          zoom={userMaps.length > 0 ? 2 : defaultZoom}
           options={mapOptions()}
           onZoomChanged={handleZoomChanged}
         >
           {userMaps.map((map, index) => (
             <React.Fragment key={map._id}>
-            <Polygon
-            paths={map.locationPoints.map((point) => ({
-              lat: point.latitude,
-              lng: point.longitude,
-            }))}
-            options={{
-              fillColor:"white",
-              fillOpacity: 0.5,
-              strokeColor: "black",
-              strokeOpacity: 1,
-              strokeWeight: 3,
-            }}
-          />
+              <Polygon
+                paths={map.locationPoints.map((point) => ({
+                  lat: point.latitude,
+                  lng: point.longitude,
+                }))}
+                options={{
+                  fillColor: "white",
+                  fillOpacity: 0.1,
+                  strokeColor: "black",
+                  strokeOpacity: 1,
+                  strokeWeight: 3,
+                }}
+              />
               <OverlayView
                 position={getCenterOfPolygon(map.locationPoints)}
                 mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
@@ -279,14 +285,14 @@ export default function Home() {
             </React.Fragment>
           ))}
 
-          {zoomLevel > 10 && selectedMapDetails && (
-            <MapDetailsPanel 
-            mapDetails={selectedMapDetails} 
-            onClose={() => {
-              setSelectedMapId(null);
-              setSelectedMapDetails(null);
-            }}
-          />
+          {zoomLevel > 7 && selectedMapDetails && (
+            <MapDetailsPanel
+              mapDetails={selectedMapDetails}
+              onClose={() => {
+                setSelectedMapId(null);
+                setSelectedMapDetails(null);
+              }}
+            />
           )}
 
           {selectedLocation && (

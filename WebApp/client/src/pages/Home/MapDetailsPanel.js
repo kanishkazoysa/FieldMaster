@@ -29,8 +29,8 @@ const MapDetailsPanel = ({ mapDetails, onClose }) => {
       <Collapse defaultActiveKey={['1']} expandIconPosition="right">
         <Panel header="Map Details" key="1">
           <Descriptions column={1} size="small">
-            <Descriptions.Item label="Area">{parseFloat(map.Area).toFixed(2)}</Descriptions.Item>
-            <Descriptions.Item label="Perimeter">{parseFloat(map.Perimeter).toFixed(2)}</Descriptions.Item>
+            <Descriptions.Item label="Area">{parseFloat(map.Area).toFixed(2)} perch</Descriptions.Item>
+            <Descriptions.Item label="Perimeter">{parseFloat(map.Perimeter).toFixed(2)} km</Descriptions.Item>
             <Descriptions.Item label="Land Type">{map.landType}</Descriptions.Item>
             <Descriptions.Item label="Location">{map.location}</Descriptions.Item>
             <Descriptions.Item label="Description">{map.description}</Descriptions.Item>
