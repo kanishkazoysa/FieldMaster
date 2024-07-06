@@ -326,6 +326,7 @@ export default function Home() {
       area: '',
       location: '',
     });
+    navigate('/home');
   };
 
   const handleUndo = () => {
@@ -452,8 +453,8 @@ export default function Home() {
       console.log('Template saved successfully:', response.data);
       message.success('Template saved successfully!');
       setIsPopupOpen(false);
-      // Reset the map or do any other necessary cleanup
       handleCancel();
+      navigate('/home');
     } catch (error) {
       console.error('Error saving template:', error);
       message.error('Failed to save template. Please try again.');
@@ -559,6 +560,11 @@ export default function Home() {
       zIndex: 1,
       display: 'flex',
       gap: '10px',
+      backgroundColor: 'rgba(0, 0, 0, 0.4)',
+      padding: '10px',
+      borderRadius: '10px',
+      width: isPolygonComplete ? '270px' : '360px', // Adjust these values as needed
+      transition: 'width 0.3s ease', // Add smooth transition
     },
     button: {
       padding: '8px 16px',
@@ -600,14 +606,18 @@ export default function Home() {
             >
               Cancel
             </button>
-            <button
-              style={buttonStyles.button}
-              onClick={handleUndo}
-              onMouseOver={(e) => (e.target.style.backgroundColor = '#0056b3')}
-              onMouseOut={(e) => (e.target.style.backgroundColor = '#007bff')}
-            >
-              Undo
-            </button>
+            {!isPolygonComplete && (
+              <button
+                style={buttonStyles.button}
+                onClick={handleUndo}
+                onMouseOver={(e) =>
+                  (e.target.style.backgroundColor = '#0056b3')
+                }
+                onMouseOut={(e) => (e.target.style.backgroundColor = '#007bff')}
+              >
+                Undo
+              </button>
+            )}
             <button
               style={buttonStyles.button}
               onClick={handleSave}
