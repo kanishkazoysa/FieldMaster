@@ -1,5 +1,8 @@
 import React from 'react';
-import { Button } from "antd";
+import { Button, Collapse, Descriptions, Typography } from "antd";
+
+const { Panel } = Collapse;
+const { Title } = Typography;
 
 const MapDetailsPanel = ({ mapDetails, onClose }) => {
   if (!mapDetails) return null;
@@ -10,77 +13,66 @@ const MapDetailsPanel = ({ mapDetails, onClose }) => {
     <div
       style={{
         position: "absolute",
-        right: "20%",
-        top: "260px",
+        right: "20px",
+        top: "80px",
         background: "white",
-        padding: "10px",
-        borderRadius: "5px",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-        width: "200px",
-        backgroundColor: "rgba(0,0,0,0.7)",
-        color: "white",
-        maxHeight: "80vh",
+        padding: "20px",
+        borderRadius: "8px",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+        width: "300px",
+        maxHeight: "calc(100vh - 100px)",
         overflowY: "auto",
       }}
     >
-      <div
+      <Title level={4} style={{ marginBottom: "16px" }}>{map.templateName}</Title>
+      
+      <Collapse defaultActiveKey={['1']} expandIconPosition="right">
+        <Panel header="Map Details" key="1">
+          <Descriptions column={1} size="small">
+            <Descriptions.Item label="Area">{parseFloat(map.Area).toFixed(2)}</Descriptions.Item>
+            <Descriptions.Item label="Perimeter">{parseFloat(map.Perimeter).toFixed(2)}</Descriptions.Item>
+            <Descriptions.Item label="Land Type">{map.landType}</Descriptions.Item>
+            <Descriptions.Item label="Location">{map.location}</Descriptions.Item>
+            <Descriptions.Item label="Description">{map.description}</Descriptions.Item>
+          </Descriptions>
+        </Panel>
+
+        {fenceDetails && (
+          <Panel header="Fence Details" key="2">
+            <Descriptions column={1} size="small">
+              <Descriptions.Item label="Post Space">{fenceDetails.postSpace} {fenceDetails.postSpaceUnit}</Descriptions.Item>
+              <Descriptions.Item label="Number of Sticks">{fenceDetails.numberOfSticks}</Descriptions.Item>
+              <Descriptions.Item label="Fence Type">{fenceDetails.fenceType}</Descriptions.Item>
+              <Descriptions.Item label="Number of Gates">{fenceDetails.fenceAmount.join(', ')}</Descriptions.Item>
+              <Descriptions.Item label="Gate Lengths">{fenceDetails.fenceLength.join(', ')}</Descriptions.Item>
+            </Descriptions>
+          </Panel>
+        )}
+
+        {plantationDetails && (
+          <Panel header="Plantation Details" key="3">
+            <Descriptions column={1} size="small">
+              <Descriptions.Item label="Number of Plants">{plantationDetails.numberOfPlants}</Descriptions.Item>
+              <Descriptions.Item label="Plant Type">{plantationDetails.plantType}</Descriptions.Item>
+              <Descriptions.Item label="Plant Space">{plantationDetails.plantSpace} {plantationDetails.unit}</Descriptions.Item>
+              <Descriptions.Item label="Row Space">{plantationDetails.rowSpace} {plantationDetails.unit}</Descriptions.Item>
+              <Descriptions.Item label="Plant Density">{plantationDetails.plantDensity}</Descriptions.Item>
+            </Descriptions>
+          </Panel>
+        )}
+      </Collapse>
+
+      <Button 
+        type="primary" 
+        onClick={onClose}
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignContent: "center",
-          borderBottom: "1px solid #ccc",
-          marginBottom: "10px",
+          marginTop: "16px",
+          width: "100%",
         }}
+        danger
       >
-        <h5>{map.templateName}</h5>
-      </div>
-      <p>Area: {parseFloat(map.Area).toFixed(2)}</p>
-      <p>Perimeter: {parseFloat(map.Perimeter).toFixed(2)}</p>
-      <p>Land Type: {map.landType}</p>
-      <p>Location: {map.location}</p>
-      <p>Description: {map.description}</p>
-
-      {fenceDetails && (
-        <>
-          <h6>Fence Details</h6>
-          <p>Post Space: {fenceDetails.postSpace} {fenceDetails.postSpaceUnit}</p>
-          <p>Number of Sticks: {fenceDetails.numberOfSticks}</p>
-          <p>Fence Type: {fenceDetails.fenceType}</p>
-          <p>Number of Gates: {fenceDetails.fenceAmount.join(', ')}</p>
-          <p>Gate Lengths: {fenceDetails.fenceLength.join(', ')}</p>
-        </>
-      )}
-
-      {plantationDetails && (
-        <>
-          <h6>Plantation Details</h6>
-          <p>Number of Plants: {plantationDetails.numberOfPlants}</p>
-          <p>Plant Type: {plantationDetails.plantType}</p>
-          <p>Plant Space: {plantationDetails.plantSpace} {plantationDetails.unit}</p>
-          <p>Row Space: {plantationDetails.rowSpace} {plantationDetails.unit}</p>
-          <p>Plant Density: {plantationDetails.plantDensity}</p>
-        </>
-      )}
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignContent: "center",
-          marginTop: "10px",
-        }}
-      >
-        <Button 
-          type='primary' 
-          onClick={onClose}
-          style={{
-            fontSize: "11px",
-          }}
-          danger
-        >
-          Close
-        </Button>
-      </div>
+        Close
+      </Button>
     </div>
   );
 };
