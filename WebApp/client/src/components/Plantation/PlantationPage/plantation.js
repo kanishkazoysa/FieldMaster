@@ -1,4 +1,3 @@
-// SideNavbar.js
 import React, { useEffect, useState } from "react";
 import { MdArrowBack, MdFormatLineSpacing } from "react-icons/md";
 import { RxRowSpacing } from "react-icons/rx";
@@ -19,7 +18,6 @@ export default function Plantation({
   onEditTemplateClick,
   template,
 }) {
-  const [textPlant, settextPlant] = useState(null);
   const [PlantSpaceUnitselectedValue, setPlantSpaceUnitselectedValue] =
     useState("");
   const [RowSpaceUnitselectedValue, setRowSpaceUnitselectedValue] =
@@ -33,6 +31,7 @@ export default function Plantation({
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
   const [plants, setPlants] = useState([]);
+  const [textPlant, setTextPlant] = useState(null);
 
   useEffect(() => {
     fetchPlants();
@@ -56,10 +55,6 @@ export default function Plantation({
 
   const handleInput2Change = (event) => {
     settextRowspace(event.target.value);
-  };
-
-  const handleInputPlantType = (event) => {
-    settextPlant(event.target.value);
   };
 
   const backtotemp = () => {
@@ -115,7 +110,7 @@ export default function Plantation({
     AxiosInstance.post("/api/plantation/plantation", {
       id,
       area,
-      textPlant,
+      textPlant: textPlant ? textPlant.value : null,
       textplantspace: plantSpaceInMeters,
       textRowspace: rowSpaceInMeters,
       PlantSpaceUnitselectedValue: "m", // Send 'm' as the unit
@@ -193,10 +188,10 @@ export default function Plantation({
             </div>
             <div style={styles.box2Property2}>
               <Select
-                style={{ width: "120%" , }}
+                style={{ width: "120%" }}
                 placeholder="Select a plant"
                 value={textPlant}
-                onChange={(value) => settextPlant(value)}
+                onChange={(selectedOption) => setTextPlant(selectedOption)}
                 options={plants.map((plant) => ({
                   value: plant.Name,
                   label: plant.Name,
