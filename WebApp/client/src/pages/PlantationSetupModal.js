@@ -45,7 +45,7 @@ const PlantationSetupModal = ({
       if (existingData.fertilizerData) {
         setFertilizerType(existingData.fertilizerData.fertilizerType || "");
         setFertilizerFrequency(
-          existingData.fertilizerData.fertilizerFrequency || "monthly"
+          existingData.fertilizerData.fertilizerFrequency || ""
         );
         setFertilizerTimes(
           existingData.fertilizerData.fertilizerTimes

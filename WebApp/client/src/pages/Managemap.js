@@ -157,6 +157,20 @@ const Managemap = () => {
     }
   };
 
+  const handleDeleteLabel = () => {
+    if (selectedPolygonIndex !== null) {
+      const updatedPolygons = [...partitionPolygons];
+      delete updatedPolygons[selectedPolygonIndex].label;
+      setPartitionPolygons(updatedPolygons);
+      setShowLabelInput(false);
+      setLabelText("");
+      message.success("Label deleted successfully");
+      
+      // Save the updated data to the backend
+      savePartitionPoints();
+    }
+  };
+
   const calculatePolygonCenter = (points) => {
     let lat = 0,
       lng = 0;
@@ -306,103 +320,148 @@ const Managemap = () => {
     const PlantationData = plantationSetupData[index];
     const fenceData = fenceSetupData[index];
 
+    const styles = {
+      modalContent: {
+        fontFamily: "Arial, sans-serif",
+        lineHeight: 1.5,
+      },
+      heading: {
+        color: "#333",
+        marginTop: "1em",
+      },
+      paragraph: {
+        margin: "0.5em 0",
+      },
+      section: {
+        marginTop: "1em",
+        paddingTop: "1em",
+        borderTop: "1px solid #e0e0e0",
+      },
+      firstSection: {
+        marginTop: "1em",
+        paddingTop: "0",
+        borderTop: "none",
+      },
+      highlight: {
+        fontWeight: "bold",
+        color: "#007BFF",
+      },
+    };
+
     let modalContent = (
-      <div>
-        <p>Area: {selectedPolygon.area} sq meters</p>
-        <p>Perimeter: {selectedPolygon.perimeter} meters</p>
-        <p>Label: {selectedPolygon.label || "No label"}</p>
+      <div style={styles.modalContent}>
+        <p style={styles.paragraph}>
+          Area: <span style={styles.highlight}>{selectedPolygon.area} sq meters</span>
+        </p>
+        <p style={styles.paragraph}>
+          Perimeter: <span style={styles.highlight}>{selectedPolygon.perimeter} meters</span>
+        </p>
+        <p style={styles.paragraph}>
+          Label: <span style={styles.highlight}>{selectedPolygon.label || "No label"}</span>
+        </p>
       </div>
     );
-
+  
     if (PlantationData) {
       modalContent = (
-        <div>
+        <div style={styles.modalContent}>
           {modalContent}
-          <h4>Plantation Data:</h4>
-          <p>Plant Type: {PlantationData.plantType || "N/A"}</p>
-          <p>
-            Plant Spacing:{" "}
-            {PlantationData.plantSpacing
-              ? PlantationData.plantSpacing.toFixed(2)
-              : "N/A"}{" "}
-            meters
-          </p>
-          <p>
-            Row Spacing:{" "}
-            {PlantationData.rowSpacing
-              ? PlantationData.rowSpacing.toFixed(2)
-              : "N/A"}{" "}
-            meters
-          </p>
-          <p>Number of Plants: {PlantationData.numberOfPlants || "N/A"}</p>
-          <p>
-            Plantation Density:{" "}
-            {PlantationData.plantationDensity
-              ? PlantationData.plantationDensity.toFixed(2)
-              : "N/A"}{" "}
-            plants/sq m
-          </p>
-          {PlantationData.fertilizerData && (
-            <>
-              <h4>Fertilizer Data:</h4>
-              <p>
-                Fertilizer Type:{" "}
-                {PlantationData.fertilizerData.fertilizerType || "N/A"}
-              </p>
-              <p>
-                Frequency:{" "}
-                {PlantationData.fertilizerData.fertilizerFrequency || "N/A"}
-              </p>
-              <p>
-                Times: {PlantationData.fertilizerData.fertilizerTimes || "N/A"}
-              </p>
-              <p>
-                Amount:{" "}
-                {PlantationData.fertilizerData.fertilizerAmount || "N/A"}{" "}
-                {PlantationData.fertilizerData.fertilizerUnit || ""}
-              </p>
-              <p>
-                Total Fertilizer per Year:{" "}
-                {PlantationData.fertilizerData.totalFertilizerPerYear
-                  ? PlantationData.fertilizerData.totalFertilizerPerYear.toFixed(
-                      2
-                    )
-                  : "N/A"}{" "}
-                kg
-              </p>
-              <p>
-                Fertilizer per Plant:{" "}
-                {PlantationData.fertilizerData.fertilizerPerPlant
-                  ? PlantationData.fertilizerData.fertilizerPerPlant.toFixed(2)
-                  : "N/A"}{" "}
-                kg
-              </p>
-            </>
-          )}
+          <div style={styles.firstSection}>
+            <h4 style={styles.heading}>Plantation Data:</h4>
+            <p style={styles.paragraph}>
+              Plant Type: <span style={styles.highlight}>{PlantationData.plantType || "N/A"}</span>
+            </p>
+            <p style={styles.paragraph}>
+              Plant Spacing:{" "}
+              <span style={styles.highlight}>
+                {PlantationData.plantSpacing ? PlantationData.plantSpacing.toFixed(2) : "N/A"} meters
+              </span>
+            </p>
+            <p style={styles.paragraph}>
+              Row Spacing:{" "}
+              <span style={styles.highlight}>
+                {PlantationData.rowSpacing ? PlantationData.rowSpacing.toFixed(2) : "N/A"} meters
+              </span>
+            </p>
+            <p style={styles.paragraph}>
+              Number of Plants: <span style={styles.highlight}>{PlantationData.numberOfPlants || "N/A"}</span>
+            </p>
+            <p style={styles.paragraph}>
+              Plantation Density:{" "}
+              <span style={styles.highlight}>
+                {PlantationData.plantationDensity ? PlantationData.plantationDensity.toFixed(2) : "N/A"} plants/sq m
+              </span>
+            </p>
+            {PlantationData.fertilizerData && 
+             Object.values(PlantationData.fertilizerData).some(value => value !== null && value !== undefined && value !== "" && !isNaN(value)) && (
+                <div style={styles.section}>
+                  <h4 style={styles.heading}>Fertilizer Data:</h4>
+                  {PlantationData.fertilizerData.fertilizerType && (
+                    <p style={styles.paragraph}>
+                      Fertilizer Type: <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerType}</span>
+                    </p>
+                  )}
+                  {PlantationData.fertilizerData.fertilizerFrequency && (
+                    <p style={styles.paragraph}>
+                      Frequency: <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerFrequency}</span>
+                    </p>
+                  )}
+                  {PlantationData.fertilizerData.fertilizerTimes && (
+                    <p style={styles.paragraph}>
+                      Times: <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerTimes}</span>
+                    </p>
+                  )}
+                  {PlantationData.fertilizerData.fertilizerAmount && (
+                    <p style={styles.paragraph}>
+                      Amount: <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerAmount} {PlantationData.fertilizerData.fertilizerUnit || ""}</span>{" "}
+                      
+                    </p>
+                  )}
+                  {PlantationData.fertilizerData.totalFertilizerPerYear && (
+                    <p style={styles.paragraph}>
+                      Total Fertilizer per Year:{" "}
+                      <span style={styles.highlight}>{PlantationData.fertilizerData.totalFertilizerPerYear.toFixed(2)} kg</span>
+                    </p>
+                  )}
+                  {PlantationData.fertilizerData.fertilizerPerPlant && (
+                    <p style={styles.paragraph}>
+                      Fertilizer per Plant:{" "}
+                      <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerPerPlant.toFixed(2)} kg</span>
+                    </p>
+                  )}
+                </div>
+              )}
+          </div>
         </div>
       );
     }
-
+  
     if (fenceData) {
       modalContent = (
-        <div>
+        <div style={styles.modalContent}>
           {modalContent}
-          <h4>Fence Data:</h4>
-          <p>Fence Type: {fenceData.fenceType}</p>
-          <p>
-            Post Spacing: {fenceData.postSpacing} {fenceData.postSpacingUnit}
-          </p>
-          <p>Number of Sticks: {fenceData.numberOfSticks}</p>
-          <h5>Gates:</h5>
-          {fenceData.gates.map((gate, idx) => (
-            <p key={idx}>
-              Gate {idx + 1}: {gate.length}m x {gate.count}
+          <div style={styles.section}>
+            <h4 style={styles.heading}>Fence Data:</h4>
+            <p style={styles.paragraph}>
+              Fence Type: <span style={styles.highlight}>{fenceData.fenceType}</span>
             </p>
-          ))}
+            <p style={styles.paragraph}>
+              Post Spacing: <span style={styles.highlight}>{fenceData.postSpacing} {fenceData.postSpacingUnit}</span> 
+            </p>
+            <p style={styles.paragraph}>
+              Number of Sticks: <span style={styles.highlight}>{fenceData.numberOfSticks}</span>
+            </p>
+            <h5 style={styles.heading}>Gates:</h5>
+            {fenceData.gates.map((gate, idx) => (
+              <p key={idx} style={styles.paragraph}>
+                Gate {idx + 1}: <span style={styles.highlight}>{gate.length}m x {gate.count}</span>
+              </p>
+            ))}
+          </div>
         </div>
       );
     }
-
+  
     Modal.info({
       title: "Partition Statistics",
       content: modalContent,
@@ -741,6 +800,55 @@ const Managemap = () => {
                     Add Label
                   </Button>
                 )}
+
+              {showLabelInput && (
+              <div>
+                <Input
+                  value={labelText}
+                  onChange={(e) => setLabelText(e.target.value)}
+                  placeholder="Enter label"
+                  style={{
+                    ...styles.toolButton,
+                    borderColor: "#4CAF50",
+                    borderWidth: "1px",
+                    borderStyle: "solid",
+                    outline: "none",
+                    boxShadow: "none",
+                  }}
+                />
+                <Button
+                  onClick={handleLabelSubmit}
+                  style={{
+                    ...styles.toolButton,
+                    backgroundColor: "#4CAF50",
+                    borderColor: "#4CAF50",
+                    color: "white",
+                  }}
+                >
+                  {partitionPolygons[selectedPolygonIndex].label
+                    ? "Update Label"
+                    : "Submit Label"}
+                </Button>
+
+                {partitionPolygons[selectedPolygonIndex].label && (
+              <Button
+                onClick={handleDeleteLabel}
+                style={{
+                  ...styles.toolButton,
+                  backgroundColor: "#FF4136",
+                  borderColor: "#FF4136",
+                  color: "white",
+                  flex: 1,
+                  marginLeft: '5px'
+                }}
+              >
+                Delete Label
+              </Button>
+            )}
+              </div>
+            )}              
+
+
                 {plantationSetupData[selectedPolygonIndex] ? (
                   <Button
                     onClick={handleEditPlantation}
@@ -780,36 +888,7 @@ const Managemap = () => {
             )}
             
 
-            {showLabelInput && (
-              <div>
-                <Input
-                  value={labelText}
-                  onChange={(e) => setLabelText(e.target.value)}
-                  placeholder="Enter label"
-                  style={{
-                    ...styles.toolButton,
-                    borderColor: "#4CAF50",
-                    borderWidth: "1px",
-                    borderStyle: "solid",
-                    outline: "none",
-                    boxShadow: "none",
-                  }}
-                />
-                <Button
-                  onClick={handleLabelSubmit}
-                  style={{
-                    ...styles.toolButton,
-                    backgroundColor: "#4CAF50",
-                    borderColor: "#4CAF50",
-                    color: "white",
-                  }}
-                >
-                  {partitionPolygons[selectedPolygonIndex].label
-                    ? "Update Label"
-                    : "Submit Label"}
-                </Button>
-              </div>
-            )}
+            
 
             {editingPolygonIndex !== null && (
               <>
