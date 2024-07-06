@@ -1,12 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import { Link } from 'react-router-dom';
-import AxiosInstance from '../../AxiosInstance';
-import LoginCountChart from './LoginCountChart';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import AxiosInstance from "../../AxiosInstance";
+import LoginCountChart from "./LoginCountChart";
 import { Doughnut } from "react-chartjs-2";
+import "./AdminDashboard.css";
 
-
-const AnalyticsSection = ({users, setLoading}) => {
-
+const AnalyticsSection = ({ users, setLoading }) => {
     const [totalUsers, setTotalUsers] = useState(users.length);
     const [totalCustomers, setTotalCustomers] = useState(0);
     const [totalAdmins, setTotalAdmins] = useState(0);
@@ -19,10 +18,10 @@ const AnalyticsSection = ({users, setLoading}) => {
             {
                 data: [totalCustomers, totalAdmins, totalUnverified],
                 backgroundColor: ["#4bc0c0", "#36A2EB", "#ff6384"],
-                hoverBackgroundColor: ["#4bc0c0", "#36A2EB", "#ff6384"]
-            }
-        ]
-    }
+                hoverBackgroundColor: ["#4bc0c0", "#36A2EB", "#ff6384"],
+            },
+        ],
+    };
 
     const options = {
         plugins: {
@@ -40,7 +39,7 @@ const AnalyticsSection = ({users, setLoading}) => {
         users.forEach((user) => {
             if (user.isAdmin === true) {
                 admins++;
-            } else if (user.isVerified === true){
+            } else if (user.isVerified === true) {
                 customers++;
             }
 
@@ -76,29 +75,27 @@ const AnalyticsSection = ({users, setLoading}) => {
             count = count + lData.count;
         });
 
-        return count
-        
-    }
-
+        return count;
+    };
 
     const fetchLoginCountData = async () => {
         try {
             const response = await AxiosInstance.post("/api/users/loginData");
             const data = response.data;
-    
+
             // Generate an array of the last 30 days
             const last30Days = generateLast30Days();
-    
+
             // Create an array of view count data for the last 30 days
             const last30DaysData = last30Days.map((day) => {
                 const entry = data.find((item) => item._id === day);
                 return { date: day, count: entry ? entry.count : 0 };
             });
-    
-            setLoginCountData(last30DaysData);
-            setDateData(last30Days)
 
-            setTotalLogins(countLogins(last30DaysData))
+            setLoginCountData(last30DaysData);
+            setDateData(last30Days);
+
+            setTotalLogins(countLogins(last30DaysData));
 
             // createChart(last30Days, last30DaysData);
         } catch (error) {
@@ -106,10 +103,9 @@ const AnalyticsSection = ({users, setLoading}) => {
         }
     };
 
-
     useEffect(() => {
-        fetchLoginCountData()
-    },[]);
+        fetchLoginCountData();
+    }, []);
 
     //Time count
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -146,55 +142,22 @@ const AnalyticsSection = ({users, setLoading}) => {
                 <div className="admin_dashboard_card card1">
                     <h1>All Users</h1>
                     <h2>{totalUsers}</h2>
-                    <Link
-                        to="#"
-                        style={{ textDecoration: "none" }}
-                    >
-                       
-                    </Link>
+                    <Link to="#" style={{ textDecoration: "none" }}></Link>
                 </div>
                 <div className="admin_dashboard_card card2">
                     <h1>Customers</h1>
-                    <h2 style={{ fontSize: "32px" }}>
-                        {totalCustomers}{" "}
-                        
-                    </h2>
-                    <Link
-                        to="#"
-                        style={{ textDecoration: "none" }}
-                    >
-                        
-                    </Link>
+                    <h2 style={{ fontSize: "32px" }}>{totalCustomers} </h2>
+                    <Link to="#" style={{ textDecoration: "none" }}></Link>
                 </div>
                 <div className="admin_dashboard_card card3">
                     <h1>Admins</h1>
                     <h2>{totalAdmins}</h2>
-                    <Link
-                        to="#"
-                        style={{ textDecoration: "none" }}
-                    >
-                        
-                    </Link>
-                </div>
-                <div className="admin_dashboard_card card4">
-                    <h1>Total Logins</h1>
-                    <h2>{totalLogins}</h2>
-                    <Link
-                        to="#"
-                        style={{ textDecoration: "none" }}
-                    >
-                        
-                    </Link>
+                    <Link to="#" style={{ textDecoration: "none" }}></Link>
                 </div>
                 <div className="admin_dashboard_card card5">
                     <h1>Unverified Users</h1>
                     <h2>{totalUnverified}</h2>
-                    <Link
-                        to="#"
-                        style={{ textDecoration: "none" }}
-                    >
-                        
-                    </Link>
+                    <Link to="#" style={{ textDecoration: "none" }}></Link>
                 </div>
                 <div className="main_dashboard_realtime_insights_container center">
                     {isDaytime ? (
@@ -239,10 +202,16 @@ const AnalyticsSection = ({users, setLoading}) => {
                 </div>
             </div>
             <hr />
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <div style={{ flex: 1 }}>
-                <h3 style={{marginLeft : "30px"}}>Users by Type</h3>
-                <div className="chart-container">
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: "10px",
+                }}
+            >
+                <div style={{ flex: 1 }} className="chart1">
+                    <h3 style={{ marginLeft: "30px" }}>Users by Type</h3>
+                    <div className="chart-container">
                         <Doughnut data={chartData} options={options} />
                         <div className="chart-legend">
                             <div className="legend-item">
@@ -269,13 +238,28 @@ const AnalyticsSection = ({users, setLoading}) => {
                         </div>
                     </div>
                 </div>
-                <div style={{ width: '3px', backgroundColor: '#000000', height: '100%' }}></div>
+                <div
+                    style={{
+                        width: "3px",
+                        backgroundColor: "#000000",
+                        height: "100%",
+                    }}
+                ></div>
                 <div style={{ flex: 1 }}>
                     <h3>Logins in past 30 Days</h3>
-                    <div style={{padding:"10px 10px 20px 0", marginRight : "30px", height : "370px"}}>
-                        <LoginCountChart/>
+                    <div
+                        style={{
+                            padding: "10px 10px 20px 0",
+                            marginRight: "30px",
+                            height: "370px",
+                        }}
+                    >
+                        <LoginCountChart />
                     </div>
                 </div>
+            </div>
+            <div className="map">
+                <h3>Map</h3>
             </div>
         </div>
     );

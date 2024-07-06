@@ -178,7 +178,7 @@ export default function App() {
           }
         />
         <Route
-          path="/admin"
+          path="/admin/*"
           element={
             <AdminRouteGuard>
               <Admin />
