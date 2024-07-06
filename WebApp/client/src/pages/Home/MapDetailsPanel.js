@@ -4,6 +4,8 @@ import { Button } from "antd";
 const MapDetailsPanel = ({ mapDetails, onClose }) => {
   if (!mapDetails) return null;
 
+  const { mapDetails: map, fenceDetails, plantationDetails } = mapDetails;
+
   return (
     <div
       style={{
@@ -14,9 +16,11 @@ const MapDetailsPanel = ({ mapDetails, onClose }) => {
         padding: "10px",
         borderRadius: "5px",
         boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-        width: "160px",
+        width: "200px",
         backgroundColor: "rgba(0,0,0,0.7)",
         color: "white",
+        maxHeight: "80vh",
+        overflowY: "auto",
       }}
     >
       <div
@@ -28,13 +32,36 @@ const MapDetailsPanel = ({ mapDetails, onClose }) => {
           marginBottom: "10px",
         }}
       >
-        <h5>{mapDetails.templateName}</h5>
+        <h5>{map.templateName}</h5>
       </div>
-      <p>Area: {parseFloat(mapDetails.area).toFixed(2)}</p>
-      <p>Perimeter: {parseFloat(mapDetails.perimeter).toFixed(2)}</p>
-      <p>Land Type: {mapDetails.landType}</p>
-      <p>Location: {mapDetails.location}</p>
-      <p>Description: {mapDetails.description}</p>
+      <p>Area: {parseFloat(map.Area).toFixed(2)}</p>
+      <p>Perimeter: {parseFloat(map.Perimeter).toFixed(2)}</p>
+      <p>Land Type: {map.landType}</p>
+      <p>Location: {map.location}</p>
+      <p>Description: {map.description}</p>
+
+      {fenceDetails && (
+        <>
+          <h6>Fence Details</h6>
+          <p>Post Space: {fenceDetails.postSpace} {fenceDetails.postSpaceUnit}</p>
+          <p>Number of Sticks: {fenceDetails.numberOfSticks}</p>
+          <p>Fence Type: {fenceDetails.fenceType}</p>
+          <p>Number of Gates: {fenceDetails.fenceAmount.join(', ')}</p>
+          <p>Gate Lengths: {fenceDetails.fenceLength.join(', ')}</p>
+        </>
+      )}
+
+      {plantationDetails && (
+        <>
+          <h6>Plantation Details</h6>
+          <p>Number of Plants: {plantationDetails.numberOfPlants}</p>
+          <p>Plant Type: {plantationDetails.plantType}</p>
+          <p>Plant Space: {plantationDetails.plantSpace} {plantationDetails.unit}</p>
+          <p>Row Space: {plantationDetails.rowSpace} {plantationDetails.unit}</p>
+          <p>Plant Density: {plantationDetails.plantDensity}</p>
+        </>
+      )}
+
       <div
         style={{
           display: "flex",
@@ -43,18 +70,16 @@ const MapDetailsPanel = ({ mapDetails, onClose }) => {
           marginTop: "10px",
         }}
       >
-      <Button 
-      type='primary' 
-      onClick={onClose}
-      style={
-        {
-       fontSize: "11px",
-        }
-      }
-      danger
-      >
-      Close
-      </Button>
+        <Button 
+          type='primary' 
+          onClick={onClose}
+          style={{
+            fontSize: "11px",
+          }}
+          danger
+        >
+          Close
+        </Button>
       </div>
     </div>
   );

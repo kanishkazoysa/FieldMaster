@@ -116,7 +116,7 @@ export default function Home() {
         setSelectedMapId(mapId);
         try {
           const response = await AxiosInstance.get(
-            `/api/auth/mapTemplate/getOneTemplate/${mapId}`
+            `/api/auth/mapTemplate/getAllmapData/${mapId}`
           );
           setSelectedMapDetails(response.data);
         } catch (error) {
