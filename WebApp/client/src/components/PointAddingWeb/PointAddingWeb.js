@@ -21,7 +21,6 @@ import axios from 'axios';
 const { Option } = Select;
 
 const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
-  console.log('hello world');
   const [templateName, setTemplateName] = useState('myTemplate');
   const [measureName, setMeasureName] = useState('tea');
   const [landType, setLandType] = useState('slope');
@@ -467,6 +466,7 @@ export default function Home() {
       if (mapRef.current && mapRef.current.state.map) {
         const map = mapRef.current.state.map;
 
+        // Hide UI elements
         map.setOptions({
           disableDefaultUI: true,
           zoomControl: false,
@@ -530,12 +530,16 @@ export default function Home() {
               perimeter: `${perimeterKilometers.toFixed(2)} km`,
               screenshot: imageUrl,
             });
+
+            // Open the save popup
+            setIsPopupOpen(true);
           } catch (error) {
             console.error('Error processing map:', error);
             message.error(
               'An error occurred while processing the map. Please try again.'
             );
           } finally {
+            // Restore UI elements
             map.setOptions({
               disableDefaultUI: false,
               zoomControl: true,
