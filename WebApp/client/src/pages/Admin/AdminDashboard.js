@@ -25,6 +25,22 @@ function AdminDashboard() {
         current: 1,
         position: ["bottomCenter"],
     });
+    const [locationAnalytics, setLocationAnalytics] = useState([]);
+
+const fetchLocationAnalytics = async () => {
+  try {
+    const response = await AxiosInstance.get("/api/auth/mapTemplate/getLocationAnalytics");
+    setLocationAnalytics(response.data);
+    console.log("Location Analytics:", response.data);
+  } catch (error) {
+    console.error("Failed to fetch location analytics:", error);
+  }
+};
+
+useEffect(() => {
+    fetchUsers();
+    fetchLocationAnalytics();
+  }, []);
 
     const fetchUsers = async () => {
         try {
@@ -265,6 +281,15 @@ function AdminDashboard() {
                             </Link>
                         </div>
                             <h1 className="admin-dashboard-header-center">Admin Dashboard</h1>
+
+                            <Button
+                                type="primary"
+                                onClick={() => {
+                                    window.location.href = "/inputcontrol";
+                                }}
+                            >
+                            Input
+                            </Button>
                      
                         <div className="avatar-container"   onClick={handleAvatarClick} >
                         <Avatar 

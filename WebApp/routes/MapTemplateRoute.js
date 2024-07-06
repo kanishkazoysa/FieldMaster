@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const router = express.Router();
 const MapTemplateModel = require('../models/MapTemplateModel');
+
 const turf = require('@turf/turf');
 const MapModel = require('../models/MapModel');
 
@@ -180,6 +181,26 @@ router.put('/deletePartitionPolygon/:templateId/:polygonIndex', async (req, res)
   } catch (error) {
     console.error('Error deleting partition polygon:', error);
     res.status(500).send('Error while deleting partition polygon.');
+  }
+});
+
+router.get('/getLocationAnalytics', async (req, res) => {
+  try {
+    const locationAnalytics = await MapTemplateModel.aggregate([
+      {
+        $group: {
+          _id: "$location",
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { count: -1 }
+      }
+    ]);
+    res.json(locationAnalytics);
+  } catch (error) {
+    console.error('Error fetching location analytics:', error);
+    res.status(500).send('Error while fetching location analytics.');
   }
 });
 
