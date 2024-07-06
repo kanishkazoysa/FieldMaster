@@ -10,7 +10,7 @@ import SideNavbar from "../components/SideNavbar/sideNavbar";
 import { styles, containerStyle } from "./ManagemapStyles";
 import AxiosInstance from "../AxiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
-import { FiMapPin, FiGrid, FiEdit, FiX, FiSave, FiTag } from "react-icons/fi";
+import { FiMapPin, FiGrid, FiEdit, FiX, FiSave, FiTag,FiTrash2 } from "react-icons/fi";
 import { PiPlantLight } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
 import { GrUndo } from "react-icons/gr";
@@ -21,6 +21,7 @@ import { GrCompliance } from "react-icons/gr";
 import PlantationSetupModal from "./PlantationSetupModal";
 import { TbFence } from "react-icons/tb";
 import FenceSetupModal from "./FenceSetupModal";
+import ClearLandSetupModal from './ClearLandSetupModal ';
 
 const { confirm } = Modal;
 
@@ -49,6 +50,44 @@ const Managemap = () => {
   const [plantationSetupData, setPlantationSetupData] = useState({});
   const [isEditingPlantation, setIsEditingPlantation] = useState(false);
   const [fenceSetupModalVisible, setFenceSetupModalVisible] = useState(false);
+  const [clearLandSetupModalVisible, setClearLandSetupModalVisible] = useState(false);
+  const [clearLandSetupData, setClearLandSetupData] = useState({});
+
+  const handleClearLandSetup = () => {
+    if (selectedPolygonIndex !== null) {
+      const selectedPolygon = partitionPolygons[selectedPolygonIndex];
+      setClearLandSetupModalVisible(true);
+      setSelectedPolygonData({
+        area: selectedPolygon.area,
+        perimeter: selectedPolygon.perimeter,
+      });
+    } else {
+      message.warning("Please select a partition first.");
+    }
+  };
+
+  const handleClearLandSetupSave = (data) => {
+    setClearLandSetupData((prevData) => ({
+      ...prevData,
+      [selectedPolygonIndex]: data,
+    }));
+  
+    // Update the partitionPolygons state
+    setPartitionPolygons((prevPolygons) => {
+      const updatedPolygons = [...prevPolygons];
+      updatedPolygons[selectedPolygonIndex] = {
+        ...updatedPolygons[selectedPolygonIndex],
+        clearLandSetup: data,
+      };
+      return updatedPolygons;
+    });
+  
+    // Save the updated data to the backend
+    savePartitionPoints();
+  
+    message.success("Clear land setup data saved successfully!");
+    setClearLandSetupModalVisible(false);
+  };
 
   const handleFenceSetup = () => {
     if (selectedPolygonIndex !== null) {
@@ -884,6 +923,16 @@ const Managemap = () => {
                 Fence Setup
               </Button>
             )}
+
+<Button
+  onClick={handleClearLandSetup}
+  icon={<FiTrash2 />} 
+  style={styles.toolButton}
+>
+  Clear Land
+</Button>
+
+
               </>
             )}
             
@@ -943,6 +992,15 @@ const Managemap = () => {
             onSave={handleFenceSetupSave}
             existingData={fenceSetupData[selectedPolygonIndex]}
           />
+
+<ClearLandSetupModal
+  visible={clearLandSetupModalVisible}
+  onClose={() => setClearLandSetupModalVisible(false)}
+  area={selectedPolygonData?.area}
+  perimeter={selectedPolygonData?.perimeter}
+  onSave={handleClearLandSetupSave}
+  existingData={clearLandSetupData[selectedPolygonIndex]}
+/>
         </GoogleMap>
       </LoadScript>
     </div>
