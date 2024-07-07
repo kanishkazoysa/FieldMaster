@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import {
+  GoogleMap,
+  LoadScript,
+  OverlayView,
+  StandaloneSearchBox,
+} from "@react-google-maps/api";
+import { MdSearch } from "react-icons/md";
 import { Link } from "react-router-dom";
 import AxiosInstance from "../../AxiosInstance";
 import LoginCountChart from "./LoginCountChart";
 import { Doughnut } from "react-chartjs-2";
 import "./AdminDashboard.css";
-import { GoogleMap, LoadScript, OverlayView } from "@react-google-maps/api";
 
 const AnalyticsSection = ({ users, setLoading }) => {
   const [totalUsers, setTotalUsers] = useState(users.length);
@@ -14,6 +20,43 @@ const AnalyticsSection = ({ users, setLoading }) => {
   const [totalUnverified, setTotalUnverified] = useState(0);
   const [locationAnalytics, setLocationAnalytics] = useState([]);
   const [mapCenter, setMapCenter] = useState({ lat: 7.8731, lng: 80.7718 }); // Center of Sri Lanka
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const mapRef = useRef(null);
+  const searchBoxRef = useRef(null);
+
+  const onMapLoad = useCallback((map) => {
+    mapRef.current = map;
+  }, []);
+
+  const handlePlacesChanged = useCallback(() => {
+    if (!searchBoxRef.current) return;
+
+    const places = searchBoxRef.current.getPlaces();
+    if (places.length === 0) return;
+
+    const selectedPlace = places[0];
+    const location = selectedPlace.geometry.location.toJSON();
+    setSelectedLocation(location);
+
+    if (mapRef.current && mapRef.current.fitBounds) {
+      const bounds = new window.google.maps.LatLngBounds();
+      bounds.extend(location);
+      mapRef.current.fitBounds(bounds);
+      mapRef.current.setZoom(15);
+    }
+  }, []);
+
+  const onSearchBoxLoad = useCallback((ref) => {
+    searchBoxRef.current = ref;
+  }, []);
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      const input = event.target;
+      input.blur();
+    }
+  };
 
   const mapContainerStyle = {
     width: "100%",
@@ -305,12 +348,31 @@ const AnalyticsSection = ({ users, setLoading }) => {
       </div>
       <div className="map">
         <h3>Map Location Analytics</h3>
-        <LoadScript googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U">
+        <LoadScript
+          googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
+          libraries={["places"]}
+        >
           <GoogleMap
             mapContainerStyle={mapContainerStyle}
-            center={mapCenter}
+            center={selectedLocation || mapCenter}
             zoom={8}
+            ref={mapRef}
+            onLoad={onMapLoad}
           >
+            <StandaloneSearchBox
+              onLoad={onSearchBoxLoad}
+              onPlacesChanged={handlePlacesChanged}
+            >
+              <div style={styles.searchContainer}>
+                <MdSearch style={styles.searchIcon} />
+                <input
+                  type="text"
+                  placeholder="Search location"
+                  style={styles.searchBox}
+                  onKeyDown={handleKeyDown}
+                />
+              </div>
+            </StandaloneSearchBox>
             {locationAnalytics.map((location, index) => (
               <MarkerWithGeocoding
                 key={location._id}
@@ -324,6 +386,32 @@ const AnalyticsSection = ({ users, setLoading }) => {
       </div>
     </div>
   );
+};
+
+const styles = {
+  searchContainer: {
+    position: "absolute",
+    top: "10px",
+    left: "10px",
+    width: "300px",
+    height: "40px",
+    display: "flex",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: "5px",
+    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+  },
+  searchIcon: {
+    margin: "0 10px",
+    color: "#666",
+  },
+  searchBox: {
+    flex: 1,
+    border: "none",
+    outline: "none",
+    padding: "5px",
+    fontSize: "16px",
+  },
 };
 
 const MarkerWithGeocoding = ({ location, geocodeLocation, index }) => {
