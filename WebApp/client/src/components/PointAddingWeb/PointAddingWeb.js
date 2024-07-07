@@ -185,6 +185,7 @@ export default function PointAddingWeb() {
     area: "",
     location: "",
   });
+  const [isImageCaptureComplete, setIsImageCaptureComplete] = useState(false);
 
   useEffect(() => {
     fetchUserDetails();
@@ -342,6 +343,10 @@ export default function PointAddingWeb() {
   };
 
   const handleSave = () => {
+    if (!isImageCaptureComplete) {
+      message.warning("Please wait until the image is captured.");
+      return;
+    }
     if (markers.length < 3) {
       message.error("Please add at least 3 points to create a polygon.");
       return;
@@ -464,6 +469,7 @@ export default function PointAddingWeb() {
   const handleComplete = () => {
     if (markers.length > 2) {
       setIsPolygonComplete(true);
+      setIsImageCaptureComplete(false);
 
       if (mapRef.current && mapRef.current.state.map) {
         const map = mapRef.current.state.map;
@@ -568,11 +574,13 @@ export default function PointAddingWeb() {
                       key: "imgCapture",
                       duration: 2,
                     });
+                    setIsImageCaptureComplete(true);
                   } catch (error) {
                     console.error("Error processing map:", error);
                     message.error(
                       "An error occurred while processing the map. Please try again."
                     );
+                    setIsImageCaptureComplete(true);
                   } finally {
                     // Restore UI elements
                     map.setOptions({
