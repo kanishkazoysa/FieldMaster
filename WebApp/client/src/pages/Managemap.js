@@ -297,6 +297,7 @@ const Managemap = () => {
           ...polygon,
           plantationSetup: plantationSetupData[index] || {},
           fenceSetup: fenceSetupData[index] || {},
+          
         })
       );
 
@@ -356,6 +357,7 @@ const Managemap = () => {
     const selectedPolygon = partitionPolygons[index];
     const PlantationData = plantationSetupData[index];
     const fenceData = fenceSetupData[index];
+    const clearLandData = clearLandSetupData[index];
 
     const styles = {
       modalContent: {
@@ -498,7 +500,7 @@ const Managemap = () => {
         )}
         {fenceData.gates && fenceData.gates.length > 0 && (
           <>
-            <h5 style={styles.heading}>Gates:</h5>
+            <h6 style={{marginTop: "0.2em"}}>Gates:</h6>
             {fenceData.gates.map((gate, idx) => (
               <p key={idx} style={styles.paragraph}>
                 Gate {idx + 1}: <span style={styles.highlight}>{gate.length}m x {gate.count}</span>
@@ -510,6 +512,144 @@ const Managemap = () => {
     </div>
   );
 }
+
+if (clearLandData && Object.keys(clearLandData).length > 0) {
+  modalContent = (
+    <div style={styles.modalContent}>
+      {modalContent}
+      <div style={styles.section}>
+        <h4 style={styles.heading}>Clear Land Data:</h4>
+        
+        {/* Weed Data */}
+        {clearLandData.weedData && (
+          <div>
+            <h5 style={styles.heading}>Weed clear Efforrt:</h5>
+            {clearLandData.weedData.weedType && (
+              <p style={styles.paragraph}>
+                Weed Type: <span style={styles.highlight}>{clearLandData.weedData.weedType}</span>
+              </p>
+            )}
+            {clearLandData.weedData.labourCount && (
+              <p style={styles.paragraph}>
+                Labour Count: <span style={styles.highlight}>{clearLandData.weedData.labourCount}</span>
+              </p>
+            )}
+            {clearLandData.weedData.workHours && (
+              <p style={styles.paragraph}>
+                Work Hours: <span style={styles.highlight}>{clearLandData.weedData.workHours}</span>
+              </p>
+            )}
+            {clearLandData.weedData.machineList && clearLandData.weedData.machineList.length > 0 && (
+              <>
+              <div style={styles.paragraph}>
+                <h6 style={{marginTop: "0.2em"}}>Machines:</h6>
+                {clearLandData.weedData.machineList.map((machine, idx) => (
+                  <p key={idx} style={styles.highlight}>{machine}</p>
+                ))}
+              </div>
+              </>
+            )}
+            {clearLandData.weedData.weedCalculationResults && (
+              <div>
+                <h6 style={{marginTop: "0.2em"}}>Weed Efforrt Output:</h6>
+                <p style={styles.paragraph}>
+                  Total Hours For Weeding: <span style={styles.highlight}>{clearLandData.weedData.weedCalculationResults.weedEffort.toFixed(2)}</span>
+                </p>
+                {/* <p style={styles.paragraph}>
+                  Total Time: <span style={styles.highlight}>{clearLandData.weedData.weedCalculationResults.totalTime}</span>
+                </p> */}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Plant Data */}
+        {clearLandData.plantData && (
+          <div>
+            
+            {clearLandData.plantData.plantList && clearLandData.plantData.plantList.length > 0 && (
+              <>
+              <h5 style={styles.heading}>Plant Data:</h5>
+                <h6 style={styles.heading}>Plants:</h6>
+                {clearLandData.plantData.plantList.map((plant, idx) => (
+                  <p key={idx} style={styles.highlight}>
+                    {plant}
+                    </p>
+                ))} 
+              </>
+            )}
+            {clearLandData.plantData.plantWorkHours && (
+              <p style={styles.paragraph}>
+                Plant Work Hours: <span style={styles.highlight}>{clearLandData.plantData.plantWorkHours}</span>
+              </p>
+            )}
+            {clearLandData.plantData.plantMachineList && clearLandData.plantData.plantMachineList.length > 0 && (
+              <>
+                <h6 style={{marginTop: "0.2em"}}>Plant Machines:</h6>
+                {clearLandData.plantData.plantMachineList.map((machine, idx) => (
+                  <p key={idx} style={styles.highlight}>{machine}</p>
+                ))}
+              </>
+            )}
+            {clearLandData.plantData.plantCalculationResults && (
+              <div>
+                <h6 style={{marginTop: "0.2em"}}>plants Efforrt Output:</h6>
+                <p style={styles.paragraph}>
+                Total Hours For clear plants: <span style={styles.highlight}>{clearLandData.plantData.plantCalculationResults.plantEffort.toFixed(2)}</span>
+                </p>
+                {/* <p style={styles.paragraph}>
+                  Total Time: <span style={styles.highlight}>{clearLandData.plantData.plantCalculationResults.totalTime}</span>
+                </p> */}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Stone Data */}
+        {clearLandData.stoneData && (
+          <div>
+            {clearLandData.stoneData.stoneList && clearLandData.stoneData.stoneList.length > 0 && (
+              <>
+               <h5 style={styles.heading}>Stone Data:</h5>
+                <h6 style={styles.heading}>Stones:</h6>
+                {clearLandData.stoneData.stoneList.map((stone, idx) => (
+                  <p key={idx} style={styles.highlight}>
+                    {stone}
+                  </p>
+                ))}
+              </>
+            )}
+            {clearLandData.stoneData.stoneWorkHours && (
+              <p style={styles.paragraph}>
+                Stone Work Hours: <span style={styles.highlight}>{clearLandData.stoneData.stoneWorkHours}</span>
+              </p>
+            )}
+            {clearLandData.stoneData.stoneMachineList && clearLandData.stoneData.stoneMachineList.length > 0 && (
+              <>
+                <h6 style={{marginTop: "0.2em"}}>Stone Machines:</h6>
+                {clearLandData.stoneData.stoneMachineList.map((machine, idx) => (
+                  <p key={idx} style={styles.highlight}>{machine}</p>
+                ))}
+              </>
+            )}
+            {clearLandData.stoneData.stoneCalculationResults && (
+              <div>
+                <h6 style={{marginTop: "0.2em"}}>Stone Efforrt Output:</h6>
+                <p style={styles.paragraph}>
+                Total Hours For Stone Cleaning: <span style={styles.highlight}>{clearLandData.stoneData.stoneCalculationResults.stoneEffort.toFixed(2)}</span>
+                </p>
+                {/* <p style={styles.paragraph}>
+                  Total Time: <span style={styles.highlight}>{clearLandData.stoneData.stoneCalculationResults.totalTime}</span>
+                </p> */}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
   
     Modal.info({
       title: "Partition Statistics",

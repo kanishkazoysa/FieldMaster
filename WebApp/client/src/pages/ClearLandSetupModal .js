@@ -269,21 +269,34 @@ const { Option } = Select;
     };
   
     const handleSave = () => {
-      const saveData = {
+      const weedData = {
         weedType,
         labourCount,
         workHours,
         machineList,
+        weedCalculationResults,
+      };
+      
+      const plantData = {
         plantList,
         plantWorkHours,
         plantMachineList,
+        plantCalculationResults,
+      };
+      
+      const stoneData = {
         stoneList,
         stoneWorkHours,
         stoneMachineList,
-        weedCalculationResults,
-        plantCalculationResults,
         stoneCalculationResults,
       };
+    
+      const saveData = {
+        weedData,
+        plantData,
+        stoneData
+      };
+    
       onSave(saveData);
       onClose();
     };
