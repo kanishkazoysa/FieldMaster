@@ -30,7 +30,7 @@ const NavBar = () => {
     }, []);
 
     return (
-        <div>
+        <div style={{marginLeft:10, marginBottom:10}}>
             <div className="admin-dashboard-header">
                         <div
                             className="avatar-container"
@@ -39,7 +39,6 @@ const NavBar = () => {
                             <Avatar userData={user} size={50} />
                         </div>
                     </div>
-                    <hr />
                     {isModalOpen && (
                         <ProfileModal
                             isOpen={isModalOpen}

@@ -1,10 +1,12 @@
 .admin-dashboard-header{
-    width: 100%;
+    width: 97.5%;
     height: 80px;
+    border-radius: 10px;
     padding: 10px 30px;
     margin-top: 20px;
     display: flex;
     flex-direction: row;
+    background-color: #fff;
     justify-content:flex-end;
 }
 
@@ -239,7 +241,7 @@
     width: fit-content;
     margin: 15px 0 15px 15px;
     padding: 0 0 0 0;
-    border-radius: 11px;
+    border-radius: 11px;  
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
