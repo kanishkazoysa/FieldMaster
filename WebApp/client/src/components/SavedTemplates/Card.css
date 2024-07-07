@@ -49,10 +49,12 @@
 }
 
 .card-content {
-  padding: 1rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  max-width: 50%; /* Adjust this value as needed */
+  overflow: hidden; /* This will prevent content from spilling out */
 }
 .templateName {
   font-size: 15px;
