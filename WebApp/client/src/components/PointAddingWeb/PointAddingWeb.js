@@ -476,103 +476,142 @@ export default function PointAddingWeb() {
           fullscreenControl: false,
         });
 
-        const uploadToImgbb = async (imageBlob) => {
-          const apiKey = "a08fb8cde558efecce3f05b7f97d4ef7";
-          const formData = new FormData();
-          formData.append("image", imageBlob);
+        // Calculate area and perimeter
+        const polygon = turf.polygon([
+          [
+            ...markers.map((m) => [m.lng, m.lat]),
+            [markers[0].lng, markers[0].lat],
+          ],
+        ]);
+        const areaMeters = turf.area(polygon);
+        const perimeterMeters =
+          turf.length(
+            turf.lineString([
+              ...markers.map((m) => [m.lng, m.lat]),
+              [markers[0].lng, markers[0].lat],
+            ])
+          ) * 1000;
 
-          try {
-            const response = await axios.post(
-              `https://api.imgbb.com/1/upload?key=${apiKey}`,
-              formData,
-              {
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                },
-              }
-            );
-            console.log(response.data.data.url);
-            return response.data.data.url;
-          } catch (error) {
-            console.error("Error uploading image to imgbb:", error);
-            throw error;
-          }
-        };
+        const areaPerches = areaMeters / 25.29285264;
+        const perimeterKilometers = perimeterMeters / 1000;
 
-        // Capture the map-outer-container
-        const mapContainer = document.querySelector(".map-outer-container");
+        // Update calculated data
+        setCalculatedData((prevData) => ({
+          ...prevData,
+          area: `${areaPerches.toFixed(2)} perches`,
+          perimeter: `${perimeterKilometers.toFixed(2)} km`,
+        }));
 
-        // Use html2canvas instead of dom-to-image
-        html2canvas(mapContainer, {
-          useCORS: true,
-          allowTaint: true,
-          ignoreElements: (element) => {
-            // Ignore problematic elements if needed
-            return (
-              element.tagName === "LINK" &&
-              element.href.includes("fonts.googleapis.com")
-            );
-          },
-        })
-          .then(async (canvas) => {
-            canvas.toBlob(async (blob) => {
-              console.log("Captured image blob:", blob);
+        // Wait for the next render cycle to ensure the polygon is drawn
+        setTimeout(() => {
+          const uploadToImgbb = async (imageBlob) => {
+            const apiKey = "a08fb8cde558efecce3f05b7f97d4ef7";
+            const formData = new FormData();
+            formData.append("image", imageBlob);
 
-              try {
-                // Upload to imgbb
-                const imageUrl = await uploadToImgbb(blob);
-                console.log("Uploaded image URL:", imageUrl);
+            try {
+              const response = await axios.post(
+                `https://api.imgbb.com/1/upload?key=${apiKey}`,
+                formData,
+                {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                }
+              );
+              return response.data.data.url;
+            } catch (error) {
+              console.error("Error uploading image to imgbb:", error);
+              throw error;
+            }
+          };
 
-                // Calculate area and perimeter
-                const polygon = turf.polygon([
-                  [
-                    ...markers.map((m) => [m.lng, m.lat]),
-                    [markers[0].lng, markers[0].lat],
-                  ],
-                ]);
-                const areaMeters = turf.area(polygon);
-                const perimeterMeters =
-                  turf.length(
-                    turf.lineString([
-                      ...markers.map((m) => [m.lng, m.lat]),
-                      [markers[0].lng, markers[0].lat],
-                    ])
-                  ) * 1000;
+          // Capture the map-outer-container
+          const mapContainer = document.querySelector(".map-outer-container");
 
-                const areaPerches = areaMeters / 25.29285264;
-                const perimeterKilometers = perimeterMeters / 1000;
-
-                setCalculatedData({
-                  area: `${areaPerches.toFixed(2)} perches`,
-                  perimeter: `${perimeterKilometers.toFixed(2)} km`,
-                  screenshot: imageUrl,
-                });
-              } catch (error) {
-                console.error("Error processing map:", error);
-                message.error(
-                  "An error occurred while processing the map. Please try again."
-                );
-              } finally {
-                // Restore UI elements
-                map.setOptions({
-                  disableDefaultUI: false,
-                  zoomControl: true,
-                  streetViewControl: true,
-                  fullscreenControl: false,
-                });
-              }
-            });
+          html2canvas(mapContainer, {
+            useCORS: true,
+            allowTaint: true,
+            scale: 0.5, // Reduce the scale to 50%
+            ignoreElements: (element) => {
+              return (
+                element.tagName === "LINK" &&
+                element.href.includes("fonts.googleapis.com")
+              );
+            },
           })
-          .catch((error) => {
-            console.error("Error capturing map:", error);
-            message.error(
-              "An error occurred while capturing the map. Please try again."
-            );
-          });
+            .then(async (canvas) => {
+              canvas.toBlob(
+                async (blob) => {
+                  try {
+                    // Compress the image before uploading
+                    const compressedBlob = await compressImage(blob, 0.7); // 70% quality
+
+                    // Upload to imgbb
+                    const imageUrl = await uploadToImgbb(compressedBlob);
+                    console.log("Uploaded image URL:", imageUrl);
+
+                    setCalculatedData((prevData) => ({
+                      ...prevData,
+                      screenshot: imageUrl,
+                    }));
+                  } catch (error) {
+                    console.error("Error processing map:", error);
+                    message.error(
+                      "An error occurred while processing the map. Please try again."
+                    );
+                  } finally {
+                    // Restore UI elements
+                    map.setOptions({
+                      disableDefaultUI: false,
+                      zoomControl: true,
+                      streetViewControl: true,
+                      fullscreenControl: false,
+                    });
+                  }
+                },
+                "image/jpeg",
+                0.7
+              ); // Convert to JPEG with 70% quality
+            })
+            .catch((error) => {
+              console.error("Error capturing map:", error);
+              message.error(
+                "An error occurred while capturing the map. Please try again."
+              );
+            });
+        }, 100); // Delay of 100ms to ensure polygon is rendered
       }
     } else {
       message.error("Please add at least 3 points to complete the polygon.");
     }
+  };
+
+  // Helper function to compress the image
+  const compressImage = (file, quality) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob(
+            (blob) => {
+              resolve(blob);
+            },
+            "image/jpeg",
+            quality
+          );
+        };
+      };
+      reader.onerror = (error) => reject(error);
+    });
   };
   const buttonStyles = {
     buttonsContainer: {
