@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { styles } from "./InputControlStyles";
 import { Button, Form, Input, Select, List, message } from "antd";
 import AxiosInstance from "../../AxiosInstance";
+import { DeleteOutlined } from '@ant-design/icons';
 
 const InputControl = () => {
   const [form] = Form.useForm();
@@ -70,7 +71,7 @@ const InputControl = () => {
       <Input.Search
         placeholder="Search..."
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginBottom: 8, marginTop: -1}}
+        style={{ marginBottom: 8, marginTop: 1}}
       />
       <List
         loading={loading}
@@ -79,13 +80,10 @@ const InputControl = () => {
         renderItem={(item) => (
           <List.Item
             actions={[
-              <Button
-                onClick={() => handleDelete(item._id, type)}
-                style={{ fontSize: 10 }}
-                danger
-              >
-                Remove
-              </Button>,
+              <DeleteOutlined
+              onClick={() => handleDelete(item._id, type)}
+              style={{ fontSize: 16, color: '#ff4d4f' }}
+            />
             ]}
           >
             <List.Item.Meta title={item.Name} style={styles.plantNameMeta} />
