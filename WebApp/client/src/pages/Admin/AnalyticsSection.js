@@ -4,6 +4,7 @@ import AxiosInstance from "../../AxiosInstance";
 import LoginCountChart from "./LoginCountChart";
 import { Doughnut } from "react-chartjs-2";
 import "./AdminDashboard.css";
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const AnalyticsSection = ({ users, setLoading }) => {
     const [totalUsers, setTotalUsers] = useState(users.length);
@@ -11,6 +12,43 @@ const AnalyticsSection = ({ users, setLoading }) => {
     const [totalAdmins, setTotalAdmins] = useState(0);
     const [totalLogins, setTotalLogins] = useState(0);
     const [totalUnverified, setTotalUnverified] = useState(0);
+    const [locationAnalytics, setLocationAnalytics] = useState([]);
+    const [mapCenter, setMapCenter] = useState({ lat: 7.8731, lng: 80.7718 }); // Center of Sri Lanka
+
+    const mapContainerStyle = {
+        width: '100%',
+        height: '600px'
+    };
+
+    useEffect(() => {
+        fetchLocationAnalytics();
+      }, []);
+
+      const fetchLocationAnalytics = async () => {
+        try {
+            const response = await AxiosInstance.get("/api/auth/mapTemplate/getLocationAnalytics");
+            const filteredLocations = response.data.filter(loc => loc._id && loc._id !== 'null' && loc._id.trim() !== '');
+            setLocationAnalytics(filteredLocations);
+        } catch (error) {
+            console.error("Error fetching location analytics:", error);
+        }
+    };
+
+    const geocodeLocation = async (locationName) => {
+        const geocoder = new window.google.maps.Geocoder();
+        return new Promise((resolve, reject) => {
+            geocoder.geocode({ address: locationName + ', Sri Lanka' }, (results, status) => {
+                if (status === 'OK') {
+                    resolve({
+                        lat: results[0].geometry.location.lat(),
+                        lng: results[0].geometry.location.lng()
+                    });
+                } else {
+                    reject(new Error(`Geocoding failed for ${locationName}`));
+                }
+            });
+        });
+    };
 
     const chartData = {
         labels: ["Customer", "Admin", "Unverified"],
@@ -259,9 +297,49 @@ const AnalyticsSection = ({ users, setLoading }) => {
                 </div>
             </div>
             <div className="map">
-                <h3>Map</h3>
+                <h3>Map Location Analytics</h3>
+                <LoadScript googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U">
+                    <GoogleMap
+                        mapContainerStyle={mapContainerStyle}
+                        center={mapCenter}
+                        zoom={8}
+                    >
+                        {locationAnalytics.map((location) => (
+                            <MarkerWithGeocoding 
+                                key={location._id} 
+                                location={location} 
+                                geocodeLocation={geocodeLocation}
+                            />
+                        ))}
+                    </GoogleMap>
+                </LoadScript>
             </div>
         </div>
+    );
+};
+
+const MarkerWithGeocoding = ({ location, geocodeLocation }) => {
+    const [position, setPosition] = useState(null);
+
+    useEffect(() => {
+        geocodeLocation(location._id)
+            .then(coords => setPosition(coords))
+            .catch(error => console.error(error));
+    }, [location, geocodeLocation]);
+
+    if (!position) return null;
+
+    return (
+        <Marker
+            position={position}
+            label={{
+                text: location.count.toString(),
+                color: 'white',
+                fontSize: '14px',
+                fontWeight: 'bold'
+            }}
+            title={`${location._id}: ${location.count}`}
+        />
     );
 };
 
