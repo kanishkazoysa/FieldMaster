@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import {
   GoogleMap,
   LoadScript,
@@ -6,25 +6,26 @@ import {
   Marker,
   Polyline,
   Polygon,
-} from '@react-google-maps/api';
-import { MdLocationOn, MdSearch } from 'react-icons/md';
-import ProfileModal from '../../components/profileManage/ProfileModal/ProfileModal';
-import { styles, containerStyle, center } from './PointAddingWebStyles';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { message, Modal, Input, Button, Select } from 'antd';
-import Avatar from '../../components/profileManage/ProfileManageModal/Avatar';
-import AxiosInstance from '../../AxiosInstance';
-import * as turf from '@turf/turf';
-import html2canvas from 'html2canvas';
-import axios from 'axios';
+} from "@react-google-maps/api";
+import { MdLocationOn, MdSearch } from "react-icons/md";
+import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
+import { styles, containerStyle, center } from "./PointAddingWebStyles";
+import { useLocation, useNavigate } from "react-router-dom";
+import { message, Modal, Input, Button, Select } from "antd";
+import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
+import AxiosInstance from "../../AxiosInstance";
+import * as turf from "@turf/turf";
+import html2canvas from "html2canvas";
+import axios from "axios";
+import domtoimage from "dom-to-image";
 
 const { Option } = Select;
 
 const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
-  const [templateName, setTemplateName] = useState('myTemplate');
-  const [measureName, setMeasureName] = useState('tea');
-  const [landType, setLandType] = useState('slope');
-  const [description, setDescription] = useState('testingDesc');
+  const [templateName, setTemplateName] = useState("myTemplate");
+  const [measureName, setMeasureName] = useState("tea");
+  const [landType, setLandType] = useState("slope");
+  const [description, setDescription] = useState("testingDesc");
   const [area, setArea] = useState(calculatedData.area);
   const [perimeter, setPerimeter] = useState(calculatedData.perimeter);
   const [location, setLocation] = useState(calculatedData.location);
@@ -54,33 +55,33 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
   };
 
   const inputStyle = {
-    width: '100%',
-    height: '32px',
+    width: "100%",
+    height: "32px",
   };
 
   const labelStyle = {
-    display: 'inline-block',
-    width: '120px',
-    textAlign: 'left',
-    marginRight: '10px',
+    display: "inline-block",
+    width: "120px",
+    textAlign: "left",
+    marginRight: "10px",
   };
 
   const rowStyle = {
-    marginBottom: '10px',
-    display: 'flex',
-    alignItems: 'center',
+    marginBottom: "10px",
+    display: "flex",
+    alignItems: "center",
   };
 
   return (
     <Modal
-      title='Save Details'
+      title="Save Details"
       visible={isOpen}
       onCancel={onClose}
       footer={[
-        <Button key='cancel' onClick={onClose}>
+        <Button key="cancel" onClick={onClose}>
           Cancel
         </Button>,
-        <Button key='save' type='primary' onClick={handleSave}>
+        <Button key="save" type="primary" onClick={handleSave}>
           Save
         </Button>,
       ]}
@@ -123,12 +124,12 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
         <Select
           value={landType}
           onChange={(value) => setLandType(value)}
-          style={{ ...inputStyle, width: '100%' }}
+          style={{ ...inputStyle, width: "100%" }}
         >
-          <Option value='agricultural'>Agricultural</Option>
-          <Option value='residential'>Residential</Option>
-          <Option value='commercial'>Commercial</Option>
-          <Option value='industrial'>Industrial</Option>
+          <Option value="agricultural">Agricultural</Option>
+          <Option value="residential">Residential</Option>
+          <Option value="commercial">Commercial</Option>
+          <Option value="industrial">Industrial</Option>
         </Select>
       </div>
       <div style={rowStyle}>
@@ -145,7 +146,7 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
-          style={{ ...inputStyle, height: 'auto' }}
+          style={{ ...inputStyle, height: "auto" }}
         />
       </div>
       {/*  {screenshot && (
@@ -180,9 +181,9 @@ export default function PointAddingWeb() {
   const [paths, setPaths] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [calculatedData, setCalculatedData] = useState({
-    perimeter: '',
-    area: '',
-    location: '',
+    perimeter: "",
+    area: "",
+    location: "",
   });
 
   useEffect(() => {
@@ -197,7 +198,7 @@ export default function PointAddingWeb() {
     if (markers.length > 0) {
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode({ location: markers[0] }, (results, status) => {
-        if (status === 'OK' && results[0]) {
+        if (status === "OK" && results[0]) {
           setCalculatedData((prevData) => ({
             ...prevData,
             location: results[0].formatted_address,
@@ -216,16 +217,16 @@ export default function PointAddingWeb() {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await AxiosInstance.get('/api/users/details');
+      const response = await AxiosInstance.get("/api/users/details");
       setUser(response.data.user);
     } catch (error) {
-      console.error('Failed to fetch user details:', error);
+      console.error("Failed to fetch user details:", error);
     }
   };
 
   useEffect(() => {
     if (location.state?.loginSuccess && !messageShownRef.current) {
-      message.success('User logged in successfully!');
+      message.success("User logged in successfully!");
       messageShownRef.current = true;
       navigate(location.pathname, { state: {}, replace: true });
     }
@@ -263,7 +264,7 @@ export default function PointAddingWeb() {
   );
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
       const input = event.target;
       input.blur();
@@ -284,7 +285,7 @@ export default function PointAddingWeb() {
   };
 
   const mapOptions = useCallback(() => {
-    if (!window.google || typeof window.google === 'undefined') return {};
+    if (!window.google || typeof window.google === "undefined") return {};
 
     return {
       minZoom: 2,
@@ -322,11 +323,11 @@ export default function PointAddingWeb() {
     setMarkers([]);
     setIsPolygonComplete(false);
     setCalculatedData({
-      perimeter: '',
-      area: '',
-      location: '',
+      perimeter: "",
+      area: "",
+      location: "",
     });
-    navigate('/home');
+    navigate("/home");
   };
 
   const handleUndo = () => {
@@ -342,7 +343,7 @@ export default function PointAddingWeb() {
 
   const handleSave = () => {
     if (markers.length < 3) {
-      message.error('Please add at least 3 points to create a polygon.');
+      message.error("Please add at least 3 points to create a polygon.");
       return;
     }
     const polygon = turf.polygon([
@@ -363,24 +364,24 @@ export default function PointAddingWeb() {
     // Get location name using reverse geocoding
     const geocoder = new window.google.maps.Geocoder();
     geocoder.geocode({ location: markers[0] }, (results, status) => {
-      if (status === 'OK') {
+      if (status === "OK") {
         if (results[0]) {
           const addressComponents = results[0].address_components;
           const cityComponent = addressComponents.find((component) =>
-            component.types.includes('locality')
+            component.types.includes("locality")
           );
           const stateComponent = addressComponents.find((component) =>
-            component.types.includes('administrative_area_level_1')
+            component.types.includes("administrative_area_level_1")
           );
           const countryComponent = addressComponents.find((component) =>
-            component.types.includes('country')
+            component.types.includes("country")
           );
 
-          const city = cityComponent ? cityComponent.long_name : '';
-          const state = stateComponent ? stateComponent.long_name : '';
-          const country = countryComponent ? countryComponent.long_name : '';
+          const city = cityComponent ? cityComponent.long_name : "";
+          const state = stateComponent ? stateComponent.long_name : "";
+          const country = countryComponent ? countryComponent.long_name : "";
 
-          let formattedLocation = '';
+          let formattedLocation = "";
           if (city && country) {
             formattedLocation = `${city}, ${country}`;
           } else if (state && country) {
@@ -388,7 +389,7 @@ export default function PointAddingWeb() {
           } else if (country) {
             formattedLocation = country;
           } else {
-            formattedLocation = 'Unknown location';
+            formattedLocation = "Unknown location";
           }
 
           setCalculatedData((prevData) => ({
@@ -398,7 +399,7 @@ export default function PointAddingWeb() {
             location: formattedLocation,
           }));
         } else {
-          console.error('No results found');
+          console.error("No results found");
           setCalculatedData((prevData) => ({
             ...prevData,
             area: `${areaInPerches.toFixed(2)} perches`,
@@ -409,7 +410,7 @@ export default function PointAddingWeb() {
           }));
         }
       } else {
-        console.error('Geocoder failed due to: ' + status);
+        console.error("Geocoder failed due to: " + status);
         setCalculatedData((prevData) => ({
           ...prevData,
           area: `${areaInPerches.toFixed(2)} perches`,
@@ -425,8 +426,8 @@ export default function PointAddingWeb() {
   const handlePopupSave = async (data) => {
     try {
       // Convert area and perimeter to numbers
-      const area = parseFloat(data.area.split(' ')[0]);
-      const perimeter = parseFloat(data.perimeter.split(' ')[0]);
+      const area = parseFloat(data.area.split(" ")[0]);
+      const perimeter = parseFloat(data.perimeter.split(" ")[0]);
 
       // Prepare the data to be sent to the backend
       const templateData = {
@@ -446,18 +447,18 @@ export default function PointAddingWeb() {
 
       // Make the API call
       const response = await AxiosInstance.post(
-        '/api/auth/mapTemplate/saveTemplate',
+        "/api/auth/mapTemplate/saveTemplate",
         templateData
       );
 
-      console.log('Template saved successfully:', response.data);
-      message.success('Template saved successfully!');
+      console.log("Template saved successfully:", response.data);
+      message.success("Template saved successfully!");
       setIsPopupOpen(false);
       handleCancel();
-      navigate('/home');
+      navigate("/home");
     } catch (error) {
-      console.error('Error saving template:', error);
-      message.error('Failed to save template. Please try again.');
+      console.error("Error saving template:", error);
+      message.error("Failed to save template. Please try again.");
     }
   };
   const handleComplete = () => {
@@ -475,10 +476,10 @@ export default function PointAddingWeb() {
           fullscreenControl: false,
         });
 
-        const uploadToImgbb = async (imageDataUrl) => {
-          const apiKey = 'a08fb8cde558efecce3f05b7f97d4ef7';
+        const uploadToImgbb = async (imageBlob) => {
+          const apiKey = "a08fb8cde558efecce3f05b7f97d4ef7";
           const formData = new FormData();
-          formData.append('image', imageDataUrl.split(',')[1]);
+          formData.append("image", imageBlob);
 
           try {
             const response = await axios.post(
@@ -486,108 +487,129 @@ export default function PointAddingWeb() {
               formData,
               {
                 headers: {
-                  'Content-Type': 'multipart/form-data',
+                  "Content-Type": "multipart/form-data",
                 },
               }
             );
             console.log(response.data.data.url);
             return response.data.data.url;
           } catch (error) {
-            console.error('Error uploading image to imgbb:', error);
+            console.error("Error uploading image to imgbb:", error);
             throw error;
           }
         };
-        // Capture the map
-        html2canvas(mapRef.current.state.map.getDiv()).then(async (canvas) => {
-          const screenshot = canvas.toDataURL('image/png');
-          console.log('Captured image data URL:', screenshot);
 
-          try {
-            // Upload to imgbb
-            const imageUrl = await uploadToImgbb(screenshot);
-            console.log('Uploaded image URL:', imageUrl);
+        // Capture the map-outer-container
+        const mapContainer = document.querySelector(".map-outer-container");
 
-            // Calculate area and perimeter
-            const polygon = turf.polygon([
-              [
-                ...markers.map((m) => [m.lng, m.lat]),
-                [markers[0].lng, markers[0].lat],
-              ],
-            ]);
-            const areaMeters = turf.area(polygon);
-            const perimeterMeters =
-              turf.length(
-                turf.lineString([
-                  ...markers.map((m) => [m.lng, m.lat]),
-                  [markers[0].lng, markers[0].lat],
-                ])
-              ) * 1000;
-
-            const areaPerches = areaMeters / 25.29285264;
-            const perimeterKilometers = perimeterMeters / 1000;
-
-            setCalculatedData({
-              area: `${areaPerches.toFixed(2)} perches`,
-              perimeter: `${perimeterKilometers.toFixed(2)} km`,
-              screenshot: imageUrl,
-            });
-          } catch (error) {
-            console.error('Error processing map:', error);
-            message.error(
-              'An error occurred while processing the map. Please try again.'
+        // Use html2canvas instead of dom-to-image
+        html2canvas(mapContainer, {
+          useCORS: true,
+          allowTaint: true,
+          ignoreElements: (element) => {
+            // Ignore problematic elements if needed
+            return (
+              element.tagName === "LINK" &&
+              element.href.includes("fonts.googleapis.com")
             );
-          } finally {
-            // Restore UI elements
-            map.setOptions({
-              disableDefaultUI: false,
-              zoomControl: true,
-              streetViewControl: true,
-              fullscreenControl: false,
+          },
+        })
+          .then(async (canvas) => {
+            canvas.toBlob(async (blob) => {
+              console.log("Captured image blob:", blob);
+
+              try {
+                // Upload to imgbb
+                const imageUrl = await uploadToImgbb(blob);
+                console.log("Uploaded image URL:", imageUrl);
+
+                // Calculate area and perimeter
+                const polygon = turf.polygon([
+                  [
+                    ...markers.map((m) => [m.lng, m.lat]),
+                    [markers[0].lng, markers[0].lat],
+                  ],
+                ]);
+                const areaMeters = turf.area(polygon);
+                const perimeterMeters =
+                  turf.length(
+                    turf.lineString([
+                      ...markers.map((m) => [m.lng, m.lat]),
+                      [markers[0].lng, markers[0].lat],
+                    ])
+                  ) * 1000;
+
+                const areaPerches = areaMeters / 25.29285264;
+                const perimeterKilometers = perimeterMeters / 1000;
+
+                setCalculatedData({
+                  area: `${areaPerches.toFixed(2)} perches`,
+                  perimeter: `${perimeterKilometers.toFixed(2)} km`,
+                  screenshot: imageUrl,
+                });
+              } catch (error) {
+                console.error("Error processing map:", error);
+                message.error(
+                  "An error occurred while processing the map. Please try again."
+                );
+              } finally {
+                // Restore UI elements
+                map.setOptions({
+                  disableDefaultUI: false,
+                  zoomControl: true,
+                  streetViewControl: true,
+                  fullscreenControl: false,
+                });
+              }
             });
-          }
-        });
+          })
+          .catch((error) => {
+            console.error("Error capturing map:", error);
+            message.error(
+              "An error occurred while capturing the map. Please try again."
+            );
+          });
       }
     } else {
-      message.error('Please add at least 3 points to complete the polygon.');
+      message.error("Please add at least 3 points to complete the polygon.");
     }
   };
-
   const buttonStyles = {
     buttonsContainer: {
-      position: 'absolute',
-      bottom: '20px',
-      right: '90px',
+      position: "absolute",
+      bottom: "20px",
+      right: "90px",
       zIndex: 1,
-      display: 'flex',
-      gap: '10px',
-      backgroundColor: 'rgba(0, 0, 0, 0.4)',
-      padding: '10px',
-      borderRadius: '10px',
-      width: isPolygonComplete ? '270px' : '360px', // Adjust these values as needed
-      transition: 'width 0.3s ease', // Add smooth transition
+      display: "flex",
+      gap: "10px",
+      backgroundColor: "rgba(0, 0, 0, 0.4)",
+      padding: "10px",
+      borderRadius: "10px",
+      width: isPolygonComplete ? "270px" : "360px", // Adjust these values as needed
+      transition: "width 0.3s ease", // Add smooth transition
     },
     button: {
-      padding: '8px 16px',
-      fontSize: '14px',
-      color: '#fff',
-      backgroundColor: '#007bff',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      transition: 'background-color 0.3s ease',
-      width: '80px',
-      textAlign: 'center',
+      padding: "8px 16px",
+      fontSize: "14px",
+      color: "#fff",
+      backgroundColor: "#007bff",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      transition: "background-color 0.3s ease",
+      width: "80px",
+      textAlign: "center",
     },
     cancelButton: {
-      backgroundColor: '#dc3545',
+      backgroundColor: "#dc3545",
     },
   };
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="map-outer-container">
       <LoadScript
-        googleMapsApiKey='AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U'
-        libraries={['places']}
+        googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
+        libraries={["places"]}
       >
         <GoogleMap
           ref={mapRef}
@@ -601,8 +623,8 @@ export default function PointAddingWeb() {
             <button
               style={{ ...buttonStyles.button, ...buttonStyles.cancelButton }}
               onClick={handleCancel}
-              onMouseOver={(e) => (e.target.style.backgroundColor = '#bd2130')}
-              onMouseOut={(e) => (e.target.style.backgroundColor = '#dc3545')}
+              onMouseOver={(e) => (e.target.style.backgroundColor = "#bd2130")}
+              onMouseOut={(e) => (e.target.style.backgroundColor = "#dc3545")}
             >
               Cancel
             </button>
@@ -611,9 +633,9 @@ export default function PointAddingWeb() {
                 style={buttonStyles.button}
                 onClick={handleUndo}
                 onMouseOver={(e) =>
-                  (e.target.style.backgroundColor = '#0056b3')
+                  (e.target.style.backgroundColor = "#0056b3")
                 }
-                onMouseOut={(e) => (e.target.style.backgroundColor = '#007bff')}
+                onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
               >
                 Undo
               </button>
@@ -621,16 +643,16 @@ export default function PointAddingWeb() {
             <button
               style={buttonStyles.button}
               onClick={handleSave}
-              onMouseOver={(e) => (e.target.style.backgroundColor = '#0056b3')}
-              onMouseOut={(e) => (e.target.style.backgroundColor = '#007bff')}
+              onMouseOver={(e) => (e.target.style.backgroundColor = "#0056b3")}
+              onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
             >
               Save
             </button>
             <button
               style={buttonStyles.button}
               onClick={handleComplete}
-              onMouseOver={(e) => (e.target.style.backgroundColor = '#0056b3')}
-              onMouseOut={(e) => (e.target.style.backgroundColor = '#007bff')}
+              onMouseOver={(e) => (e.target.style.backgroundColor = "#0056b3")}
+              onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
             >
               Fill
             </button>
@@ -644,7 +666,7 @@ export default function PointAddingWeb() {
             <Polyline
               path={paths}
               options={{
-                strokeColor: '#000000',
+                strokeColor: "#000000",
                 strokeOpacity: 0.8,
                 strokeWeight: 0.5,
               }}
@@ -655,9 +677,9 @@ export default function PointAddingWeb() {
             <Polygon
               paths={[...paths, paths[0]]}
               options={{
-                fillColor: '#000000',
+                fillColor: "#000000",
                 fillOpacity: 0.35,
-                strokeColor: '#FF0000',
+                strokeColor: "#FF0000",
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
               }}
@@ -666,8 +688,8 @@ export default function PointAddingWeb() {
 
           <MdLocationOn
             fontSize={27}
-            style={{ marginLeft: '10px', marginTop: '10px' }}
-            color='#fff'
+            style={{ marginLeft: "10px", marginTop: "10px" }}
+            color="#fff"
           />
 
           <StandaloneSearchBox
@@ -677,8 +699,8 @@ export default function PointAddingWeb() {
             <div style={styles.searchContainer}>
               <MdSearch style={styles.searchIcon} />
               <input
-                type='text'
-                placeholder='Search location'
+                type="text"
+                placeholder="Search location"
                 style={styles.searchBox}
                 onKeyDown={handleKeyDown}
               />
