@@ -7,7 +7,7 @@ import { IoBookmarks } from 'react-icons/io5';
 import { RiWalkFill } from 'react-icons/ri';
 import StartMeasurePage from '../MeasureOption/measureOption.js';
 import SavedTemplatesWeb from '../SavedTemplates/SavedTemplatesWeb.js';
-// import Fence from "../Fence/Fence/fence";
+
 import ClearLand from '../ClearLand/ClearLand/clearLand';
 import Plantation from '../Plantation/PlantationPage/plantation';
 import TemplateDetails from '../SavedTemplates/TemplateDetails.js';

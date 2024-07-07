@@ -3,7 +3,7 @@ import "./contact.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faGithub, faFacebook, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import video3 from "../../../assets/contact_video.mp4";
-import axios from 'axios';
+
 
 function ContactForm() {
   const [formData, setFormData] = useState({

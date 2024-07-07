@@ -9,7 +9,7 @@ import { FaClockRotateLeft } from "react-icons/fa6";
 import { IoTimeSharp } from "react-icons/io5";
 import { GiWeight, GiChemicalDrop } from "react-icons/gi";
 import { Tb24Hours } from "react-icons/tb";
-import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
+
 import { getFertilizerDetailsHtml } from "./FertilizerDetailsTemplate.js";
 
 export default function FertilizingDetails({
@@ -27,8 +27,7 @@ export default function FertilizingDetails({
   selectedFrequency,
   numberOfPlants
 }) {
-  //const [numberOfPlants, setNumberOfPlants] = useState(null);
-  const [PlantDensity, setPlantDensity] = useState(null);
+  
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
 

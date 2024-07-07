@@ -1,4 +1,4 @@
-// SideNavbar.js
+
 import React, { useState} from "react";
 import { MdArrowBack, MdFormatLineSpacing } from "react-icons/md";
 import { RxRowSpacing } from "react-icons/rx";
@@ -50,7 +50,7 @@ export default function Plantation({
   };
 
   const backtotemp = () =>{
-    setCurrentPage("TemplateDetails"); // Update this line
+    setCurrentPage("TemplateDetails"); 
     setAnimatePage(true);
   }
   const handlePlantSpaceUnitChange = (selectedOption) => {
@@ -112,7 +112,7 @@ export default function Plantation({
       textplantspace: plantSpaceInMeters,
         textRowspace: rowSpaceInMeters,
         PlantSpaceUnitselectedValue: "m", // Send 'm' as the unit   
-      //RowSpaceUnitselectedValue,
+     
 
     })
       .then((response) => {

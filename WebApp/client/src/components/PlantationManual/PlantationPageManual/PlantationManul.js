@@ -1,15 +1,15 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { MdArrowBack, MdFormatLineSpacing } from "react-icons/md";
 import { RxRowSpacing } from "react-icons/rx";
 import { PiTreeEvergreenFill } from "react-icons/pi";
 import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
-import Swal from 'sweetalert2'
+
 import { styles } from "./PlantationManualStyles";
 import Select from "react-select";
 import AxiosInstance from "../../../AxiosInstance";
-import axios from "axios";
+
 import PlantationDetailsManual from "../PlantationDetailsManual/PlantationDetailsManual";
 import { message } from "antd";
 export default function Plantation({ onBackToSidebar, area, perimeter, PerimeterUnitselectedValue, AreaUnitselectedValue }) {
