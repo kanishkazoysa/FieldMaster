@@ -31,12 +31,48 @@ export const styles = StyleSheet.create({
       left: 0,
       right: 0,
     },
-  
+    cardContent1: {
+      marginTop: responsiveHeight(0),
+      marginLeft: responsiveWidth(0),
+      marginBottom: responsiveHeight(0),
+      paddingBottom: responsiveHeight(1.5),
+     
+    },
+    card:{
+      height:responsiveHeight(10),
+      borderRadius: 11,
+      marginTop: responsiveHeight(1),
+      paddingBottom: responsiveHeight(0.3),
+      width: "93%",
+      backgroundColor: "#fff",
+    },
+    cardTop:{
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: responsiveHeight(-2),
+      marginBottom: responsiveHeight(-3),
+      backgroundColor: "white",
+    },
+    cardHeader:{
+      flexDirection: "row",
+    },
+    card1Top:{
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: responsiveHeight(-1),
+      height: responsiveHeight(3.5),
+      width: "100%",
+    },
+    card1Header:{
+      flexDirection: "row",
+      width: "100%",
+    },
     card1: {
       height: "max-content",
       borderRadius: 11,
       marginTop: responsiveHeight(1),
-      paddingBottom: responsiveHeight(0.3),
+      paddingBottom: responsiveHeight(-20),
+      paddingHorizontal: responsiveHeight(1), 
       width: "93%",
       backgroundColor: "#fff",
     },
@@ -45,9 +81,9 @@ export const styles = StyleSheet.create({
       alignItems: "center",
       flexDirection: "row",
       justifyContent: "space-between",
-      marginTop: responsiveHeight(1),
+      marginTop: responsiveHeight(0.5),
       marginBottom: responsiveHeight(-1),
-      marginLeft: responsiveWidth(2.6),
+      marginLeft: responsiveWidth(20),
     },
     card2: {
       height: "max-content",
@@ -56,6 +92,16 @@ export const styles = StyleSheet.create({
       width: "93%",
       backgroundColor: "#fff",
       borderRadius: 11,
+    },
+    card2Top:{
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: responsiveHeight(-1),
+      height: responsiveHeight(4),
+    },
+    card2Header:{
+      flexDirection: "row",
+      width: "100%",
     },
     countText: {
       marginLeft: responsiveWidth(3.5),
@@ -73,10 +119,13 @@ export const styles = StyleSheet.create({
     cardTopText: {
       marginLeft: responsiveWidth(1),
     },
+   
     cardContent: {
       display: "flex",
       flexDirection: "row",
       marginTop: responsiveHeight(-1),
+      marginLeft: responsiveWidth(-1),
+      
     },
     calButtton: {
       marginTop: responsiveHeight(4),
@@ -119,7 +168,6 @@ export const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-around",
-      backgroundColor: "whitesmoke",
       marginRight: responsiveWidth(1.2),
       marginLeft: responsiveWidth(1.2),
       marginBottom: responsiveHeight(1),
@@ -170,8 +218,19 @@ export const styles = StyleSheet.create({
       height: responsiveHeight(4),
       alignItems: "center",
       justifyContent: "center",
-      marginLeft: responsiveWidth(-17),
+      marginLeft: responsiveWidth(-82),
       marginTop: responsiveHeight(3.5),
+    },
+    Dropdown2: {
+        backgroundColor: "#F0F2F5",
+        borderRadius: 10,
+        width: "40%",
+        height: responsiveHeight(4),
+        alignItems: "center",
+        justifyContent: "center",
+        marginLeft: responsiveWidth(-87),
+        marginTop: responsiveHeight(3.5),
+      
     },
     machineAddButton: {
       width: responsiveWidth(30),

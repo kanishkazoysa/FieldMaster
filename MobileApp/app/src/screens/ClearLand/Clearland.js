@@ -28,6 +28,9 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { styles } from "./ClearLandStyles";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
+import WeedAlert from "./AlertButtonWeed";
+import PlantAlert from "./AlertButtonPlant";
+import StoneAlert from "./AlertButtonStones";
 import AxiosInstance from "../../AxiosInstance";
 
 export default function ClearLand({ route }) {
@@ -110,8 +113,7 @@ export default function ClearLand({ route }) {
 
   const options = [
     { label: "Small", value: "Small" },
-    { label: "Medium", value: "Medium" },
-    { label: "High", value: "High" },
+    { label: "Large", value: "Large" },
   ];
 
   /display/;
@@ -137,7 +139,7 @@ export default function ClearLand({ route }) {
 
   const handleAdd1 = () => {
     //validation part Add button
-    const combinedValue1 = stoneTypeSelectedValue;
+    const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
       Boolean
     );
@@ -182,17 +184,27 @@ export default function ClearLand({ route }) {
       displayValues2,
     })
       .then((response) => {
-        if (
-          !pressed ||
-          !(displayValues.length > 0) ||
-          !(displayValues1.length > 0) ||
-          !laborCount ||
-          !workHours ||
-          !(displayValues2.length > 0)
-        ) {
-          // Display error message
-          Alert.alert("Error", "Please fill in all fields");
-          return; // Stop execution if fields are empty
+        if (!laborCount) {
+          Alert.alert("Error", "Please enter the Labor Count.");
+          return;
+        }
+    
+        if (!workHours) {
+          Alert.alert("Error", "Please enter the Work Hours.");
+          return;
+        }
+    
+        if (displayValues2.length === 0) {
+          Alert.alert("Error", "Please add at least one Machinery item.");
+          return;
+        }
+    
+        if (!pressed && displayValues.length === 0 && displayValues1.length === 0) {
+          Alert.alert(
+            "Error",
+            "Please fill in at least one optional field: Weeds, Plants, or Stones."
+          );
+          return;
         }
         navigation.navigate("EffortOutput", {
           id: id,
@@ -242,16 +254,22 @@ export default function ClearLand({ route }) {
       <ScrollView>
         <View style={styles.container2}>
           {/* Weeds box */}
-          <Card style={styles.card1}>
-            <Card.Content style={styles.cardContent}>
+          <Card style={styles.card}>
+          
+            <Card.Content style={styles.cardContent1}>
+              <View style={styles.cardTop}>
+              <View style={styles.cardHeader}>
               <MaterialCommunityIcons
                 name="sprout-outline"
                 size={responsiveFontSize(3)}
                 color="#65676B"
               />
-              <Text style={styles.cardTopText} variant="titleLarge">
+                <Text style={styles.cardTopText} variant="titleLarge">
                 Weeds
-              </Text>
+                </Text>
+              </View>
+              <WeedAlert></WeedAlert>
+              </View>
               <PaperProvider>
                 <View style={styles.weedButton}>
                   <Button
@@ -304,6 +322,8 @@ export default function ClearLand({ route }) {
           {/* Plants box */}
           <Card style={styles.card1}>
             <Card.Content style={styles.cardContent}>
+            <View style={styles.card1Top}>
+              <View style={styles.card1Header}>
               <MaterialCommunityIcons
                 name="sprout"
                 size={responsiveFontSize(3)}
@@ -312,6 +332,10 @@ export default function ClearLand({ route }) {
               <Text style={styles.cardTopText} variant="titleLarge">
                 Plants
               </Text>
+              </View>
+              <PlantAlert></PlantAlert>
+              </View>
+              
               <View style={styles.Dropdown1}>
                 <RNPickerSelect
                   placeholder={placeholder1}
@@ -384,12 +408,20 @@ export default function ClearLand({ route }) {
 
           {/* Stones box */}
           <Card style={styles.card1}>
+            
             <Card.Content style={styles.cardContent}>
+            <View style={styles.card2Top}>
+              <View style={styles.card2Header}>
+              
               <Image source={require("../../../assets/Stones.png")} />
               <Text style={styles.cardTopText} variant="titleLarge">
                 Stones
               </Text>
-              <View style={styles.Dropdown1}>
+              </View>
+              </View>
+              <StoneAlert></StoneAlert>
+              
+              <View style={styles.Dropdown2}>
                 <RNPickerSelect
                   placeholder={placeholder}
                   items={options}

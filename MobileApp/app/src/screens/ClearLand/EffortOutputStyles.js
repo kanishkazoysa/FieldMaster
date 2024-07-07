@@ -199,7 +199,7 @@ export const styles = StyleSheet.create({
       backgroundColor: "white",
       width: responsiveWidth(86),
       height: responsiveHeight(15),
-      marginTop: responsiveHeight(5),
+      marginTop: responsiveHeight(3),
       alignItems: "center",
       borderRadius: 11,
       shadowColor: "#000",
@@ -299,6 +299,44 @@ export const styles = StyleSheet.create({
     },
   
     /*Third Section*/
+    box4: {
+      width: "87%",
+      height: responsiveHeight(18),
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "white",
+      marginTop: responsiveHeight(1),
+      borderRadius: 11,
+      shadowColor: "#000",
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
+      elevation: 3,
+    },
+
+    box4Header: {
+      fontSize: responsiveFontSize(1.8),
+      marginLeft:responsiveHeight(4.5),
+      marginTop:responsiveHeight(6.5),
+      fontWeight: "bold",
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: "90%",
+    },
+
+    box4inner :{
+        width: "80%",
+        height: "60%",
+        backgroundColor: "white",
+        marginBottom: responsiveHeight(8),
+        marginTop: responsiveHeight(0),
+      },
+
+    box4Inner: {
+      marginLeft: 15,
+      marginTop: responsiveHeight(-1),
+      height:responsiveHeight(5),
+    },
   
     box3: {
       width: "87%",
@@ -313,11 +351,21 @@ export const styles = StyleSheet.create({
       shadowRadius: 5,
       elevation: 3,
     },
+    box4Text:{
+      marginTop: responsiveHeight(1),
+      marginBottom: responsiveHeight(1)
+    },
+    box4Text2: {
+      marginTop: responsiveHeight(1),
+      marginBottom: responsiveHeight(-100),
+    },
   
     inner: {
       width: "80%",
-      height: "90%",
+      height: "80%",
       backgroundColor: "white",
+      marginBottom: responsiveHeight(5),
+      marginTop: responsiveHeight(1),
     },
   
     innertopText: {
@@ -371,7 +419,7 @@ export const styles = StyleSheet.create({
       flexDirection:"column",
       alignItems: "center",
       justifyContent:  "center",
-      bottom: responsiveHeight(4),
+      bottom: responsiveHeight(17),
     },
 
     buttonContainer: {

@@ -29,6 +29,7 @@ import { shareAsync } from "expo-sharing";
 import { styles } from "./EffortOutputStyles";
 import Headersection from "../../components/Headersection";
 import AlertButton from "../../components/AlertButton";
+import EffortAlert from "./AlertButtonEffort";
 import CustomButton from "../../components/CustomButton";
 import axios from "axios";
 import AxiosInstance from "../../AxiosInstance";
@@ -45,6 +46,9 @@ export default function EffortOutput({ route }) {
   const [Perimeter, setPerimeter] = useState(null);
   const [effortOutput, setEffortOutput] = useState(null);
   const [workDays, setWorkDays] = useState(null);
+  const [weedEffort, setWeedEffort] = useState(null);
+  const [plantEffort, setPlantEffort] = useState(null);
+  const [stoneEffort, setStoneEffort] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state
 
   //Fetch data from database
@@ -59,6 +63,9 @@ export default function EffortOutput({ route }) {
       setArea(response.data.Area);
       setPerimeter(response.data.Perimeter);
       setEffortOutput(response.data.effortOutput);
+      setWeedEffort(response.data.weedEffort);
+      setPlantEffort(response.data.plantEffort);
+      setStoneEffort(response.data.stoneEffort);
       setWorkDays(response.data.workDays);
       setLoading(false);
     } catch (error) {
@@ -167,10 +174,8 @@ export default function EffortOutput({ route }) {
 
       <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
         <Appbar.BackAction
-          onPress={() => {
-            navigation.goBack();
-            color = "white";
-          }}
+          onPress={() => navigation.navigate("TemplateView", { item: item })}
+          color="white"
         />
 
         <Text style={styles.headerText}>Effort Output</Text>
@@ -253,6 +258,21 @@ export default function EffortOutput({ route }) {
             </View>
 
             {/* section 3 */}
+            <View style={styles.box4}>
+              <View style={styles.box4Header}>
+              <Text style={styles.innertopText}>Effort Values</Text>
+              <EffortAlert></EffortAlert>
+              </View>
+              <View style={styles.box4inner}>
+              <View style={styles.box4Inner}>
+                <Text style={styles.box4Text}>Remove weeds     :   {Math.ceil(weedEffort)} hrs</Text>
+                <Text>Cut trees                :   {Math.ceil(plantEffort)} hrs</Text>
+                <Text style={styles.box4Text2}>Break stones         :   {Math.ceil(stoneEffort)} hrs</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* section 4 */}
             <View style={styles.box3}>
               <View style={styles.inner}>
                 <Text style={styles.innertopText}>Results based on</Text>
