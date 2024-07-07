@@ -82,7 +82,7 @@ const FenceSetupModal = ({
           displayValues,
           fenceAmountsArray,
           fenceLengthsArray,
-          Perimeter: perimeter,
+          Perimeter: perimeter/1000,
         }
       );
 

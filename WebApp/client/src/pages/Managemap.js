@@ -52,6 +52,8 @@ const Managemap = () => {
   const [fenceSetupModalVisible, setFenceSetupModalVisible] = useState(false);
   const [clearLandSetupModalVisible, setClearLandSetupModalVisible] = useState(false);
   const [clearLandSetupData, setClearLandSetupData] = useState({});
+  const [drawingMode, setDrawingMode] = useState(null);
+
 
   const handleClearLandSetup = () => {
     if (selectedPolygonIndex !== null) {
@@ -244,7 +246,9 @@ const Managemap = () => {
     };
 
     setPartitionPolygons((prevPolygons) => [...prevPolygons, newPolygon]);
-    setDrawingEnabled(false);
+    //setDrawingEnabled(false);
+
+      polygon.setMap(null);
 
     // Show popup with area and perimeter
     Modal.info({
@@ -274,23 +278,16 @@ const Managemap = () => {
   };
 
   const toggleDrawingMode = () => {
-    setDrawingEnabled((prevState) => !prevState);
+    setDrawingEnabled(true);
     setEditingPolygonIndex(null);
     setSelectedPolygonIndex(null);
-    if (!drawingEnabled) {
-      if (drawingManagerRef.current) {
-        drawingManagerRef.current.setDrawingMode(
-          window.google.maps.drawing.OverlayType.POLYGON
-        );
-      }
-    } else {
-      if (
-        drawingManagerRef.current &&
-        drawingManagerRef.current.state.drawingControlPosition
-      ) {
-        drawingManagerRef.current.state.setDrawingMode(null);
-      }
-    }
+    setDrawingMode(window.google.maps.drawing.OverlayType.POLYGON);
+  };
+
+  const toggleSelectionMode = () => {
+    setDrawingMode(null);
+    setEditingPolygonIndex(null);
+    setSelectedPolygonIndex(null);
   };
 
   const savePartitionPoints = async () => {
@@ -778,8 +775,10 @@ const Managemap = () => {
 
           {drawingEnabled && (
             <DrawingManager
-              ref={drawingManagerRef}
-              onPolygonComplete={handleGeofenceComplete}
+            onLoad={(drawingManager) => {
+              drawingManagerRef.current = drawingManager;
+            }}
+                          onPolygonComplete={handleGeofenceComplete}
               options={{
                 drawingControl: true,
                 drawingControlOptions: {
@@ -795,8 +794,7 @@ const Managemap = () => {
                   clickable: true,
                   zIndex: 2,
                 },
-                drawingMode: window.google.maps.drawing.OverlayType.POLYGON,
-              }}
+                drawingMode: drawingMode,              }}
             />
           )}
 
@@ -811,6 +809,14 @@ const Managemap = () => {
               style={styles.toolButton}
             >
               {drawingEnabled ? "Draw Polygon" : "Draw Polygon"}
+            </Button>
+
+            <Button
+              onClick={toggleSelectionMode}
+              icon={<FiSave />}
+              style={styles.toolButton}
+            >
+              Select
             </Button>
             <Button
               onClick={savePartitionPoints}

@@ -6,14 +6,98 @@ import AxiosInstance from "../AxiosInstance";
 
 const { Option } = Select;
 
-const ClearLandSetupModal = ({
-  visible,
-  onClose,
-  area,
-  perimeter,
-  onSave,
-  existingData,
-}) => {
+  const calculateEffortOutput = (weedEffort, plantEffort, stoneEffort) => {
+    return Math.ceil(weedEffort + plantEffort + stoneEffort);
+  };
+  
+  const calculateWeedEffort = (weedType, area, laborsCount, machineDetails) => {
+    let weedEffort = 0;
+    let totalWeedEffort = 0;
+    const machineEffortValues = { Backhoes: 0.714, Excavators: 0.0593 };
+    const weedEffortValues = { low: 0.036, medium: 0.042, high: 0 };
+  
+    if (weedType === "low" || weedType === "medium") {
+      weedEffort = weedEffortValues[weedType];
+      totalWeedEffort = (weedEffort / laborsCount) * area;
+    }
+    if (weedType === "high") {
+      if (machineDetails) {
+        machineDetails.forEach(({ type, count }) => {
+          if (type === "Backhoes") {
+            weedEffort = machineEffortValues[type] / parseInt(count);
+          }
+          if (type === "Excavators") {
+            weedEffort = machineEffortValues[type] / parseInt(count);
+          }
+          if (type !== "Backhoes" && type !== "Excavators") {
+            weedEffort = 0.714;
+          }
+        });
+      }
+      totalWeedEffort = (weedEffort * area) / 60;
+    }
+    return totalWeedEffort;
+  };
+  
+  const calculatePlantEffort = (plantDetails, machineDetails) => {
+    let plantEffort = 0;
+    let chainsawCount = 1;
+    const plantEffortValues = { Low: 1 / 12, Medium: 0.25, High: 0.5 };
+  
+    if (machineDetails) {
+      machineDetails.forEach(({ type, count }) => {
+        if (type === "Chainsaws") {
+          chainsawCount = parseInt(count);
+        }
+      });
+    }
+  
+    plantDetails.forEach(({ count, type }) => {
+      const effortPerPlant = plantEffortValues[count];
+      plantEffort += effortPerPlant * parseInt(type);
+    });
+  
+    return plantEffort / chainsawCount;
+  };
+  
+  const calculateStoneEffort = (stoneDetails, machineDetails) => {
+    let stoneEffort = 0;
+    let breakerCount = 1;
+    let totalStoneEffort = 0;
+    const stoneEffortValues = { Small: 0.5, High: 1 };
+  
+    if (machineDetails) {
+      machineDetails.forEach(({ type, count }) => {
+        if (type === "Excavator breakers") {
+          breakerCount = parseInt(count);
+        }
+      });
+    }
+  
+    stoneDetails.forEach(({ count, type }) => {
+      const effortPerStone = stoneEffortValues[count];
+      stoneEffort += effortPerStone * parseInt(type);
+    });
+  
+    totalStoneEffort = stoneEffort / breakerCount;
+    return totalStoneEffort;
+  };
+  
+  const calculateWorkDays = (effort, workHours) => {
+    const fulldays = Math.floor(effort / workHours);
+    const remainingHours = effort % workHours;
+    const totalDays = remainingHours === 0 ? fulldays : fulldays + 1;
+    return totalDays;
+  };
+  
+  const ClearLandSetupModal = ({
+    visible,
+    onClose,
+    area,
+    perimeter,
+    onSave,
+    existingData,
+  }) => {
     const [activeSection, setActiveSection] = useState(null);
   
     // Weed section states
@@ -41,117 +125,171 @@ const ClearLandSetupModal = ({
     const [stoneMachineType, setStoneMachineType] = useState("");
     const [stoneMachineCount, setStoneMachineCount] = useState("");
     const [stoneMachineList, setStoneMachineList] = useState([]);
-
-  useEffect(() => {
-    if (existingData) {
-      // Load existing data if available
-      setWeedType(existingData.weedType || "");
-      setLabourCount(existingData.labourCount || "");
-      setWorkHours(existingData.workHours || "");
-      setMachineList(existingData.machineList || []);
-    }
-  }, [existingData]);
-
-  const handleAddMachine = (type) => {
-    if (type === "weed") {
-      if (!machineType || !machineCount) {
-        message.error("Please select a machine type and enter a count");
-        return;
+  
+    // Calculation result states
+    const [weedCalculationResults, setWeedCalculationResults] = useState(null);
+    const [plantCalculationResults, setPlantCalculationResults] = useState(null);
+    const [stoneCalculationResults, setStoneCalculationResults] = useState(null);
+  
+    useEffect(() => {
+      if (existingData) {
+        // Load existing data if available
+        setWeedType(existingData.weedType || "");
+        setLabourCount(existingData.labourCount || "");
+        setWorkHours(existingData.workHours || "");
+        setMachineList(existingData.machineList || []);
       }
-      const newMachine = `${machineType} x ${machineCount}`;
-      setMachineList([...machineList, newMachine]);
-      setMachineType("");
-      setMachineCount("");
-    } else if (type === "plant") {
-      if (!plantMachineType || !plantMachineCount) {
-        message.error("Please select a machine type and enter a count");
-        return;
+    }, [existingData]);
+  
+    const handleAddMachine = (type) => {
+      if (type === "weed") {
+        if (!machineType || !machineCount) {
+          message.error("Please select a machine type and enter a count");
+          return;
+        }
+        const newMachine = `${machineType} x ${machineCount}`;
+        setMachineList([...machineList, newMachine]);
+        setMachineType("");
+        setMachineCount("");
+      } else if (type === "plant") {
+        if (!plantMachineType || !plantMachineCount) {
+          message.error("Please select a machine type and enter a count");
+          return;
+        }
+        const newMachine = `${plantMachineType} x ${plantMachineCount}`;
+        setPlantMachineList([...plantMachineList, newMachine]);
+        setPlantMachineType("");
+        setPlantMachineCount("");
+      } else if (type === "stone") {
+        if (!stoneMachineType || !stoneMachineCount) {
+          message.error("Please select a machine type and enter a count");
+          return;
+        }
+        const newMachine = `${stoneMachineType} x ${stoneMachineCount}`;
+        setStoneMachineList([...stoneMachineList, newMachine]);
+        setStoneMachineType("");
+        setStoneMachineCount("");
       }
-      const newMachine = `${plantMachineType} x ${plantMachineCount}`;
-      setPlantMachineList([...plantMachineList, newMachine]);
-      setPlantMachineType("");
-      setPlantMachineCount("");
-    } else if (type === "stone") {
-      if (!stoneMachineType || !stoneMachineCount) {
-        message.error("Please select a machine type and enter a count");
-        return;
-      }
-      const newMachine = `${stoneMachineType} x ${stoneMachineCount}`;
-      setStoneMachineList([...stoneMachineList, newMachine]);
-      setStoneMachineType("");
-      setStoneMachineCount("");
-    }
-  };
-
-
-  const handleRemoveMachine = (index, type) => {
-    if (type === "weed") {
-      const newMachineList = [...machineList];
-      newMachineList.splice(index, 1);
-      setMachineList(newMachineList);
-    } else if (type === "plant") {
-      const newMachineList = [...plantMachineList];
-      newMachineList.splice(index, 1);
-      setPlantMachineList(newMachineList);
-    } else if (type === "stone") {
-      const newMachineList = [...stoneMachineList];
-      newMachineList.splice(index, 1);
-      setStoneMachineList(newMachineList);
-    }
-  };
-
-  const handleAddPlant = () => {
-    if (!plantType || !plantCount) {
-      message.error("Please select a plant type and enter a count");
-      return;
-    }
-    const newPlant = `${plantType} x ${plantCount}`;
-    setPlantList([...plantList, newPlant]);
-    setPlantType("");
-    setPlantCount("");
-  };
-
-  const handleRemovePlant = (index) => {
-    const newPlantList = [...plantList];
-    newPlantList.splice(index, 1);
-    setPlantList(newPlantList);
-  };
-
-  const handleAddStone = () => {
-    if (!stoneType || !stoneCount) {
-      message.error("Please select a stone type and enter a count");
-      return;
-    }
-    const newStone = `${stoneType} x ${stoneCount}`;
-    setStoneList([...stoneList, newStone]);
-    setStoneType("");
-    setStoneCount("");
-  };
-
-  const handleRemoveStone = (index) => {
-    const newStoneList = [...stoneList];
-    newStoneList.splice(index, 1);
-    setStoneList(newStoneList);
-  };
-
-  const handleSave = () => {
-    const saveData = {
-      weedType,
-      labourCount,
-      workHours,
-      machineList,
-      plantList,
-      plantWorkHours,
-      plantMachineList,
-      stoneList,
-      stoneWorkHours,
-      stoneMachineList,
     };
-    onSave(saveData);
-    onClose();
-  };
-
-  if (!visible) return null;
+  
+    const handleRemoveMachine = (index, type) => {
+      if (type === "weed") {
+        const newMachineList = [...machineList];
+        newMachineList.splice(index, 1);
+        setMachineList(newMachineList);
+      } else if (type === "plant") {
+        const newMachineList = [...plantMachineList];
+        newMachineList.splice(index, 1);
+        setPlantMachineList(newMachineList);
+      } else if (type === "stone") {
+        const newMachineList = [...stoneMachineList];
+        newMachineList.splice(index, 1);
+        setStoneMachineList(newMachineList);
+      }
+    };
+  
+    const handleAddPlant = () => {
+      if (!plantType || !plantCount) {
+        message.error("Please select a plant type and enter a count");
+        return;
+      }
+      const newPlant = `${plantType} x ${plantCount}`;
+      setPlantList([...plantList, newPlant]);
+      setPlantType("");
+      setPlantCount("");
+    };
+  
+    const handleRemovePlant = (index) => {
+      const newPlantList = [...plantList];
+      newPlantList.splice(index, 1);
+      setPlantList(newPlantList);
+    };
+  
+    const handleAddStone = () => {
+      if (!stoneType || !stoneCount) {
+        message.error("Please select a stone type and enter a count");
+        return;
+      }
+      const newStone = `${stoneType} x ${stoneCount}`;
+      setStoneList([...stoneList, newStone]);
+      setStoneType("");
+      setStoneCount("");
+    };
+  
+    const handleRemoveStone = (index) => {
+      const newStoneList = [...stoneList];
+      newStoneList.splice(index, 1);
+      setStoneList(newStoneList);
+    };
+  
+    const calculateWeedSection = () => {
+      const weedMachineDetails = machineList.map(machine => {
+        const [type, count] = machine.split(" x ");
+        return { type, count };
+      });
+  
+      const weedEffort = calculateWeedEffort(weedType, area, parseInt(labourCount), weedMachineDetails);
+      const workDays = calculateWorkDays(weedEffort, parseInt(workHours));
+  
+      setWeedCalculationResults({ weedEffort, workDays });
+    };
+  
+    const calculatePlantSection = () => {
+      const plantMachineDetails = plantMachineList.map(machine => {
+        const [type, count] = machine.split(" x ");
+        return { type, count };
+      });
+  
+      const plantDetails = plantList.map(plant => {
+        const [count, type] = plant.split(" x ");
+        return { count, type };
+      });
+  
+      const plantEffort = calculatePlantEffort(plantDetails, plantMachineDetails);
+      const workDays = calculateWorkDays(plantEffort, parseInt(plantWorkHours));
+  
+      setPlantCalculationResults({ plantEffort, workDays });
+    };
+  
+    const calculateStoneSection = () => {
+      const stoneMachineDetails = stoneMachineList.map(machine => {
+        const [type, count] = machine.split(" x ");
+        return { type, count };
+      });
+  
+      const stoneDetails = stoneList.map(stone => {
+        const [count, type] = stone.split(" x ");
+        return { count, type };
+      });
+  
+      const stoneEffort = calculateStoneEffort(stoneDetails, stoneMachineDetails);
+      const workDays = calculateWorkDays(stoneEffort, parseInt(stoneWorkHours));
+  
+      setStoneCalculationResults({ stoneEffort, workDays });
+    };
+  
+    const handleSave = () => {
+      const saveData = {
+        weedType,
+        labourCount,
+        workHours,
+        machineList,
+        plantList,
+        plantWorkHours,
+        plantMachineList,
+        stoneList,
+        stoneWorkHours,
+        stoneMachineList,
+        weedCalculationResults,
+        plantCalculationResults,
+        stoneCalculationResults,
+      };
+      onSave(saveData);
+      onClose();
+    };
+  
+    if (!visible) return null;
+  
 
   return (
     <div
@@ -310,9 +448,9 @@ const ClearLandSetupModal = ({
                 onChange={(value) => setMachineType(value)}
                 placeholder="Select Machine"
               >
-                <Option value="tractor">Tractor</Option>
-                <Option value="excavator">Excavator</Option>
-                <Option value="bulldozer">Bulldozer</Option>
+                <Option value="Backhoes">Backhoes</Option>
+                <Option value="excavator">Excavators</Option>
+                {/* <Option value="bulldozer">Bulldozer</Option> */}
               </Select>
             </div>
             <div
@@ -403,9 +541,17 @@ const ClearLandSetupModal = ({
             </div>
           </div>
 
+          {weedCalculationResults && (
+      <div style={{ marginTop: "10px" }}>
+        <h6>Weed Clearing Results</h6>
+        <p>Weed Effort: {weedCalculationResults.weedEffort.toFixed(2)} hours</p>
+        {/* <p>Work Days: {weedCalculationResults.workDays}</p> */}
+      </div>
+    )}
+
           <div
         style={{
-          marginTop: "20px",
+          marginTop: "10px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -413,7 +559,7 @@ const ClearLandSetupModal = ({
       >
         <Button
           type="primary"
-          onClick={{}}
+          onClick={calculateWeedSection}
           style={{
             width: "47%",
             marginBottom: "10px",
@@ -465,9 +611,9 @@ const ClearLandSetupModal = ({
                 onChange={(value) => setPlantType(value)}
                 placeholder="Select Plant Type"
               >
-                 <Option value="low">Low</Option>
-                 <Option value="medium">Medium</Option>
-                 <Option value="high">High</Option>
+                 <Option value="Low">Low</Option>
+                 <Option value="Medium">Medium</Option>
+                 <Option value="High">High</Option>
               </Select>
             </div>
             <div
@@ -557,7 +703,7 @@ const ClearLandSetupModal = ({
           </div>
 
           
-          <div style={{ marginTop: "10px",
+          {/* <div style={{ marginTop: "10px",
               marginBottom: "10px",
               display: "flex",
               alignItems: "center",
@@ -569,9 +715,17 @@ const ClearLandSetupModal = ({
               onChange={(e) => setPlantWorkHours(e.target.value)}
               style={{ width: "65%" }}
             />
-          </div>
+          </div> */}
 
-
+         <h6
+            style={{
+              marginLeft: "10px",
+              marginBottom: "10px",
+              marginTop: "10px",
+            }}
+          >
+            Machinery
+          </h6> 
           <div
             style={{
               display: "flex",
@@ -603,9 +757,9 @@ const ClearLandSetupModal = ({
                 onChange={(value) => setPlantMachineType(value)}
                 placeholder="Select Machine"
               >
-                <Option value="tractor">Tractor</Option>
-                <Option value="excavator">Excavator</Option>
-                <Option value="bulldozer">Bulldozer</Option>
+                <Option value="Chainsaws">Chainsaws</Option>
+                <Option value="Excavator">Excavator</Option>
+                {/* <Option value="bulldozer">Bulldozer</Option> */}
               </Select>
             </div>
             <div
@@ -695,11 +849,20 @@ const ClearLandSetupModal = ({
             </div>
           </div>
 
-          <div style={{ marginTop: "20px",
+          {plantCalculationResults && (
+      <div style={{ marginTop: "10px" }}>
+        <h5>Plant Clearing Results</h5>
+        <p>Plant Effort: {plantCalculationResults.plantEffort.toFixed(2)} hours</p>
+        {/* <p>Work Days: {plantCalculationResults.workDays}</p> */}
+      </div>
+    )}
+
+          <div style={{ marginTop: "10px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",}}>
-            <Button type="primary" onClick={{}} style={{
+            <Button type="primary" onClick={calculatePlantSection} 
+            style={{
             width: "47%",
             marginBottom: "10px",
             marginTop: "10px",
@@ -742,9 +905,9 @@ const ClearLandSetupModal = ({
           onChange={(value) => setStoneType(value)}
           placeholder="Select Stone Type"
         >
-           <Option value="small">Small</Option>
-           <Option value="medium">Medium</Option>
-           <Option value="large">Large</Option>
+           <Option value="Small">Small</Option>
+           {/* <Option value="medium">Medium</Option> */}
+           <Option value="High">High</Option>
         </Select>
       </div>
       <div
@@ -833,7 +996,7 @@ const ClearLandSetupModal = ({
       </div>
     </div>
 
-    <div style={{ marginTop: "10px",
+    {/* <div style={{ marginTop: "10px",
         marginBottom: "10px",
         display: "flex",
         alignItems: "center",
@@ -845,7 +1008,7 @@ const ClearLandSetupModal = ({
         onChange={(e) => setStoneWorkHours(e.target.value)}
         style={{ width: "65%" }}
       />
-    </div>
+    </div> */}
 
     <div
       style={{
@@ -877,9 +1040,9 @@ const ClearLandSetupModal = ({
           onChange={(value) => setStoneMachineType(value)}
           placeholder="Select Machine"
         >
-          <Option value="tractor">Tractor</Option>
-          <Option value="excavator">Excavator</Option>
-          <Option value="bulldozer">Bulldozer</Option>
+          <Option value="Excavator breakers">Excavator breakers</Option>
+          {/* <Option value="excavator">Excavator</Option> */}
+          <Option value="Bulldozer">Bulldozer</Option>
         </Select>
       </div>
       <div
@@ -969,11 +1132,20 @@ const ClearLandSetupModal = ({
       </div>
     </div>
 
+    {stoneCalculationResults && (
+      <div style={{ marginTop: "20px" }}>
+        <h5>Stone Clearing Results</h5>
+        <p>Stone Effort: {stoneCalculationResults.stoneEffort.toFixed(2)} hours</p>
+        {/* <p>Work Days: {stoneCalculationResults.workDays}</p> */}
+      </div>
+    )}
+
     <div style={{ marginTop: "20px",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",}}>
-      <Button type="primary" onClick={{}} style={{
+      <Button type="primary" onClick={calculateStoneSection} 
+      style={{
       width: "47%",
       marginBottom: "10px",
       marginTop: "10px",
