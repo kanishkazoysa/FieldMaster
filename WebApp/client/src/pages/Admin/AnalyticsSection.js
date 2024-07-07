@@ -59,8 +59,9 @@ const AnalyticsSection = ({ users, setLoading }) => {
   };
 
   const mapContainerStyle = {
-    width: "100%",
+    width: "95%",
     height: "600px",
+    position: "relative", // Add this line
   };
 
   useEffect(() => {
@@ -346,42 +347,47 @@ const AnalyticsSection = ({ users, setLoading }) => {
           </div>
         </div>
       </div>
+      <hr />
       <div className="map">
-        <h3>Map Location Analytics</h3>
+        <h3 className="mapHeader">Map Location Analytics</h3>
         <LoadScript
           googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
           libraries={["places"]}
         >
-          <GoogleMap
-            mapContainerStyle={mapContainerStyle}
-            center={selectedLocation || mapCenter}
-            zoom={8}
-            ref={mapRef}
-            onLoad={onMapLoad}
-          >
-            <StandaloneSearchBox
-              onLoad={onSearchBoxLoad}
-              onPlacesChanged={handlePlacesChanged}
+          <div style={{ position: "relative" ,marginLeft:65,}}>
+            {" "}
+            {/* Add this wrapper div */}
+            <GoogleMap
+              mapContainerStyle={mapContainerStyle}
+              center={selectedLocation || mapCenter}
+              zoom={8}
+              ref={mapRef}
+              onLoad={onMapLoad}
             >
-              <div style={styles.searchContainer}>
-                <MdSearch style={styles.searchIcon} />
-                <input
-                  type="text"
-                  placeholder="Search location"
-                  style={styles.searchBox}
-                  onKeyDown={handleKeyDown}
+              <StandaloneSearchBox
+                onLoad={onSearchBoxLoad}
+                onPlacesChanged={handlePlacesChanged}
+              >
+                <div style={styles.searchContainer}>
+                  <MdSearch style={styles.searchIcon} />
+                  <input
+                    type="text"
+                    placeholder="Search location"
+                    style={styles.searchBox}
+                    onKeyDown={handleKeyDown}
+                  />
+                </div>
+              </StandaloneSearchBox>
+              {locationAnalytics.map((location, index) => (
+                <MarkerWithGeocoding
+                  key={location._id}
+                  location={location}
+                  geocodeLocation={geocodeLocation}
+                  index={index}
                 />
-              </div>
-            </StandaloneSearchBox>
-            {locationAnalytics.map((location, index) => (
-              <MarkerWithGeocoding
-                key={location._id}
-                location={location}
-                geocodeLocation={geocodeLocation}
-                index={index}
-              />
-            ))}
-          </GoogleMap>
+              ))}
+            </GoogleMap>
+          </div>
         </LoadScript>
       </div>
     </div>
@@ -392,14 +398,15 @@ const styles = {
   searchContainer: {
     position: "absolute",
     top: "10px",
-    left: "10px",
+    right: "140px",
     width: "300px",
     height: "40px",
     display: "flex",
     alignItems: "center",
     backgroundColor: "white",
-    borderRadius: "5px",
+    borderRadius: "10px",
     boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+    zIndex: 1, // Add this line to ensure the search bar appears above the map
   },
   searchIcon: {
     margin: "0 10px",
@@ -411,6 +418,7 @@ const styles = {
     outline: "none",
     padding: "5px",
     fontSize: "16px",
+    borderRadius: "10px",
   },
 };
 

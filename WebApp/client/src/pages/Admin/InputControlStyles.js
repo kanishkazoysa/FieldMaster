@@ -8,10 +8,14 @@ export const styles = {
     overflow: 'hidden',
   },
   container: {
+    borderRadius: "5px",
     display: "flex",
-    width: "100%",
+    width: "98.3%",
     flex: 1,
     overflow: 'hidden',
+    backgroundColor: "white",
+    border: "1px solid #dbdbdb",
+    marginLeft: "16px",
   },
   leftColumn: {
     width: "30%",
@@ -39,12 +43,14 @@ export const styles = {
     flexDirection: 'column',
   },
   header: {
-    width: "100%",
+    width: "98%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: "5px",
+    marginLeft: "16px",
     padding: "20px",
-    backgroundColor: "#15314f",
+    backgroundColor: "#007BFF",
     borderBottom: "1px solid #f1f1f1",
   },
   listWrapper: {
@@ -71,7 +77,7 @@ export const styles = {
   leftHeader: {
     color: "white",
     alignItems: "center",
-    backgroundColor: "#15314f",
+    backgroundColor: "#007BFF",
     justifyContent: "center",
     padding: "20px",
     display: "flex",

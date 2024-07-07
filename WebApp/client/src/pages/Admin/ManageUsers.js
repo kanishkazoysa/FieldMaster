@@ -322,6 +322,7 @@ function ManageUsers() {
                     </Modal>
 
                     <Table
+                    className="user_table"
                         columns={columns}
                         dataSource={userList}
                         pagination={userList.length > 10 ? pagination : false}
