@@ -12,9 +12,9 @@ import { useNavigation } from "@react-navigation/native";
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 import Headersection from "../../components/Headersection";
-import CustomButton from "../../components/CustomButton";
+
 import {styles} from './FertilizingDetailsStyles';
-import { Appbar, Button } from "react-native-paper";
+import { Button } from "react-native-paper";
 
 export default function FertilizationDetails({ route }) {
   const { params } = route;
