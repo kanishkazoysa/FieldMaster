@@ -15,6 +15,7 @@ const fertilizerRoute= require('./routes/fertilizerRoute.js');
 const fenceRoute = require('./routes/fenceRoute.js');
 const clearLandRoute = require('./routes/clearLandRoute.js');
 const MapTemplateRoute = require('./routes/MapTemplateRoute.js');
+const InputControlRoute = require('./routes/InputControlRoute.js');
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -29,6 +30,7 @@ app.use('/api/fertilizer', fertilizerRoute);
 app.use('/api/fence', fenceRoute);
 app.use('/api/clearLand', clearLandRoute);
 app.use('/api/auth/mapTemplate', MapTemplateRoute);
+app.use('/api/auth/inputControl', InputControlRoute);
 
 const port = process.env.PORT || 5000;
 
