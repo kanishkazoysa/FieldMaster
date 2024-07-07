@@ -134,10 +134,17 @@ const { Option } = Select;
     useEffect(() => {
       if (existingData) {
         // Load existing data if available
-        setWeedType(existingData.weedType || "");
-        setLabourCount(existingData.labourCount || "");
-        setWorkHours(existingData.workHours || "");
-        setMachineList(existingData.machineList || []);
+        setWeedType(existingData.weedData.weedType || "");
+        setLabourCount(existingData.weedData.labourCount || "");
+        setWorkHours(existingData.weedData.workHours || "");
+        setMachineList(existingData.weedData.machineList|| []);
+        setWeedCalculationResults(existingData.weedData.weedCalculationResults || null);
+        setPlantList(existingData.plantData.plantList || []);
+        setPlantMachineList(existingData.plantData.plantMachineList || []);
+        setPlantCalculationResults(existingData.plantData.plantCalculationResults || null);
+        setStoneList(existingData.stoneData.stoneList || []);
+        setStoneMachineList(existingData.stoneData.stoneMachineList || []);
+        setStoneCalculationResults(existingData.stoneData.stoneCalculationResults || null);
       }
     }, [existingData]);
   

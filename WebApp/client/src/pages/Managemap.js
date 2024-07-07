@@ -49,6 +49,8 @@ const Managemap = () => {
   const [fenceSetupData, setFenceSetupData] = useState({});
   const [plantationSetupData, setPlantationSetupData] = useState({});
   const [isEditingPlantation, setIsEditingPlantation] = useState(false);
+  const [isEditingFence, setIsEditingFence] = useState(false);
+  const [isEditingClearLand, setIsEditingClearLand] = useState(false);
   const [fenceSetupModalVisible, setFenceSetupModalVisible] = useState(false);
   const [clearLandSetupModalVisible, setClearLandSetupModalVisible] = useState(false);
   const [clearLandSetupData, setClearLandSetupData] = useState({});
@@ -90,6 +92,20 @@ const Managemap = () => {
   
     message.success("Clear land setup data saved successfully!");
     setClearLandSetupModalVisible(false);
+  };
+
+  const handleEditFenceSetup = () => {
+    if (selectedPolygonIndex !== null) {
+      const selectedPolygon = partitionPolygons[selectedPolygonIndex];
+      setSelectedPolygonData({
+        area: selectedPolygon.area,
+        perimeter: selectedPolygon.perimeter,
+      });
+      setIsEditingFence(true);
+      setFenceSetupModalVisible(true);
+    } else {
+      message.warning("Please select a partition first.");
+    }
   };
 
   const handleFenceSetup = () => {
@@ -514,7 +530,7 @@ const Managemap = () => {
   );
 }
 
-if (clearLandData && Object.keys(clearLandData).length > 0) {
+if (clearLandData && Object.keys(clearLandData).length > 0 && ( clearLandData.weedData || clearLandData.plantData || clearLandData.stoneData)) {
   modalContent = (
     <div style={styles.modalContent}>
       {modalContent}
@@ -1073,10 +1089,9 @@ if (clearLandData && Object.keys(clearLandData).length > 0) {
                   </Button>
                 )}
 
-{fenceSetupData[selectedPolygonIndex] && 
-     Object.keys(fenceSetupData[selectedPolygonIndex]).length > 0 ? (
+{fenceSetupData[selectedPolygonIndex]  ? (
       <Button
-        onClick={handleFenceSetup}
+        onClick={handleEditFenceSetup}
         icon={<TbFence />}
         style={styles.toolButton}
       >
@@ -1092,13 +1107,24 @@ if (clearLandData && Object.keys(clearLandData).length > 0) {
       </Button>
     )}
 
-<Button
-  onClick={handleClearLandSetup}
-  icon={<FiTrash2 />} 
-  style={styles.toolButton}
->
-  Clear Land
-</Button>
+{clearLandSetupData[selectedPolygonIndex] && 
+ Object.keys(clearLandSetupData[selectedPolygonIndex]).length > 0 ? (
+  <Button
+    onClick={handleClearLandSetup}
+    icon={<FiTrash2 />}
+    style={styles.toolButton}
+  >
+    Edit Clear Land
+  </Button>
+) : (
+  <Button
+    onClick={handleClearLandSetup}
+    icon={<FiTrash2 />}
+    style={styles.toolButton}
+  >
+    Clear Land
+  </Button>
+)}
 
 
               </>
@@ -1154,11 +1180,12 @@ if (clearLandData && Object.keys(clearLandData).length > 0) {
 
           <FenceSetupModal
             visible={fenceSetupModalVisible}
-            onClose={() => setFenceSetupModalVisible(false)}
+            onClose={() => {setFenceSetupModalVisible(false);
+              setIsEditingFence(false);} }
             area={selectedPolygonData?.area}
             perimeter={selectedPolygonData?.perimeter}
             onSave={handleFenceSetupSave}
-            existingData={fenceSetupData[selectedPolygonIndex]}
+            existingData={isEditingFence ? fenceSetupData[selectedPolygonIndex] : null}
           />
 
 <ClearLandSetupModal
