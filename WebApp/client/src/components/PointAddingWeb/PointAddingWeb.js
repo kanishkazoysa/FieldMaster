@@ -166,7 +166,7 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
   );
 };
 
-export default function Home() {
+export default function PointAddingWeb() {
   const location = useLocation();
   const navigate = useNavigate();
   const messageShownRef = useRef(false);

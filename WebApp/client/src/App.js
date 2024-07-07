@@ -25,7 +25,7 @@ import LoginPage from './pages/auth/Login/LoginPage';
 import FPPage from './pages/auth/ForgotPassowrd/FPPage';
 import OtpPage from './pages/auth/ForgotPassowrd/OtpPage';
 import CPPage from './pages/auth/ForgotPassowrd/CPPage';
-import PointAddingWeb from './components/PointAddingWeb/PointAddingWeb.js';
+import PointAddingWeb from './components/PointAddingWeb/PointAddingWeb';
 
 const UserRouteGuard = ({ children }) => {
   const token = localStorage.getItem('UserToken');
