@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback } from "react";
 import {
   TouchableOpacity,
   View,
@@ -6,41 +6,47 @@ import {
   Image,
   ScrollView,
   StatusBar,
-} from 'react-native';
-import { Appbar } from 'react-native-paper';
-import { styles } from './SavedTemplatesScreenStyles';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useFocusEffect } from '@react-navigation/native';
-import AxiosInstance from '../../../AxiosInstance';
-import { responsiveFontSize } from 'react-native-responsive-dimensions';
+  ActivityIndicator,
+} from "react-native";
+import { Appbar } from "react-native-paper";
+import { styles } from "./SavedTemplatesScreenStyles";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useFocusEffect } from "@react-navigation/native";
+import AxiosInstance from "../../../AxiosInstance";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 const CustomEditIcon = (props) => {
   <MaterialCommunityIcons
     {...props}
-    name='square-edit-outline'
+    name="square-edit-outline"
     size={responsiveFontSize(3.5)}
-    color='#65676B'
+    color="#65676B"
   />;
 };
 const CustomDeleteIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='trash-can-outline'
+    name="trash-can-outline"
     size={responsiveFontSize(3)}
-    color='#65676B'
+    color="#65676B"
   />
 );
+
+const truncateText = (text, maxLength) => {
+  if (text.length <= maxLength) return text;
+  return text.substr(0, maxLength) + "...";
+};
 
 const SavedTemplatesScreen = ({ navigation }) => {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchData = () => {
-    console.log('calling api to get all templates...');
+    console.log("calling api to get all templates...");
     AxiosInstance.get(`/api/auth/mapTemplate/getAllTemplates`)
       .then((response) => {
         setTemplates(response.data);
-        console.log('fetching successful');
+        console.log("fetching successful");
         setLoading(false);
       })
       .catch((error) => {
@@ -60,7 +66,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
       `/api/auth/mapTemplate/deleteTemplate/${deletingTemplate._id}`
     )
       .then((response) => {
-        alert('Template deleted');
+        alert("Template deleted");
         setTemplates(
           templates.filter((template) => template._id !== deletingTemplate._id)
         );
@@ -71,22 +77,22 @@ const SavedTemplatesScreen = ({ navigation }) => {
   };
 
   const handleTemplatePress = (item) => {
-    console.log('template pressed');
-    navigation.navigate('TemplateView', { item: item });
+    console.log("template pressed");
+    navigation.navigate("TemplateView", { item: item });
   };
 
   return (
     <>
       <View>
-        <StatusBar barStyle='light-content' backgroundColor='#007BFF' />
+        <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
         <Appbar.Header style={styles.header}>
           <Appbar.BackAction
-            onPress={() => navigation.navigate('Home')}
-            color='white'
+            onPress={() => navigation.navigate("Home")}
+            color="white"
           />
           <Appbar.Content
-            title='Saved Templates'
+            title="Saved Templates"
             titleStyle={styles.title_text}
           />
         </Appbar.Header>
@@ -94,7 +100,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
       {loading ? (
         <View style={styles.loadingScreen}>
           <View style={styles.dotsWrapper}>
-            <ActivityIndicator color='#007BFF' size={45} />
+            <ActivityIndicator color="#007BFF" size={45} />
           </View>
         </View>
       ) : (
@@ -117,7 +123,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
                           source={{
                             uri:
                               item.imageUrl ||
-                              'https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png',
+                              "https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png",
                           }}
                         />
                       </View>
@@ -129,10 +135,10 @@ const SavedTemplatesScreen = ({ navigation }) => {
                             {item.templateName}
                           </Text>
                           <Text style={styles.sub_text_style}>
-                            Location: {item.location}
+                            Location: {truncateText(item.location, 16)}
                           </Text>
                           <Text style={styles.sub_text_style}>
-                            Date: {item.date}{' '}
+                            Date: {item.date}{" "}
                           </Text>
                           <Text style={styles.sub_text_style}>
                             Time: {item.time}
@@ -143,13 +149,13 @@ const SavedTemplatesScreen = ({ navigation }) => {
                         <TouchableOpacity
                           style={styles.icon_style}
                           onPress={() => {
-                            navigation.navigate('EditTemplate', { item: item });
+                            navigation.navigate("EditTemplate", { item: item });
                           }}
                         >
                           <MaterialCommunityIcons
-                            name='square-edit-outline'
+                            name="square-edit-outline"
                             size={responsiveFontSize(2.7)}
-                            color='#65676B'
+                            color="#65676B"
                           />
                         </TouchableOpacity>
 

@@ -1,25 +1,31 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Polygon } from 'react-native-maps';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { View, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
-import { TextInput, Alert } from 'react-native';
-import { Polyline } from 'react-native-maps';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { polygon, area, length } from '@turf/turf';
+import React, { useEffect, useState, useRef } from "react";
+import { Polygon } from "react-native-maps";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+  ActivityIndicator,
+} from "react-native";
+import { TextInput, Alert } from "react-native";
+import { Polyline } from "react-native-maps";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { polygon, area, length } from "@turf/turf";
 import {
   faLayerGroup,
   faLocationCrosshairs,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { styles } from './PointAddingScreenStyles';
-import MapView, { MAP_TYPES } from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-import * as Location from 'expo-location';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { responsiveFontSize } from 'react-native-responsive-dimensions';
-import { captureRef } from 'react-native-view-shot';
-import * as FileSystem from 'expo-file-system';
-import axios from 'axios';
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { styles } from "./PointAddingScreenStyles";
+import MapView, { MAP_TYPES } from "react-native-maps";
+import { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { captureRef } from "react-native-view-shot";
+import axios from "axios";
 
 const PointAddingScreen = ({ navigation, route }) => {
   const [showUserLocation, setShowUserLocation] = useState(false);
@@ -35,17 +41,18 @@ const PointAddingScreen = ({ navigation, route }) => {
   const mapRef = React.useRef(null);
   const viewShotRef = useRef(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [capturedImageUri, setCapturedImageUri] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const uploadToImgbb = async (imageUri) => {
-    const apiKey = 'a08fb8cde558efecce3f05b7f97d4ef7';
+    const apiKey = "a08fb8cde558efecce3f05b7f97d4ef7";
     const formData = new FormData();
-    formData.append('image', {
+    formData.append("image", {
       uri: imageUri,
-      type: 'image/jpeg',
-      name: 'map_image.jpg',
+      type: "image/jpeg",
+      name: "map_image.jpg",
     });
 
     try {
@@ -54,13 +61,13 @@ const PointAddingScreen = ({ navigation, route }) => {
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         }
       );
       return response.data.data.url;
     } catch (error) {
-      console.error('Error uploading image to imgbb:', error);
+      console.error("Error uploading image to imgbb:", error);
       throw error;
     }
   };
@@ -95,8 +102,8 @@ const PointAddingScreen = ({ navigation, route }) => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access location was denied');
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
         return;
       }
       let location = await Location.getCurrentPositionAsync({
@@ -124,7 +131,7 @@ const PointAddingScreen = ({ navigation, route }) => {
     if (points.length > 2) {
       setIsPolygonComplete(true);
     } else {
-      alert('You need at least 3 points to complete a polygon');
+      alert("You need at least 3 points to complete a polygon");
     }
   };
   /* the handleUndoLastPoint function is used to undo the last point */
@@ -137,19 +144,19 @@ const PointAddingScreen = ({ navigation, route }) => {
   const handleSaveMap = async () => {
     try {
       if (points.length < 3) {
-        alert('You need at least 3 points to calculate area and perimeter');
+        alert("You need at least 3 points to calculate area and perimeter");
         return;
       }
 
-      let imageUrl = '';
+      let imageUrl = "";
       if (mapRef.current) {
         const uri = await captureRef(mapRef.current, {
-          format: 'jpg',
+          format: "jpg",
           quality: 0.8,
         });
-        console.log('Captured image URI:', uri);
+        console.log("Captured image URI:", uri);
         imageUrl = await uploadToImgbb(uri);
-        console.log('Uploaded image URL:', imageUrl);
+        console.log("Uploaded image URL:", imageUrl);
       }
 
       const formattedPoints = points.map((point) => [
@@ -160,23 +167,23 @@ const PointAddingScreen = ({ navigation, route }) => {
 
       const poly = polygon([formattedPoints]);
       const areaMeters = area(poly);
-      const perimeterMeters = length(poly, { units: 'meters' });
+      const perimeterMeters = length(poly, { units: "meters" });
       const areaPerches = areaMeters / 25.29285264;
       const perimeterKilometers = perimeterMeters / 1000;
 
       Alert.alert(
-        'Confirmation',
+        "Confirmation",
         `Area: ${areaPerches.toFixed(2)} perches, Perimeter: ${perimeterKilometers.toFixed(2)} kilometers`,
         [
           {
-            text: 'Cancel',
+            text: "Cancel",
             onPress: () => setPoints([]),
-            style: 'cancel',
+            style: "cancel",
           },
           {
-            text: 'OK',
+            text: "OK",
             onPress: () => {
-              navigation.navigate('SaveScreen', {
+              navigation.navigate("SaveScreen", {
                 locationPoints: points,
                 area: areaPerches,
                 perimeter: perimeterKilometers,
@@ -188,8 +195,8 @@ const PointAddingScreen = ({ navigation, route }) => {
         { cancelable: false }
       );
     } catch (error) {
-      console.error('Error saving map:', error);
-      alert('An error occurred while saving the map. Please try again.');
+      console.error("Error saving map:", error);
+      alert("An error occurred while saving the map. Please try again.");
     }
   };
 
@@ -201,13 +208,13 @@ const PointAddingScreen = ({ navigation, route }) => {
 
   /* the handleCancel function is used to navigate to the home screen */
   const handleCancel = () => {
-    navigation.navigate('Home');
+    navigation.navigate("Home");
   };
   const mapTypes = [
-    { name: 'Satellite', value: 'satellite' },
-    { name: 'Standard', value: 'standard' },
-    { name: 'Hybrid', value: 'hybrid' },
-    { name: 'Terrain', value: 'terrain' },
+    { name: "Satellite", value: "satellite" },
+    { name: "Standard", value: "standard" },
+    { name: "Hybrid", value: "hybrid" },
+    { name: "Terrain", value: "terrain" },
   ];
 
   /* the toggleMapType function is used to toggle the map type */
@@ -244,17 +251,17 @@ const PointAddingScreen = ({ navigation, route }) => {
             });
           }
         } else {
-          console.error('Location not found');
+          console.error("Location not found");
         }
       } catch (error) {
-        console.error('Error searching for location:', error);
+        console.error("Error searching for location:", error);
       }
     }
   };
 
   /* the clearSearchQuery function is used to clear the search query */
   const clearSearchQuery = () => {
-    setSearchQuery('');
+    setSearchQuery("");
   };
 
   return (
@@ -262,7 +269,7 @@ const PointAddingScreen = ({ navigation, route }) => {
       {loading ? (
         <View style={styles.loadingScreen}>
           <View style={styles.dotsWrapper}>
-            <ActivityIndicator color='#007BFF' size={45} />
+            <ActivityIndicator color="#007BFF" size={45} />
           </View>
         </View>
       ) : (
@@ -270,14 +277,14 @@ const PointAddingScreen = ({ navigation, route }) => {
           <View style={styles.searchbar}>
             <View style={styles.locationIconContainer}>
               <MaterialIcons
-                name='location-on'
+                name="location-on"
                 size={responsiveFontSize(2.5)}
-                color='#007BFF'
+                color="#007BFF"
               />
             </View>
             <TextInput
-              placeholder='Search Location'
-              placeholderTextColor='rgba(0, 0, 0, 0.5)'
+              placeholder="Search Location"
+              placeholderTextColor="rgba(0, 0, 0, 0.5)"
               onFocus={onFocus}
               onBlur={onBlur}
               style={[
@@ -288,21 +295,21 @@ const PointAddingScreen = ({ navigation, route }) => {
               value={searchQuery}
               onSubmitEditing={searchLocation}
             />
-            {searchQuery !== '' && (
+            {searchQuery !== "" && (
               <TouchableOpacity
                 onPress={clearSearchQuery}
                 style={styles.clearIconContainer}
               >
                 <MaterialIcons
-                  name='cancel'
+                  name="cancel"
                   size={responsiveFontSize(2.5)}
-                  color='#707070'
+                  color="#707070"
                 />
               </TouchableOpacity>
             )}
           </View>
           <Modal
-            animationType='slide'
+            animationType="slide"
             transparent={true}
             visible={modalVisible}
             onRequestClose={closeModal}
@@ -310,9 +317,9 @@ const PointAddingScreen = ({ navigation, route }) => {
             <View
               style={{
                 flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
               }}
             >
               <View style={styles.centeredView}>
@@ -372,15 +379,15 @@ const PointAddingScreen = ({ navigation, route }) => {
                   {!isPolygonComplete && points.length > 1 && (
                     <Polyline
                       coordinates={points}
-                      strokeColor='#000'
+                      strokeColor="#000"
                       strokeWidth={1}
                     />
                   )}
                   {isPolygonComplete && points.length > 2 && (
                     <Polygon
                       coordinates={points}
-                      strokeColor='#000'
-                      fillColor='rgba(199, 192, 192, 0.5)'
+                      strokeColor="#000"
+                      fillColor="rgba(199, 192, 192, 0.5)"
                       strokeWidth={1}
                     />
                   )}
@@ -396,7 +403,7 @@ const PointAddingScreen = ({ navigation, route }) => {
                   <FontAwesomeIcon
                     icon={faLayerGroup}
                     size={responsiveFontSize(3)}
-                    color='#fff'
+                    color="#fff"
                   />
                   {showDropdown && (
                     <View style={styles.dropdownContainer}>
@@ -407,7 +414,7 @@ const PointAddingScreen = ({ navigation, route }) => {
                             style={styles.dropdownItem}
                             onPress={() => selectMapType(index)}
                           >
-                            <Text style={{ color: '#fff' }}>{item.name}</Text>
+                            <Text style={{ color: "#fff" }}>{item.name}</Text>
                           </TouchableOpacity>
                         )}
                         keyExtractor={(item) => item.value}
@@ -422,7 +429,7 @@ const PointAddingScreen = ({ navigation, route }) => {
                   <FontAwesomeIcon
                     icon={faLocationCrosshairs}
                     size={responsiveFontSize(3)}
-                    color='#fff'
+                    color="#fff"
                   />
                 </TouchableOpacity>
                 <View>
@@ -432,9 +439,9 @@ const PointAddingScreen = ({ navigation, route }) => {
                       onPressOut={() => setIsButtonPressed(false)}
                     >
                       <MaterialCommunityIcons
-                        name='arrow-u-left-top'
+                        name="arrow-u-left-top"
                         size={responsiveFontSize(3)}
-                        color='white'
+                        color="white"
                         style={styles.sideIconStyle}
                         onPress={handleUndoLastPoint}
                       />
@@ -444,9 +451,9 @@ const PointAddingScreen = ({ navigation, route }) => {
                       onPressOut={() => setIsButtonPressed(false)}
                     >
                       <MaterialCommunityIcons
-                        name='shape-polygon-plus'
+                        name="shape-polygon-plus"
                         size={responsiveFontSize(3)}
-                        color='white'
+                        color="white"
                         style={styles.sideIconStyle}
                         onPress={handleCompleteMap}
                       />
