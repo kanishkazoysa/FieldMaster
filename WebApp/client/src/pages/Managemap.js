@@ -297,7 +297,8 @@ const Managemap = () => {
           ...polygon,
           plantationSetup: plantationSetupData[index] || {},
           fenceSetup: fenceSetupData[index] || {},
-          
+          clearLandSetup: clearLandSetupData[index] || {}, 
+
         })
       );
 
@@ -791,6 +792,9 @@ if (clearLandData && Object.keys(clearLandData).length > 0) {
         const fetchedPlantationSetupData = {};
         // Set fence setup data
         const fetchedFenceSetupData = {};
+
+        const fetchedClearLandSetupData = {};
+
         fetchedPartitionPolygons.forEach((polygon, index) => {
           if (polygon.plantationSetup) {
             fetchedPlantationSetupData[index] = polygon.plantationSetup;
@@ -798,9 +802,13 @@ if (clearLandData && Object.keys(clearLandData).length > 0) {
           if (polygon.fenceSetup) {
             fetchedFenceSetupData[index] = polygon.fenceSetup;
           }
+          if (polygon.clearLandSetup) {
+            fetchedClearLandSetupData[index] = polygon.clearLandSetup;
+          }
         });
         setPlantationSetupData(fetchedPlantationSetupData);
         setFenceSetupData(fetchedFenceSetupData);
+        setClearLandSetupData(fetchedClearLandSetupData);
   
         const avgLatitude =
           fetchedPoints.reduce((total, point) => total + point.latitude, 0) /
