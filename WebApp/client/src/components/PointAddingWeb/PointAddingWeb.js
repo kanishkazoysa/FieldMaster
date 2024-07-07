@@ -502,6 +502,12 @@ export default function PointAddingWeb() {
           perimeter: `${perimeterKilometers.toFixed(2)} km`,
         }));
 
+        // Show capturing alert
+        message.loading({
+          content: "Capturing map image...",
+          key: "imgCapture",
+        });
+
         // Wait for the next render cycle to ensure the polygon is drawn
         setTimeout(() => {
           const uploadToImgbb = async (imageBlob) => {
@@ -532,7 +538,7 @@ export default function PointAddingWeb() {
           html2canvas(mapContainer, {
             useCORS: true,
             allowTaint: true,
-            scale: 0.5, // Reduce the scale to 50%
+            scale: 0.5,
             ignoreElements: (element) => {
               return (
                 element.tagName === "LINK" &&
@@ -545,7 +551,7 @@ export default function PointAddingWeb() {
                 async (blob) => {
                   try {
                     // Compress the image before uploading
-                    const compressedBlob = await compressImage(blob, 0.7); // 70% quality
+                    const compressedBlob = await compressImage(blob, 0.7);
 
                     // Upload to imgbb
                     const imageUrl = await uploadToImgbb(compressedBlob);
@@ -555,6 +561,13 @@ export default function PointAddingWeb() {
                       ...prevData,
                       screenshot: imageUrl,
                     }));
+
+                    // Show success message
+                    message.success({
+                      content: "Map image captured successfully!",
+                      key: "imgCapture",
+                      duration: 2,
+                    });
                   } catch (error) {
                     console.error("Error processing map:", error);
                     message.error(
@@ -572,7 +585,7 @@ export default function PointAddingWeb() {
                 },
                 "image/jpeg",
                 0.7
-              ); // Convert to JPEG with 70% quality
+              );
             })
             .catch((error) => {
               console.error("Error capturing map:", error);
@@ -580,13 +593,12 @@ export default function PointAddingWeb() {
                 "An error occurred while capturing the map. Please try again."
               );
             });
-        }, 100); // Delay of 100ms to ensure polygon is rendered
+        }, 100);
       }
     } else {
       message.error("Please add at least 3 points to complete the polygon.");
     }
   };
-
   // Helper function to compress the image
   const compressImage = (file, quality) => {
     return new Promise((resolve, reject) => {
