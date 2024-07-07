@@ -4,7 +4,7 @@ import '../SavedTemplates/SavedTemplatesWeb.css';
 import Card from './Card.js';
 import { FaSearch } from 'react-icons/fa';
 import AxiosInstance from '../../AxiosInstance';
-import { message, Empty, Modal, Button } from 'antd';
+import { message, Empty, Modal, Button, Spin } from 'antd';
 
 const SavedTemplatesWeb = ({
   onBackToSidebar,
@@ -15,17 +15,21 @@ const SavedTemplatesWeb = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const getAllTemplates = () => {
+    setLoading(true);
     AxiosInstance.get(`/api/auth/mapTemplate/getAllTemplates`)
       .then((response) => {
         setTemplates(response.data);
         console.log('Templates fetched successfully');
         console.log(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.error('Failed to fetch templates:', error);
         message.error('Failed to fetch templates');
+        setLoading(false);
       });
   };
 
@@ -92,24 +96,35 @@ const SavedTemplatesWeb = ({
           </div>
 
           <div className='cardsDiv'>
-            {filteredTemplates.length > 0 ? (
-              filteredTemplates.map((template) => (
-                <Card
-                  key={template._id}
-                  templateName={template.templateName}
-                  location={template.location}
-                  date={template.date}
-                  imageUrl={template.imageUrl}
-                  onClick={() => onCardClick(template)}
-                  onDelete={() => showDeleteConfirm(template)}
-                  onEdit={() => handleEditTemplateClick(template)}
-                />
-              ))
+            {loading ? (
+              <div className='spin-container'>
+                <Spin size='large'>
+                  <div className='content' />
+                </Spin>
+                <div className='loading-text'>Loading templates...</div>
+              </div>
             ) : (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description={<span>You don't have any templates yet</span>}
-              />
+              <>
+                {filteredTemplates.length > 0 ? (
+                  filteredTemplates.map((template) => (
+                    <Card
+                      key={template._id}
+                      templateName={template.templateName}
+                      location={template.location}
+                      date={template.date}
+                      imageUrl={template.imageUrl}
+                      onClick={() => onCardClick(template)}
+                      onDelete={() => showDeleteConfirm(template)}
+                      onEdit={() => handleEditTemplateClick(template)}
+                    />
+                  ))
+                ) : (
+                  <Empty
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    description={<span>You don't have any templates yet</span>}
+                  />
+                )}
+              </>
             )}
           </div>
         </div>
