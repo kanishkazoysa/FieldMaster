@@ -29,7 +29,7 @@ export const styles = {
       fontWeight: "bold",
       marginBottom: 0,
       color: "white",
-      marginLeft: "95px",
+      marginLeft: "85px",
     },
   
     Box1: {
@@ -75,7 +75,7 @@ export const styles = {
     propertyDetails: {
       flexDirection: "column",
       marginLeft: 10,
-      width: "50%",
+      width: "100%",
       //height: 40,
       backgroundColor: "white",
     },
@@ -120,14 +120,22 @@ export const styles = {
         outline: "none",
       },
   
-    box2Property: {
+    box2Property1: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      paddingLeft: 19,
+      justifyContent: "center",
+      backgroundColor: "white",
+      width: "35%",
+    },
+    box2Property2: {
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "white",
-      width: "46%",
-      padding: 7,
+      width: "76%",
     },
   
     box2PropertyDetails: {
@@ -382,15 +390,11 @@ export const styles = {
     },
   
     Button1: {
-      display: "flex",
-      width: "100%",
-      height: 35,
-      backgroundColor: "#0866FF",
-      alignItems: "center",
-      justifyContent: "center",
-      marginTop: 130,
-      borderRadius: 11,
-      borderWidth: 0,
+    width: "100%",
+    padding: '17px',
+    alignItems: "center",
+    marginTop: 180,
+    borderRadius: 11,
     },
   };
   

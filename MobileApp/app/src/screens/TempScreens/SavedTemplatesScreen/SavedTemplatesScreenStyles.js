@@ -16,6 +16,17 @@ export const styles = StyleSheet.create({
       },
     }),
   },
+
+  loadingScreen: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  dotsWrapper: {
+    width: 100,
+  },
+  
   top_Bar: {
     alignItems: 'center',
     justifyContent: 'center',

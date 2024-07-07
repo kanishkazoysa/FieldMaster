@@ -1,5 +1,4 @@
-// SideNavbar.js
-import React, { useState} from "react";
+import React, { useEffect, useState } from "react";
 import { MdArrowBack, MdFormatLineSpacing } from "react-icons/md";
 import { RxRowSpacing } from "react-icons/rx";
 import { PiTreeEvergreenFill } from "react-icons/pi";
@@ -7,20 +6,18 @@ import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
 import { styles } from "./plantationStyles.js";
 import Select from "react-select";
-import { message } from "antd";
+import { message, Button } from "antd";
 import PlantationDetails from "../PlantationDetails/plantationDetails";
 import AxiosInstance from "../../../AxiosInstance";
-import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
-export default function Plantation({ 
+import TemplateDetails from "../../SavedTemplates/TemplateDetails.js";
+export default function Plantation({
   onBackToSidebar,
   id,
   Perimeter,
   area,
   onEditTemplateClick,
-  template
+  template,
 }) {
- 
-  const [textPlant, settextPlant] = useState(null);
   const [PlantSpaceUnitselectedValue, setPlantSpaceUnitselectedValue] =
     useState("");
   const [RowSpaceUnitselectedValue, setRowSpaceUnitselectedValue] =
@@ -29,13 +26,28 @@ export default function Plantation({
     useState("");
   const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
     useState("");
-
   const [textplantspace, settextplantspace] = useState("");
   const [textRowspace, settextRowspace] = useState("");
-
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
+  const [plants, setPlants] = useState([]);
+  const [textPlant, setTextPlant] = useState(null);
 
+  useEffect(() => {
+    fetchPlants();
+  }, []);
+
+  const fetchPlants = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/Plants"
+      );
+      setPlants(response.data);
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+      message.error("Failed to fetch plants. Please try again.");
+    }
+  };
 
   const handleInput1Change = (event) => {
     settextplantspace(event.target.value);
@@ -45,14 +57,10 @@ export default function Plantation({
     settextRowspace(event.target.value);
   };
 
-  const handleInputPlantType = (event) => {
-    settextPlant(event.target.value);
-  };
-
-  const backtotemp = () =>{
+  const backtotemp = () => {
     setCurrentPage("TemplateDetails"); // Update this line
     setAnimatePage(true);
-  }
+  };
   const handlePlantSpaceUnitChange = (selectedOption) => {
     setPlantSpaceUnitselectedValue1(selectedOption);
     setPlantSpaceUnitselectedValue(selectedOption.value);
@@ -63,8 +71,22 @@ export default function Plantation({
     setRowSpaceUnitselectedValue(selectedOption.value);
   };
 
+  let plantSpaceInMeters = textplantspace;
+  let rowSpaceInMeters = textRowspace;
 
+  if (PlantSpaceUnitselectedValue === "cm") {
+    plantSpaceInMeters = parseFloat(textplantspace) / 100;
+  }
+  if (PlantSpaceUnitselectedValue === "m") {
+    plantSpaceInMeters = plantSpaceInMeters;
+  }
 
+  if (PlantSpaceUnitselectedValue === "cm") {
+    rowSpaceInMeters = parseFloat(textRowspace) / 100;
+  }
+  if (PlantSpaceUnitselectedValue === "m") {
+    rowSpaceInMeters = rowSpaceInMeters;
+  }
 
   const handlePlantationDetails = async (e) => {
     // Validate the data
@@ -75,28 +97,24 @@ export default function Plantation({
       !textplantspace ||
       !textRowspace
     ) {
-      message.error("Please fill all input fields")
+      message.error("Please fill all input fields");
       return;
     }
-  
+
     const regex = /^\d+(\.\d+)?$/; // allow decimal and float numbers
-    if (
-      !regex.test(textplantspace) ||
-      !regex.test(textRowspace)
-    ) {
-      message.error("Please fill valid input")
+    if (!regex.test(textplantspace) || !regex.test(textRowspace)) {
+      message.error("Please fill valid input");
       return;
     }
-  
+
     AxiosInstance.post("/api/plantation/plantation", {
       id,
       area,
-      textPlant,
-      textplantspace,
-      textRowspace,
-      PlantSpaceUnitselectedValue,
-      RowSpaceUnitselectedValue,
-
+      textPlant: textPlant ? textPlant.value : null,
+      textplantspace: plantSpaceInMeters,
+      textRowspace: rowSpaceInMeters,
+      PlantSpaceUnitselectedValue: "m", // Send 'm' as the unit
+      //RowSpaceUnitselectedValue,
     })
       .then((response) => {
         // If backend response is successful, navigate to detail page
@@ -106,8 +124,14 @@ export default function Plantation({
         console.log("Response:", response.data);
       })
       .catch((error) => {
-        console.error("Error:", error.response ? error.response.data : error.message);
-        message.error("Error", "Failed to create plantation. Please try again.")
+        console.error(
+          "Error:",
+          error.response ? error.response.data : error.message
+        );
+        message.error(
+          "Error",
+          "Failed to create plantation. Please try again."
+        );
         alert("Error", "Failed to create plantation. Please try again.");
       });
   };
@@ -118,10 +142,6 @@ export default function Plantation({
       setCurrentPage(null);
     }, 300);
   };
-
-
-
-
 
   return (
     <div>
@@ -152,9 +172,7 @@ export default function Plantation({
                 <PiSquareDuotone color="gray" size={35} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
-                  <p style={styles.propertyValue}>
-                    {/* {area} m<sup>2</sup> */}{area } Acres
-                  </p>
+                  <p style={styles.propertyValue}>{area} Perches</p>
                 </div>
               </div>
             </div>
@@ -162,28 +180,34 @@ export default function Plantation({
 
           {/* box 2 */}
           <div style={styles.box2}>
-            <div style={styles.box2Property}>
-              <PiTreeEvergreenFill name="plant" size={35} color="gray" />
+            <div style={styles.box2Property1}>
+              <PiTreeEvergreenFill name="plant" size={25} color="gray" />
               <div style={styles.box2PropertyDetails}>
                 <p style={styles.Box2PropertyLabel}>Plant</p>
               </div>
             </div>
-            <div style={styles.box2Property}>
-              <input
-                type="text"
-                style={styles.box2input}
-                placeholder="Tea"
+            <div style={styles.box2Property2}>
+              <Select
+                style={{ width: "120%" }}
+                placeholder="Select a plant"
                 value={textPlant}
-                onChange={handleInputPlantType}
+                onChange={(selectedOption) => setTextPlant(selectedOption)}
+                options={plants.map((plant) => ({
+                  value: plant.Name,
+                  label: plant.Name,
+                }))}
               />
-
             </div>
           </div>
           {/* box 3 */}
           <div style={styles.box3}>
             <div style={styles.box3Property}>
               <div style={{ transform: "rotate(90deg)" }}>
-                <RxRowSpacing name="format-line-spacing" size={25} color="gray" />
+                <RxRowSpacing
+                  name="format-line-spacing"
+                  size={25}
+                  color="gray"
+                />
               </div>
               <div style={styles.box3PropertyDetails}>
                 <p style={styles.Box3PropertyLabel}>Plant Spacing</p>
@@ -192,7 +216,7 @@ export default function Plantation({
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="number"
+                  type="text"
                   style={styles.box3input}
                   placeholder="0"
                   value={textplantspace}
@@ -202,7 +226,7 @@ export default function Plantation({
                   placeholder="m"
                   options={[
                     { value: "m", label: "m" },
-                    //{ value: "cm", label: "cm" },
+                    { value: "cm", label: "cm" },
                   ]}
                   value={PlantSpaceUnitselectedValue1}
                   onChange={handlePlantSpaceUnitChange}
@@ -222,7 +246,11 @@ export default function Plantation({
           <div style={styles.box3}>
             <div style={styles.box3Property}>
               <div style={{ transform: "rotate(90deg)" }}>
-                <MdFormatLineSpacing name="format-row-spacing" size={25} color="gray" />
+                <MdFormatLineSpacing
+                  name="format-row-spacing"
+                  size={25}
+                  color="gray"
+                />
               </div>
               <div style={styles.box3PropertyDetails}>
                 <p style={styles.Box3PropertyLabel}>Row Spacing</p>
@@ -231,7 +259,7 @@ export default function Plantation({
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="number"
+                  type="text"
                   style={styles.box3input}
                   placeholder="0"
                   value={textRowspace}
@@ -241,7 +269,7 @@ export default function Plantation({
                   placeholder="m"
                   options={[
                     { value: "m", label: "m" },
-                   // { value: "cm", label: "cm" },
+                    { value: "cm", label: "cm" },
                   ]}
                   value={RowSpaceUnitselectedValue1}
                   onChange={handleRowSpaceUnitChange}
@@ -258,13 +286,15 @@ export default function Plantation({
             </div>
           </div>
 
-
-
           {/* calculate button */}
           <div style={styles.bottom}>
-            <button style={styles.Button1} onClick={handlePlantationDetails}>
-              <p style={styles.Box4ButtonText}>Calculate Plantation</p>
-            </button>
+            <Button
+              type="primary"
+              style={styles.Button1}
+              onClick={handlePlantationDetails}
+            >
+              <p style={{ fontSize: 13 }}>Calculate Plantation</p>
+            </Button>
           </div>
         </div>
       )}
@@ -279,20 +309,19 @@ export default function Plantation({
       >
         {currentPage === "plantationDetails" && (
           <PlantationDetails
-          onBackToSidebar={onBackToSidebar}
-          onback = {handleBackClick}
-          id={id}
-          onEditTemplateClick = {onEditTemplateClick}
-          template = {template}
-            
+            onBackToSidebar={onBackToSidebar}
+            onback={handleBackClick}
+            id={id}
+            onEditTemplateClick={onEditTemplateClick}
+            template={template}
           />
         )}
         {currentPage === "TemplateDetails" && (
           <TemplateDetails
             onBackToSidebar={onBackToSidebar}
             id={id}
-            onEditTemplateClick = {onEditTemplateClick}
-            template = {template}
+            onEditTemplateClick={onEditTemplateClick}
+            template={template}
           />
         )}
       </div>

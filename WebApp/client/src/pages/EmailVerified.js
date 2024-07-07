@@ -67,23 +67,23 @@ const EmailVerified = () => {
               component="img"
               src={
                 details.verified === "true"
-                  ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMO33rtb-JUsiG0xMiYX9viv4TpfWUrKrkVQ&usqp=CAU"
-                  : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6RRwce-lkHMNvSoRlucALLFE-8zY_z_e7bQ&usqp=CAU"
+                  ? "https://i.ibb.co/jH2v9Y8/email-right.png"
+                  : "https://i.ibb.co/KD5GGzP/email-wrong.png"
               }
               sx={{
                 filter: "drop-shadow(5px 13px 10px  rgba(0,0,0,0.62))",
                 width: "300px",
-                height: "350px",
+                height: "300px",
                 position: "relative", // Add this line
                 top: "-70px",
               }}
             />
 
             <Button
-              style={{ position: "absolue", marginTop: "-20px" }}
+              style={{ position: "absolue", marginTop: "-20px", backgroundColor: "#007BFF", color: "white"}}
               variant="outlined"
               component={Link}
-              to={details.verified === "true" ? "/" : "/Registration"}
+              to={details.verified === "true" ? "/login" : "/register"}
             >
               {details.verified === "true" ? "Login Now" : "Register Again"}
             </Button>

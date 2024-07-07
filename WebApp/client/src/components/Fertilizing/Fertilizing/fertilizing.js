@@ -11,7 +11,7 @@ import { styles } from "./fertilizingStyles.js";
 import Select from "react-select";
 import { FaTree } from "react-icons/fa";
 import FertilizingDetails from "../FertilizingDetails/fertilizingDetails";
-import { message } from "antd";
+import { message,Button } from "antd";
 import AxiosInstance from "../../../AxiosInstance";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
 export default function Fertilizing(
@@ -306,9 +306,9 @@ const handleFrequencyChange = (selectedFrequency) => {
 
           {/* calculate button */}
           <div style={styles.bottom}>
-            <button style={styles.Button1} onClick={handleFertilizingDetails}>
-              <p style={styles.Box4ButtonText}>Calculate Fertilizing</p>
-            </button>
+            <Button type="primary" style={styles.Button1} onClick={handleFertilizingDetails}>
+              <p style={{fontSize: 13}}>Calculate Fertilizing</p>
+            </Button>
           </div>
         </div>
       )}

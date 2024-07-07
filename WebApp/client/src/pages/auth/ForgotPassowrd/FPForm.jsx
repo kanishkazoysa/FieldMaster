@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../Register/RegisterStyle.css";
@@ -15,6 +15,7 @@ const FPForm = () => {
         email,
       })
       .then(() => {
+        message.success("OTP sent successfully");
         navigate(`/enter-otp/${email}`);
       })
       .catch((error) => {

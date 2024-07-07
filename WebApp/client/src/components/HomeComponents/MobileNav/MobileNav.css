@@ -12,12 +12,24 @@
     transition: all 0.3s ease;
     transform: translateX(-100vw);
   }
+  .logo{
+    max-width: 12rem;
+    margin: 0;
+    margin-top: 0;
+ 
+  }
+  .image {
+    width: 60%;
+    margin-bottom: 8%;
+    
+  }
   
   .mobile-menu-container {
     width: 60vw;
     height: 100vh;
-    background-color: #6fa8dc;
+    background-color: #accae5;
     padding: 2rem;
+ 
   }
   
   .mobile-menu.active {
@@ -41,6 +53,8 @@
     list-style: none;
     margin-left: -2rem;
   }
+  
+  
   
   @media (max-width: 769px) {
     .mobile-menu {

@@ -14,11 +14,11 @@ import { shareAsync } from 'expo-sharing';
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
 import {styles} from './FertilizingDetailsStyles';
-
+import { Appbar, Button } from "react-native-paper";
 
 export default function FertilizationDetails({ route }) {
   const { params } = route;
-  const { FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton,count,plantcount} = params;
+  const { FertilizerType, NumberOfTime, FertilizerAmount, FertilizerAmountUnit, SelectedButton,count,plantcount,area,perimeter} = params;
   const [factorValue, setFactor] = useState(1);
   const [totalAmount, setTotalAmount] = useState(0);
   const [Total,setTotal] = useState(0);
@@ -31,7 +31,7 @@ export default function FertilizationDetails({ route }) {
         factorValue = 365;
         break;
       case "Weekly":
-        factorValue = 4; 
+        factorValue = 48; 
         break;
       case "Monthly":
         factorValue = 12;
@@ -52,8 +52,10 @@ export default function FertilizationDetails({ route }) {
   }, []);
 
   useEffect(() =>{
-    setTotal((plantcount*totalAmount/1000));
+    setTotal((plantcount*totalAmount));
   })
+
+
 
 
 
@@ -149,10 +151,14 @@ export default function FertilizationDetails({ route }) {
   
 `;
 
-
-  const navigation = useNavigation();
+  
+const navigation = useNavigation();
   const handleFertilizationDetails = () => {
     navigation.navigate("Fence");
+  };
+
+  const backToHome = () => {
+    navigation.navigate("Home");
   };
 
 
@@ -219,7 +225,7 @@ export default function FertilizationDetails({ route }) {
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>For plantation</Text>
-                  <Text style={styles.propertyValue}>{Total} kg</Text>
+                  <Text style={styles.propertyValue}>{Total} {FertilizerAmountUnit}</Text>
                 </View>
               </View>
             </View>
@@ -236,7 +242,7 @@ export default function FertilizationDetails({ route }) {
               />
               <View style={styles.box2PropertyDetails}>
                 <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                <Text style={styles.Box2PropertyValue}>665m</Text>
+                <Text style={styles.Box2PropertyValue}>{perimeter}Km</Text>
               </View>
             </View>
             <View style={styles.box2Property}>
@@ -247,7 +253,7 @@ export default function FertilizationDetails({ route }) {
               />
               <View style={styles.box2PropertyDetails}>
                 <Text style={styles.Box2PropertyLabel}>Area</Text>
-                <Text style={styles.Box2PropertyValue}>2 acres</Text>
+                <Text style={styles.Box2PropertyValue}>{area}perches</Text>
               </View>
             </View>
           </View>
@@ -309,23 +315,78 @@ export default function FertilizationDetails({ route }) {
         {/* Bottom section */}
 
         <View style={styles.bottom}>
-
-          <CustomButton
-            onPress={print}
-            text="Save As PDF"
-            iconName="content-save-outline" 
-            iconColor="white" 
-            buttonColor="#E41E3F"
-          />
-
-          <CustomButton
-            onPress={printToFile}
-            text="Share PDF"
-            iconName="share-variant" 
-            iconColor="white" 
-            buttonColor="#007BFF" 
-          />
-        </View>
+            <View style={styles.buttonContainer}>
+              <View style={styles.buttonWrapper}>
+                <Button
+                  style={{
+                    height: 40,
+                    marginTop: 10,
+                    borderRadius: 18,
+                    borderColor: "red", // Add this line for the border color
+                    borderWidth: 1, // Ensure the border is visible by setting the borderWidth
+                  }}
+                  mode="elevated"
+                  onPress={print}
+                  labelStyle={{ color: "red", fontSize: 14 }}
+                  icon={() => (
+                    <MaterialCommunityIcons
+                      name="content-save-outline"
+                      size={20}
+                      color="red"
+                    />
+                  )}
+                >
+                  Save As PDF
+                </Button>
+              </View>
+              <View style={styles.buttonWrapper}>
+                <Button
+                  style={{
+                    height: 40,
+                    marginTop: 10,
+                    borderRadius: 18,
+                    borderColor: "#007BFF", // Add this line for the border color
+                    borderWidth: 1, // Ensure the border is visible by setting the borderWidth
+                  }}
+                  mode="elevated"
+                  onPress={printToFile}
+                  labelStyle={{ color: "#007BFF", fontSize: 14 }}
+                  icon={() => (
+                    <MaterialCommunityIcons
+                      name="share-variant"
+                      size={20}
+                      color="#007BFF"
+                    />
+                  )}
+                >
+                 Share PDF
+                </Button>
+              </View>
+            </View>
+            <Button
+              style={{
+                height: 40,
+                marginTop: 10,
+                borderRadius: 18,
+                width: "87%",
+                backgroundColor:"#007BFF",
+                borderColor: "black",
+                borderWidth: 0.2, // Ensure the border is visible by setting the borderWidth
+              }}
+              mode="contained-tonal"
+              onPress={backToHome}
+              labelStyle={{  fontSize: 14 , color:"white"}}
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="home-import-outline"
+                  size={20}
+                  color="white"
+                />
+              )}
+            >
+              Back To Home
+            </Button>
+          </View>
       </ScrollView>
 
 

@@ -75,7 +75,7 @@ export const styles = {
     propertyDetails: {
       flexDirection: "column",
       marginLeft: 10,
-      width: "50%",
+      width: "85%",
       //height: 40,
       backgroundColor: "white",
     },
@@ -120,14 +120,22 @@ export const styles = {
         outline: "none",
       },
   
-    box2Property: {
+    box2Property1: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      paddingLeft: 19,
+      justifyContent: "center",
+      backgroundColor: "white",
+      width: "35%",
+    },
+    box2Property2: {
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "white",
-      width: "46%",
-      padding: 7,
+      width: "76%",
     },
   
     box2PropertyDetails: {

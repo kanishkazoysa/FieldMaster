@@ -110,6 +110,7 @@ const PointAddingScreen = ({ navigation, route }) => {
         longitudeDelta: 0.0005,
       });
       setCurrentLocation(location);
+      setLoading(false);
     })();
   }, []);
 
@@ -258,200 +259,216 @@ const PointAddingScreen = ({ navigation, route }) => {
 
   return (
     <>
-      <View style={styles.searchbar}>
-        <View style={styles.locationIconContainer}>
-          <MaterialIcons
-            name='location-on'
-            size={responsiveFontSize(2.5)}
-            color='#007BFF'
-          />
-        </View>
-        <TextInput
-          placeholder='Search Location'
-          placeholderTextColor='rgba(0, 0, 0, 0.5)'
-          onFocus={onFocus}
-          onBlur={onBlur}
-          style={[
-            styles.searchbarInput,
-            isFocused ? styles.searchbarInputFocused : null,
-          ]}
-          onChangeText={setSearchQuery}
-          value={searchQuery}
-          onSubmitEditing={searchLocation}
-        />
-        {searchQuery !== '' && (
-          <TouchableOpacity
-            onPress={clearSearchQuery}
-            style={styles.clearIconContainer}
-          >
-            <MaterialIcons
-              name='cancel'
-              size={responsiveFontSize(2.5)}
-              color='#707070'
-            />
-          </TouchableOpacity>
-        )}
-      </View>
-      <Modal
-        animationType='slide'
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeModal}
-      >
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <TouchableOpacity
-                style={styles.btnStyle}
-                onPress={() => handleSetMapType(MAP_TYPES.SATELLITE)}
-              >
-                <Text style={styles.btmBtnStyle}>Satellite</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.btnStyle}
-                onPress={() => handleSetMapType(MAP_TYPES.STANDARD)}
-              >
-                <Text style={styles.btmBtnStyle}>Standard</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.btnStyle}
-                onPress={() => handleSetMapType(MAP_TYPES.HYBRID)}
-              >
-                <Text style={styles.btmBtnStyle}>Hybrid</Text>
-              </TouchableOpacity>
-            </View>
+      {loading ? (
+        <View style={styles.loadingScreen}>
+          <View style={styles.dotsWrapper}>
+            <ActivityIndicator color='#007BFF' size={45} />
           </View>
         </View>
-      </Modal>
-      {/* including map view */}
-      {region && (
+      ) : (
         <View style={{ flex: 1 }}>
-          <MapView
-            ref={mapRef}
-            style={styles.mapViewStyling}
-            region={region}
-            showsUserLocation={showUserLocation}
-            onUserLocationChange={(event) => {
-              const { latitude, longitude } = event.nativeEvent.coordinate;
-              setRegion({
-                ...region,
-                latitude: event.nativeEvent.coordinate.latitude,
-                longitude: event.nativeEvent.coordinate.longitude,
-              });
-              setCurrentLocation({ coords: { latitude, longitude } });
-            }}
-            mapType={mapTypes[mapTypeIndex].value}
-            onPress={(event) => {
-              if (!isButtonPressed) {
-                setPoints([...points, event.nativeEvent.coordinate]);
-              }
-            }}
-            mapPadding={{ top: 0, right: -100, bottom: 0, left: 0 }}
-          >
-            {points.map((point, index) => (
-              <Marker key={index} coordinate={point} />
-            ))}
-            {!isPolygonComplete && points.length > 1 && (
-              <Polyline
-                coordinates={points}
-                strokeColor='#000'
-                strokeWidth={1}
+          <View style={styles.searchbar}>
+            <View style={styles.locationIconContainer}>
+              <MaterialIcons
+                name='location-on'
+                size={responsiveFontSize(2.5)}
+                color='#007BFF'
               />
-            )}
-            {isPolygonComplete && points.length > 2 && (
-              <Polygon
-                coordinates={points}
-                strokeColor='#000'
-                fillColor='rgba(199, 192, 192, 0.5)'
-                strokeWidth={1}
-              />
-            )}
-          </MapView>
-
-          <TouchableOpacity
-            style={styles.layerIconContainer}
-            onPress={() => {
-              setIsButtonPressed(true);
-              toggleMapType();
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faLayerGroup}
-              size={responsiveFontSize(3)}
-              color='#fff'
+            </View>
+            <TextInput
+              placeholder='Search Location'
+              placeholderTextColor='rgba(0, 0, 0, 0.5)'
+              onFocus={onFocus}
+              onBlur={onBlur}
+              style={[
+                styles.searchbarInput,
+                isFocused ? styles.searchbarInputFocused : null,
+              ]}
+              onChangeText={setSearchQuery}
+              value={searchQuery}
+              onSubmitEditing={searchLocation}
             />
-            {showDropdown && (
-              <View style={styles.dropdownContainer}>
-                <FlatList
-                  data={mapTypes}
-                  renderItem={({ item, index }) => (
-                    <TouchableOpacity
-                      style={styles.dropdownItem}
-                      onPress={() => selectMapType(index)}
-                    >
-                      <Text style={{ color: '#fff' }}>{item.name}</Text>
-                    </TouchableOpacity>
-                  )}
-                  keyExtractor={(item) => item.value}
+            {searchQuery !== '' && (
+              <TouchableOpacity
+                onPress={clearSearchQuery}
+                style={styles.clearIconContainer}
+              >
+                <MaterialIcons
+                  name='cancel'
+                  size={responsiveFontSize(2.5)}
+                  color='#707070'
                 />
+              </TouchableOpacity>
+            )}
+          </View>
+          <Modal
+            animationType='slide'
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={closeModal}
+          >
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              }}
+            >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <TouchableOpacity
+                    style={styles.btnStyle}
+                    onPress={() => handleSetMapType(MAP_TYPES.SATELLITE)}
+                  >
+                    <Text style={styles.btmBtnStyle}>Satellite</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.btnStyle}
+                    onPress={() => handleSetMapType(MAP_TYPES.STANDARD)}
+                  >
+                    <Text style={styles.btmBtnStyle}>Standard</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.btnStyle}
+                    onPress={() => handleSetMapType(MAP_TYPES.HYBRID)}
+                  >
+                    <Text style={styles.btmBtnStyle}>Hybrid</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+          {/* including map view */}
+          <View style={{ flex: 1 }}>
+            {region && (
+              <View style={{ flex: 1 }}>
+                <MapView
+                  ref={mapRef}
+                  style={styles.mapViewStyling}
+                  region={region}
+                  showsUserLocation={showUserLocation}
+                  onUserLocationChange={(event) => {
+                    const { latitude, longitude } =
+                      event.nativeEvent.coordinate;
+                    setRegion({
+                      ...region,
+                      latitude: event.nativeEvent.coordinate.latitude,
+                      longitude: event.nativeEvent.coordinate.longitude,
+                    });
+                    setCurrentLocation({ coords: { latitude, longitude } });
+                  }}
+                  mapType={mapTypes[mapTypeIndex].value}
+                  onPress={(event) => {
+                    if (!isButtonPressed) {
+                      setPoints([...points, event.nativeEvent.coordinate]);
+                    }
+                  }}
+                  mapPadding={{ top: 0, right: -100, bottom: 0, left: 0 }}
+                >
+                  {points.map((point, index) => (
+                    <Marker key={index} coordinate={point} />
+                  ))}
+                  {!isPolygonComplete && points.length > 1 && (
+                    <Polyline
+                      coordinates={points}
+                      strokeColor='#000'
+                      strokeWidth={1}
+                    />
+                  )}
+                  {isPolygonComplete && points.length > 2 && (
+                    <Polygon
+                      coordinates={points}
+                      strokeColor='#000'
+                      fillColor='rgba(199, 192, 192, 0.5)'
+                      strokeWidth={1}
+                    />
+                  )}
+                </MapView>
+
+                <TouchableOpacity
+                  style={styles.layerIconContainer}
+                  onPress={() => {
+                    setIsButtonPressed(true);
+                    toggleMapType();
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faLayerGroup}
+                    size={responsiveFontSize(3)}
+                    color='#fff'
+                  />
+                  {showDropdown && (
+                    <View style={styles.dropdownContainer}>
+                      <FlatList
+                        data={mapTypes}
+                        renderItem={({ item, index }) => (
+                          <TouchableOpacity
+                            style={styles.dropdownItem}
+                            onPress={() => selectMapType(index)}
+                          >
+                            <Text style={{ color: '#fff' }}>{item.name}</Text>
+                          </TouchableOpacity>
+                        )}
+                        keyExtractor={(item) => item.value}
+                      />
+                    </View>
+                  )}
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.locationFocusBtn}
+                  onPress={focusOnCurrentLocation}
+                >
+                  <FontAwesomeIcon
+                    icon={faLocationCrosshairs}
+                    size={responsiveFontSize(3)}
+                    color='#fff'
+                  />
+                </TouchableOpacity>
+                <View>
+                  <View style={styles.sideIconWrap}>
+                    <TouchableWithoutFeedback
+                      onPressIn={() => setIsButtonPressed(true)}
+                      onPressOut={() => setIsButtonPressed(false)}
+                    >
+                      <MaterialCommunityIcons
+                        name='arrow-u-left-top'
+                        size={responsiveFontSize(3)}
+                        color='white'
+                        style={styles.sideIconStyle}
+                        onPress={handleUndoLastPoint}
+                      />
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback
+                      onPressIn={() => setIsButtonPressed(true)}
+                      onPressOut={() => setIsButtonPressed(false)}
+                    >
+                      <MaterialCommunityIcons
+                        name='shape-polygon-plus'
+                        size={responsiveFontSize(3)}
+                        color='white'
+                        style={styles.sideIconStyle}
+                        onPress={handleCompleteMap}
+                      />
+                    </TouchableWithoutFeedback>
+                  </View>
+                </View>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    onPress={handleCancel}
+                    style={styles.cancelBtnStyle}
+                  >
+                    <Text style={styles.btmBtnStyle}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleSaveMap}
+                    style={styles.btnStyle}
+                  >
+                    <Text style={styles.btmBtnStyle}>Save</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.locationFocusBtn}
-            onPress={focusOnCurrentLocation}
-          >
-            <FontAwesomeIcon
-              icon={faLocationCrosshairs}
-              size={responsiveFontSize(3)}
-              color='#fff'
-            />
-          </TouchableOpacity>
-          <View>
-            <View style={styles.sideIconWrap}>
-              <TouchableWithoutFeedback
-                onPressIn={() => setIsButtonPressed(true)}
-                onPressOut={() => setIsButtonPressed(false)}
-              >
-                <MaterialCommunityIcons
-                  name='arrow-u-left-top'
-                  size={responsiveFontSize(3)}
-                  color='white'
-                  style={styles.sideIconStyle}
-                  onPress={handleUndoLastPoint}
-                />
-              </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback
-                onPressIn={() => setIsButtonPressed(true)}
-                onPressOut={() => setIsButtonPressed(false)}
-              >
-                <MaterialCommunityIcons
-                  name='shape-polygon-plus'
-                  size={responsiveFontSize(3)}
-                  color='white'
-                  style={styles.sideIconStyle}
-                  onPress={handleCompleteMap}
-                />
-              </TouchableWithoutFeedback>
-            </View>
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={handleCancel}
-              style={styles.cancelBtnStyle}
-            >
-              <Text style={styles.btmBtnStyle}>Cancel</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleSaveMap} style={styles.btnStyle}>
-              <Text style={styles.btmBtnStyle}>Save</Text>
-            </TouchableOpacity>
           </View>
         </View>
       )}

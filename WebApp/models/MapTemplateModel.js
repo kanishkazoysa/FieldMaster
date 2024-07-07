@@ -1,8 +1,28 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const PointSchema = new mongoose.Schema({
   longitude: Number,
   latitude: Number,
+});
+
+const PartitionPolygonSchema = new mongoose.Schema({
+  points: {
+    type: [PointSchema],
+    default: [],
+  },
+  area: {
+    type: Number,
+    required: true,
+  },
+  perimeter: {
+    type: Number,
+    required: true,
+  },
+
+  label: {
+    type: String,
+    default: "",
+  },
 });
 
 /* this schema is used to save map template */
@@ -47,6 +67,10 @@ const MapTemplateSchema = new mongoose.Schema({
   imageUrl: {
     type: String,
   },
+  partitionPolygons: {
+    type: [PartitionPolygonSchema],
+    default: [],
+  },
 });
 
-module.exports = mongoose.model('MapTemplate', MapTemplateSchema);
+module.exports = mongoose.model("MapTemplate", MapTemplateSchema);

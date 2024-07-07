@@ -51,7 +51,7 @@ export const styles = {
       fontWeight: "bold",
       marginBottom: 0,
       color: "white",
-      marginLeft: "70px",
+      marginLeft: "64px",
     },
   
     /*first section*/
@@ -225,7 +225,7 @@ export const styles = {
       backgroundColor: "green",
       alignItems: "center",
       justifyContent: "center",
-      marginTop: 10,
+      marginTop: 70,
       borderRadius: 11,
       borderWidth: 0,
    
@@ -235,20 +235,16 @@ export const styles = {
       alignItems: "center",
       marginTop : 90,
       width: "92%",
-      
+
     },
   
     Button2: {
-      display: "flex",
       width: "100%",
       height: 38,
-      backgroundColor: "red",
       alignItems: "center",
-      justifyContent: "center",
-      marginTop: 10,
+      marginTop: 60,
       borderRadius: 11,
-      borderWidth: 0,
-   
+      padding: '17px',
     },
   };
   

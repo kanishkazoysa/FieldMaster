@@ -9,13 +9,51 @@ export const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
-  
+     
+    loadingScreen: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    dotsWrapper: {
+      width: 100,
+    },
+
     /*Top Section*/
-  
+    loadingScreen: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    dotsWrapper: {
+      width: 100,
+    },
+    
     scrollContent: {
       flexDirection: "column",
       justifyContent: "space-between",
       height: "100%",
+    },
+
+    top_Bar: {
+      justifyContent:"space-between",
+      height: responsiveHeight(6.5),
+      backgroundColor: '#007BFF',
+  
+      ...Platform.select({
+        android: {
+          marginTop: responsiveHeight(3),
+        },
+      }),
+    },
+  
+    headerText: {
+      fontSize: responsiveFontSize(2.3),
+      marginRight: responsiveWidth(3.5),
+      textAlign: "center",
+      color: "white",
     },
 
     topSection: {
@@ -38,7 +76,7 @@ export const styles = StyleSheet.create({
       backgroundColor: "white",
       width: responsiveWidth(86),
       height: responsiveHeight(13),
-      marginTop: responsiveHeight(2),
+      marginTop: responsiveHeight(6),
       alignItems: "center",
       borderRadius: 11,
       shadowColor: "#000",
@@ -97,7 +135,7 @@ export const styles = StyleSheet.create({
       flexDirection: "row",
       padding: responsiveWidth(3),
       backgroundColor: "white",
-      marginTop: responsiveHeight(2),
+      marginTop: responsiveHeight(1.5),
       borderRadius: 11,
       shadowColor: "#000",
       shadowOpacity: 0.1,
@@ -120,10 +158,10 @@ export const styles = StyleSheet.create({
       backgroundColor: "white",
     },
     Box2PropertyLabel: {
-        fontSize: responsiveFontSize(1.8),
+        fontSize: responsiveFontSize(1.7),
     },
     Box2PropertyValue: {
-        fontSize: responsiveFontSize(1.9),
+        fontSize: responsiveFontSize(1.8),
         fontWeight: "bold",
     },
   
@@ -134,7 +172,7 @@ export const styles = StyleSheet.create({
       // height: "max-content",
       height: responsiveHeight(25),
       backgroundColor: "white",
-      marginTop: responsiveHeight(2),
+      marginTop: responsiveHeight(1.5),
       borderRadius: 11,
       padding: responsiveWidth(7),
       shadowColor: "#000",
@@ -183,8 +221,19 @@ export const styles = StyleSheet.create({
     /* bottom section */
   
     bottom: {
+      flexDirection:"column",
       alignItems: "center",
-      bottom: responsiveHeight(3),
+      justifyContent:  "center",
+      bottom: responsiveHeight(4),
+    },
+
+    buttonContainer: {
+      flexDirection: 'row',
+      width: '86%',
+      justifyContent: 'space-between',      
+    },
+    buttonWrapper: {
+      width: '48%',
     },
   });
   

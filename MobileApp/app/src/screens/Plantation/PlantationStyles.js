@@ -89,7 +89,7 @@ export const styles = StyleSheet.create({
     propertyDetails: {
       flexDirection: "column",
       marginLeft: responsiveWidth(2),
-      width: "50%",
+      width: "60%",
       height: responsiveHeight(4.6),
       backgroundColor: "white",
     },
@@ -99,7 +99,7 @@ export const styles = StyleSheet.create({
     },
   
     propertyValue: {
-        fontSize: responsiveFontSize(1.8),
+        fontSize: responsiveFontSize(1.6),
       fontWeight: "bold",
     },
   

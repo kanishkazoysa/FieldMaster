@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, Row, Col } from "antd";
+import { Form, Input, Button, Row, Col, message } from "antd";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./RegisterStyle.css";
@@ -16,6 +16,7 @@ const RegisterForm = () => {
                 password,
             })
             .then(() => {
+                message.success("User registered successfully!");
                 window.location.href = "/login";
             })
             .catch((error) => {

@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const router = express.Router();
 const MapTemplateModel = require('../models/MapTemplateModel');
+const fenceModel = require("../models/fence");
+const plantationModel = require("../models/plantation");
+
 const turf = require('@turf/turf');
 const MapModel = require('../models/MapModel');
 
@@ -134,5 +137,123 @@ router.get('/getAllMapPoints', async (req, res) => {
     res.status(500).send('Error while getting maps.');
   }
 });
+
+/* this route is used to save partition points */
+router.put('/savePartitionPoints/:id', async (req, res) => {
+  try {
+    const { partitionPolygons } = req.body;
+    const updatedTemplate = await MapTemplateModel.findByIdAndUpdate(
+      req.params.id,
+      { $set: { partitionPolygons } },
+      { new: true }
+    );
+    
+    if (!updatedTemplate) {
+      return res.status(404).send('Template not found');
+    }
+    
+    res.json(updatedTemplate);
+  } catch (error) {
+    console.error('Error saving partition points:', error);
+    res.status(500).send('Error while saving partition points.');
+  }
+});
+
+router.put('/deletePartitionPolygon/:templateId/:polygonIndex', async (req, res) => {
+  try {
+    const { templateId, polygonIndex } = req.params;
+
+    // Find the map template by ID
+    const mapTemplate = await MapTemplateModel.findById(templateId);
+
+    if (!mapTemplate) {
+      return res.status(404).send('Template not found');
+    }
+
+    // Ensure polygonIndex is within bounds
+    if (polygonIndex < 0 || polygonIndex >= mapTemplate.partitionPolygons.length) {
+      return res.status(400).send('Invalid polygon index');
+    }
+
+    // Remove the specified partition polygon
+    mapTemplate.partitionPolygons.splice(polygonIndex, 1);
+
+    // Save the updated map template
+    await mapTemplate.save();
+
+    res.json(mapTemplate);
+  } catch (error) {
+    console.error('Error deleting partition polygon:', error);
+    res.status(500).send('Error while deleting partition polygon.');
+  }
+});
+
+router.get('/getLocationAnalytics', async (req, res) => {
+  try {
+    const locationAnalytics = await MapTemplateModel.aggregate([
+      {
+        $group: {
+          _id: "$location",
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { count: -1 }
+      }
+    ]);
+    res.json(locationAnalytics);
+  } catch (error) {
+    console.error('Error fetching location analytics:', error);
+    res.status(500).send('Error while fetching location analytics.');
+  }
+});
+
+router.get("/getAllmapData/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const Fence = await fenceModel.findOne({ Id: id });
+    const Plantation = await plantationModel.findOne({ Id: id });
+    const map = await MapTemplateModel.findOne({ _id: id });
+    
+    if (!map) {
+      return res.status(404).json({ status: "error", message: "Map not found" });
+    }
+
+    const response = {
+      status: "success",
+      mapDetails: {
+        Area: map.area,
+        Perimeter: map.perimeter,
+        templateName: map.templateName,
+        landType: map.landType,
+        location: map.location,
+        description: map.description,
+      },
+      fenceDetails: Fence ? {
+        postSpace: Fence.PostSpace,
+        postSpaceUnit: Fence.PostSpaceUnit,
+        gateDetails: Fence.GateDetails,
+        numberOfSticks: Fence.NumberofSticks,
+        fenceType: Fence.FenceType,
+        fenceAmount: Fence.NumberofGates,
+        fenceLength: Fence.Gatelength,
+      } : null,
+      plantationDetails: Plantation ? {
+        numberOfPlants: Plantation.NoOfPlants,
+        plantType: Plantation.PlantType,
+        plantSpace: Plantation.PlantSpace,
+        rowSpace: Plantation.RowSpace,
+        plantDensity: Plantation.PlantDensity,
+        unit: Plantation.Unit,
+      } : null,
+    };
+
+    res.json(response);
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
+});
+
+
 
 module.exports = router;

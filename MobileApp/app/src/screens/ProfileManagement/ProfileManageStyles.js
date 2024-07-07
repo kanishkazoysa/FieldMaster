@@ -67,9 +67,9 @@ const styles = StyleSheet.create({
     padding: responsiveHeight(0),
     alignSelf: "center",
   },
-  cameraIcon: {
-    top: responsiveHeight(-2.8),
-    right: responsiveWidth(-28),
+  editIcon: {
+    top: responsiveHeight(-2.9),
+    right: responsiveWidth(-30),
   },
   avtarTxt: {
     fontSize: responsiveFontSize(3),
