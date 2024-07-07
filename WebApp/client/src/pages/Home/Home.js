@@ -16,6 +16,7 @@ import { message } from "antd";
 import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
 import AxiosInstance from "../../AxiosInstance";
 import MapDetailsPanel from "./MapDetailsPanel";
+import { MdMyLocation } from "react-icons/md";
 
 export default function Home() {
   const location = useLocation();
@@ -111,6 +112,30 @@ export default function Home() {
     const centerLat = (Math.min(...latitudes) + Math.max(...latitudes)) / 2;
     const centerLng = (Math.min(...longitudes) + Math.max(...longitudes)) / 2;
     return { lat: centerLat, lng: centerLng };
+  };
+
+  const handleGetCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setSelectedLocation(userLocation);
+          if (mapRef.current && mapRef.current.state.map) {
+            mapRef.current.state.map.panTo(userLocation);
+            mapRef.current.state.map.setZoom(15);
+          }
+        },
+        (error) => {
+          console.error("Error getting user's location:", error);
+          message.error("Unable to retrieve your location");
+        }
+      );
+    } else {
+      message.error("Geolocation is not supported by this browser");
+    }
   };
 
   const handleLabelClick = useCallback(
@@ -241,6 +266,22 @@ export default function Home() {
           options={mapOptions()}
           onZoomChanged={handleZoomChanged}
         >
+          <div
+            onClick={handleGetCurrentLocation}
+            style={{
+              position: "absolute",
+              bottom: "100px",
+              right: "10px",
+              background: "white",
+              padding: "7px",
+              borderRadius: "50%",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+              cursor: "pointer",
+            }}
+          >
+            <MdMyLocation size={24} />
+          </div>
+
           {userMaps.map((map, index) => (
             <React.Fragment key={map._id}>
               <Polygon
