@@ -28,13 +28,10 @@ export default function FertilizingDetails({
   numberOfPlants
 }) {
   
-  const [currentPage, setCurrentPage] = useState(null);
-  const [animatePage, setAnimatePage] = useState(false);
+  const [currentPage] = useState(null);
+  const [animatePage] = useState(false);
 
-  const handleFertilization = () => {
-    setCurrentPage("Fertilizing");
-    setAnimatePage(true);
-  };
+  
 
   const params = route?.params || {};
   const {
@@ -42,8 +39,6 @@ export default function FertilizingDetails({
     NumberOfTime,
     FertilizerAmount,
     FertilizerAmountUnit,
-   
-    count,
     plantcount,
   } = params;
 

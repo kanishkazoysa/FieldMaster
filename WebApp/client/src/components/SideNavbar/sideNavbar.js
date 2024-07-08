@@ -20,7 +20,7 @@ export default function SideNavbar() {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [isEditingTemplate, setIsEditingTemplate] = useState(false);
+  
 
   const handleMouseEnter = (item) => {
     setHoveredMenuItem(item);
@@ -51,15 +51,7 @@ export default function SideNavbar() {
     }
   };
 
-  const handleSaveScreenClick = () => {
-    setCurrentPage('SaveScreen');
-    console.log('clicked save screen');
-    setAnimatePage(true);
-    if (collapsed) {
-      setCollapsed(false);
-    }
-  };
-
+  
   const handleBackClick = () => {
     setAnimatePage(false);
     setTimeout(() => {

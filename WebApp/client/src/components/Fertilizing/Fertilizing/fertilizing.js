@@ -59,10 +59,7 @@ const handleFrequencyChange = (selectedFrequency) => {
     setFertilizerAmountUnitselectedValue(selectedOption.value);
   };
 
-  const backtotemp = () =>{
-    setCurrentPage("TemplateDetails"); 
-    setAnimatePage(true);
-  }
+  
   const handleFertilizingDetails = async (e) => {
 
     

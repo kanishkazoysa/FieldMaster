@@ -33,7 +33,7 @@ function ContactForm() {
         body: JSON.stringify(formData)
       });
 
-      const result = await response.json();
+      
       if (response.ok) {
         setStatus('Message Sent!');
         // Clear input fields

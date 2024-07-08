@@ -95,13 +95,7 @@ export default function Plantation({ onBackToSidebar, area, perimeter, Perimeter
       message.error("Error: Please enter a valid value for row space")
       return;
     }
-    const requestData = {
-      textPlant,
-      textplantspace,
-      textRowspace,
-      PlantSpaceUnitselectedValue,
-      RowSpaceUnitselectedValue
-    };
+    
 
     AxiosInstance.post("/api/plantation/plantationFromManualCalculator",
       {
