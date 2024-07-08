@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TextInput,
   FlatList,
   TouchableWithoutFeedback,
   Keyboard,
@@ -12,7 +11,6 @@ import { useNavigation } from "@react-navigation/native";
 import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from "react-native-maps";
 import { Button } from "react-native-paper";
 import * as Location from "expo-location";
-import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   responsiveWidth,
@@ -24,18 +22,18 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import SelectionModal from "../../components/SelectionModal";
 import ProfileModel from "../../components/ProfileModel";
-import axios from "axios";
 import ProfileAvatar from "../../components/ProfileAvatar";
 import { useIsFocused } from "@react-navigation/native";
 import AxiosInstance from "../../AxiosInstance";
 import styles from "./HomeStyles";
 import MapDetailsPanel from "./MapDetailsPanel";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { BackHandler, Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 const apiKey = "AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U";
 
 export default function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
   const navigation = useNavigation();
   const [isfocused, setIsFocused] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
@@ -52,6 +50,26 @@ export default function Home() {
   const [selectedMapId, setSelectedMapId] = useState(null);
   const [selectedMapDetails, setSelectedMapDetails] = useState(null);
   const [searchedRegion, setSearchedRegion] = useState(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        Alert.alert('Exit App', 'Are you sure you want to exit?', [
+          {
+            text: 'Cancel',
+            onPress: () => null,
+            style: 'cancel',
+          },
+          { text: 'YES', onPress: () => BackHandler.exitApp() },
+        ]);
+        return true;
+      };
+  
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
 
   
 
