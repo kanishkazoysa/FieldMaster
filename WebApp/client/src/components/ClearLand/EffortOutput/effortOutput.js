@@ -14,6 +14,8 @@ import ClearLand from "../ClearLand/clearLand";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails";
 import AxiosInstance from "../../../AxiosInstance";
 import { getClearLandDetailsHtml } from "./EffortOutputTemplate";
+import AlertButton from "./AlertButton";
+import AlertEffort from "./AlertEffort";
 const { confirm } = Modal;
 export default function EffortOutput({
   onBackToSidebar,
@@ -29,6 +31,9 @@ export default function EffortOutput({
   const [Perimeter, setPerimeter] = useState(null);
   const [effortOutput, setEffortOutput] = useState(null);
   const [workDays, setWorkDays] = useState(null);
+  const [weedEffort, setWeedEffort] = useState(null);
+  const [plantEffort, setPlantEffort] = useState(null);
+  const [stoneEffort, setStoneEffort] = useState(null);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
 
@@ -47,6 +52,9 @@ export default function EffortOutput({
         setArea(response.data.Area);
         setPerimeter(response.data.Perimeter);
         setEffortOutput(response.data.effortOutput);
+        setWeedEffort(response.data.weedEffort);
+        setPlantEffort(response.data.plantEffort);
+        setStoneEffort(response.data.stoneEffort);
         setWorkDays(response.data.workDays);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -137,7 +145,10 @@ export default function EffortOutput({
 
           {/* first box */}
           <div style={styles.Box1}>
+            <div style={styles.box1Top}>
             <p style={styles.titleText}>Total Effort Count</p>
+            <AlertButton></AlertButton>
+            </div>
             <div style={styles.propertyBox}>
               <div style={styles.property}>
                 <div>
@@ -178,6 +189,18 @@ export default function EffortOutput({
             </div>
           </div>
 
+          <div style ={styles.box}>
+            <div style={styles.boxTop}>
+              <p style={styles.boxHeader}>Effort Values</p>
+              <AlertEffort></AlertEffort>
+            </div>
+             <div style={styles.boxInner}>
+                <p style={styles.boxInnerText}>Weed Effort &nbsp;&nbsp;   :&nbsp;&nbsp; {weedEffort} hrs</p>
+                <p style={styles.boxInnerText}>Tree Effort  &nbsp;&nbsp;&nbsp;&nbsp;  :&nbsp;&nbsp; {plantEffort} hrs</p>
+                <p>Stone Effort  &nbsp;&nbsp; :&nbsp;&nbsp; {stoneEffort} hrs</p>
+             </div>
+          </div>
+
           {/* third box */}
           <div style={styles.box3}>
             <p style={styles.innertopText}>Result based on</p>
@@ -187,7 +210,7 @@ export default function EffortOutput({
                 <GrUserWorker size={20} color="gray" />
                 <p style={styles.propertyLabel1}>
                   Labors
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
                 </p>
               </div>
               <div style={styles.innersquareright}>
@@ -200,7 +223,7 @@ export default function EffortOutput({
                 <HiTruck name="boom-gate" size={24} color="gray" />
                 <p style={styles.propertyLabel1}>
                   Macinery
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
                 </p>
               </div>
               <div style={styles.innersquareright1}>

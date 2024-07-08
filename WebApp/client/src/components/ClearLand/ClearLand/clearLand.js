@@ -1,8 +1,6 @@
 // SideNavbar.js
 import React, { useState, useRef } from "react";
-import { FaBars } from "react-icons/fa";
 import { MdArrowBack } from "react-icons/md";
-import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { BsBoundingBox } from "react-icons/bs";
 import {
@@ -14,38 +12,27 @@ import {
 import { HiTruck } from "react-icons/hi2";
 import { GiStonePile } from "react-icons/gi";
 import { GrUserWorker } from "react-icons/gr";
-import axios from "axios";
 import { styles } from "./clearLandStyles";
 import { FiSearch } from "react-icons/fi";
-import { Input, Space, List, AutoComplete ,message } from "antd";
-import { CloseSquareFilled } from "@ant-design/icons";
+import { Input, Space, List, AutoComplete ,message,Select } from "antd";
 import EffortOutput from "../EffortOutput/effortOutput";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails";
 import AxiosInstance from "../../../AxiosInstance";
+import AlertWeed from "../EffortOutput/AlertWeed"
+import AlertPlant from "../EffortOutput/AlertPlant"
+import AlertStone from "../EffortOutput/AlertStone"
 export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTemplateClick,template }) {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
-  // const [perimeter, setPerimeter] = useState("1.5");
-  // const [area, setArea] = useState("100");
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
-  const [plantTypeSelectedValue1, setPlantTypeSelectedValue1] = useState(null);
   const [stoneTypeSelectedValue, setStoneTypeSelectedValue] = useState(null);
-  const [stoneTypeSelectedValue1, setStoneTypeSelectedValue1] = useState(null);
+  const [machineTypeSelectedValue, setMachineTypeSelectedValue] = useState(null);
   const [pressed, setPressed] = useState(null);
   const [plantCount, setPlantCount] = useState("");
   const [stonesCount, setStonesCount] = useState("");
   const [laborCount, setLaborCount] = useState("");
   const [workHours, setWorkHours] = useState("");
   const [machineCount, setMachineCount] = useState("");
-
-  // const { Search } = Input;
-
-  const machineryList = [
-    "Excavators",
-    "Backhoes",
-    "Chainsaws",
-    "Excavator breakers",
-  ];
 
   const prefix = <FiSearch style={{ fontSize: 16, color: "#d3d3d3" }} />;
 
@@ -63,6 +50,9 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
   const handleStoneCountChange = (event) => {
     setStonesCount(event.target.value);
+  };
+  const handleMachineTypeChange = (event) => {
+    setMachineTypeSelectedValue(event.target.value);
   };
 
   const handleLaborCountChange = (event) => {
@@ -97,7 +87,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
   const handleAdd1 = () => {
     //validation part Add button
-    const combinedValue1 = stoneTypeSelectedValue;
+    const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
       Boolean
     );
@@ -115,12 +105,12 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
   const [displayValues2, setDisplayValues2] = useState([]);
   const handleAdd2 = () => {
     //validation part Add button
-    const combinedValue2 = machineCount + " x " + searchValue;
+    const combinedValue2 = machineCount + " x " + machineTypeSelectedValue;
     const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
       Boolean
     );
     setDisplayValues2(newDisplayValues2);
-    setSearchValue("");
+    setMachineTypeSelectedValue("");
     setMachineCount("");
   };
 
@@ -130,39 +120,29 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
     setDisplayValues2(newDisplayValues2);
   };
 
-  const [searchValue, setSearchValue] = useState("");
-  const [filteredMachinery, setFilteredMachinery] = useState([]);
-
-  const handleSearchChange = (value) => {
-    setSearchValue(value);
-
-    if (value) {
-      const filtered = machineryList.filter((item) =>
-        item.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredMachinery(filtered);
-    } else {
-      setFilteredMachinery([]);
-    }
-  };
-
-  const handleItemClick = (item) => {
-    setSearchValue(item);
-    setFilteredMachinery([]); // Clear the list after selecting an item
-  };
-
   const handleClearlandDetails = async (e) => {
       // Validate required fields
-      if (
-        !pressed ||
-        !(displayValues.length > 0) ||
-        !(displayValues1.length > 0) ||
-        !laborCount ||
-        !workHours
-      ) {
-        message.error("Error: Please fill in all fields");
-        return;
-      }
+      if (!laborCount) {
+          message.error("Error:Please enter the Labor Count.");
+          return;
+        }
+    
+        if (!workHours) {
+          message.error("Error:Please enter the Work Hours.");
+          return;
+        }
+    
+        if (displayValues2.length === 0) {
+          message.error("Error:Please add at least one Machinery item.");
+          return;
+        }
+    
+        if (!pressed && displayValues.length === 0 && displayValues1.length === 0) {
+          message.error(
+            "Error:Please fill in at least one optional field: Weeds, Plants, or Stones."
+          );
+          return;
+        }
 
        // Make POST request to the backend
        AxiosInstance.post("/api/clearLand/clearLand", {
@@ -241,7 +221,8 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
               <div style={styles.box2InnerTop}>
                 <PiPlantFill color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
-                  <p style={styles.Box2PropertyLabel}>Weeds</p>
+                  <p style={styles.BoxPropertyLabel}>Weeds</p>
+                  <AlertWeed></AlertWeed>
                 </div>
               </div>
               <div style={styles.box2InnerBottom}>
@@ -307,7 +288,8 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
               <div style={styles.box2InnerTop}>
                 <PiTreeFill color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
-                  <p style={styles.Box2PropertyLabel}>Plants</p>
+                  <p style={styles.BoxPropertyLabel}>Plants</p>
+                  <AlertPlant></AlertPlant>
                 </div>
               </div>
             </div>
@@ -370,7 +352,8 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
               <div style={styles.box2InnerTop}>
                 <GiStonePile color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
-                  <p style={styles.Box2PropertyLabel}>Stones</p>
+                  <p style={styles.BoxPropertyLabel}>Stones</p>
+                  <AlertStone></AlertStone>
                 </div>
               </div>
             </div>
@@ -385,8 +368,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                     Select
                   </option>
                   <option value="Small">Small</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
+                  <option value="Large">Large</option>
                 </select>
               </div>
               <div style={styles.box3middleContainer}>
@@ -481,44 +463,21 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
             </div>
 
             <Space direction="vertical" style={{ width: "100%" }}>
-              <AutoComplete
-                option={filteredMachinery.map((item) => ({ value: item }))}
-                value={searchValue}
-                onChange={setSearchValue}
-                onSearch={handleSearchChange}
-              >
-                <Input
-                  size="small"
-                  placeholder="Search for machines"
-                  prefix={prefix}
-                  style={styles.searchbar}
-                  allowClear={{
-                    clearIcon: <CloseSquareFilled />,
-                  }}
-                />
-              </AutoComplete>
-              {filteredMachinery.length > 0 && (
-                <List
-                  bordered
-                  dataSource={filteredMachinery}
-                  renderItem={(item) => (
-                    <List.Item
-                      onClick={() => handleItemClick(item)}
-                      style={styles.searchbarListItems}
-                      size="small"
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "#f0f0f0";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "#fff";
-                      }}
-                    >
-                      {item}
-                    </List.Item>
-                  )}
-                  style={styles.searchbarList}
-                />
-              )}
+            <div style={styles.dropDown2Container}>
+                <select
+                  style={styles.dropdown2}
+                  value={machineTypeSelectedValue}
+                  onChange={handleMachineTypeChange}
+                >
+                  <option value="" disabled selected>
+                    Select Machine type
+                  </option>
+                  <option value="Excavators">Excavators</option>
+                  <option value="Backhoes">Backhoes</option>
+                  <option value="Chainsaws">Chainsaws</option>
+                  <option value="Excavator breakers">Excavator breakers</option>
+                </select>
+              </div>
             </Space>
 
             <div style={styles.box7InputContainer}>

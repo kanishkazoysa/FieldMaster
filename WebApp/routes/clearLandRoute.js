@@ -23,7 +23,7 @@ const calculateWeedEffort = (weedType,area,laborsCount,machineDetails) => {
     }
   if(weedType === "High"){
     if(machineDetails){
-      machineDetails.forEach(({type,count}) => {
+      machineDetails.forEach(({count,type}) => {
         if(type === "Backhoes"){
           weedEffort = machineEffortValues[type] / parseInt(count);
         }
@@ -49,7 +49,7 @@ const calculatePlantEffort = (plantDetails,machineDetails) => {
   let totalPlantEffort = 0;
   const plantEffortValues = { Low: 1 / 12, Medium: 0.25, High: 0.5 };//for 1 chainsaw
   if(machineDetails){
-    machineDetails.forEach(({type,count}) => {
+    machineDetails.forEach(({count,type}) => {
       if(type === "Chainsaws"){
           chainsawCount = parseInt(count);
       }
@@ -68,9 +68,9 @@ const calculateStoneEffort = (stoneDetails,machineDetails) => {
   let stoneEffort = 0;
   let breakerCount = 1;
   let totalStoneEffort = 0;
-  const stoneEffortValues = { Small:0.5 , High: 1 };
+  const stoneEffortValues = { Small:0.5 , Large: 1 };
   if(machineDetails){
-    machineDetails.forEach(({type,count}) => {
+    machineDetails.forEach(({count,type}) => {
       if(type === "Excavator breakers"){
           breakerCount = parseInt(count);
       }
@@ -120,8 +120,8 @@ router.post("/clearLand", async (req, res) => {
       return {count, type: type.trim() };
     });;
     const machineDetails = displayValues2.map((value) => {
-        const [type, count] = value.split(" x ");
-        return { type: type.trim(), count};
+        const [count, type] = value.split(" x ");
+        return { count, type: type.trim()};
       });
       const weedEffort = calculateWeedEffort(weedType,area,laborsCount,machineDetails);
     const plantEffort = calculatePlantEffort(plantDetails,machineDetails);  
