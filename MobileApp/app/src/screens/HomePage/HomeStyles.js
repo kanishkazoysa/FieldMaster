@@ -2,7 +2,6 @@ import { StyleSheet, Platform } from 'react-native';
 import {
   responsiveHeight,
   responsiveWidth,
-  responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
@@ -135,17 +134,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 18,
+    paddingLeft: responsiveWidth(2),
     borderRadius: 25,
   },
   searchBarInput: {
-    height: 34,
+    height: responsiveHeight(5),
     marginTop: 4,
     marginLeft: 0,
     marginRight: 0,
     color: '#5d5d5d',
     fontSize: 16,
   },
+  markerText: {
+  color: 'white',
+  fontWeight: 'bold',
+  textAlign: 'center',
+  textAlignVertical: 'center',
+},
 });
 
 export default styles;

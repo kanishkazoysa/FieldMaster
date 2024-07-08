@@ -53,6 +53,8 @@ export default function Home() {
   const [selectedMapDetails, setSelectedMapDetails] = useState(null);
   const [searchedRegion, setSearchedRegion] = useState(null);
 
+  
+
   // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
@@ -79,11 +81,12 @@ export default function Home() {
           "/api/auth/mapTemplate/getAllTemplates"
         );
         setUserMaps(response.data);
+        showAllMaps(); // Call showAllMaps after setting userMaps
       } catch (error) {
         console.error("Failed to fetch user maps:", error);
       }
     };
-
+  
     fetchUserMaps();
   }, []);
 
@@ -165,41 +168,6 @@ export default function Home() {
         longitudeDelta: 0.05,
       });
     }
-  };
-
-  const searchLocation = async () => {
-    if (searchQuery) {
-      try {
-        const response = await axios.get(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-            searchQuery
-          )}&key=${apiKey}`
-        ); // Search for location by address using Google Maps Geocoding API
-        const data = response.data;
-        if (data.results && data.results.length > 0) {
-          const { lat, lng } = data.results[0].geometry.location; // Get latitude and longitude
-          setShowCurrentLocation(false); // Hide current location
-          setSearchedLocation({ latitude: lat, longitude: lng });
-          if (mapRef.current) {
-            // Animate to searched location
-            mapRef.current.animateToRegion({
-              latitude: lat,
-              longitude: lng,
-              latitudeDelta: 0.05,
-              longitudeDelta: 0.05,
-            });
-          }
-        } else {
-          console.error("Location not found");
-        }
-      } catch (error) {
-        console.error("Error searching for location:", error);
-      }
-    }
-  };
-  //clear the search query
-  const clearSearchQuery = () => {
-    setSearchQuery("");
   };
 
   // handle the template press
@@ -287,6 +255,22 @@ export default function Home() {
     }
   };
 
+  const showAllMaps = () => {
+    if (mapRef.current && userMaps.length > 0) {
+      const allCoordinates = userMaps.flatMap((map) =>
+        map.locationPoints.map((point) => ({
+          latitude: point.latitude,
+          longitude: point.longitude,
+        }))
+      );
+  
+      mapRef.current.fitToCoordinates(allCoordinates, {
+        edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+        animated: true,
+      });
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
@@ -295,12 +279,12 @@ export default function Home() {
           style={styles.map}
           provider={PROVIDER_GOOGLE}
           mapType={mapTypes[mapTypeIndex].value} // Set map type
-          // initialRegion={{
-          //   latitude: 6.2427,
-          //   longitude: 80.0607,
-          //   latitudeDelta: 0.0922,
-          //   longitudeDelta: 0.0421,
-          // }} // Initial region (Sri Lanka)
+          initialRegion={{
+            latitude: 6.2427,
+            longitude: 80.0607,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }} // Initial region (Sri Lanka)
           region={searchedRegion}
         >
           {userMaps.map((map, index) => (
@@ -364,7 +348,7 @@ export default function Home() {
           renderRightButton={() => (
             <View style={{ marginRight: responsiveWidth(1) }}>
               <TouchableOpacity onPress={ProfileManage}>
-                <ProfileAvatar userData={userData} textSize={5} />
+                <ProfileAvatar userData={userData} textSize={responsiveFontSize(0.65)} />
               </TouchableOpacity>
             </View>
           )}
