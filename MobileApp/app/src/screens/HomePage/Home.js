@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator 
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from "react-native-maps";
@@ -50,6 +51,7 @@ export default function Home() {
   const [selectedMapId, setSelectedMapId] = useState(null);
   const [selectedMapDetails, setSelectedMapDetails] = useState(null);
   const [searchedRegion, setSearchedRegion] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -202,13 +204,14 @@ export default function Home() {
     if (mapId === selectedMapId) {
       zoomOutMap();
     } else {
+      setIsLoading(true);
       setSelectedMapId(mapId);
       try {
         const response = await AxiosInstance.get(
           `/api/auth/mapTemplate/getAllmapData/${mapId}`
         );
         setSelectedMapDetails(response.data);
-
+  
         // Zoom to the selected map
         const selectedMap = userMaps.find((map) => map._id === mapId);
         if (selectedMap && mapRef.current) {
@@ -216,7 +219,7 @@ export default function Home() {
             latitude: point.latitude,
             longitude: point.longitude,
           }));
-
+  
           mapRef.current.fitToCoordinates(coordinates, {
             edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
             animated: true,
@@ -224,6 +227,8 @@ export default function Home() {
         }
       } catch (error) {
         console.error("Failed to fetch map details:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -335,7 +340,13 @@ export default function Home() {
             <Marker coordinate={searchedLocation} title="Searched Location" />
           )}
         </MapView>
-        {selectedMapDetails && (
+        {isLoading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#007BFF" />
+          </View>
+        )}
+        
+        {selectedMapDetails && !isLoading && (
           <MapDetailsPanel
             mapDetails={selectedMapDetails}
             onClose={zoomOutMap}
