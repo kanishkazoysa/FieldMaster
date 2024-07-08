@@ -9,7 +9,7 @@ import {
   Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from "react-native-maps";
 import { Button } from "react-native-paper";
 import * as Location from "expo-location";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -29,6 +29,7 @@ import ProfileAvatar from "../../components/ProfileAvatar";
 import { useIsFocused } from "@react-navigation/native";
 import AxiosInstance from "../../AxiosInstance";
 import styles from "./HomeStyles";
+import MapDetailsPanel from './MapDetailsPanel';
 
 const apiKey = "AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U";
 
@@ -46,6 +47,9 @@ export default function Home() {
   const mapRef = React.useRef(null);
   const [userData, setUserData] = useState(null);
   const isFocused = useIsFocused();
+  const [userMaps, setUserMaps] = useState([]);
+const [selectedMapId, setSelectedMapId] = useState(null);
+const [selectedMapDetails, setSelectedMapDetails] = useState(null);
 
   // Fetch user data
   useEffect(() => {
@@ -64,6 +68,20 @@ export default function Home() {
       fetchUserData();
     }
   }, [isFocused]);
+
+  //get all maps of user
+  useEffect(() => {
+    const fetchUserMaps = async () => {
+      try {
+        const response = await AxiosInstance.get("/api/auth/mapTemplate/getAllTemplates");
+        setUserMaps(response.data);
+      } catch (error) {
+        console.error("Failed to fetch user maps:", error);
+      }
+    };
+  
+    fetchUserMaps();
+  }, []);
 
   //get the current location
   useEffect(() => {
@@ -190,6 +208,43 @@ export default function Home() {
     Keyboard.dismiss();
   };
 
+  const handleMapSelect = async (mapId) => {
+    if (mapId === selectedMapId) {
+      setSelectedMapId(null);
+      setSelectedMapDetails(null);
+    } else {
+      setSelectedMapId(mapId);
+      try {
+        const response = await AxiosInstance.get(`/api/auth/mapTemplate/getAllmapData/${mapId}`);
+        setSelectedMapDetails(response.data);
+        
+        // Zoom to the selected map
+        const selectedMap = userMaps.find(map => map._id === mapId);
+        if (selectedMap && mapRef.current) {
+          const coordinates = selectedMap.locationPoints.map(point => ({
+            latitude: point.latitude,
+            longitude: point.longitude,
+          }));
+          
+          mapRef.current.fitToCoordinates(coordinates, {
+            edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+            animated: true,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch map details:", error);
+      }
+    }
+  };
+
+  const getCenterOfPolygon = (points) => {
+    const latitudes = points.map((p) => p.latitude);
+    const longitudes = points.map((p) => p.longitude);
+    const centerLat = (Math.min(...latitudes) + Math.max(...latitudes)) / 2;
+    const centerLng = (Math.min(...longitudes) + Math.max(...longitudes)) / 2;
+    return { latitude: centerLat, longitude: centerLng };
+  };
+
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
@@ -205,6 +260,29 @@ export default function Home() {
             longitudeDelta: 0.0421,
           }} // Initial region (Sri Lanka)
         >
+
+        {userMaps.map((map, index) => (
+          <React.Fragment key={map._id}>
+            <Polygon
+              coordinates={map.locationPoints.map((point) => ({
+                latitude: point.latitude,
+                longitude: point.longitude,
+              }))}
+              fillColor="rgba(255,255,255,0.1)"
+              strokeColor="black"
+              strokeWidth={3}
+            />
+            <Marker
+              coordinate={getCenterOfPolygon(map.locationPoints)}
+              onPress={() => handleMapSelect(map._id)}
+            >
+              <View style={styles.markerContainer}>
+                <Text style={styles.markerText}>{index + 1}</Text>
+              </View>
+            </Marker>
+          </React.Fragment>
+        ))}
+
       {/* Show markers on the map for search location */}
           {showCurrentLocation && currentLocation && (
             <Marker
@@ -219,6 +297,15 @@ export default function Home() {
             <Marker coordinate={searchedLocation} title="Searched Location" />
           )} 
         </MapView>
+        {selectedMapDetails && (
+          <MapDetailsPanel
+            mapDetails={selectedMapDetails}
+            onClose={() => {
+              setSelectedMapId(null);
+              setSelectedMapDetails(null);
+            }}
+          />
+        )}
 
         {/* Search bar */}
         <View style={styles.searchbar}>

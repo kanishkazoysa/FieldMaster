@@ -104,6 +104,24 @@ const styles = StyleSheet.create({
     transform: [{ translateY: responsiveHeight(-1.4) }],
     zIndex: 1,
   },
+  markerContainer: {
+    backgroundColor: 'black',
+    borderRadius: 40,
+    padding: 5,
+  },
+  markerText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  mapDetailsPanel: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 5,
+  },
 });
 
 export default styles;
