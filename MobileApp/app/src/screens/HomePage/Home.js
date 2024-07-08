@@ -52,6 +52,7 @@ export default function Home() {
   const [selectedMapDetails, setSelectedMapDetails] = useState(null);
   const [searchedRegion, setSearchedRegion] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMapDetailsVisible, setIsMapDetailsVisible] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -72,8 +73,6 @@ export default function Home() {
       return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, [])
   );
-
-  
 
   // Fetch user data
   useEffect(() => {
@@ -136,7 +135,7 @@ export default function Home() {
     {
       icon: "walk",
       Header: "Walk around the land",
-      Text: "Click on Start button and it will track your phone’s live position.",
+      Text: "Click on Start button and it will track your phone's live position.",
     },
     {
       icon: "map-marker-radius",
@@ -211,6 +210,7 @@ export default function Home() {
           `/api/auth/mapTemplate/getAllmapData/${mapId}`
         );
         setSelectedMapDetails(response.data);
+        setIsMapDetailsVisible(true);  // Set this to true when map is selected
   
         // Zoom to the selected map
         const selectedMap = userMaps.find((map) => map._id === mapId);
@@ -250,6 +250,7 @@ export default function Home() {
     }
     setSelectedMapId(null);
     setSelectedMapDetails(null);
+    setIsMapDetailsVisible(false);  // Set this to false when zooming out
   };
 
   const getCenterOfPolygon = (points) => {
@@ -301,7 +302,7 @@ export default function Home() {
           ref={mapRef}
           style={styles.map}
           provider={PROVIDER_GOOGLE}
-          mapType={mapTypes[mapTypeIndex].value} // Set map type
+          mapType={mapTypes[mapTypeIndex].value}
           region={searchedRegion}
         >
           {userMaps.map((map, index) => (
@@ -326,7 +327,6 @@ export default function Home() {
             </React.Fragment>
           ))}
 
-          {/* Show markers on the map for search location */}
           {showCurrentLocation && currentLocation && (
             <Marker
               coordinate={{
@@ -340,6 +340,7 @@ export default function Home() {
             <Marker coordinate={searchedLocation} title="Searched Location" />
           )}
         </MapView>
+        
         {isLoading && (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#007BFF" />
@@ -349,71 +350,101 @@ export default function Home() {
         {selectedMapDetails && !isLoading && (
           <MapDetailsPanel
             mapDetails={selectedMapDetails}
-            onClose={zoomOutMap}
+            onClose={() => {
+              zoomOutMap();
+              setIsMapDetailsVisible(false);
+            }}
           />
         )}
 
-        {/* Search bar */}
-        <GooglePlacesAutocomplete
-          placeholder='Search Location'
-          onPress={handlePlaceSelect}
-          fetchDetails={true}
-          query={{
-            key: apiKey,
-            language: 'en',
-          }}
-          styles={{
-            container: styles.searchBarContainer,
-            textInputContainer: styles.searchBarInputContainer,
-            textInput: styles.searchBarInput,
-          }}
-         
-          renderRightButton={() => (
-            <View style={{ marginRight: responsiveWidth(1) }}>
-              <TouchableOpacity onPress={ProfileManage}>
-                <ProfileAvatar userData={userData} textSize={responsiveFontSize(0.65)} />
-              </TouchableOpacity>
-            </View>
-          )}
-        />
-
-        <TouchableOpacity
-          style={styles.layerIconContainer}
-          onPress={toggleMapType}
-        >
-          <FontAwesomeIcon
-            icon={faLayerGroup}
-            size={responsiveFontSize(2.7)}
-            color="#fff"
-          />
-          {showDropdown && (
-            <View style={styles.dropdownContainer}>
-              <FlatList
-                data={mapTypes}
-                renderItem={({ item, index }) => (
-                  <TouchableOpacity
-                    style={styles.dropdownItem}
-                    onPress={() => selectMapType(index)}
-                  >
-                    <Text style={{ color: "#fff" }}>{item.name}</Text>
+        {!isMapDetailsVisible && (
+          <>
+            <GooglePlacesAutocomplete
+              placeholder='Search Location'
+              onPress={handlePlaceSelect}
+              fetchDetails={true}
+              query={{
+                key: apiKey,
+                language: 'en',
+              }}
+              styles={{
+                container: styles.searchBarContainer,
+                textInputContainer: styles.searchBarInputContainer,
+                textInput: styles.searchBarInput,
+              }}
+              renderRightButton={() => (
+                <View style={{ marginRight: responsiveWidth(1) }}>
+                  <TouchableOpacity onPress={ProfileManage}>
+                    <ProfileAvatar userData={userData} textSize={responsiveFontSize(0.65)} />
                   </TouchableOpacity>
-                )}
-                keyExtractor={(item) => item.value}
-              />
-            </View>
-          )}
-        </TouchableOpacity>
+                </View>
+              )}
+            />
 
-        <TouchableOpacity
-          style={styles.button2}
-          onPress={focusOnCurrentLocation}
-        >
-          <FontAwesomeIcon
-            icon={faLocationCrosshairs}
-            size={responsiveFontSize(2.7)}
-            color="#fff"
-          />
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.layerIconContainer}
+              onPress={toggleMapType}
+            >
+              <FontAwesomeIcon
+                icon={faLayerGroup}
+                size={responsiveFontSize(2.7)}
+                color="#fff"
+              />
+              {showDropdown && (
+                <View style={styles.dropdownContainer}>
+                  <FlatList
+                    data={mapTypes}
+                    renderItem={({ item, index }) => (
+                      <TouchableOpacity
+                        style={styles.dropdownItem}
+                        onPress={() => selectMapType(index)}
+                      >
+                        <Text style={{ color: "#fff" }}>{item.name}</Text>
+                      </TouchableOpacity>
+                    )}
+                    keyExtractor={(item) => item.value}
+                  />
+                </View>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.button2}
+              onPress={focusOnCurrentLocation}
+            >
+              <FontAwesomeIcon
+                icon={faLocationCrosshairs}
+                size={responsiveFontSize(2.7)}
+                color="#fff"
+              />
+            </TouchableOpacity>
+
+            <View style={styles.buttonContainer}>
+              <View style={styles.buttonWrapper}>
+                <Button
+                  buttonColor="#007BFF"
+                  icon="walk"
+                  mode="contained"
+                  onPress={startMeasure}
+                  style={styles.button}
+                >
+                  Start Measure
+                </Button>
+              </View>
+              <View style={styles.buttonWrapper}>
+                <Button
+                  buttonColor="#007BFF"
+                  icon="content-save-all"
+                  mode="contained"
+                  onPress={handleTemplatePress}
+                  style={styles.button}
+                >
+                  Templates
+                </Button>
+              </View>
+            </View>
+          </>
+        )}
 
         <SelectionModal
           modalVisible={modalVisible}
@@ -425,31 +456,6 @@ export default function Home() {
           profileModalVisible={profileModalVisible}
           setProfileModalVisible={setProfileModalVisible}
         />
-
-        <View style={styles.buttonContainer}>
-          <View style={styles.buttonWrapper}>
-            <Button
-              buttonColor="#007BFF"
-              icon="walk"
-              mode="contained"
-              onPress={startMeasure}
-              style={styles.button}
-            >
-              Start Measure
-            </Button>
-          </View>
-          <View style={styles.buttonWrapper}>
-            <Button
-              buttonColor="#007BFF"
-              icon="content-save-all"
-              mode="contained"
-              onPress={handleTemplatePress}
-              style={styles.button}
-            >
-              Templates
-            </Button>
-          </View>
-        </View>
       </View>
     </TouchableWithoutFeedback>
   );
