@@ -13,7 +13,7 @@ const MapDetailsPanel = ({ mapDetails, onClose }) => {
     <View style={styles.container}>
       <Text style={styles.title}>{map.templateName}</Text>
       
-      <ScrollView style={styles.scrollView}>
+      <ScrollView style={styles.mainScrollView} showsVerticalScrollIndicator={true}>
         <Collapse>
           <CollapseHeader>
             <View style={styles.header}>
@@ -80,7 +80,7 @@ const MapDetailsPanel = ({ mapDetails, onClose }) => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    right: 20,
+    right: 35,
     top: 80,
     backgroundColor: 'white',
     padding: 20,
@@ -94,15 +94,16 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     width: width * 0.8,
-    maxHeight: height * 0.7,
+    maxHeight: height * 0.8,
+    zIndex: 1,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 16,
   },
-  scrollView: {
-    maxHeight: height * 0.5,
+  mainScrollView: {
+    flexGrow: 1,
   },
   header: {
     backgroundColor: '#f0f0f0',

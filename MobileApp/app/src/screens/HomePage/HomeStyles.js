@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     right: responsiveWidth(3),
     top: responsiveHeight(24),
-    zIndex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
