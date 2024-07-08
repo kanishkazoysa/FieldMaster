@@ -15,7 +15,7 @@ import EffortOutput from "../ClearLand/EffortOutput/effortOutput";
 import Plantation from "../Plantation/PlantationPage/plantation";
 import PlantationDetails from "../Plantation/PlantationDetails/plantationDetails";
 import AxiosInstance from "../../AxiosInstance";
-import { Button} from "antd";
+import { Button, Flex } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const TemplateDetails = ({
@@ -36,7 +36,6 @@ const TemplateDetails = ({
   const [points, setPoints] = useState([]);
   const [region, setRegion] = useState(null);
 
-
   const handleBackClick = () => {
     setAnimatePage(false);
     setTimeout(() => {
@@ -44,12 +43,9 @@ const TemplateDetails = ({
     }, 300);
   };
 
-  
-
   const navigateToRegister = () => {
     navigate(`/Managemap/${id}`); // Navigate to ManageMap page with template ID
   };
-
 
   const checkIdClearLand = async (id) => {
     try {
@@ -121,7 +117,11 @@ const TemplateDetails = ({
 
   const handleResizeMapClick = () => {
     navigate("/resizemap", {
-      state: { templateId: template._id, templateArea: template.area, templatePerimeter: template.perimeter }, 
+      state: {
+        templateId: template._id,
+        templateArea: template.area,
+        templatePerimeter: template.perimeter,
+      },
     });
   };
 
@@ -138,16 +138,18 @@ const TemplateDetails = ({
               </div>
             </div>
             <div className="div-02">
-              <img
-                src="https://i.ibb.co/9TQd2Bb/map-image.jpg"
-                alt="mapImage"
-                className="map-img"
-              />
+              <div className="map-img-container">
+                <img
+                  src={template.imageUrl}
+                  alt="mapImage"
+                  className="map-img"
+                />
+              </div>
               <div className="button-container">
-                <Button type="primary" className="action-btn" onClick={navigateToRegister}>
+                <Button type="primary" className="action-btn">
                   Manage Map
                 </Button>
-                <Button type="primary" className="action-btn" onClick={handleResizeMapClick}>
+                <Button type="primary" className="action-btn">
                   Resize Map
                 </Button>
               </div>
@@ -215,6 +217,7 @@ const TemplateDetails = ({
                   </div>
                 </div>
               </div>
+              <hr className="breaker" />
               <div className="description-div">
                 <p className="bold-text">Description</p>
                 <p className="description-text">{template.description}</p>
