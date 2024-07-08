@@ -17,7 +17,6 @@ import AxiosInstance from "../../AxiosInstance";
 import * as turf from "@turf/turf";
 import html2canvas from "html2canvas";
 import axios from "axios";
-import domtoimage from "dom-to-image";
 
 const { Option } = Select;
 
