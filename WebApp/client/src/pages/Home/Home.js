@@ -17,6 +17,7 @@ import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
 import AxiosInstance from "../../AxiosInstance";
 import MapDetailsPanel from "./MapDetailsPanel";
 import { MdMyLocation } from "react-icons/md";
+import { Modal } from 'antd';
 
 export default function Home() {
   const location = useLocation();
@@ -33,6 +34,15 @@ export default function Home() {
   const [zoomLevel, setZoomLevel] = useState(2);
   const sriLankaCenter = { lat: 7.8731, lng: 80.7718 };
   const defaultZoom = 7;
+  const [isMobileOnlyModalVisible, setIsMobileOnlyModalVisible] = useState(false);
+
+  const showMobileOnlyModal = () => {
+    setIsMobileOnlyModalVisible(true);
+  };
+
+  const handleMobileOnlyModalOk = () => {
+    setIsMobileOnlyModalVisible(false);
+  };
 
   const handleZoomChanged = () => {
     if (mapRef.current && mapRef.current.state.map) {
@@ -252,7 +262,7 @@ export default function Home() {
   return (
     <div style={styles.container}>
       <div style={styles.sidebar}>
-        <SideNavbar />
+      <SideNavbar onShowMobileOnlyModal={showMobileOnlyModal} />
       </div>
       <LoadScript
         googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
@@ -373,6 +383,14 @@ export default function Home() {
           )}
         </GoogleMap>
       </LoadScript>
+      <Modal
+        title="Mobile Only Feature"
+        visible={isMobileOnlyModalVisible}
+        onOk={handleMobileOnlyModalOk}
+        onCancel={handleMobileOnlyModalOk}
+      >
+        <p>This feature is only available in the mobile application.</p>
+      </Modal>
     </div>
   );
 }
