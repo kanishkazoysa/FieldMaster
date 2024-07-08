@@ -9,7 +9,7 @@ import { FaClockRotateLeft } from "react-icons/fa6";
 import { IoTimeSharp } from "react-icons/io5";
 import { GiWeight, GiChemicalDrop } from "react-icons/gi";
 import { Tb24Hours } from "react-icons/tb";
-import { message,Button } from "antd";
+import { Button } from "antd";
 import AxiosInstance from "../../../AxiosInstance.js";
 import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
@@ -20,7 +20,7 @@ export default function FertilizingDetails({
   onBackToSidebar,
   onEditTemplateClick,
   template,
-  onback,
+  
   id,
   FertilizerAmountUnitselectedValue,
   textFertilizationType,
