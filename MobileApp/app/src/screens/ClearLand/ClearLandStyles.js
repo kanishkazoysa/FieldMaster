@@ -232,6 +232,16 @@ export const styles = StyleSheet.create({
         marginTop: responsiveHeight(3.5),
       
     },
+    Dropdown3: {
+      backgroundColor: "#F0F2F5",
+        borderRadius: 10,
+        width: "100%",
+        height: responsiveHeight(4),
+        alignItems: "center",
+        justifyContent: "center",
+        marginLeft: responsiveWidth(-4),
+        marginTop: responsiveHeight(1),
+    },
     machineAddButton: {
       width: responsiveWidth(30),
       height: responsiveHeight(3.5),

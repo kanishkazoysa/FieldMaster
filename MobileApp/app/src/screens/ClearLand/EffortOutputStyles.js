@@ -340,7 +340,7 @@ export const styles = StyleSheet.create({
   
     box3: {
       width: "87%",
-      height: responsiveHeight(22),
+      height: "max-content",
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "white",
@@ -361,9 +361,9 @@ export const styles = StyleSheet.create({
     },
   
     inner: {
-      width: "80%",
-      height: "80%",
-      backgroundColor: "white",
+      width: "90%",
+      height: "max-content",
+      // backgroundColor: "pink",
       marginBottom: responsiveHeight(5),
       marginTop: responsiveHeight(1),
     },
@@ -378,34 +378,52 @@ export const styles = StyleSheet.create({
     },
   
     innercenter: {
+      display: "flex",
       flexDirection: "row",
-      width: "100%",
-      height: responsiveHeight(5.5),
-      alignItems: "center",
       justifyContent: "space-between",
+      width: "100%",
       backgroundColor: "white",
-      marginVertical: responsiveHeight(1),
+      marginVertical: 1,
+      marginTop: 12,
+      height:"auto",
     },
   
     innersquareleft: {
-      width: "50%",
-      height: responsiveHeight(5.5),
+      display: "flex",
+      width: "55%",
       flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
+      alignItems: "left",
+      // justifyContent: "space-between",
       backgroundColor: "white",
+      // height: 10,
     },
   
     innersquareright: {
-      width: "45%",
-      height: responsiveHeight(2.7),
+      display: "flex",
+      width: "50%",
       flexDirection: "row",
       alignItems: "center",
       backgroundColor: "white",
+      marginTop: 0,
+      
+    },
+  
+    innersquareright1: {
+      display: "flex",
+      width: "50%",
+      height: "auto",
+      marginTop: 0,
+      paddinhTop: 0,
+      marginLeft: 0,
+      marginBottom: 0,
+      justifyContent: "flex-start",
+      backgroundColor: "white",
+      flexDirection: "column",
     },
   
     RightText: {
       fontSize: responsiveFontSize(1.7),
+      marginLeft: responsiveWidth(1.5),
     },
   
     LeftText: {

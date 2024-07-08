@@ -15,31 +15,39 @@ function calculateEffortOutput(
 const calculateWeedEffort = (weedType,area,laborsCount,machineDetails) => {
   let weedEffort = 0;
   let totalWeedEffort = 0;
+  let backhoePresent = false;
+  let excavatorPresent = false;
   const machineEffortValues = { Backhoes: 0.714, Excavators: 0.0593 }; // time in minutes to clear 1 square meter 
-  const weedEffortValues = { Low: 0.036, Medium: 0.042, High: 0 };//hours per 1 square meter and per 1 labor.for high assume already one backhoe exists
+  const weedEffortValues = { Low: 0.036, Medium: 0.042, High: 0.714 };//hours per 1 square meter and per 1 labor.for high assume already one backhoe exists
   if(weedType === "Low" || weedType === "Medium"){
       weedEffort = weedEffortValues[weedType];
       totalWeedEffort = (weedEffort/laborsCount)*area;
     }
-  if(weedType === "High"){
-    if(machineDetails){
-      machineDetails.forEach(({count,type}) => {
-        if(type === "Backhoes"){
-          weedEffort = machineEffortValues[type] / parseInt(count);
-        }
-        if(type === "Excavators"){
-          weedEffort = machineEffortValues[type] / (parseInt(count));
-        }
-        if(type !== "Backhoes" && type !== "Excavators"){
-          weedEffort = 0.714;
-        }
-      });
+    if (weedType === "High") {
+      totalWeedEffort = 0; // Initialize total weed effort
+      if (machineDetails) {
+        machineDetails.forEach(({ count, type }) => {
+          if (type === "Excavators") {
+            excavatorPresent = true;
+            excavatorCount = parseInt(count);
+          } else if (type === "Backhoes") {
+            backhoePresent = true;
+            backhoeCount = parseInt(count);
+          }
+        });
+      }
+      if(excavatorPresent && backhoePresent){
+        weedEffort = ((0.714/backhoeCount)+(0.0593/excavatorCount))/2;	
+      }else if(excavatorPresent){
+        weedEffort = 0.0593/excavatorCount;
+      }else if(backhoePresent){
+        weedEffort = 0.714/backhoeCount;
+      }else{
+        weedEffort = 0.714;
+      }
+      totalWeedEffort = (weedEffort*area)/60; 
     }
-    totalWeedEffort = (weedEffort*area)/60;
-  }
-  
-  
-  return totalWeedEffort;
+   return totalWeedEffort;
 }
 
 

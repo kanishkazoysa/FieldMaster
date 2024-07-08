@@ -277,15 +277,15 @@ export default function EffortOutput({ route }) {
               <View style={styles.inner}>
                 <Text style={styles.innertopText}>Results based on</Text>
 
-                <View style={styles.center}>
+                <View >
                   <View style={styles.innercenter}>
                     <View style={styles.innersquareleft}>
                       <MaterialCommunityIcons
                         name="account-hard-hat"
-                        size={30}
+                        size={25}
                         color="#65676B"
                       />
-                      <Text style={styles.LeftText}>Labors            :</Text>
+                      <Text style={styles.LeftText}>Labors                :</Text>
                     </View>
                     <View style={styles.innersquareright}>
                       <Text style={styles.RightText}>{laborCount}</Text>
@@ -297,15 +297,17 @@ export default function EffortOutput({ route }) {
                     <View style={styles.innersquareleft}>
                       <MaterialCommunityIcons
                         name="shovel"
-                        size={30}
+                        size={25}
                         color="#65676B"
                       />
-                      <Text style={styles.LeftText}>Machinery      :</Text>
+                      <Text style={styles.LeftText}>Machinery          :</Text>
                     </View>
-                    <View style={styles.innersquareright}>
-                      <Text style={styles.RightText}>{data1.map((machine, index) => (
-                        <Text key={index}>{machine}</Text>
-                      ))}</Text>
+                    <View style={styles.innersquareright1}>
+                    {data1.map((machine, index) => (
+          <Text key={index} style={styles.RightText}>
+            {machine}
+          </Text>
+        ))}
                     </View>
                   </View>
 

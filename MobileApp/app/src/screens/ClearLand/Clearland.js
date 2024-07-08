@@ -44,32 +44,8 @@ export default function ClearLand({ route }) {
   const [stonesCount, setStonesCount] = useState("");
   const [laborCount, setLaborCount] = useState("");
   const [workHours, setWorkHours] = useState("");
-  const [searchItem, setSearchItem] = useState("");
+  const [machineTypeSelectedValue, setMachineTypeSelectedValue] = useState(null);
   const [machineCount, setMachineCount] = useState("");
-  const [searchSuggestions, setSearchSuggestions] = useState([]);
-  const [suggestions, setSuggestions] = useState([
-    "Excavators",
-    "Backhoes",
-    "Chainsaws",
-    "Excavator breakers",
-  ]);
-
-  const handleSearch = (query) => {
-    if (query === "") {
-      setSearchSuggestions([]);
-      return;
-    }
-    const filteredSuggestions = suggestions.filter((item) =>
-      item.toLowerCase().includes(query.toLowerCase())
-    );
-    setSearchSuggestions(filteredSuggestions);
-  };
-
-  const handleSuggestionSelect = (item) => {
-    setSearchItem(item);
-    setSearchSuggestions([]);
-  };
-
   const handlePlantCountChange = (text) => {
     setPlantCount(text);
   };
@@ -116,6 +92,19 @@ export default function ClearLand({ route }) {
     { label: "Large", value: "Large" },
   ];
 
+  const placeholder2 = {
+    label: "Select Machine Type",
+    value: null,
+    color: "red",
+  };
+
+  const options2 = [
+    { label: "Excavators", value: "Excavators" },
+    { label: "Backhoes", value: "Backhoes" },
+    { label: "Chainsaws", value: "Chainsaws" },
+    { label: "Excavator breakers", value: "Excavator breakers" },
+  ];
+
   /display/;
 
   const [displayValues, setDisplayValues] = useState([]);
@@ -158,12 +147,12 @@ export default function ClearLand({ route }) {
 
   const handleAdd2 = () => {
     //validation part Add button
-    const combinedValue2 = searchItem + " x " + machineCount;
+    const combinedValue2 = machineCount + " x " + machineTypeSelectedValue;
     const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
       Boolean
     );
     setDisplayValues2(newDisplayValues2);
-    setSearchItem("");
+    setMachineTypeSelectedValue("");
     setMachineCount("");
   };
 
@@ -573,28 +562,14 @@ export default function ClearLand({ route }) {
                   alignItems: "center",
                 }}
               >
-                <View style={styles.SearchbarContainer}>
-                  <Searchbar
-                    placeholder="Search for machines"
-                    placeholderStyle={{ fontSize: 16, marginTop: -14 }}
-                    inputStyle={{ fontSize: 16, marginTop: -14 }}
-                    style={styles.Searchbar}
-                    onChangeText={(text) => {
-                      setSearchItem(text);
-                      handleSearch(text);
-                    }}
-                    value={searchItem}
-                  ></Searchbar>
-                  {searchSuggestions.map((item, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      style={styles.suggestionItem}
-                      onPress={() => handleSuggestionSelect(item)}
-                    >
-                      <Text>{item}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
+                <View style={styles.Dropdown3}>
+                <RNPickerSelect
+                  placeholder={placeholder2}
+                  items={options2}
+                  onValueChange={(value) => setMachineTypeSelectedValue(value)}
+                  value={machineTypeSelectedValue}
+                />
+              </View>
                 <Text
                   style={{
                     fontSize: 16,
@@ -647,7 +622,7 @@ export default function ClearLand({ route }) {
                   >
                     <MaterialCommunityIcons
                       name="close-circle-outline"
-                      size={20}
+                      size={responsiveFontSize(2.7)}
                       color="#007BFF"
                     />
                   </TouchableOpacity>
