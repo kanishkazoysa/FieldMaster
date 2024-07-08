@@ -297,12 +297,6 @@ export default function Home() {
           style={styles.map}
           provider={PROVIDER_GOOGLE}
           mapType={mapTypes[mapTypeIndex].value} // Set map type
-          initialRegion={{
-            latitude: 6.2427,
-            longitude: 80.0607,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }} // Initial region (Sri Lanka)
           region={searchedRegion}
         >
           {userMaps.map((map, index) => (
