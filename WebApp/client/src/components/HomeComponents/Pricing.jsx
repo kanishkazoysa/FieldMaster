@@ -59,19 +59,17 @@ const tiers = [
 function Pricing() {
   return (
     <div id="pricing" className="pricing">
-      <Container maxWidth="md" component="main" style={{ marginBottom: "1rem" }}>
+      <Container
+        maxWidth="md"
+        component="main"
+        style={{ marginBottom: "1rem" }}
+      >
         <div style={{ textAlign: "center", color: "#007BFF", margin: "2rem" }}>
           <h2>Pricing</h2>
         </div>
         <Grid container spacing={3} justifyContent="center">
           {tiers.map((tier) => (
-            <Grid
-              item
-              key={tier.title}
-              xs={12}
-              sm={6}
-              md={4}
-            >
+            <Grid item key={tier.title} xs={12} sm={6} md={4}>
               <Card>
                 <CardHeader
                   title={tier.title}
@@ -97,10 +95,18 @@ function Pricing() {
                       mb: 2,
                     }}
                   >
-                    <Typography component="h2" variant="h3" color="text.primary">
+                    <Typography
+                      component="h2"
+                      variant="h3"
+                      color="text.primary"
+                    >
                       ${tier.price}
                     </Typography>
-                    <Typography variant="h6" color="text.secondary" sx={{ ml: 1 }}>
+                    <Typography
+                      variant="h6"
+                      color="text.secondary"
+                      sx={{ ml: 1 }}
+                    >
                       /mo
                     </Typography>
                   </Box>

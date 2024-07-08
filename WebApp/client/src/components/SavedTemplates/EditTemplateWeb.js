@@ -3,6 +3,7 @@ import { MdArrowBack } from 'react-icons/md';
 import './EditTemplateStyles.css';
 import { FaRegSave } from 'react-icons/fa';
 import AxiosInstance from '../../AxiosInstance';
+import { message } from 'antd';
 
 const EditTemplateWeb = ({ onBackToSidebar, template, onSaveSuccess }) => {
   const [templateName, setTemplateName] = useState(template.templateName);
@@ -25,14 +26,14 @@ const EditTemplateWeb = ({ onBackToSidebar, template, onSaveSuccess }) => {
       )
         .then((response) => {
           onSaveSuccess();
-          alert('Template updated successfully');
+          message.success('Template updated successfully');
         })
         .catch((error) => {
           console.error('Error updating template:', error);
-          alert('Failed to update template');
+          message.error('Failed to update template');
         });
     } else {
-      alert('No changes made to the template');
+      message.info('No changes made to the template');
       onSaveSuccess();
     }
   };

@@ -80,7 +80,7 @@ export const styles = {
       alignItems: "center",
       justifyContent: "left",
       backgroundColor: "white",
-      width: "46%",
+      width: "56%",
       //height: 50,
     },
   
