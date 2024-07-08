@@ -2,13 +2,12 @@ import { StyleSheet, Platform } from 'react-native';
 import {
   responsiveHeight,
   responsiveWidth,
-  responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 
 const styles = StyleSheet.create({
   locationIconContainer: {
     position: 'absolute',
-    left: responsiveWidth(5),
+    left: responsiveWidth(1),
     top: '50%',
     transform: [{ translateY: responsiveHeight(-1.4) }],
     zIndex: 1,
@@ -20,7 +19,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     right: responsiveWidth(3),
     top: responsiveHeight(24),
-    zIndex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -104,6 +102,65 @@ const styles = StyleSheet.create({
     transform: [{ translateY: responsiveHeight(-1.4) }],
     zIndex: 1,
   },
+  markerContainer: {
+    backgroundColor: 'black',
+    borderRadius: 40,
+    padding: 5,
+  },
+  markerText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  mapDetailsPanel: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 5,
+  },
+  searchBarContainer: {
+    position: 'absolute',
+    top: 20,
+    left: 12,
+    right: 10,
+    width: '93%',
+    zIndex: 1,
+    
+  },
+  searchBarInputContainer: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: responsiveWidth(2),
+    borderRadius: 25,
+  },
+  searchBarInput: {
+    height: responsiveHeight(5),
+    marginTop: 4,
+    marginLeft: 0,
+    marginRight: 0,
+    color: '#5d5d5d',
+    fontSize: 16,
+  },
+  markerText: {
+  color: 'white',
+  fontWeight: 'bold',
+  textAlign: 'center',
+  textAlignVertical: 'center',
+},
+loadingContainer: {
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: 'rgba(0,0,0,0.5)',
+},
 });
 
 export default styles;

@@ -128,6 +128,7 @@ export default function SideNavbar() {
               <IoBookmarks fontSize={18} style={{ marginRight: '15px' }} />
               {!collapsed && 'Templates'}
             </MenuItem>
+            {/* 
             <MenuItem
               onClick={() => {
                 handleSaveScreenClick();
@@ -143,6 +144,7 @@ export default function SideNavbar() {
             >
               {!collapsed && 'SaveScreen'}
             </MenuItem>
+            */}
           </Menu>
         )}
         <div

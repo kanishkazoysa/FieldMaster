@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
   editIcon: {
     top: responsiveHeight(-2.9),
-    right: responsiveWidth(-27),
+    right: responsiveWidth(-30),
   },
   avtarTxt: {
     fontSize: responsiveFontSize(3),

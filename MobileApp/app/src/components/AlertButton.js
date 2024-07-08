@@ -25,6 +25,7 @@ export default function AlertButton() {
           name="alert-circle-outline"
           size={18}
           color="#007BFF"
+          
         />
       </TouchableOpacity>
     </View>
@@ -44,5 +45,6 @@ const styles = StyleSheet.create({
   iconButton: {
     padding: 6,
     paddingLeft: -10,
+    paddingRight:12,
   },
 });
