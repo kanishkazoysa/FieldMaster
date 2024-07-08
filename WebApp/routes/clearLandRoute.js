@@ -180,25 +180,28 @@ router.post("/clearLandFromManualCalculator", async (req, res) => {
       return {count, type: type.trim() };
     });
      
-    const stoneType = displayValues1;
+    const stoneDetails = displayValues1.map((value) => {
+      const [count, type] = value.split(" x ");
+      return {count, type: type.trim() };
+    });;
     const machineDetails = displayValues2.map((value) => {
-        const [type, count] = value.split(" x ");
-        return { type: type.trim(), count};
+        const [count, type] = value.split(" x ");
+        return { count, type: type.trim()};
       });
-    const weedEffort = calculateWeedEffort(weedType);
-    const plantEffort = calculatePlantEffort(plantDetails);  
-    const stoneEffort = calculateStoneEffort(stoneType);
-    const machineEffort = calculateMachineEffort(machineDetails);
-    const chainsawCount = getChainsawCount(machineDetails);
-    const breakerCount = getBreakerCount(machineDetails);
-    const effort = calculateEffortOutput(area,weedEffort,laborsCount,plantEffort,stoneEffort,machineEffort,chainsawCount,breakerCount);
+      const weedEffort = calculateWeedEffort(weedType,area,laborsCount,machineDetails);
+    const plantEffort = calculatePlantEffort(plantDetails,machineDetails);  
+    const stoneEffort = calculateStoneEffort(stoneDetails,machineDetails);
+    const effort = calculateEffortOutput(weedEffort,plantEffort,stoneEffort);
     const workDays = calculateWorkDays(effort,workHours);
 
     res.json({
       status: "ok",
       data: {
+        weedEffort,
+        plantEffort,
+        stoneEffort,
         effort,
-         workDays,
+        workDays,
       },
     })
 
