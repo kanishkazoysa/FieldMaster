@@ -26,6 +26,7 @@
     "@turf/area": "^6.5.0",
     "@turf/helpers": "^7.0.0",
     "@turf/turf": "^6.5.0",
+    "accordion-collapse-react-native": "^1.1.1",
     "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
@@ -37,6 +38,7 @@
     "expo-crypto": "~12.4.1",
     "expo-dev-client": "~2.4.13",
     "expo-document-picker": "^12.0.1",
+    "expo-file-system": "~15.4.5",
     "expo-font": "~11.4.0",
     "expo-image-picker": "~14.3.2",
     "expo-location": "~16.1.0",
@@ -78,7 +80,9 @@
     "react-native-screens": "~3.22.0",
     "react-native-svg": "13.9.0",
     "react-native-vector-icons": "^10.0.3",
-    "react-native-web": "~0.19.6"
+    "react-native-view-shot": "^3.8.0",
+    "react-native-web": "~0.19.6",
+    "sweetalert": "^2.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

@@ -13,7 +13,7 @@ import Navbar from "./components/HomeComponents/navbar/Navbar";
 import Hero from "./components/HomeComponents/Hero/Hero";
 import About from "./components/HomeComponents/About";
 import Pricing from "./components/HomeComponents/Pricing";
-import Setup from "./components/HomeComponents/Setup";
+import Setup from "./components/HomeComponents/SetupCard";
 import ContactForm from "./components/HomeComponents/contact/contact";
 import "./index.css";
 import Home from "./pages/Home/Home";
@@ -25,9 +25,11 @@ import LoginPage from "./pages/auth/Login/LoginPage";
 import FPPage from "./pages/auth/ForgotPassowrd/FPPage";
 import OtpPage from "./pages/auth/ForgotPassowrd/OtpPage";
 import CPPage from "./pages/auth/ForgotPassowrd/CPPage";
+import PointAddingWeb from "./components/PointAddingWeb/PointAddingWeb";
 import Admin from "./pages/Admin/AdminDashboard";
 import { jwtDecode } from "jwt-decode";
-import ResizeMap from "./components/ResizeMap/ResizeMap"
+import ResizeMap from "./components/ResizeMap/ResizeMap";
+import InputControl from "./pages/Admin/InputControl";
 import EmailManage from "./pages/Admin/UserEmailManage/EmailManage";
 
 const checkTokenExpired = (token) => {
@@ -44,7 +46,6 @@ const checkTokenExpired = (token) => {
     return true;
   }
 };
-
 
 const UserRouteGuard = ({ children }) => {
   const token = localStorage.getItem("UserToken");
@@ -91,7 +92,7 @@ const AuthRouteGuard = ({ children }) => {
   const AdminToken = localStorage.getItem("AdminToken");
   if (token) {
     return <Navigate to="/home" />;
-  } else if(AdminToken) {
+  } else if (AdminToken) {
     return <Navigate to="/admin" />;
   } else {
     return children;
@@ -178,10 +179,19 @@ export default function App() {
           }
         />
         <Route
-          path="/admin"
+          path="/admin/*"
           element={
             <AdminRouteGuard>
               <Admin />
+            </AdminRouteGuard>
+          }
+        />
+
+        <Route
+          path="/inputcontrol"
+          element={
+            <AdminRouteGuard>
+              <InputControl />
             </AdminRouteGuard>
           }
         />
@@ -206,6 +216,7 @@ export default function App() {
         <Route path="/emailVerification" element={<EmailVerified />} />
         <Route path="/managemap/:templateId" element={<Managemap />} />
         <Route path="/resizemap" element={<ResizeMap />} />
+        <Route path="/pointAddingWeb" element={<PointAddingWeb />} />
       </Routes>
     </Router>
   );

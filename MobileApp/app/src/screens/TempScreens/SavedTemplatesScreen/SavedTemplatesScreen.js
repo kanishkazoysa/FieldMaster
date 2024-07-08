@@ -6,7 +6,7 @@ import {
   Image,
   ScrollView,
   StatusBar,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { Appbar } from "react-native-paper";
 import { styles } from "./SavedTemplatesScreenStyles";
@@ -31,6 +31,11 @@ const CustomDeleteIcon = (props) => (
     color="#65676B"
   />
 );
+
+const truncateText = (text, maxLength) => {
+  if (text.length <= maxLength) return text;
+  return text.substr(0, maxLength) + "...";
+};
 
 const SavedTemplatesScreen = ({ navigation }) => {
   const [templates, setTemplates] = useState([]);
@@ -61,7 +66,6 @@ const SavedTemplatesScreen = ({ navigation }) => {
       `/api/auth/mapTemplate/deleteTemplate/${deletingTemplate._id}`
     )
       .then((response) => {
-        /* console.log(response); */
         alert("Template deleted");
         setTemplates(
           templates.filter((template) => template._id !== deletingTemplate._id)
@@ -80,7 +84,6 @@ const SavedTemplatesScreen = ({ navigation }) => {
   return (
     <>
       <View>
-        {/* Static section at the top */}
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
 
         <Appbar.Header style={styles.header}>
@@ -93,81 +96,83 @@ const SavedTemplatesScreen = ({ navigation }) => {
             titleStyle={styles.title_text}
           />
         </Appbar.Header>
-
       </View>
       {loading ? (
         <View style={styles.loadingScreen}>
           <View style={styles.dotsWrapper}>
-        <ActivityIndicator 
-           color="#007BFF" 
-           size={45} 
-           />
-      </View>
+            <ActivityIndicator color="#007BFF" size={45} />
+          </View>
         </View>
       ) : (
-      <View style={styles.low_outer}>
-        {/* template */}
-        <View style={styles.scrollViewOuterStyle}>
-          <ScrollView
-            style={{ flex: 1 }}
-            contentContainerStyle={{ paddingBottom: 20 }}
-          >
-            {templates.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => handleTemplatePress(item)}
-                >
-                  <View style={styles.template_style}>
-                    <View style={styles.col_01}>
-                      <Image
-                        style={styles.image_style}
-                        source={{
-                          uri: "https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png",
-                        }}
-                      />
-                    </View>
-                    <TouchableOpacity onPress={() => handleTemplatePress(item)}>
-                      <View style={styles.col_02}>
-                        <Text style={styles.bold_text}>
-                          {item.templateName}
-                        </Text>
-                        <Text style={styles.sub_text_style}>
-                          Location: {item.location}
-                        </Text>
-                        <Text style={styles.sub_text_style}>
-                          Date: {item.date}{" "}
-                        </Text>
-                        <Text style={styles.sub_text_style}>
-                          Time: {item.time}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                    <View style={styles.col_03}>
-                      <TouchableOpacity
-                        style={styles.icon_style}
-                        onPress={() => {
-                          navigation.navigate("EditTemplate", { item: item });
-                        }}
-                      >
-                        <MaterialCommunityIcons
-                          name="square-edit-outline"
-                          size={responsiveFontSize(2.7)}
-                          color="#65676B"
+        <View style={styles.low_outer}>
+          <View style={styles.scrollViewOuterStyle}>
+            <ScrollView
+              style={{ flex: 1 }}
+              contentContainerStyle={{ paddingBottom: 20 }}
+            >
+              {templates.map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => handleTemplatePress(item)}
+                  >
+                    <View style={styles.template_style}>
+                      <View style={styles.col_01}>
+                        <Image
+                          style={styles.image_style}
+                          source={{
+                            uri:
+                              item.imageUrl ||
+                              "https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png",
+                          }}
                         />
+                      </View>
+                      <TouchableOpacity
+                        onPress={() => handleTemplatePress(item)}
+                      >
+                        <View style={styles.col_02}>
+                          <Text style={styles.bold_text}>
+                            {item.templateName}
+                          </Text>
+                          <Text style={styles.sub_text_style}>
+                            Location: {truncateText(item.location, 16)}
+                          </Text>
+                          <Text style={styles.sub_text_style}>
+                            Date: {item.date}{" "}
+                          </Text>
+                          <Text style={styles.sub_text_style}>
+                            Time: {item.time}
+                          </Text>
+                        </View>
                       </TouchableOpacity>
+                      <View style={styles.col_03}>
+                        <TouchableOpacity
+                          style={styles.icon_style}
+                          onPress={() => {
+                            navigation.navigate("EditTemplate", { item: item });
+                          }}
+                        >
+                          <MaterialCommunityIcons
+                            name="square-edit-outline"
+                            size={responsiveFontSize(2.7)}
+                            color="#65676B"
+                          />
+                        </TouchableOpacity>
 
-                      <TouchableOpacity  style={styles.icon_style1} onPress={() => handleDelete(item)}>
-                        <CustomDeleteIcon />
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.icon_style1}
+                          onPress={() => handleDelete(item)}
+                        >
+                          <CustomDeleteIcon />
+                        </TouchableOpacity>
+                      </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
         </View>
-      </View>
       )}
     </>
   );
