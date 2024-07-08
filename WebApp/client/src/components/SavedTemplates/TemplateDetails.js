@@ -146,10 +146,10 @@ const TemplateDetails = ({
                 />
               </div>
               <div className="button-container">
-                <Button type="primary" className="action-btn">
+                <Button type="primary" className="action-btn" onClick={navigateToRegister}>
                   Manage Map
                 </Button>
-                <Button type="primary" className="action-btn">
+                <Button type="primary" className="action-btn" onClick={handleResizeMapClick}>
                   Resize Map
                 </Button>
               </div>
