@@ -273,7 +273,7 @@ export default function Fertilizing(
                   onChange={handleInputAmount}
                 />
                 <Select
-                  placeholder="mg"
+                  placeholder="unit"
                   options={[
                     { value: "mg", label: "mg" },
                     { value: "g", label: "g" },

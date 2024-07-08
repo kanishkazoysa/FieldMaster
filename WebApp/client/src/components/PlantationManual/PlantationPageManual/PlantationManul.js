@@ -239,7 +239,7 @@ export default function Plantation({ onBackToSidebar, area, perimeter, Perimeter
                   onChange={handleInput1Change}
                 />
                 <Select
-                  placeholder="m"
+                  placeholder="unit"
                   options={[
                     { value: "m", label: "m" },
                     { value: "cm", label: "cm" },
@@ -278,7 +278,7 @@ export default function Plantation({ onBackToSidebar, area, perimeter, Perimeter
                   onChange={handleInput2Change}
                 />
                 <Select
-                  placeholder="m"
+                  placeholder="unit"
                   options={[
                     { value: "m", label: "m" },
                     { value: "cm", label: "cm" },
