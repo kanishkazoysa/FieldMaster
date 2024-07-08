@@ -29,7 +29,8 @@ import ProfileAvatar from "../../components/ProfileAvatar";
 import { useIsFocused } from "@react-navigation/native";
 import AxiosInstance from "../../AxiosInstance";
 import styles from "./HomeStyles";
-import MapDetailsPanel from './MapDetailsPanel';
+import MapDetailsPanel from "./MapDetailsPanel";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 const apiKey = "AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U";
 
@@ -48,8 +49,9 @@ export default function Home() {
   const [userData, setUserData] = useState(null);
   const isFocused = useIsFocused();
   const [userMaps, setUserMaps] = useState([]);
-const [selectedMapId, setSelectedMapId] = useState(null);
-const [selectedMapDetails, setSelectedMapDetails] = useState(null);
+  const [selectedMapId, setSelectedMapId] = useState(null);
+  const [selectedMapDetails, setSelectedMapDetails] = useState(null);
+  const [searchedRegion, setSearchedRegion] = useState(null);
 
   // Fetch user data
   useEffect(() => {
@@ -73,13 +75,15 @@ const [selectedMapDetails, setSelectedMapDetails] = useState(null);
   useEffect(() => {
     const fetchUserMaps = async () => {
       try {
-        const response = await AxiosInstance.get("/api/auth/mapTemplate/getAllTemplates");
+        const response = await AxiosInstance.get(
+          "/api/auth/mapTemplate/getAllTemplates"
+        );
         setUserMaps(response.data);
       } catch (error) {
         console.error("Failed to fetch user maps:", error);
       }
     };
-  
+
     fetchUserMaps();
   }, []);
 
@@ -210,22 +214,23 @@ const [selectedMapDetails, setSelectedMapDetails] = useState(null);
 
   const handleMapSelect = async (mapId) => {
     if (mapId === selectedMapId) {
-      setSelectedMapId(null);
-      setSelectedMapDetails(null);
+      zoomOutMap();
     } else {
       setSelectedMapId(mapId);
       try {
-        const response = await AxiosInstance.get(`/api/auth/mapTemplate/getAllmapData/${mapId}`);
+        const response = await AxiosInstance.get(
+          `/api/auth/mapTemplate/getAllmapData/${mapId}`
+        );
         setSelectedMapDetails(response.data);
-        
+
         // Zoom to the selected map
-        const selectedMap = userMaps.find(map => map._id === mapId);
+        const selectedMap = userMaps.find((map) => map._id === mapId);
         if (selectedMap && mapRef.current) {
-          const coordinates = selectedMap.locationPoints.map(point => ({
+          const coordinates = selectedMap.locationPoints.map((point) => ({
             latitude: point.latitude,
             longitude: point.longitude,
           }));
-          
+
           mapRef.current.fitToCoordinates(coordinates, {
             edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
             animated: true,
@@ -237,12 +242,49 @@ const [selectedMapDetails, setSelectedMapDetails] = useState(null);
     }
   };
 
+  const zoomOutMap = () => {
+    if (mapRef.current) {
+      // Zoom out to show all maps
+      const allCoordinates = userMaps.flatMap((map) =>
+        map.locationPoints.map((point) => ({
+          latitude: point.latitude,
+          longitude: point.longitude,
+        }))
+      );
+
+      mapRef.current.fitToCoordinates(allCoordinates, {
+        edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+        animated: true,
+      });
+    }
+    setSelectedMapId(null);
+    setSelectedMapDetails(null);
+  };
+
   const getCenterOfPolygon = (points) => {
     const latitudes = points.map((p) => p.latitude);
     const longitudes = points.map((p) => p.longitude);
     const centerLat = (Math.min(...latitudes) + Math.max(...latitudes)) / 2;
     const centerLng = (Math.min(...longitudes) + Math.max(...longitudes)) / 2;
     return { latitude: centerLat, longitude: centerLng };
+  };
+
+  const handlePlaceSelect = (data, details = null) => {
+    if (details) {
+      const { lat, lng } = details.geometry.location;
+      setSearchedRegion({
+        latitude: lat,
+        longitude: lng,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      });
+      mapRef.current.animateToRegion({
+        latitude: lat,
+        longitude: lng,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      });
+    }
   };
 
   return (
@@ -253,37 +295,37 @@ const [selectedMapDetails, setSelectedMapDetails] = useState(null);
           style={styles.map}
           provider={PROVIDER_GOOGLE}
           mapType={mapTypes[mapTypeIndex].value} // Set map type
-          initialRegion={{
-            latitude: 6.2427,
-            longitude: 80.0607,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }} // Initial region (Sri Lanka)
+          // initialRegion={{
+          //   latitude: 6.2427,
+          //   longitude: 80.0607,
+          //   latitudeDelta: 0.0922,
+          //   longitudeDelta: 0.0421,
+          // }} // Initial region (Sri Lanka)
+          region={searchedRegion}
         >
+          {userMaps.map((map, index) => (
+            <React.Fragment key={map._id}>
+              <Polygon
+                coordinates={map.locationPoints.map((point) => ({
+                  latitude: point.latitude,
+                  longitude: point.longitude,
+                }))}
+                fillColor="rgba(255,255,255,0.1)"
+                strokeColor="black"
+                strokeWidth={3}
+              />
+              <Marker
+                coordinate={getCenterOfPolygon(map.locationPoints)}
+                onPress={() => handleMapSelect(map._id)}
+              >
+                <View style={styles.markerContainer}>
+                  <Text style={styles.markerText}>{index + 1}</Text>
+                </View>
+              </Marker>
+            </React.Fragment>
+          ))}
 
-        {userMaps.map((map, index) => (
-          <React.Fragment key={map._id}>
-            <Polygon
-              coordinates={map.locationPoints.map((point) => ({
-                latitude: point.latitude,
-                longitude: point.longitude,
-              }))}
-              fillColor="rgba(255,255,255,0.1)"
-              strokeColor="black"
-              strokeWidth={3}
-            />
-            <Marker
-              coordinate={getCenterOfPolygon(map.locationPoints)}
-              onPress={() => handleMapSelect(map._id)}
-            >
-              <View style={styles.markerContainer}>
-                <Text style={styles.markerText}>{index + 1}</Text>
-              </View>
-            </Marker>
-          </React.Fragment>
-        ))}
-
-      {/* Show markers on the map for search location */}
+          {/* Show markers on the map for search location */}
           {showCurrentLocation && currentLocation && (
             <Marker
               coordinate={{
@@ -295,60 +337,38 @@ const [selectedMapDetails, setSelectedMapDetails] = useState(null);
           )}
           {searchedLocation && (
             <Marker coordinate={searchedLocation} title="Searched Location" />
-          )} 
+          )}
         </MapView>
         {selectedMapDetails && (
           <MapDetailsPanel
             mapDetails={selectedMapDetails}
-            onClose={() => {
-              setSelectedMapId(null);
-              setSelectedMapDetails(null);
-            }}
+            onClose={zoomOutMap}
           />
         )}
 
         {/* Search bar */}
-        <View style={styles.searchbar}>
-          <View style={styles.locationIconContainer}>
-            <MaterialIcons
-              name="location-on"
-              size={responsiveFontSize(2.9)}
-              color="#007BFF"
-            />
-          </View>
-          <TextInput
-            placeholder="Search Location"
-            placeholderTextColor="rgba(0, 0, 0, 0.5)"
-            onFocus={onFocus}
-            onBlur={onBlur}
-            style={[
-              styles.searchbarInput,
-              isfocused ? styles.searchbarInputFocused : null,
-            ]}
-            onChangeText={setSearchQuery}
-            value={searchQuery}
-            onSubmitEditing={searchLocation}
-          />
-
-          {/* Clear search query icon */}
-          {searchQuery !== "" && (
-            <TouchableOpacity
-              onPress={clearSearchQuery}
-              style={styles.clearIconContainer}
-            >
-              <MaterialIcons
-                name="cancel"
-                size={responsiveFontSize(2.9)}
-                color="#707070"
-              />
-            </TouchableOpacity>
-          )} 
-          <View style={{ marginLeft: responsiveWidth(3) }}>
-            <TouchableOpacity onPress={ProfileManage}>
-              <ProfileAvatar userData={userData} textSize={5} />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <GooglePlacesAutocomplete
+          placeholder='Search Location'
+          onPress={handlePlaceSelect}
+          fetchDetails={true}
+          query={{
+            key: apiKey,
+            language: 'en',
+          }}
+          styles={{
+            container: styles.searchBarContainer,
+            textInputContainer: styles.searchBarInputContainer,
+            textInput: styles.searchBarInput,
+          }}
+         
+          renderRightButton={() => (
+            <View style={{ marginRight: responsiveWidth(1) }}>
+              <TouchableOpacity onPress={ProfileManage}>
+                <ProfileAvatar userData={userData} textSize={5} />
+              </TouchableOpacity>
+            </View>
+          )}
+        />
 
         <TouchableOpacity
           style={styles.layerIconContainer}

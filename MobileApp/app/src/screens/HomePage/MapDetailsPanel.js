@@ -70,7 +70,12 @@ const MapDetailsPanel = ({ mapDetails, onClose }) => {
         )}
       </ScrollView>
 
-      <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+      <TouchableOpacity 
+        style={styles.closeButton} 
+        onPress={() => {
+          onClose();
+        }}
+      >
         <Text style={styles.closeButtonText}>Close</Text>
       </TouchableOpacity>
     </View>

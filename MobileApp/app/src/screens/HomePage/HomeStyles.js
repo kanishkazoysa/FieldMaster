@@ -8,7 +8,7 @@ import {
 const styles = StyleSheet.create({
   locationIconContainer: {
     position: 'absolute',
-    left: responsiveWidth(5),
+    left: responsiveWidth(1),
     top: '50%',
     transform: [{ translateY: responsiveHeight(-1.4) }],
     zIndex: 1,
@@ -120,6 +120,31 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 10,
     borderRadius: 5,
+  },
+  searchBarContainer: {
+    position: 'absolute',
+    top: 20,
+    left: 12,
+    right: 10,
+    width: '93%',
+    zIndex: 1,
+    
+  },
+  searchBarInputContainer: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 18,
+    borderRadius: 25,
+  },
+  searchBarInput: {
+    height: 34,
+    marginTop: 4,
+    marginLeft: 0,
+    marginRight: 0,
+    color: '#5d5d5d',
+    fontSize: 16,
   },
 });
 
