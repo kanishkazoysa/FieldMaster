@@ -97,59 +97,70 @@ const EmailManage = () => {
     ? submissions.filter(submission => submission.email.toLowerCase().includes(searchEmail.toLowerCase()))
     : submissions;
 
-  const columns = [
-    {
-      title: '#',
-      dataIndex: 'index',
-      key: 'index',
-      render: (text, record, index) => index + 1,
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name),
-      filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-      onFilter: (value, record) => record.name.toLowerCase().includes(value.toLowerCase()),
-    },
-    {
-      title: 'Email Address',
-      dataIndex: 'email',
-      key: 'email',
-    },
-    {
-      title: 'Message',
-      dataIndex: 'message',
-      key: 'message',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status) => (
-        <Tag color={status === 'replied' ? 'green' : 'volcano'}>
-          {status.toUpperCase()}
-        </Tag>
-      ),
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <div>
-          <Button type="primary" onClick={() => handleReply(record)} style={{ backgroundColor: 'blue', borderColor: 'blue', marginRight: 8 }}>
-            Reply
-          </Button>
-          <Button type="default" icon={<EyeOutlined />} onClick={() => handleView(record)} style={{ marginRight: 8 }}>
-            View
-          </Button>
-          <Popconfirm title="Are you sure to delete this submission?" onConfirm={() => handleDelete(record._id)} okText="Yes" cancelText="No">
-            <Button type="danger" icon={<DeleteOutlined />} style={{ color: 'red' }} />
-          </Popconfirm>
-        </div>
-      ),
-    },
-  ];
+    const columns = [
+      {
+        title: '#',
+        dataIndex: 'index',
+        key: 'index',
+        render: (text, record, index) => index + 1,
+      },
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+        sorter: (a, b) => a.name.localeCompare(b.name),
+        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+        onFilter: (value, record) => record.name.toLowerCase().includes(value.toLowerCase()),
+      },
+      {
+        title: 'Email Address',
+        dataIndex: 'email',
+        key: 'email',
+      },
+      {
+        title: 'Message',
+        dataIndex: 'message',
+        key: 'message',
+        render: (message) => (
+          <span style={{ display: 'inline-block', maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {message.length > 50 ? `${message.substring(0, 50)}...` : message}
+          </span>
+        ),
+      },
+      {
+        title: 'Date/Time',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        render: (createdAt) => new Date(createdAt).toLocaleString(),
+      },
+      {
+        title: 'Status',
+        dataIndex: 'status',
+        key: 'status',
+        render: (status) => (
+          <Tag color={status === 'replied' ? 'green' : 'volcano'}>
+            {status.toUpperCase()}
+          </Tag>
+        ),
+      },
+      {
+        title: 'Action',
+        key: 'action',
+        render: (_, record) => (
+          <div>
+            <Button type="primary" onClick={() => handleReply(record)} style={{ backgroundColor: 'blue', borderColor: 'blue', marginRight: 8 }}>
+              Reply
+            </Button>
+            {/* <Button type="default" icon={<EyeOutlined />} onClick={() => handleView(record)} style={{ marginRight: 8 }}>
+              View
+            </Button> */}
+            <Popconfirm title="Are you sure to delete this submission?" onConfirm={() => handleDelete(record._id)} okText="Yes" cancelText="No">
+              <Button type="danger" icon={<DeleteOutlined />} style={{ color: 'red' }} />
+            </Popconfirm>
+          </div>
+        ),
+      },
+    ];
 
   const totalEmails = submissions.length;
   const repliedEmails = submissions.filter(sub => sub.status === 'replied').length;

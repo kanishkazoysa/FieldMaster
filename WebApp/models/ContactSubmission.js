@@ -1,28 +1,30 @@
-
-
 const mongoose = require('mongoose');
 
 const contactSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-      },
-      email: {
+    },
+    email: {
         type: String,
         required: true,
-      },
-      message: {
+    },
+    message: {
         type: String,
         required: true,
-      },
-      status: {
+    },
+    reply: {
+        type: String,
+        default: '', 
+    },
+    status: {
         type: String,
         default: 'pending',
-      },
-      createdAt: {
+    },
+    createdAt: {
         type: Date,
         default: Date.now,
-      },
+    },
 });
 
 const ContactSubmission = mongoose.model('ContactSubmission', contactSchema);
