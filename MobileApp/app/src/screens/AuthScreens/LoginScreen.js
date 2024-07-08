@@ -84,7 +84,7 @@ export default function LoginScreen() {
         <StatusBar barStyle="light-content" backgroundColor="#007BFF" />
         <Appbar.Header style={styles.header}>
           <Appbar.BackAction
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate("Welcome")}
             color="white"
           />
         </Appbar.Header>
