@@ -1,5 +1,6 @@
-// SideNavbar.js
+
 import React from "react";
+import { FiTrash2 } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import { MdArrowBack } from "react-icons/md";
 import { BsBoundingBox } from "react-icons/bs";
@@ -12,7 +13,7 @@ import { RxRowSpacing } from "react-icons/rx";
 import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
 import AxiosInstance from "../../../AxiosInstance";
 import Plantation from "../PlantationPage/plantation";
-import { RiEditBoxLine } from "react-icons/ri"; 
+ 
 import { BeatLoader } from 'react-spinners';
 import TemplateDetails from "../../SavedTemplates/TemplateDetails"
 import { ExclamationCircleOutlined } from '@ant-design/icons';
@@ -35,10 +36,7 @@ export default function PlantationDetails({
     useState("");
   const [RowSpaceUnitselectedValue, setRowSpaceUnitselectedValue] =
     useState("");
-  const [PlantSpaceUnitselectedValue1, setPlantSpaceUnitselectedValue1] =
-    useState("");
-  const [RowSpaceUnitselectedValue1, setRowSpaceUnitselectedValue1] =
-    useState("");
+  
 
   const [textplantspace, settextplantspace] = useState("");
   const [textRowspace, settextRowspace] = useState("");
@@ -81,7 +79,7 @@ export default function PlantationDetails({
         setLoading(false);
         console.log(data);
 
-        //setnumberOfPlants(data.data); // Assuming you want to set numberOfPlants here
+        
       } catch (error) {
         console.error('Error fetching data:', error);
         setLoading(false);
@@ -107,7 +105,7 @@ export default function PlantationDetails({
   const handleIconPress = (e) => {
     confirm({
       title: 'Are you sure?',
-      content: 'Do you want to update Plantation?',
+      content: 'Do you want to delete Plantation?',
       icon: <ExclamationCircleOutlined />,
       okText: 'Yes',
       okType: 'primary',
@@ -166,7 +164,7 @@ export default function PlantationDetails({
           fontSize={20}
         />
         <p style={styles.titleText1}>Plantation Details</p>
-        <RiEditBoxLine
+        <FiTrash2
                 onClick={handleIconPress}
                 style={styles.editorbutton}
                 fontSize={19}

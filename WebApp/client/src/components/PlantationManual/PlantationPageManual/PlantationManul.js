@@ -262,7 +262,7 @@ export default function Plantation({
                   onChange={handleInput1Change}
                 />
                 <Select
-                  placeholder="m"
+                  placeholder="unit"
                   options={[
                     { value: "m", label: "m" },
                     { value: "cm", label: "cm" },
@@ -305,7 +305,7 @@ export default function Plantation({
                   onChange={handleInput2Change}
                 />
                 <Select
-                  placeholder="m"
+                  placeholder="unit"
                   options={[
                     { value: "m", label: "m" },
                     { value: "cm", label: "cm" },

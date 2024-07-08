@@ -107,7 +107,7 @@ export const styles = {
         alignItems: "center",
         justifyContent: "center",
         borderWidth: 1,
-        //borderColor: "#CED0D4",
+   
       },
       smallText:{
         fontSize: 6,

@@ -30,6 +30,7 @@ import Admin from "./pages/Admin/AdminDashboard";
 import { jwtDecode } from "jwt-decode";
 import ResizeMap from "./components/ResizeMap/ResizeMap";
 import InputControl from "./pages/Admin/InputControl";
+import EmailManage from "./pages/Admin/UserEmailManage/EmailManage";
 
 const checkTokenExpired = (token) => {
   if (!token) {
@@ -192,6 +193,12 @@ export default function App() {
             <AdminRouteGuard>
               <InputControl />
             </AdminRouteGuard>
+          }
+        />
+        <Route
+          path="/email-manage"
+          element={
+              <EmailManage />
           }
         />
 

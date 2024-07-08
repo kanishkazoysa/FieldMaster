@@ -7,7 +7,7 @@ import { IoBookmarks } from 'react-icons/io5';
 import { RiWalkFill } from 'react-icons/ri';
 import StartMeasurePage from '../MeasureOption/measureOption.js';
 import SavedTemplatesWeb from '../SavedTemplates/SavedTemplatesWeb.js';
-// import Fence from "../Fence/Fence/fence";
+
 import ClearLand from '../ClearLand/ClearLand/clearLand';
 import Plantation from '../Plantation/PlantationPage/plantation';
 import TemplateDetails from '../SavedTemplates/TemplateDetails.js';
@@ -20,7 +20,7 @@ export default function SideNavbar() {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [isEditingTemplate, setIsEditingTemplate] = useState(false);
+  
 
   const handleMouseEnter = (item) => {
     setHoveredMenuItem(item);
@@ -51,15 +51,7 @@ export default function SideNavbar() {
     }
   };
 
-  const handleSaveScreenClick = () => {
-    setCurrentPage('SaveScreen');
-    console.log('clicked save screen');
-    setAnimatePage(true);
-    if (collapsed) {
-      setCollapsed(false);
-    }
-  };
-
+  
   const handleBackClick = () => {
     setAnimatePage(false);
     setTimeout(() => {
