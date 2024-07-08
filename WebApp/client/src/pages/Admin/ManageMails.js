@@ -224,7 +224,7 @@ const EmailManage = () => {
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
       <h3 style={{ textAlign: "center", marginBottom: "20px" }}>
-        Email Manage - Admin Dashboard
+        Manage Emails 
       </h3>
 
       <Row gutter={16} style={{ marginBottom: "20px" }}>
