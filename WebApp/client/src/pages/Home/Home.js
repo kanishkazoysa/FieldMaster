@@ -17,7 +17,7 @@ import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
 import AxiosInstance from "../../AxiosInstance";
 import MapDetailsPanel from "./MapDetailsPanel";
 import { MdMyLocation } from "react-icons/md";
-import { Modal } from 'antd';
+import MobileOnlyModal from "./MobileOnlyModal";
 
 export default function Home() {
   const location = useLocation();
@@ -40,7 +40,7 @@ export default function Home() {
     setIsMobileOnlyModalVisible(true);
   };
 
-  const handleMobileOnlyModalOk = () => {
+  const handleMobileOnlyModalClose = () => {
     setIsMobileOnlyModalVisible(false);
   };
 
@@ -383,14 +383,10 @@ export default function Home() {
           )}
         </GoogleMap>
       </LoadScript>
-      <Modal
-        title="Mobile Only Feature"
-        visible={isMobileOnlyModalVisible}
-        onOk={handleMobileOnlyModalOk}
-        onCancel={handleMobileOnlyModalOk}
-      >
-        <p>This feature is only available in the mobile application.</p>
-      </Modal>
+      <MobileOnlyModal 
+        isVisible={isMobileOnlyModalVisible} 
+        onClose={handleMobileOnlyModalClose} 
+      />
     </div>
   );
 }
