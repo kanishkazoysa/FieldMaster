@@ -343,16 +343,29 @@ const Managemap = () => {
         cancelText: "No",
         async onOk() {
           try {
-
             const updatedPartitionPolygons = partitionPolygons.map(
-              (polygon, index) => ({
-                ...polygon,
-                plantationSetup: plantationSetupData[index] || {},
-                fenceSetup: fenceSetupData[index] || {},
-                clearLandSetup: clearLandSetupData[index] || {}, 
-      
-              })
+              (polygon, index) => {
+                const updatedPolygon = { ...polygon };
+  
+                // Only include plantationSetup if it has content
+                if (plantationSetupData[index] && Object.keys(plantationSetupData[index]).length > 0) {
+                  updatedPolygon.plantationSetup = plantationSetupData[index];
+                }
+  
+                // Only include fenceSetup if it has content
+                if (fenceSetupData[index] && Object.keys(fenceSetupData[index]).length > 0) {
+                  updatedPolygon.fenceSetup = fenceSetupData[index];
+                }
+  
+                // Only include clearLandSetup if it has content
+                if (clearLandSetupData[index] && Object.keys(clearLandSetupData[index]).length > 0) {
+                  updatedPolygon.clearLandSetup = clearLandSetupData[index];
+                }
+  
+                return updatedPolygon;
+              }
             );
+  
             const response = await AxiosInstance.put(
               `/api/auth/mapTemplate/savePartitionPoints/${templateId}`,
               {
@@ -543,7 +556,7 @@ const Managemap = () => {
   );
 }
 
-if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandData).length > 0) {
+if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandData).length > 0 && (clearLandData.weedData.weedType|| clearLandData.plantData.plantList || clearLandData.stoneData.stoneList)) {
   modalContent = (
     <div style={styles.modalContent}>
       {modalContent}
@@ -551,14 +564,18 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
         <h4 style={styles.heading}>Clear Land Data:</h4>
         
         {/* Weed Data */}
+        
         {clearLandData.weedData && typeof clearLandData.weedData === 'object' && (
           <div>
-            <h5 style={styles.heading}>Weed clear Efforrt:</h5>
-            {clearLandData.weedData.weedType && (
-              <p style={styles.paragraph}>
-                Weed Type: <span style={styles.highlight}>{clearLandData.weedData.weedType}</span>
-              </p>
-            )}
+           {clearLandData.weedData.weedType && (
+  <>
+    <h6 style={{ marginTop: "0.2em" }}>Weed Data:</h6>
+    <p style={styles.paragraph}>
+      Weed Type: <span style={styles.highlight}>{clearLandData.weedData.weedType}</span>
+    </p>
+  </>
+)}
+
             {clearLandData.weedData.labourCount && (
               <p style={styles.paragraph}>
                 Labour Count: <span style={styles.highlight}>{clearLandData.weedData.labourCount}</span>
