@@ -19,6 +19,8 @@ import MapDetailsPanel from "./MapDetailsPanel";
 import { MdMyLocation } from "react-icons/md";
 import MobileOnlyModal from "./MobileOnlyModal";
 
+const apiKey = process.env.REACT_APP_GOOGLE_CLOUD_API_KEY;
+
 export default function Home() {
   const location = useLocation();
   const navigate = useNavigate(); // Use useNavigate hook
@@ -265,7 +267,7 @@ export default function Home() {
       <SideNavbar onShowMobileOnlyModal={showMobileOnlyModal} />
       </div>
       <LoadScript
-        googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
+        googleMapsApiKey={apiKey}
         libraries={["places"]}
       >
         <GoogleMap
