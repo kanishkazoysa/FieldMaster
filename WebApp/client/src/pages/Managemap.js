@@ -930,10 +930,10 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
                   lng: point.longitude,
                 }))}
                 options={{
-                  strokeColor: "#0000FF",
+                  strokeColor: selectedPolygonIndex === index ? "#FF0000" : "#0000FF",
                   strokeOpacity: 1.0,
                   strokeWeight: 2,
-                  fillColor: "rgba(0, 0, 255, 0.2)",
+                  fillColor: selectedPolygonIndex === index ? "rgba(255, 0, 0, 0.2)" : "rgba(0, 0, 255, 0.2)",
                   fillOpacity: 0.4,
                   zIndex: 2,
                   editable: editingPolygonIndex === index,
