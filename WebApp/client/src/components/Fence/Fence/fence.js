@@ -20,8 +20,6 @@ export default function Fence({
   onEditTemplateClick,
   template,
 }) {
-  const [FenceTypeselectedValue, setFenceTypeselectedValue] = useState(null);
-  const [FenceTypeselectedValue1, setFenceTypeselectedValue1] = useState(null);
   const [PostSpaceUnitselectedValue, setPostSpaceUnitselectedValue] = useState("");
   const [PostSpaceUnitselectedValue1, setPostSpaceUnitselectedValue1] = useState("");
   const [inputValuePostspace, setInputValuePostspace] = useState("");
@@ -65,10 +63,6 @@ export default function Fence({
     setInputValuePostspace(event.target.value);
   };
 
-  const handleFenceTypeChange = (selectedOption) => {
-    setFenceTypeselectedValue1(selectedOption);
-    setFenceTypeselectedValue(selectedOption.value);
-  };
 
   const handlePostSpaceUnitChange = (selectedOption) => {
     setPostSpaceUnitselectedValue1(selectedOption);
