@@ -17,6 +17,9 @@ import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
 import AxiosInstance from "../../AxiosInstance";
 import MapDetailsPanel from "./MapDetailsPanel";
 import { MdMyLocation } from "react-icons/md";
+import MobileOnlyModal from "./MobileOnlyModal";
+
+const apiKey = process.env.REACT_APP_GOOGLE_CLOUD_API_KEY;
 
 export default function Home() {
   const location = useLocation();
@@ -33,6 +36,16 @@ export default function Home() {
   const [zoomLevel, setZoomLevel] = useState(2);
   const sriLankaCenter = { lat: 7.8731, lng: 80.7718 };
   const defaultZoom = 7;
+  const [isMobileOnlyModalVisible, setIsMobileOnlyModalVisible] = useState(false);
+  const [isMapLoading, setIsMapLoading] = useState(true);
+
+  const showMobileOnlyModal = () => {
+    setIsMobileOnlyModalVisible(true);
+  };
+
+  const handleMobileOnlyModalClose = () => {
+    setIsMobileOnlyModalVisible(false);
+  };
 
   const handleZoomChanged = () => {
     if (mapRef.current && mapRef.current.state.map) {
@@ -252,10 +265,10 @@ export default function Home() {
   return (
     <div style={styles.container}>
       <div style={styles.sidebar}>
-        <SideNavbar />
+      <SideNavbar onShowMobileOnlyModal={showMobileOnlyModal} />
       </div>
       <LoadScript
-        googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
+        googleMapsApiKey={apiKey}
         libraries={["places"]}
       >
         <GoogleMap
@@ -265,7 +278,13 @@ export default function Home() {
           zoom={userMaps.length > 0 ? 2 : defaultZoom}
           options={mapOptions()}
           onZoomChanged={handleZoomChanged}
+          onLoad={() => setIsMapLoading(false)}
         >
+        {isMapLoading && (
+          <div style={styles.loadingOverlay}>
+            <p>Loading map...</p>
+          </div>
+        )}
           <div
             onClick={handleGetCurrentLocation}
             style={{
@@ -373,6 +392,10 @@ export default function Home() {
           )}
         </GoogleMap>
       </LoadScript>
+      <MobileOnlyModal 
+        isVisible={isMobileOnlyModalVisible} 
+        onClose={handleMobileOnlyModalClose} 
+      />
     </div>
   );
 }

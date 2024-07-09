@@ -7,8 +7,8 @@ const ContactSubmission = require('../models/ContactSubmission');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: "ugshenali@gmail.com",
-    pass: "cpof djmp nwqh kcgw",
+    user: "fieldmasterteam@gmail.com",
+    pass: "yhkn pfjk dchz nult",
   },
 });
 
@@ -22,12 +22,12 @@ transporter.verify((error, success) => {
 });
 
 // Function to send email
-const sendEmail = (name, email, message) => {
+const sendEmail = (toEmail, subject, text) => {
   const mailOptions = {
-    from: email,
-    to: 'ugshenali@gmail.com', 
-    subject: 'New Contact Form Submission from FieldMaster',
-    text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+    from: 'fieldmasterteam@gmail.com',
+    to: toEmail,
+    subject: subject,
+    text: text,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -43,7 +43,6 @@ const sendEmail = (name, email, message) => {
 router.post('/send', async (req, res) => {
   const { name, email, message } = req.body;
 
-  // Create a new instance of ContactSubmission
   const newSubmission = new ContactSubmission({
     name,
     email,
@@ -51,17 +50,75 @@ router.post('/send', async (req, res) => {
   });
 
   try {
-    // Save the submission to the database
     await newSubmission.save();
-
-    // Send email to your email address
-    sendEmail(name, email, message);
-
-    // Respond to client
+    sendEmail('fieldmasterteam@gmail.com', 'New Contact Form Submission from FieldMaster', `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
     res.status(200).json({ success: 'Submission saved and email sent successfully' });
   } catch (error) {
     console.error('Database Save Error:', error);
     res.status(500).json({ error: 'Failed to save submission', details: error.message });
+  }
+});
+
+// Route to fetch submissions
+router.get('/submissions', async (req, res) => {
+  try {
+    const submissions = await ContactSubmission.find();
+    res.status(200).json(submissions);
+  } catch (error) {
+    console.error('Fetch Submissions Error:', error);
+    res.status(500).json({ error: 'Failed to fetch submissions', details: error.message });
+  }
+});
+
+// Route to handle sending reply and updating status
+router.post('/reply', async (req, res) => {
+  const { id, toEmail, replyMessage } = req.body;
+
+  try {
+    // Find the submission by id
+    const submission = await ContactSubmission.findById(id);
+
+    if (!submission) {
+      return res.status(404).json({ message: 'Submission not found' });
+    }
+
+    // Send reply email
+    const mailOptions = {
+      from: 'fieldmasterteam@gmail.com',
+      to: toEmail,
+      subject: 'Reply to your message from Fieldmaster',
+      text: replyMessage,
+    };
+
+    // Send email using transporter
+    transporter.sendMail(mailOptions, async (error, info) => {
+      if (error) {
+        console.error('Failed to send reply:', error);
+        return res.status(500).json({ message: 'Failed to send reply' });
+      }
+      
+      // Update submission status and reply message
+      submission.status = 'replied';
+      submission.replyMessage = replyMessage;
+      await submission.save();
+
+      res.status(200).json({ message: 'Reply sent successfully' });
+    });
+
+  } catch (error) {
+    console.error('Failed to send reply:', error);
+    res.status(500).json({ message: 'Failed to send reply' });
+  }
+});
+
+// Route to delete a submission
+router.delete('/submissions/:id', async (req, res) => {
+  try {
+    await ContactSubmission.findByIdAndDelete(req.params.id);
+    res.status(200).json({ success: 'Submission deleted successfully' });
+  } catch (error) {
+    console.error('Delete Submission Error:', error);
+    res.status(500).json({ error: 'Failed to delete submission', details: error.message });
   }
 });
 

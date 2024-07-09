@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const PointSchema = new mongoose.Schema({
   longitude: Number,
@@ -35,7 +35,7 @@ const PartitionPolygonSchema = new mongoose.Schema({
 
   label: {
     type: String,
-    default: '',
+    default: "",
   },
 
   plantationSetup: {
@@ -129,10 +129,13 @@ const MapTemplateSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  imageUrl: {
+    type: String,
+  },
   partitionPolygons: {
     type: [PartitionPolygonSchema],
     default: [],
   },
 });
 
-module.exports = mongoose.model('MapTemplate', MapTemplateSchema);
+module.exports = mongoose.model("MapTemplate", MapTemplateSchema);

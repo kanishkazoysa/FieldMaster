@@ -13,6 +13,7 @@
 @media (min-width: 768px) {
   .card-image {
     width: 128px;
+    border-radius: 10px;
   }
 }
 .search-bar {
@@ -53,6 +54,21 @@
   padding-right: 10px;
 }
 
+.spin-container {
+  display: flex;
+  flex-direction: column; /* Change to column to stack children vertically */
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  min-width: 250px;
+  font-size: 12px;
+}
+
+.loading-text {
+  text-align: center; /* Center the text horizontally */
+  width: 100%; /* Ensure it spans the full width of its container */
+  margin-top: 20px; /* Add some space between the spinner and the text */
+}
 .search-icon {
   color: #adacac;
   position: absolute;

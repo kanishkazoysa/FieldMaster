@@ -12,21 +12,21 @@ import LoginCountChart from "./LoginCountChart";
 import { Doughnut } from "react-chartjs-2";
 import "./AdminDashboard.css";
 
+const apiKey = process.env.REACT_APP_GOOGLE_CLOUD_API_KEY;
+
 const AnalyticsSection = ({ users, setLoading }) => {
-  const [totalUsers, setTotalUsers] = useState(users.length);
+  const [totalUsers] = useState(users.length);
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [totalAdmins, setTotalAdmins] = useState(0);
-  const [totalLogins, setTotalLogins] = useState(0);
+  const [setTotalLogins] = useState(0);
   const [totalUnverified, setTotalUnverified] = useState(0);
   const [locationAnalytics, setLocationAnalytics] = useState([]);
-  const [mapCenter, setMapCenter] = useState({ lat: 7.8731, lng: 80.7718 }); // Center of Sri Lanka
+  const [mapCenter] = useState({ lat: 7.8731, lng: 80.7718 }); // Center of Sri Lanka
   const [selectedLocation, setSelectedLocation] = useState(null);
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
+  const [isMapLoading, setIsMapLoading] = useState(true);
 
-  const onMapLoad = useCallback((map) => {
-    mapRef.current = map;
-  }, []);
 
   const handlePlacesChanged = useCallback(() => {
     if (!searchBoxRef.current) return;
@@ -67,37 +67,49 @@ const AnalyticsSection = ({ users, setLoading }) => {
   useEffect(() => {
     fetchLocationAnalytics();
   }, []);
-
+  
   const fetchLocationAnalytics = async () => {
     try {
       const response = await AxiosInstance.get(
         "/api/auth/mapTemplate/getLocationAnalytics"
       );
-      const filteredLocations = response.data.filter(
-        (loc) => loc._id && loc._id !== "null" && loc._id.trim() !== ""
-      );
-      setLocationAnalytics(filteredLocations);
+      
+      // Apply the filter here
+      const validLocationNames = response.data.filter(location => {
+        return location._id && location._id !== "null" && location._id.trim() !== "" && location._id !== "Unknown location";
+      });
+  
+      console.log("validLocationNames", validLocationNames);
+      setLocationAnalytics(validLocationNames);
     } catch (error) {
       console.error("Error fetching location analytics:", error);
     }
   };
 
+
   const geocodeLocation = async (locationName) => {
     const geocoder = new window.google.maps.Geocoder();
     return new Promise((resolve, reject) => {
-      geocoder.geocode(
-        { address: locationName + ", Sri Lanka" },
-        (results, status) => {
-          if (status === "OK") {
-            resolve({
-              lat: results[0].geometry.location.lat(),
-              lng: results[0].geometry.location.lng(),
-            });
-          } else {
-            reject(new Error(`Geocoding failed for ${locationName}`));
-          }
+      geocoder.geocode({ address: locationName }, (results, status) => {
+        if (status === "OK") {
+          resolve({
+            lat: results[0].geometry.location.lat(),
+            lng: results[0].geometry.location.lng(),
+          });
+        } else {
+          // If geocoding fails, try again with ", Sri Lanka" appended
+          geocoder.geocode({ address: locationName + ", Sri Lanka" }, (results, status) => {
+            if (status === "OK") {
+              resolve({
+                lat: results[0].geometry.location.lat(),
+                lng: results[0].geometry.location.lng(),
+              });
+            } else {
+              reject(new Error(`Geocoding failed for ${locationName}`));
+            }
+          });
         }
-      );
+      });
     });
   };
 
@@ -143,8 +155,8 @@ const AnalyticsSection = ({ users, setLoading }) => {
   }, [users]);
 
   //Fetch login data
-  const [loginCountData, setLoginCountData] = useState([]);
-  const [dateData, setDateData] = useState([]);
+  const [setLoginCountData] = useState([]);
+  const [setDateData] = useState([]);
 
   const generateLast30Days = () => {
     const today = new Date();
@@ -351,7 +363,7 @@ const AnalyticsSection = ({ users, setLoading }) => {
       <div className="map">
         <h3 className="mapHeader">Map Location Analytics</h3>
         <LoadScript
-          googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
+          googleMapsApiKey={apiKey}
           libraries={["places"]}
         >
           <div style={{ position: "relative" ,marginLeft:65,}}>
@@ -362,8 +374,13 @@ const AnalyticsSection = ({ users, setLoading }) => {
               center={selectedLocation || mapCenter}
               zoom={8}
               ref={mapRef}
-              onLoad={onMapLoad}
+              onLoad={() => setIsMapLoading(false)}
             >
+            {isMapLoading && (
+              <div style={styles.loadingOverlay}>
+                <p>Loading map...</p>
+              </div>
+            )}
               <StandaloneSearchBox
                 onLoad={onSearchBoxLoad}
                 onPlacesChanged={handlePlacesChanged}

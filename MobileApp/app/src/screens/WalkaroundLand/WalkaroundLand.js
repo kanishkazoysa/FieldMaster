@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   FlatList,
+  Alert,
 } from "react-native";
 import MapView, {
   PROVIDER_GOOGLE,
@@ -23,6 +24,8 @@ import { distance } from "@turf/turf";
 import styles from "./WalkaroundLandStyles";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { faUndo } from "@fortawesome/free-solid-svg-icons";
+import { captureRef } from "react-native-view-shot";
+import axios from "axios";
 
 const BACKGROUND_LOCATION_TASK = "background-location-task";
 
@@ -50,7 +53,7 @@ export default function WalkaroundLand() {
   const [isPolygonClosed, setIsPolygonClosed] = useState(false);
 
   //define taskmanager to request location permission
-  TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => { 
+  TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
       console.error("Background location task error:", error);
       return;
@@ -87,15 +90,41 @@ export default function WalkaroundLand() {
     }
   });
 
+  const uploadToImgbb = async (imageUri) => {
+    const apiKey = "a08fb8cde558efecce3f05b7f97d4ef7";
+    const formData = new FormData();
+    formData.append("image", {
+      uri: imageUri,
+      type: "image/jpeg",
+      name: "map_image.jpg",
+    });
+
+    try {
+      const response = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${apiKey}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data.data.url;
+    } catch (error) {
+      console.error("Error uploading image to imgbb:", error);
+      throw error;
+    }
+  };
+
   const handleStartPress = () => {
     //start tracking location
     setTrackingPaused(!trackingPaused);
     if (!trackingPaused) {
       setDrawPolyline(true);
       setPathCoordinates([initialLocation]); //set initial location
-      setIsSaveButtonDisabled(true);//disable save button
-      setShowFillColor(false);//hide fill color
-      setIsPolygonClosed(false);//  set polygon closed to false
+      setIsSaveButtonDisabled(true); //disable save button
+      setShowFillColor(false); //hide fill color
+      setIsPolygonClosed(false); //  set polygon closed to false
     } else {
       setTrackingStarted(false);
       setIsResizeButtonDisabled(false);
@@ -117,7 +146,7 @@ export default function WalkaroundLand() {
     //start tracking location
     const startTracking = async () => {
       try {
-        const { coords } = await Location.getCurrentPositionAsync({}); // get current location data 
+        const { coords } = await Location.getCurrentPositionAsync({}); // get current location data
 
         const { status } = await Location.requestForegroundPermissionsAsync(); // request location permission
         if (status !== "granted") {
@@ -233,11 +262,28 @@ export default function WalkaroundLand() {
 
   // save map data
   const saveMapData = async () => {
-    navigation.navigate("SaveScreen", {
-      locationPoints: pathCoordinates,
-      area: calculatedArea,
-      perimeter: polygonPerimeter,
-    });
+    try {
+      let imageUrl = "";
+      if (mapRef.current) {
+        const uri = await captureRef(mapRef.current, {
+          format: "jpg",
+          quality: 0.8,
+        });
+        console.log("Captured image URI:", uri);
+        imageUrl = await uploadToImgbb(uri);
+        console.log("Uploaded image URL:", imageUrl);
+      }
+
+      navigation.navigate("SaveScreen", {
+        locationPoints: pathCoordinates,
+        area: calculatedArea,
+        perimeter: polygonPerimeter,
+        imageUrl: imageUrl,
+      });
+    } catch (error) {
+      console.error("Error capturing or uploading map screenshot:", error);
+      Alert.alert("Error", "Failed to save map data. Please try again.");
+    }
   };
 
   //  handle drag end
@@ -372,7 +418,7 @@ export default function WalkaroundLand() {
           longitudeDelta: 5,
         }} //initial region
       >
-      {/** Draw polyline */}
+        {/** Draw polyline */}
         {drawPolyline && pathCoordinates.length > 0 && (
           <>
             <Polyline
@@ -394,7 +440,7 @@ export default function WalkaroundLand() {
             )}
           </>
         )}
-          {/** Draw markers */}
+        {/** Draw markers */}
         {resizingMode &&
           pathCoordinates.map((coordinate, index) => (
             <Marker

@@ -8,7 +8,7 @@ import {
   Keyboard,
   ActivityIndicator 
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation , useFocusEffect } from "@react-navigation/native";
 import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from "react-native-maps";
 import { Button } from "react-native-paper";
 import * as Location from "expo-location";
@@ -30,13 +30,11 @@ import styles from "./HomeStyles";
 import MapDetailsPanel from "./MapDetailsPanel";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { BackHandler, Alert } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 
-const apiKey = "AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U";
+const apiKey = "AIzaSyCmDfdWl4TZegcfinTmC0LlmFCiEcdRbmU";
 
 export default function Home() {
   const navigation = useNavigation();
-  const [isfocused, setIsFocused] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [showCurrentLocation, setShowCurrentLocation] = useState(false);
@@ -53,6 +51,13 @@ export default function Home() {
   const [searchedRegion, setSearchedRegion] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isMapDetailsVisible, setIsMapDetailsVisible] = useState(false);
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchUserMaps();
+    }, [])
+  );
 
   useFocusEffect(
     React.useCallback(() => {
@@ -93,7 +98,7 @@ export default function Home() {
   }, [isFocused]);
 
   //get all maps of user
-  useEffect(() => {
+ 
     const fetchUserMaps = async () => {
       try {
         const response = await AxiosInstance.get(
@@ -106,8 +111,7 @@ export default function Home() {
       }
     };
   
-    fetchUserMaps();
-  }, []);
+   
 
   //get the current location
   useEffect(() => {
@@ -167,13 +171,6 @@ export default function Home() {
     setShowDropdown(false);
   };
 
-  const onFocus = () => {
-    setIsFocused(true);
-  };
-
-  const onBlur = () => {
-    setIsFocused(false);
-  };
 
   const focusOnCurrentLocation = () => {
     setShowCurrentLocation(!showCurrentLocation); // Toggle current location

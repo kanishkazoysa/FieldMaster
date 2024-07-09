@@ -1,4 +1,4 @@
-// SideNavbar.js
+
 import React, { useState, useRef } from "react";
 import { MdArrowBack } from "react-icons/md";
 import { GiWeight } from "react-icons/gi";
@@ -10,8 +10,7 @@ import { FaClockRotateLeft } from "react-icons/fa6";
 import { message } from "antd";
 import { styles } from "./FetilizingManualStyles";
 import Select from "react-select";
-// import AxiosInstance from "../../../AxiosInstance";
-import axios from "axios";
+
 import { FaTree } from "react-icons/fa";
 import FertilizingDetailsManual from "../FertilizingDetailsManual/FertilizingDetailsManual";
 
@@ -27,7 +26,7 @@ export default function Fertilizing(
     calculatedPlantDensity,
     numberOfPlants
   }) {
- 
+
 
   const [textFertilizationType, setTextFertilizationType] =
     useState("");
@@ -53,23 +52,22 @@ export default function Fertilizing(
     setTextFertilizationAmount(event.target.value);
   };
 
-  const [frequency, setFrequency] = useState(''); 
 
   const [selectedFrequency, setSelectedFrequency] = useState(null);
 
-const handleFrequencyChange = (selectedFrequency) => {
-  setSelectedFrequency(selectedFrequency);
-};
+  const handleFrequencyChange = (selectedFrequency) => {
+    setSelectedFrequency(selectedFrequency);
+  };
 
   const handleAmountUnitChange = (selectedOption) => {
     setFertilizerAmountUnitselectedValue1(selectedOption);
     setFertilizerAmountUnitselectedValue(selectedOption.value);
   };
 
- 
+
   const handleFertilizingDetails = (e) => {
     e.preventDefault();
-  
+
     // Validate required fields
     if (
       !textFertilizationNUmberoftime ||
@@ -89,12 +87,12 @@ const handleFrequencyChange = (selectedFrequency) => {
       message.error("Error: Please enter a valid value for number of times");
       return;
     }
-    
+
     // Transition to the next page or section
     setCurrentPage("FertilizingDetailsManual");
     setAnimatePage(true);
   };
-    const handleBackClick = () => {
+  const handleBackClick = () => {
     setAnimatePage(false);
     setTimeout(() => {
       setCurrentPage(null);
@@ -178,55 +176,55 @@ const handleFrequencyChange = (selectedFrequency) => {
 
 
           <div style={styles.BoxFrequency}>
-          <p style={styles.titleText}>Frequency</p>
-          <div style={styles.frequencyButtonContainer}>
-            <button
-              style={{
-                ...styles.frequencyButton,
-                ...(selectedFrequency === 'daily' && styles.selectedFrequencyButton)
-              }}
-              onClick={() => handleFrequencyChange('daily')}
-            >
-              Daily
-            </button>
-            <button
-              style={{
-                ...styles.frequencyButton,
-                ...(selectedFrequency === 'weekly' && styles.selectedFrequencyButton)
-              }}
-              onClick={() => handleFrequencyChange('weekly')}
-            >
-              Weekly
-            </button>
-            <button
-              style={{
-                ...styles.frequencyButton,
-                ...(selectedFrequency === 'monthly' && styles.selectedFrequencyButton)
-              }}
-              onClick={() => handleFrequencyChange('monthly')}
-            >
-              Monthly
-            </button>
-            <button
-              style={{
-                ...styles.frequencyButton,
-                ...(selectedFrequency === 'quarterly' && styles.selectedFrequencyButton)
-              }}
-              onClick={() => handleFrequencyChange('quarterly')}
-            >
-              Quarterly
-            </button>
-            <button
-              style={{
-                ...styles.frequencyButton,
-                ...(selectedFrequency === 'yearly' && styles.selectedFrequencyButton)
-              }}
-              onClick={() => handleFrequencyChange('yearly')}
-            >
-              Yearly
-            </button>
+            <p style={styles.titleText}>Frequency</p>
+            <div style={styles.frequencyButtonContainer}>
+              <button
+                style={{
+                  ...styles.frequencyButton,
+                  ...(selectedFrequency === 'daily' && styles.selectedFrequencyButton)
+                }}
+                onClick={() => handleFrequencyChange('daily')}
+              >
+                Daily
+              </button>
+              <button
+                style={{
+                  ...styles.frequencyButton,
+                  ...(selectedFrequency === 'weekly' && styles.selectedFrequencyButton)
+                }}
+                onClick={() => handleFrequencyChange('weekly')}
+              >
+                Weekly
+              </button>
+              <button
+                style={{
+                  ...styles.frequencyButton,
+                  ...(selectedFrequency === 'monthly' && styles.selectedFrequencyButton)
+                }}
+                onClick={() => handleFrequencyChange('monthly')}
+              >
+                Monthly
+              </button>
+              <button
+                style={{
+                  ...styles.frequencyButton,
+                  ...(selectedFrequency === 'quarterly' && styles.selectedFrequencyButton)
+                }}
+                onClick={() => handleFrequencyChange('quarterly')}
+              >
+                Quarterly
+              </button>
+              <button
+                style={{
+                  ...styles.frequencyButton,
+                  ...(selectedFrequency === 'yearly' && styles.selectedFrequencyButton)
+                }}
+                onClick={() => handleFrequencyChange('yearly')}
+              >
+                Yearly
+              </button>
+            </div>
           </div>
-        </div>
 
           {/* box 3 */}
           <div style={styles.box3}>
@@ -275,7 +273,7 @@ const handleFrequencyChange = (selectedFrequency) => {
                   onChange={handleInputAmount}
                 />
                 <Select
-                  placeholder="mg"
+                  placeholder="unit"
                   options={[
                     { value: "mg", label: "mg" },
                     { value: "g", label: "g" },
@@ -313,23 +311,23 @@ const handleFrequencyChange = (selectedFrequency) => {
           overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === "FertilizingDetailsManual" 
-        && (<FertilizingDetailsManual 
-        onBackToSidebar={handleBackClick}
-        textPlant={textPlant}
-        FertilizerAmountUnitselectedValue={FertilizerAmountUnitselectedValue}
-        textFertilizationNUmberoftime={textFertilizationNUmberoftime}
-        textFertilizationAmount={textFertilizationAmount}
-        textFertilizationType={textFertilizationType}
-        selectedFrequency={selectedFrequency}
-        calculatedPlantDensity={calculatedPlantDensity}
-        numberOfPlants={numberOfPlants}
-        area={area}
-        perimeter={perimeter}
-        AreaUnitselectedValue={AreaUnitselectedValue}
-        PerimeterUnitselectedValue={PerimeterUnitselectedValue}
-        
-        />)}
+        {currentPage === "FertilizingDetailsManual"
+          && (<FertilizingDetailsManual
+            onBackToSidebar={handleBackClick}
+            textPlant={textPlant}
+            FertilizerAmountUnitselectedValue={FertilizerAmountUnitselectedValue}
+            textFertilizationNUmberoftime={textFertilizationNUmberoftime}
+            textFertilizationAmount={textFertilizationAmount}
+            textFertilizationType={textFertilizationType}
+            selectedFrequency={selectedFrequency}
+            calculatedPlantDensity={calculatedPlantDensity}
+            numberOfPlants={numberOfPlants}
+            area={area}
+            perimeter={perimeter}
+            AreaUnitselectedValue={AreaUnitselectedValue}
+            PerimeterUnitselectedValue={PerimeterUnitselectedValue}
+
+          />)}
       </div>
     </div>
   );

@@ -30,7 +30,6 @@ const { confirm } = Modal;
 
 const Managemap = () => {
   const { templateId } = useParams();
-  const apiKey = "AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U";
   const [points, setPoints] = useState([]);
   const [partitionPolygons, setPartitionPolygons] = useState([]);
   const [drawingEnabled, setDrawingEnabled] = useState(false);
@@ -960,7 +959,7 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
       </div>
 
       <LoadScript
-        googleMapsApiKey={apiKey}
+        googleMapsApiKey={process.env.REACT_APP_GOOGLE_CLOUD_API_KEY}
         libraries={["places", "drawing", "geometry"]}
       >
         <GoogleMap
