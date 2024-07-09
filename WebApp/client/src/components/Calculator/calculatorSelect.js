@@ -7,7 +7,7 @@ import { styles } from "./calculatorSelectStyles";
 import PlantationManul from "../PlantationManual/PlantationPageManual/PlantationManul";
 import FenceManual from "../Fence Manual/Fence/fenceManual";
 import ClearLandManual from "../ClearLandManualCalculator/ClearLandManual/ClearLandManual";
-import { Button, Flex } from "antd";
+import { Button,} from "antd";
 
 const convertAreaToSqMeters = (area, unit) => {
   const conversionRates = {
@@ -26,10 +26,6 @@ export default function CalculatorSelect({
   PerimeterUnitselectedValue,
   AreaUnitselectedValue,
 }) {
-  const [isHovered1, setIsHovered1] = useState(false);
-  const [isHovered2, setIsHovered2] = useState(false);
-  const [isHovered3, setIsHovered3] = useState(false);
-
   // For plantation
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
