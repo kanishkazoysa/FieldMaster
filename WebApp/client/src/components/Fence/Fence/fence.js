@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,useEffect } from "react";
 import { FaBars } from "react-icons/fa";
 import { MdArrowBack, MdFence } from "react-icons/md";
 import { GiGate } from "react-icons/gi";
@@ -33,6 +33,25 @@ export default function Fence({
   const inputValueFenceAmountRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
+  const [fenceType, setfenceType] = useState([]);
+  const [textFence, setTextFence] = useState(null);
+
+  useEffect(() => {
+    fetchFenceType();
+  }, []);
+
+  const fetchFenceType = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/FenceTypes"
+      );
+      setfenceType(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+      message.error("Failed to fetch plants. Please try again.");
+    }
+  };
 
   const handleFenceLengthChange = (event) => {
     setInputValueFenceLength(event.target.value);
@@ -104,7 +123,7 @@ export default function Fence({
     // Validate the data
     if (
       !PostSpaceUnitselectedValue ||
-      !FenceTypeselectedValue ||
+      !textFence ||
       !inputValuePostspace
     ) {
       message.error("Error: Please fill all input fields");
@@ -119,7 +138,7 @@ export default function Fence({
 
     AxiosInstance.post("/api/fence/fence", {
       id,
-      FenceTypeselectedValue,
+      FenceTypeselectedValue : textFence ? textFence.value : null,
       inputValuePostspace,
       PostSpaceUnitselectedValue,
       displayValues,
@@ -200,13 +219,13 @@ export default function Fence({
               <div style={styles.Box2DropdownContainer}>
                 <Select
                   placeholder="Type"
-                  options={[
-                    { value: "Wood", label: "Wood" },
-                    { value: "Metal", label: "Metal" },
-                    { value: "Fiber", label: "Fiber" },
-                  ]}
-                  value={FenceTypeselectedValue1}
-                  onChange={handleFenceTypeChange}
+                  value={textFence}
+                  onChange={(selectedOption) => setTextFence(selectedOption)}
+                  options={fenceType.map((Fence) => ({
+                    value: Fence.Name,
+                    label: Fence.Name,
+                  }))}
+                
                   styles={{
                     control: (provided) => ({
                       ...provided,
