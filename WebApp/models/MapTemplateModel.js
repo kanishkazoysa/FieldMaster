@@ -19,43 +19,6 @@ const FenceSetupSchema = new mongoose.Schema({
 });
 
 
-const WeedDataSchema = new mongoose.Schema({
-  weedType: String,
-  labourCount: Number,
-  workHours: Number,
-  machineList: [String],
-  weedCalculationResults: {
-    weedEffort: Number,
-    totalTime: Number,
-  },
-});
-
-const PlantDataSchema = new mongoose.Schema({
-  plantList: [String],
-  plantWorkHours: Number,
-  plantMachineList: [String],
-  plantCalculationResults: {
-    plantEffort: Number,
-    totalTime: Number,
-  },
-});
-
-const StoneDataSchema = new mongoose.Schema({
-  stoneList: [String],
-  stoneWorkHours: Number,
-  stoneMachineList: [String],
-  stoneCalculationResults: {
-    stoneEffort: Number,
-    totalTime: Number,
-  },
-});
-
-const ClearLandSetupSchema = new mongoose.Schema({
-  weedData: WeedDataSchema,
-  plantData: PlantDataSchema,
-  stoneData: StoneDataSchema,
-});
-
 const PartitionPolygonSchema = new mongoose.Schema({
   points: {
     type: [PointSchema],
@@ -93,7 +56,37 @@ const PartitionPolygonSchema = new mongoose.Schema({
   },
 
   fenceSetup: FenceSetupSchema,
-  clearLandSetup: ClearLandSetupSchema,
+
+  clearLandSetup: {
+    weedData: {
+      weedType: String,
+      labourCount: Number,
+      workHours: Number,
+      machineList: [String],
+      weedCalculationResults: {
+        weedEffort: Number,
+        totalTime: Number,
+      },
+    },
+    plantData: {
+      plantList: [String],
+      plantWorkHours: Number,
+      plantMachineList: [String],
+      plantCalculationResults: {
+        plantEffort: Number,
+        totalTime: Number,
+      },
+    },
+    stoneData: {
+      stoneList: [String],
+      stoneWorkHours: Number,
+      stoneMachineList: [String],
+      stoneCalculationResults: {
+        stoneEffort: Number,
+        totalTime: Number,
+      },
+    },
+  },
 
 });
 

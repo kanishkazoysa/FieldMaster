@@ -343,10 +343,20 @@ const Managemap = () => {
         cancelText: "No",
         async onOk() {
           try {
+
+            const updatedPartitionPolygons = partitionPolygons.map(
+              (polygon, index) => ({
+                ...polygon,
+                plantationSetup: plantationSetupData[index] || {},
+                fenceSetup: fenceSetupData[index] || {},
+                clearLandSetup: clearLandSetupData[index] || {}, 
+      
+              })
+            );
             const response = await AxiosInstance.put(
               `/api/auth/mapTemplate/savePartitionPoints/${templateId}`,
               {
-                partitionPolygons,
+                partitionPolygons: updatedPartitionPolygons,
               }
             );
             console.log("Save response:", response.data);
@@ -375,6 +385,9 @@ const Managemap = () => {
     const PlantationData = plantationSetupData[index];
     const fenceData = fenceSetupData[index];
     const clearLandData = clearLandSetupData[index];
+
+    console.log("Clear land data:", clearLandData);
+
 
     const styles = {
       modalContent: {
@@ -530,7 +543,7 @@ const Managemap = () => {
   );
 }
 
-if (clearLandData && Object.keys(clearLandData).length > 0 && ( clearLandData.weedData || clearLandData.plantData || clearLandData.stoneData)) {
+if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandData).length > 0) {
   modalContent = (
     <div style={styles.modalContent}>
       {modalContent}
@@ -538,7 +551,7 @@ if (clearLandData && Object.keys(clearLandData).length > 0 && ( clearLandData.we
         <h4 style={styles.heading}>Clear Land Data:</h4>
         
         {/* Weed Data */}
-        {clearLandData.weedData && (
+        {clearLandData.weedData && typeof clearLandData.weedData === 'object' && (
           <div>
             <h5 style={styles.heading}>Weed clear Efforrt:</h5>
             {clearLandData.weedData.weedType && (
@@ -825,6 +838,8 @@ if (clearLandData && Object.keys(clearLandData).length > 0 && ( clearLandData.we
         setPlantationSetupData(fetchedPlantationSetupData);
         setFenceSetupData(fetchedFenceSetupData);
         setClearLandSetupData(fetchedClearLandSetupData);
+        console.log("Fetched clear land setup data:", fetchedClearLandSetupData);
+
   
         const avgLatitude =
           fetchedPoints.reduce((total, point) => total + point.latitude, 0) /
