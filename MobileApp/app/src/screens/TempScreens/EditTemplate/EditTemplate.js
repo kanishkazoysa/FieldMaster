@@ -20,18 +20,18 @@ const theme = {
 const PerimeterIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='crop'
+    name="crop"
     size={responsiveFontSize(3)}
-    color='grey'
+    color="grey"
   />
 );
 
 const AreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='dice-4-outline'
+    name="dice-4-outline"
     size={responsiveFontSize(3)}
-    color='grey'
+    color="grey"
   />
 );
 
@@ -93,15 +93,15 @@ const EditTemplate = ({ route, navigation }) => {
         <View style={styles.low_outer}>
           <View style={styles.imageView}>
             <Image
-              source={{ uri: 'https://i.ibb.co/9TQd2Bb/map-image.jpg' }}
+              source={{ uri: item.imageUrl }}
               style={styles.imageStyling}
             />
           </View>
           <MaterialCommunityIcons
-            name='square-edit-outline'
+            name="square-edit-outline"
             size={responsiveFontSize(3)}
             style={styles.editIconStyle}
-            color='#65676B'
+            color="#65676B"
             onPress={() => {
               navigation.navigate('ResizeMap', {
                 templateId: item._id,
@@ -140,9 +140,9 @@ const EditTemplate = ({ route, navigation }) => {
             <TextInput
               value={measureName}
               onChangeText={setMeasureName}
-              backgroundColor='white'
+              backgroundColor="white"
               style={styles.textInput}
-              activeUnderlineColor='black'
+              activeUnderlineColor="black"
             />
           </View>
           <View style={styles.inputBlock}>
@@ -150,8 +150,8 @@ const EditTemplate = ({ route, navigation }) => {
             <TextInput
               value={landType}
               onChangeText={setLandType}
-              backgroundColor='white'
-              activeUnderlineColor='black'
+              backgroundColor="white"
+              activeUnderlineColor="black"
               style={styles.textInput02}
             />
           </View>
@@ -165,8 +165,8 @@ const EditTemplate = ({ route, navigation }) => {
                 style={styles.descriptionInput}
                 multiline={true}
                 numberOfLines={4}
-                outlineColor='black'
-                activeUnderlineColor='black'
+                outlineColor="black"
+                activeUnderlineColor="black"
                 theme={{ colors: { primary: 'black' } }}
               />
             </View>
