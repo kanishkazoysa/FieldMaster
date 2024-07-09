@@ -10,12 +10,21 @@ import SideNavbar from "../components/SideNavbar/sideNavbar";
 import { styles, containerStyle } from "./ManagemapStyles";
 import AxiosInstance from "../AxiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
-import { FiGrid, FiEdit, FiSave, FiTag } from "react-icons/fi";
+import { FiMapPin, FiGrid, FiEdit, FiX, FiSave, FiTag,FiTrash2 } from "react-icons/fi";
+import { FaArrowPointer } from "react-icons/fa6";
+import { PiPlantLight } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
 import { GrUndo } from "react-icons/gr";
 import { message, Button, Modal, Input } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { TbTopologyComplex } from "react-icons/tb";
+import { PiSelectionForeground } from "react-icons/pi";
 import { GrCompliance } from "react-icons/gr";
+import PlantationSetupModal from "./PlantationSetupModal";
+import { TbFence } from "react-icons/tb";
+import FenceSetupModal from "./FenceSetupModal";
+import ClearLandSetupModal from './ClearLandSetupModal ';
+import TemplateDataModal from "./TemplateDataModal ";
 
 const { confirm } = Modal;
 
@@ -35,8 +44,221 @@ const Managemap = () => {
   const [labelText, setLabelText] = useState("");
   const [showLabelInput, setShowLabelInput] = useState(false);
   const [currentLabel, setCurrentLabel] = useState("");
+  const [PlantationSetupModalVisible, setPlantationSetupModalVisible] =
+    useState(false);
   const navigate = useNavigate();
+  const [selectedPolygonData, setSelectedPolygonData] = useState(null);
+  const [fenceSetupData, setFenceSetupData] = useState({});
+  const [plantationSetupData, setPlantationSetupData] = useState({});
+  const [isEditingPlantation, setIsEditingPlantation] = useState(false);
+  const [isEditingFence, setIsEditingFence] = useState(false);
+  const [isEditingClearLand, setIsEditingClearLand] = useState(false);
+  const [fenceSetupModalVisible, setFenceSetupModalVisible] = useState(false);
+  const [clearLandSetupModalVisible, setClearLandSetupModalVisible] = useState(false);
+  const [clearLandSetupData, setClearLandSetupData] = useState({});
+  const [drawingMode, setDrawingMode] = useState(null);
+  const [multiSelectMode, setMultiSelectMode] = useState(false);
+  const [multiSelectedPolygons, setMultiSelectedPolygons] = useState([]);
+  const [templateData, setTemplateData] = useState(null);
+  const [templateDataModalVisible, setTemplateDataModalVisible] = useState(false);
+
+
+  const deleteSelectedPolygons = async () => {
+    if (multiSelectedPolygons.length > 0) {
+      const updatedPolygons = partitionPolygons.filter(
+        (_, index) => !multiSelectedPolygons.includes(index)
+      );
   
+      confirm({
+        title: "Are you sure?",
+        content: `Do you want to delete ${multiSelectedPolygons.length} selected partition${multiSelectedPolygons.length > 1 ? 's' : ''}?`,
+        icon: <ExclamationCircleOutlined />,
+        okText: "Yes",
+        okType: "primary",
+        cancelText: "No",
+        async onOk() {
+          try {
+            await AxiosInstance.put(
+              `/api/auth/mapTemplate/savePartitionPoints/${templateId}`,
+              {
+                partitionPolygons: updatedPolygons,
+              }
+            );
+            setPartitionPolygons(updatedPolygons);
+            setMultiSelectedPolygons([]);
+            setMultiSelectMode(false);
+            message.success(`${multiSelectedPolygons.length} partition${multiSelectedPolygons.length > 1 ? 's' : ''} deleted successfully!`);
+            window.location.reload();
+          } catch (error) {
+            console.error("Error deleting partition polygons:", error);
+            message.error("Failed to delete partition polygons.");
+          }
+        },
+        onCancel() {
+          console.log("Cancelled");
+        },
+      });
+    } else {
+      message.warning("No polygons selected for deletion.");
+    }
+  };
+
+  const toggleMultiSelectMode = () => {
+    setDrawingMode(null);
+    setMultiSelectMode(!multiSelectMode);
+    if (multiSelectMode) {
+      // Clear selections when exiting multi-select mode
+      setMultiSelectedPolygons([]);
+    }
+  };
+
+  const handleMultiSelect = (index) => {
+    if (multiSelectMode) {
+      setMultiSelectedPolygons(prevSelected => {
+        if (prevSelected.includes(index)) {
+          return prevSelected.filter(i => i !== index);
+        } else {
+          return [...prevSelected, index];
+        }
+      });
+    }
+  };
+
+  const handleClearLandSetup = () => {
+    if (selectedPolygonIndex !== null) {
+      const selectedPolygon = partitionPolygons[selectedPolygonIndex];
+      setClearLandSetupModalVisible(true);
+      setSelectedPolygonData({
+        area: selectedPolygon.area,
+        perimeter: selectedPolygon.perimeter,
+      });
+    } else {
+      message.warning("Please select a partition first.");
+    }
+  };
+  
+
+  const handleClearLandSetupSave = (data) => {
+    setClearLandSetupData((prevData) => ({
+      ...prevData,
+      [selectedPolygonIndex]: data,
+    }));
+  
+    // Update the partitionPolygons state
+    setPartitionPolygons((prevPolygons) => {
+      const updatedPolygons = [...prevPolygons];
+      updatedPolygons[selectedPolygonIndex] = {
+        ...updatedPolygons[selectedPolygonIndex],
+        clearLandSetup: data,
+      };
+      return updatedPolygons;
+    });
+  
+    // Save the updated data to the backend
+    savePartitionPoints();
+  
+    message.success("Clear land setup data saved successfully!");
+    setClearLandSetupModalVisible(false);
+  };
+
+  const handleEditFenceSetup = () => {
+    if (selectedPolygonIndex !== null) {
+      const selectedPolygon = partitionPolygons[selectedPolygonIndex];
+      setSelectedPolygonData({
+        area: selectedPolygon.area,
+        perimeter: selectedPolygon.perimeter,
+      });
+      setIsEditingFence(true);
+      setFenceSetupModalVisible(true);
+    } else {
+      message.warning("Please select a partition first.");
+    }
+  };
+
+  const handleFenceSetup = () => {
+    if (selectedPolygonIndex !== null) {
+      const selectedPolygon = partitionPolygons[selectedPolygonIndex];
+      setSelectedPolygonData({
+        area: selectedPolygon.area,
+        perimeter: selectedPolygon.perimeter,
+      });
+      setFenceSetupModalVisible(true);
+    } else {
+      message.warning("Please select a partition first.");
+    }
+  };
+
+  const handleFenceSetupSave = (data) => {
+    setFenceSetupData((prevData) => ({
+      ...prevData,
+      [selectedPolygonIndex]: data,
+    }));
+
+    // Update the partitionPolygons state
+    setPartitionPolygons((prevPolygons) => {
+      const updatedPolygons = [...prevPolygons];
+      updatedPolygons[selectedPolygonIndex] = {
+        ...updatedPolygons[selectedPolygonIndex],
+        fenceSetup: data,
+      };
+      return updatedPolygons;
+    });
+
+    // Save the updated data to the backend
+    savePartitionPoints();
+
+    message.success("Fence setup data saved successfully!");
+    setFenceSetupModalVisible(false);
+  };
+
+  const handleEditPlantation = () => {
+    if (selectedPolygonIndex !== null) {
+      const selectedPolygon = partitionPolygons[selectedPolygonIndex];
+      setIsEditingPlantation(true);
+      setPlantationSetupModalVisible(true);
+      setSelectedPolygonData({
+        area: selectedPolygon.area,
+        perimeter: selectedPolygon.perimeter,
+      });
+    }
+  };
+
+  const handlePlantationSetupSave = (data) => {
+    setPlantationSetupData((prevData) => ({
+      ...prevData,
+      [selectedPolygonIndex]: data,
+    }));
+
+    // Update the partitionPolygons state
+    setPartitionPolygons((prevPolygons) => {
+      const updatedPolygons = [...prevPolygons];
+      updatedPolygons[selectedPolygonIndex] = {
+        ...updatedPolygons[selectedPolygonIndex],
+        plantationSetup: data,
+      };
+      return updatedPolygons;
+    });
+
+    // Save the updated data to the backend
+    savePartitionPoints();
+
+    message.success("Plantation setup data saved successfully!");
+    setPlantationSetupModalVisible(false);
+  };
+
+  const handlePlantationSetup = () => {
+    if (selectedPolygonIndex !== null) {
+      const selectedPolygon = partitionPolygons[selectedPolygonIndex];
+      setPlantationSetupModalVisible(true);
+      // Pass only the area and perimeter to the modal
+      setSelectedPolygonData({
+        area: selectedPolygon.area,
+        perimeter: selectedPolygon.perimeter,
+      });
+    } else {
+      message.warning("Please select a partition first.");
+    }
+  };
 
   const handleAddLabel = () => {
     if (selectedPolygonIndex !== null) {
@@ -57,6 +279,20 @@ const Managemap = () => {
       setPartitionPolygons(updatedPolygons);
       setShowLabelInput(false);
       setLabelText("");
+    }
+  };
+
+  const handleDeleteLabel = () => {
+    if (selectedPolygonIndex !== null) {
+      const updatedPolygons = [...partitionPolygons];
+      delete updatedPolygons[selectedPolygonIndex].label;
+      setPartitionPolygons(updatedPolygons);
+      setShowLabelInput(false);
+      setLabelText("");
+      message.success("Label deleted successfully");
+      
+      // Save the updated data to the backend
+      savePartitionPoints();
     }
   };
 
@@ -93,7 +329,9 @@ const Managemap = () => {
     };
 
     setPartitionPolygons((prevPolygons) => [...prevPolygons, newPolygon]);
-    setDrawingEnabled(false);
+    //setDrawingEnabled(false);
+
+      polygon.setMap(null);
 
     // Show popup with area and perimeter
     Modal.info({
@@ -123,42 +361,41 @@ const Managemap = () => {
   };
 
   const toggleDrawingMode = () => {
-    setDrawingEnabled((prevState) => !prevState);
+    setDrawingEnabled(true);
     setEditingPolygonIndex(null);
     setSelectedPolygonIndex(null);
-    if (!drawingEnabled) {
-      if (drawingManagerRef.current) {
-        drawingManagerRef.current.setDrawingMode(
-          window.google.maps.drawing.OverlayType.POLYGON
-        );
-      }
-    } else {
-      if (
-        drawingManagerRef.current &&
-        drawingManagerRef.current.state.drawingControlPosition
-      ) {
-        drawingManagerRef.current.state.setDrawingMode(null);
-      }
-    }
+    setDrawingMode(window.google.maps.drawing.OverlayType.POLYGON);
+  };
+
+  const toggleSelectionMode = () => {
+    setDrawingMode(null);
+    setEditingPolygonIndex(null);
+    setSelectedPolygonIndex(null);
   };
 
   const savePartitionPoints = async () => {
     try {
-      try {
-        const response = await AxiosInstance.put(
-          `/api/auth/mapTemplate/savePartitionPoints/${templateId}`,
-          {
-            partitionPolygons,
-          }
-        );
-        console.log("Save response:", response.data);
-        message.success("Partition polygons saved successfully!");
-      } catch (error) {
-        console.error("Error saving partition polygons:", error);
-        message.error("Failed to save partition polygons.");
-      }
+      const updatedPartitionPolygons = partitionPolygons.map(
+        (polygon, index) => ({
+          ...polygon,
+          plantationSetup: plantationSetupData[index] || {},
+          fenceSetup: fenceSetupData[index] || {},
+          clearLandSetup: clearLandSetupData[index] || {}, 
+
+        })
+      );
+
+      const response = await AxiosInstance.put(
+        `/api/auth/mapTemplate/savePartitionPoints/${templateId}`,
+        {
+          partitionPolygons: updatedPartitionPolygons,
+        }
+      );
+      console.log("Save response:", response.data);
+      message.success("Partition polygons saved successfully!");
     } catch (error) {
-      console.error("Error showing confirmation dialog:", error);
+      console.error("Error saving partition polygons:", error);
+      message.error("Failed to save partition polygons.");
     }
   };
 
@@ -173,10 +410,33 @@ const Managemap = () => {
         cancelText: "No",
         async onOk() {
           try {
+            const updatedPartitionPolygons = partitionPolygons.map(
+              (polygon, index) => {
+                const updatedPolygon = { ...polygon };
+  
+                // Only include plantationSetup if it has content
+                if (plantationSetupData[index] && Object.keys(plantationSetupData[index]).length > 0) {
+                  updatedPolygon.plantationSetup = plantationSetupData[index];
+                }
+  
+                // Only include fenceSetup if it has content
+                if (fenceSetupData[index] && Object.keys(fenceSetupData[index]).length > 0) {
+                  updatedPolygon.fenceSetup = fenceSetupData[index];
+                }
+  
+                // Only include clearLandSetup if it has content
+                if (clearLandSetupData[index] && Object.keys(clearLandSetupData[index]).length > 0) {
+                  updatedPolygon.clearLandSetup = clearLandSetupData[index];
+                }
+  
+                return updatedPolygon;
+              }
+            );
+  
             const response = await AxiosInstance.put(
               `/api/auth/mapTemplate/savePartitionPoints/${templateId}`,
               {
-                partitionPolygons,
+                partitionPolygons: updatedPartitionPolygons,
               }
             );
             console.log("Save response:", response.data);
@@ -202,15 +462,313 @@ const Managemap = () => {
     setShowLabelInput(false);
 
     const selectedPolygon = partitionPolygons[index];
-    Modal.info({
-      title: "Selected Partition Statistics",
-      content: (
-        <div>
-          <p>Area: {selectedPolygon.area} sq meters</p>
-          <p>Perimeter: {selectedPolygon.perimeter} meters</p>
-          <p>Label: {selectedPolygon.label || "No label"}</p>
+    const PlantationData = plantationSetupData[index];
+    const fenceData = fenceSetupData[index];
+    const clearLandData = clearLandSetupData[index];
+
+    console.log("Clear land data:", clearLandData);
+
+
+    const styles = {
+      modalContent: {
+        fontFamily: "Arial, sans-serif",
+        lineHeight: 1.5,
+      },
+      heading: {
+        color: "#333",
+        marginTop: "1em",
+      },
+      paragraph: {
+        margin: "0.5em 0",
+      },
+      section: {
+        marginTop: "1em",
+        paddingTop: "1em",
+        borderTop: "1px solid #e0e0e0",
+      },
+      firstSection: {
+        marginTop: "1em",
+        paddingTop: "0",
+        borderTop: "none",
+      },
+      highlight: {
+        fontWeight: "bold",
+        color: "#007BFF",
+      },
+    };
+
+    let modalContent = (
+      <div style={styles.modalContent}>
+        <p style={styles.paragraph}>
+          Area: <span style={styles.highlight}>{selectedPolygon.area} sq meters</span>
+        </p>
+        <p style={styles.paragraph}>
+          Perimeter: <span style={styles.highlight}>{selectedPolygon.perimeter} meters</span>
+        </p>
+        <p style={styles.paragraph}>
+          Label: <span style={styles.highlight}>{selectedPolygon.label || "No label"}</span>
+        </p>
+      </div>
+    );
+  
+    if (PlantationData) {
+      modalContent = (
+        <div style={styles.modalContent}>
+          {modalContent}
+          <div style={styles.firstSection}>
+            <h4 style={styles.heading}>Plantation Data:</h4>
+            <p style={styles.paragraph}>
+              Plant Type: <span style={styles.highlight}>{PlantationData.plantType || "N/A"}</span>
+            </p>
+            <p style={styles.paragraph}>
+              Plant Spacing:{" "}
+              <span style={styles.highlight}>
+                {PlantationData.plantSpacing ? PlantationData.plantSpacing.toFixed(2) : "N/A"} meters
+              </span>
+            </p>
+            <p style={styles.paragraph}>
+              Row Spacing:{" "}
+              <span style={styles.highlight}>
+                {PlantationData.rowSpacing ? PlantationData.rowSpacing.toFixed(2) : "N/A"} meters
+              </span>
+            </p>
+            <p style={styles.paragraph}>
+              Number of Plants: <span style={styles.highlight}>{PlantationData.numberOfPlants || "N/A"}</span>
+            </p>
+            <p style={styles.paragraph}>
+              Plantation Density:{" "}
+              <span style={styles.highlight}>
+                {PlantationData.plantationDensity ? PlantationData.plantationDensity.toFixed(2) : "N/A"} plants/sq m
+              </span>
+            </p>
+            {PlantationData.fertilizerData && 
+             Object.values(PlantationData.fertilizerData).some(value => value !== null && value !== undefined && value !== "" && !isNaN(value)) && (
+                <div style={styles.section}>
+                  <h4 style={styles.heading}>Fertilizer Data:</h4>
+                  {PlantationData.fertilizerData.fertilizerType && (
+                    <p style={styles.paragraph}>
+                      Fertilizer Type: <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerType}</span>
+                    </p>
+                  )}
+                  {PlantationData.fertilizerData.fertilizerFrequency && (
+                    <p style={styles.paragraph}>
+                      Frequency: <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerFrequency}</span>
+                    </p>
+                  )}
+                  {PlantationData.fertilizerData.fertilizerTimes && (
+                    <p style={styles.paragraph}>
+                      Times: <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerTimes}</span>
+                    </p>
+                  )}
+                  {PlantationData.fertilizerData.fertilizerAmount && (
+                    <p style={styles.paragraph}>
+                      Amount: <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerAmount} {PlantationData.fertilizerData.fertilizerUnit || ""}</span>{" "}
+                      
+                    </p>
+                  )}
+                  {PlantationData.fertilizerData.totalFertilizerPerYear && (
+                    <p style={styles.paragraph}>
+                      Total Fertilizer per Year:{" "}
+                      <span style={styles.highlight}>{PlantationData.fertilizerData.totalFertilizerPerYear.toFixed(2)} kg</span>
+                    </p>
+                  )}
+                  {PlantationData.fertilizerData.fertilizerPerPlant && (
+                    <p style={styles.paragraph}>
+                      Fertilizer per Plant:{" "}
+                      <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerPerPlant.toFixed(2)} kg</span>
+                    </p>
+                  )}
+                </div>
+              )}
+          </div>
         </div>
-      ),
+      );
+    }
+  
+    if (fenceData && Object.keys(fenceData).length > 0 && 
+    (fenceData.fenceType || fenceData.postSpacing || fenceData.numberOfSticks || 
+     (fenceData.gates && fenceData.gates.length > 0))) {
+  modalContent = (
+    <div style={styles.modalContent}>
+      {modalContent}
+      <div style={styles.section}>
+        <h4 style={styles.heading}>Fence Data:</h4>
+        {fenceData.fenceType && (
+          <p style={styles.paragraph}>
+            Fence Type: <span style={styles.highlight}>{fenceData.fenceType}</span>
+          </p>
+        )}
+        {fenceData.postSpacing && (
+          <p style={styles.paragraph}>
+            Post Spacing: <span style={styles.highlight}>{fenceData.postSpacing} {fenceData.postSpacingUnit}</span> 
+          </p>
+        )}
+        {fenceData.numberOfSticks && (
+          <p style={styles.paragraph}>
+            Number of Sticks: <span style={styles.highlight}>{fenceData.numberOfSticks}</span>
+          </p>
+        )}
+        {fenceData.gates && fenceData.gates.length > 0 && (
+          <>
+            <h6 style={{marginTop: "0.2em"}}>Gates:</h6>
+            {fenceData.gates.map((gate, idx) => (
+              <p key={idx} style={styles.paragraph}>
+                Gate {idx + 1}: <span style={styles.highlight}>{gate.length}m x {gate.count}</span>
+              </p>
+            ))}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandData).length > 0 && (clearLandData.weedData.weedType|| clearLandData.plantData.plantList || clearLandData.stoneData.stoneList)) {
+  modalContent = (
+    <div style={styles.modalContent}>
+      {modalContent}
+      <div style={styles.section}>
+        <h4 style={styles.heading}>Clear Land Data:</h4>
+        
+        {/* Weed Data */}
+        
+        {clearLandData.weedData && typeof clearLandData.weedData === 'object' && (
+          <div>
+           {clearLandData.weedData.weedType && (
+  <>
+    <h6 style={{ marginTop: "0.2em" }}>Weed Data:</h6>
+    <p style={styles.paragraph}>
+      Weed Type: <span style={styles.highlight}>{clearLandData.weedData.weedType}</span>
+    </p>
+  </>
+)}
+
+            {clearLandData.weedData.labourCount && (
+              <p style={styles.paragraph}>
+                Labour Count: <span style={styles.highlight}>{clearLandData.weedData.labourCount}</span>
+              </p>
+            )}
+            {clearLandData.weedData.workHours && (
+              <p style={styles.paragraph}>
+                Work Hours: <span style={styles.highlight}>{clearLandData.weedData.workHours}</span>
+              </p>
+            )}
+            {clearLandData.weedData.machineList && clearLandData.weedData.machineList.length > 0 && (
+              <>
+              <div style={styles.paragraph}>
+                <h6 style={{marginTop: "0.2em"}}>Machines:</h6>
+                {clearLandData.weedData.machineList.map((machine, idx) => (
+                  <p key={idx} style={styles.highlight}>{machine}</p>
+                ))}
+              </div>
+              </>
+            )}
+            {clearLandData.weedData.weedCalculationResults && (
+              <div>
+                <h6 style={{marginTop: "0.2em"}}>Weed Efforrt Output:</h6>
+                <p style={styles.paragraph}>
+                  Total Hours For Weeding: <span style={styles.highlight}>{clearLandData.weedData.weedCalculationResults.weedEffort.toFixed(2)}</span>
+                </p>
+                {/* <p style={styles.paragraph}>
+                  Total Time: <span style={styles.highlight}>{clearLandData.weedData.weedCalculationResults.totalTime}</span>
+                </p> */}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Plant Data */}
+        {clearLandData.plantData && (
+          <div>
+            
+            {clearLandData.plantData.plantList && clearLandData.plantData.plantList.length > 0 && (
+              <>
+              <h5 style={styles.heading}>Plant Data:</h5>
+                <h6 style={styles.heading}>Plants:</h6>
+                {clearLandData.plantData.plantList.map((plant, idx) => (
+                  <p key={idx} style={styles.highlight}>
+                    {plant}
+                    </p>
+                ))} 
+              </>
+            )}
+            {clearLandData.plantData.plantWorkHours && (
+              <p style={styles.paragraph}>
+                Plant Work Hours: <span style={styles.highlight}>{clearLandData.plantData.plantWorkHours}</span>
+              </p>
+            )}
+            {clearLandData.plantData.plantMachineList && clearLandData.plantData.plantMachineList.length > 0 && (
+              <>
+                <h6 style={{marginTop: "0.2em"}}>Plant Machines:</h6>
+                {clearLandData.plantData.plantMachineList.map((machine, idx) => (
+                  <p key={idx} style={styles.highlight}>{machine}</p>
+                ))}
+              </>
+            )}
+            {clearLandData.plantData.plantCalculationResults && (
+              <div>
+                <h6 style={{marginTop: "0.2em"}}>plants Efforrt Output:</h6>
+                <p style={styles.paragraph}>
+                Total Hours For clear plants: <span style={styles.highlight}>{clearLandData.plantData.plantCalculationResults.plantEffort.toFixed(2)}</span>
+                </p>
+                {/* <p style={styles.paragraph}>
+                  Total Time: <span style={styles.highlight}>{clearLandData.plantData.plantCalculationResults.totalTime}</span>
+                </p> */}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Stone Data */}
+        {clearLandData.stoneData && (
+          <div>
+            {clearLandData.stoneData.stoneList && clearLandData.stoneData.stoneList.length > 0 && (
+              <>
+               <h5 style={styles.heading}>Stone Data:</h5>
+                <h6 style={styles.heading}>Stones:</h6>
+                {clearLandData.stoneData.stoneList.map((stone, idx) => (
+                  <p key={idx} style={styles.highlight}>
+                    {stone}
+                  </p>
+                ))}
+              </>
+            )}
+            {clearLandData.stoneData.stoneWorkHours && (
+              <p style={styles.paragraph}>
+                Stone Work Hours: <span style={styles.highlight}>{clearLandData.stoneData.stoneWorkHours}</span>
+              </p>
+            )}
+            {clearLandData.stoneData.stoneMachineList && clearLandData.stoneData.stoneMachineList.length > 0 && (
+              <>
+                <h6 style={{marginTop: "0.2em"}}>Stone Machines:</h6>
+                {clearLandData.stoneData.stoneMachineList.map((machine, idx) => (
+                  <p key={idx} style={styles.highlight}>{machine}</p>
+                ))}
+              </>
+            )}
+            {clearLandData.stoneData.stoneCalculationResults && (
+              <div>
+                <h6 style={{marginTop: "0.2em"}}>Stone Efforrt Output:</h6>
+                <p style={styles.paragraph}>
+                Total Hours For Stone Cleaning: <span style={styles.highlight}>{clearLandData.stoneData.stoneCalculationResults.stoneEffort.toFixed(2)}</span>
+                </p>
+                {/* <p style={styles.paragraph}>
+                  Total Time: <span style={styles.highlight}>{clearLandData.stoneData.stoneCalculationResults.totalTime}</span>
+                </p> */}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+  
+    Modal.info({
+      title: "Partition Statistics",
+      content: modalContent,
+      width: 500,
       onOk() {},
     });
   };
@@ -281,6 +839,7 @@ const Managemap = () => {
           points: newPoints,
           area: stats.area,
           perimeter: stats.perimeter,
+          label: partitionPolygons[index].label, // Preserve the label
         };
 
         setUndoStack((prevStack) => [...prevStack, updatedPolygon]);
@@ -290,6 +849,14 @@ const Managemap = () => {
           updatedPolygons[index] = updatedPolygon;
           return updatedPolygons;
         });
+
+        // Update the polygon on the map
+        polygon.setPath(
+          newPoints.map(
+            (point) =>
+              new window.google.maps.LatLng(point.latitude, point.longitude)
+          )
+        );
       }
     }
   };
@@ -318,6 +885,7 @@ const Managemap = () => {
   const finishEditing = () => {
     setEditingPolygonIndex(null);
     setUndoStack([]);
+    savePartitionPoints();
     window.location.reload();
   };
 
@@ -328,27 +896,52 @@ const Managemap = () => {
           `/api/auth/mapTemplate/getOneTemplate/${templateId}`
         );
         console.log("Fetched template data:", response.data);
+        const fetchedTemplateData = response.data;
         const fetchedPoints = response.data.locationPoints;
         const fetchedPartitionPolygons = response.data.partitionPolygons || [];
         setPoints(fetchedPoints);
         setPartitionPolygons(fetchedPartitionPolygons);
+        setTemplateData(fetchedTemplateData);
 
+        // Set plantation setup data
+        const fetchedPlantationSetupData = {};
+        // Set fence setup data
+        const fetchedFenceSetupData = {};
+
+        const fetchedClearLandSetupData = {};
+
+        fetchedPartitionPolygons.forEach((polygon, index) => {
+          if (polygon.plantationSetup) {
+            fetchedPlantationSetupData[index] = polygon.plantationSetup;
+          }
+          if (polygon.fenceSetup) {
+            fetchedFenceSetupData[index] = polygon.fenceSetup;
+          }
+          if (polygon.clearLandSetup) {
+            fetchedClearLandSetupData[index] = polygon.clearLandSetup;
+          }
+        });
+        setPlantationSetupData(fetchedPlantationSetupData);
+        setFenceSetupData(fetchedFenceSetupData);
+        setClearLandSetupData(fetchedClearLandSetupData);
+        console.log("Fetched clear land setup data:", fetchedClearLandSetupData);
+
+  
         const avgLatitude =
           fetchedPoints.reduce((total, point) => total + point.latitude, 0) /
           fetchedPoints.length;
         const avgLongitude =
           fetchedPoints.reduce((total, point) => total + point.longitude, 0) /
           fetchedPoints.length;
-
+  
         setCenter({ lat: avgLatitude, lng: avgLongitude });
       } catch (error) {
         console.error("An error occurred while fetching the template:", error);
       }
     };
-
+  
     fetchTemplateData();
   }, [templateId]);
-
   const toggleMapType = () => {
     setMapTypeId((prevType) =>
       prevType === "roadmap" ? "satellite" : "roadmap"
@@ -401,22 +994,21 @@ const Managemap = () => {
           {partitionPolygons.map((polygon, index) => (
             <React.Fragment key={index}>
               <Polygon
-                key={index}
                 path={polygon.points.map((point) => ({
                   lat: point.latitude,
                   lng: point.longitude,
                 }))}
                 options={{
-                  strokeColor: "#0000FF",
+                  strokeColor: (multiSelectMode && multiSelectedPolygons.includes(index)) || (!multiSelectMode && selectedPolygonIndex === index) ? "#FF0000" : "#0000FF",
                   strokeOpacity: 1.0,
                   strokeWeight: 2,
-                  fillColor: "rgba(0, 0, 255, 0.2)",
+                  fillColor: (multiSelectMode && multiSelectedPolygons.includes(index)) || (!multiSelectMode && selectedPolygonIndex === index) ? "rgba(255, 0, 0, 0.2)" : "rgba(0, 0, 255, 0.2)",
                   fillOpacity: 0.4,
                   zIndex: 2,
                   editable: editingPolygonIndex === index,
                   clickable: true,
                 }}
-                onClick={() => handlePolygonClick(index)}
+                onClick={() => multiSelectMode ? handleMultiSelect(index) : handlePolygonClick(index)}
                 onMouseUp={() => handlePolygonEdit(index)}
                 onLoad={(polygon) => {
                   polygonRefs.current[index] = polygon;
@@ -448,8 +1040,10 @@ const Managemap = () => {
 
           {drawingEnabled && (
             <DrawingManager
-              ref={drawingManagerRef}
-              onPolygonComplete={handleGeofenceComplete}
+            onLoad={(drawingManager) => {
+              drawingManagerRef.current = drawingManager;
+            }}
+                          onPolygonComplete={handleGeofenceComplete}
               options={{
                 drawingControl: true,
                 drawingControlOptions: {
@@ -465,8 +1059,7 @@ const Managemap = () => {
                   clickable: true,
                   zIndex: 2,
                 },
-                drawingMode: window.google.maps.drawing.OverlayType.POLYGON,
-              }}
+                drawingMode: drawingMode,              }}
             />
           )}
 
@@ -476,11 +1069,26 @@ const Managemap = () => {
             <p style={styles.toolTitle}>Tools</p>
             <hr style={styles.toolHr}></hr>
             <Button
+  onClick={() => setTemplateDataModalVisible(true)}
+  icon={<FiGrid />}
+  style={styles.toolButton}
+>
+  Template Data
+</Button>
+            <Button
               onClick={toggleDrawingMode}
               icon={<FiGrid />}
               style={styles.toolButton}
             >
               {drawingEnabled ? "Draw Polygon" : "Draw Polygon"}
+            </Button>
+
+            <Button
+              onClick={toggleSelectionMode}
+              icon={<FaArrowPointer />}
+              style={styles.toolButton}
+            >
+              Select polygon
             </Button>
             <Button
               onClick={savePartitionPoints}
@@ -489,6 +1097,29 @@ const Managemap = () => {
             >
               Save Partition
             </Button>
+
+            <Button
+  onClick={toggleMultiSelectMode}
+  icon={<PiSelectionForeground />}
+  style={{
+    ...styles.toolButton,
+    backgroundColor: multiSelectMode ? "#4CAF50" : undefined,
+    color: multiSelectMode ? "white" : undefined,
+  }}
+>
+  {multiSelectMode ? "Exit Multi-Select" : "Select Multiple"}
+</Button>
+
+{multiSelectMode && (
+  <Button
+    onClick={deleteSelectedPolygons}
+    icon={<MdDeleteForever />}
+    style={styles.toolButton}
+    disabled={multiSelectedPolygons.length === 0}
+  >
+    <span style={{ fontSize: "10px" }}>Delete Selected ({multiSelectedPolygons.length})</span>
+  </Button>
+)}
             {selectedPolygonIndex !== null && (
               <>
                 <Button
@@ -522,9 +1153,8 @@ const Managemap = () => {
                     Add Label
                   </Button>
                 )}
-              </>
-            )}
-            {showLabelInput && (
+
+              {showLabelInput && (
               <div>
                 <Input
                   value={labelText}
@@ -552,8 +1182,88 @@ const Managemap = () => {
                     ? "Update Label"
                     : "Submit Label"}
                 </Button>
-              </div>
+
+                {partitionPolygons[selectedPolygonIndex].label && (
+              <Button
+                onClick={handleDeleteLabel}
+                style={{
+                  ...styles.toolButton,
+                  backgroundColor: "#FF4136",
+                  borderColor: "#FF4136",
+                  color: "white",
+                  flex: 1,
+                  marginLeft: '5px'
+                }}
+              >
+                Delete Label
+              </Button>
             )}
+              </div>
+            )}              
+
+
+                {plantationSetupData[selectedPolygonIndex] ? (
+                  <Button
+                    onClick={handleEditPlantation}
+                    icon={<PiPlantLight />}
+                    style={styles.toolButton}
+                  >
+                    Edit Plantation
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handlePlantationSetup}
+                    icon={<PiPlantLight />}
+                    style={styles.toolButton}
+                  >
+                    Plantation
+                  </Button>
+                )}
+
+{fenceSetupData[selectedPolygonIndex]  ? (
+      <Button
+        onClick={handleEditFenceSetup}
+        icon={<TbFence />}
+        style={styles.toolButton}
+      >
+        Edit Fence
+      </Button>
+    ) : (
+      <Button
+        onClick={handleFenceSetup}
+        icon={<TbFence />}
+        style={styles.toolButton}
+      >
+        Fence Setup
+      </Button>
+    )}
+
+{clearLandSetupData[selectedPolygonIndex] && 
+ Object.keys(clearLandSetupData[selectedPolygonIndex]).length > 0 ? (
+  <Button
+    onClick={handleClearLandSetup}
+    icon={<FiTrash2 />}
+    style={styles.toolButton}
+  >
+    Edit Clear Land
+  </Button>
+) : (
+  <Button
+    onClick={handleClearLandSetup}
+    icon={<FiTrash2 />}
+    style={styles.toolButton}
+  >
+    Clear Land
+  </Button>
+)}
+
+
+              </>
+            )}
+            
+
+            
+
             {editingPolygonIndex !== null && (
               <>
                 <Button
@@ -582,6 +1292,47 @@ const Managemap = () => {
               </Button>
             </div>
           </div>
+
+          <PlantationSetupModal
+            visible={PlantationSetupModalVisible}
+            onClose={() => {
+              setPlantationSetupModalVisible(false);
+              setIsEditingPlantation(false);
+            }}
+            area={selectedPolygonData?.area}
+            perimeter={selectedPolygonData?.perimeter}
+            onSave={handlePlantationSetupSave}
+            existingData={
+              isEditingPlantation
+                ? plantationSetupData[selectedPolygonIndex]
+                : null
+            }
+          />
+
+          <FenceSetupModal
+            visible={fenceSetupModalVisible}
+            onClose={() => {setFenceSetupModalVisible(false);
+              setIsEditingFence(false);} }
+            area={selectedPolygonData?.area}
+            perimeter={selectedPolygonData?.perimeter}
+            onSave={handleFenceSetupSave}
+            existingData={isEditingFence ? fenceSetupData[selectedPolygonIndex] : null}
+          />
+
+<ClearLandSetupModal
+  visible={clearLandSetupModalVisible}
+  onClose={() => setClearLandSetupModalVisible(false)}
+  area={selectedPolygonData?.area}
+  perimeter={selectedPolygonData?.perimeter}
+  onSave={handleClearLandSetupSave}
+  existingData={clearLandSetupData[selectedPolygonIndex]}
+/>
+
+<TemplateDataModal
+  visible={templateDataModalVisible}
+  onClose={() => setTemplateDataModalVisible(false)}
+  data={templateData}
+/>
         </GoogleMap>
       </LoadScript>
     </div>
