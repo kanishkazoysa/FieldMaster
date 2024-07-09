@@ -113,8 +113,8 @@ export const styles = {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginLeft: 5,
-    width: "80%",
+    marginLeft: 2,
+    width: "70%",
     backgroundColor: "white",
   },
   Box2PropertyLabel: {
