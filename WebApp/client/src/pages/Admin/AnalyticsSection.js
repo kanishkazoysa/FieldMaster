@@ -25,10 +25,8 @@ const AnalyticsSection = ({ users, setLoading }) => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
+  const [isMapLoading, setIsMapLoading] = useState(true);
 
-  const onMapLoad = useCallback((map) => {
-    mapRef.current = map;
-  }, []);
 
   const handlePlacesChanged = useCallback(() => {
     if (!searchBoxRef.current) return;
@@ -376,8 +374,13 @@ const AnalyticsSection = ({ users, setLoading }) => {
               center={selectedLocation || mapCenter}
               zoom={8}
               ref={mapRef}
-              onLoad={onMapLoad}
+              onLoad={() => setIsMapLoading(false)}
             >
+            {isMapLoading && (
+              <div style={styles.loadingOverlay}>
+                <p>Loading map...</p>
+              </div>
+            )}
               <StandaloneSearchBox
                 onLoad={onSearchBoxLoad}
                 onPlacesChanged={handlePlacesChanged}

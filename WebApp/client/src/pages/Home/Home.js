@@ -37,6 +37,7 @@ export default function Home() {
   const sriLankaCenter = { lat: 7.8731, lng: 80.7718 };
   const defaultZoom = 7;
   const [isMobileOnlyModalVisible, setIsMobileOnlyModalVisible] = useState(false);
+  const [isMapLoading, setIsMapLoading] = useState(true);
 
   const showMobileOnlyModal = () => {
     setIsMobileOnlyModalVisible(true);
@@ -277,7 +278,13 @@ export default function Home() {
           zoom={userMaps.length > 0 ? 2 : defaultZoom}
           options={mapOptions()}
           onZoomChanged={handleZoomChanged}
+          onLoad={() => setIsMapLoading(false)}
         >
+        {isMapLoading && (
+          <div style={styles.loadingOverlay}>
+            <p>Loading map...</p>
+          </div>
+        )}
           <div
             onClick={handleGetCurrentLocation}
             style={{
