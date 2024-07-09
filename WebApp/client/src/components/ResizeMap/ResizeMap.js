@@ -16,7 +16,6 @@ const ResizeMapScreen = () => {
     parseFloat(templatePerimeter) || 0
   );
   const [history, setHistory] = useState([]);
-  const [isMapLoading, setIsMapLoading] = useState(true);
 
   const containerStyle = {
     width: "100%",
