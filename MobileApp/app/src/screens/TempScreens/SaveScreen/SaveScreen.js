@@ -12,20 +12,46 @@ import { responsiveFontSize } from 'react-native-responsive-dimensions';
 const CustomPerimeterIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='vector-square'
+    name="vector-square"
     size={responsiveFontSize(3.7)}
-    color='grey'
+    color="grey"
   />
 );
 const CustomAreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='texture-box'
+    name="texture-box"
     size={responsiveFontSize(3.7)}
-    color='grey'
+    color="grey"
   />
 );
 
+const reverseGeocode = async (latitude, longitude) => {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
+    );
+    const data = await response.json();
+    if (data.address) {
+      const city =
+        data.address.city || data.address.town || data.address.village;
+      const country = data.address.country;
+      return `${city}, ${country}`;
+    }
+    return 'Location not found';
+  } catch (error) {
+    console.error('Error during reverse geocoding:', error);
+    return 'Error getting location';
+  }
+};
+
+const truncateLocation = (location, maxLength = 25) => {
+  if (location.length <= maxLength) return location;
+  const [city, country] = location.split(', ');
+  const truncatedCountry =
+    country.slice(0, maxLength - city.length - 5) + '...';
+  return `${city}, ${truncatedCountry}`;
+};
 export function SaveScreen({ navigation, route }) {
   const {
     area: initialArea,
@@ -40,8 +66,22 @@ export function SaveScreen({ navigation, route }) {
   const [templateName, setTemplateName] = React.useState('test');
   const [measureName, setMeasureName] = React.useState('test');
   const [landType, setLandType] = React.useState('test');
-  const [location, setLocation] = React.useState('test');
+  const [location, setLocation] = React.useState('');
   const [descriptionText, setDescriptionText] = React.useState('test');
+
+  React.useEffect(() => {
+    const getLocation = async () => {
+      if (locationPoints && locationPoints.length > 0) {
+        const [firstPoint] = locationPoints;
+        const locationName = await reverseGeocode(
+          firstPoint.latitude,
+          firstPoint.longitude
+        );
+        setLocation(truncateLocation(locationName));
+      }
+    };
+    getLocation();
+  }, [locationPoints]);
 
   /* this function is used to save the data */
   const onSaveButtonPress = () => {
@@ -144,7 +184,7 @@ export function SaveScreen({ navigation, route }) {
                 <TextInput
                   style={styles.input_text}
                   value={location}
-                  onChangeText={(text) => setLocation(text)}
+                  onChangeText={(text) => setLocation(truncateLocation(text))}
                 />
               </View>
               <View style={styles.input_view}>
@@ -156,18 +196,17 @@ export function SaveScreen({ navigation, route }) {
                 />
               </View>
             </View>
-
             <View style={styles.inner_view_03}>
               <Text style={styles.bold_text1}>Description:</Text>
 
               <TextInput
-                placeholder='Type here...'
+                placeholder="Type here..."
                 value={descriptionText}
                 onChangeText={(text) => setDescriptionText(text)}
                 multiline={true}
                 numberOfLines={6}
                 style={styles.description_input}
-                underlineColor='transparent'
+                underlineColor="transparent"
               />
             </View>
             <View style={styles.imageContainer}>
