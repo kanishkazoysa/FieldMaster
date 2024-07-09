@@ -62,11 +62,8 @@ export default function PlantationFromManualCalculator({ route }) {
   const [textPlant, setTextPlant] = useState("");
   const [textplantspace, setTextPlantSpace] = useState("");
   const [textRowspace, setTextRowSpace] = useState("");
-
   const navigation = useNavigation();
-
-  const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] =
-    useState(null);
+  const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] = useState(null);
   const PlantSpaceUnitPlaceholder = {
     label: "M",
     value: null,
