@@ -7,9 +7,14 @@ import { useState } from 'react';
 import Calculator from '../Calculator/calculator';
 import { useNavigate } from 'react-router-dom';
 
-export default function StartMeasurePage({ onBackToSidebar }) {
+export default function StartMeasurePage({ onBackToSidebar, onMobileOnlyFeature }) {
   const [hoveredOption, setHoveredOption] = useState(null);
   const navigate = useNavigate();
+
+
+  const handleWalkAroundClick = () => {
+    onMobileOnlyFeature();
+  };
 
   const handleOptionHover = (option) => {
     setHoveredOption(option);
@@ -54,10 +59,13 @@ export default function StartMeasurePage({ onBackToSidebar }) {
             <div
               style={{
                 ...styles.options,
-                ...(hoveredOption === 'walkAround' && styles.hoverEffect),
+                ...(hoveredOption === 'walkAround'),
+                backgroundColor: '#9e95d6',
+                cursor: 'pointer'
               }}
               onMouseEnter={() => handleOptionHover('walkAround')}
               onMouseLeave={handleOptionLeave}
+              onClick={handleWalkAroundClick}
             >
               <div style={styles.iconContainer}>
                 <RiWalkFill
