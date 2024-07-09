@@ -12,6 +12,8 @@ import LoginCountChart from "./LoginCountChart";
 import { Doughnut } from "react-chartjs-2";
 import "./AdminDashboard.css";
 
+const apiKey = process.env.REACT_APP_GOOGLE_CLOUD_API_KEY;
+
 const AnalyticsSection = ({ users, setLoading }) => {
   const [totalUsers] = useState(users.length);
   const [totalCustomers, setTotalCustomers] = useState(0);
@@ -85,6 +87,7 @@ const AnalyticsSection = ({ users, setLoading }) => {
       console.error("Error fetching location analytics:", error);
     }
   };
+
 
   const geocodeLocation = async (locationName) => {
     const geocoder = new window.google.maps.Geocoder();
@@ -362,7 +365,7 @@ const AnalyticsSection = ({ users, setLoading }) => {
       <div className="map">
         <h3 className="mapHeader">Map Location Analytics</h3>
         <LoadScript
-          googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
+          googleMapsApiKey={apiKey}
           libraries={["places"]}
         >
           <div style={{ position: "relative" ,marginLeft:65,}}>

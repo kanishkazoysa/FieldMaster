@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { GoogleMap, LoadScript, PolygonF } from "@react-google-maps/api";
-import SideNavbar from "../SideNavbar/sideNavbar";
 import { styles } from "./ResizeMapStyles";
 import AxiosInstance from "../../AxiosInstance";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -182,7 +181,7 @@ const ResizeMapScreen = () => {
     <div style={styles.container}>
       <div style={styles.mapContainer}>
         <LoadScript
-          googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
+          googleMapsApiKey={process.env.REACT_APP_GOOGLE_CLOUD_API_KEY}
           libraries={["places"]}
         >
           <GoogleMap

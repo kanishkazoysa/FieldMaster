@@ -46,6 +46,33 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [capturedImageUri, setCapturedImageUri] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const getLocationName = async (latitude, longitude) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U`
+      );
+      const data = await response.json();
+      if (data.results && data.results.length > 0) {
+        const addressComponents = data.results[0].address_components;
+        const city = addressComponents.find(
+          (component) =>
+            component.types.includes("locality") ||
+            component.types.includes("administrative_area_level_2")
+        );
+        const country = addressComponents.find((component) =>
+          component.types.includes("country")
+        );
+        if (city && country) {
+          return `${city.long_name}, ${country.long_name}`;
+        }
+      }
+      return "";
+    } catch (error) {
+      console.error("Error getting location name:", error);
+      return "";
+    }
+  };
+
   const uploadToImgbb = async (imageUri) => {
     const apiKey = "a08fb8cde558efecce3f05b7f97d4ef7";
     const formData = new FormData();

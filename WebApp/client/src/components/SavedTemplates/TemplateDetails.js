@@ -146,10 +146,18 @@ const TemplateDetails = ({
                 />
               </div>
               <div className="button-container">
-                <Button type="primary" className="action-btn" onClick={navigateToRegister}>
+                <Button
+                  type="primary"
+                  className="action-btn"
+                  onClick={navigateToRegister}
+                >
                   Manage Map
                 </Button>
-                <Button type="primary" className="action-btn" onClick={handleResizeMapClick}>
+                <Button
+                  type="primary"
+                  className="action-btn"
+                  onClick={handleResizeMapClick}
+                >
                   Resize Map
                 </Button>
               </div>
@@ -199,14 +207,14 @@ const TemplateDetails = ({
                   <HiChartPie className="info-icon" />
                   <div>
                     <p>Area</p>
-                    <p className="bold-text">{template.area}</p>
+                    <p className="bold-text">{template.area}perches</p>
                   </div>
                 </div>
                 <div className="info-container">
                   <TbVector className="info-icon" />
                   <div>
                     <p>Perimeter</p>
-                    <p className="bold-text">{template.perimeter}</p>
+                    <p className="bold-text">{template.perimeter}km</p>
                   </div>
                 </div>
                 <div className="info-container">

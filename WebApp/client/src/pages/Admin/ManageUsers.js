@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { BeatLoader } from "react-spinners";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { message } from "antd";
 import { Tag, Space, Table, Button, Modal, Input, Alert } from "antd";
 import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
 import AxiosInstance from "../../AxiosInstance";
 import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
+
+const { confirm } = Modal;
 
 function ManageUsers() {
     const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -159,6 +162,36 @@ function ManageUsers() {
         setIsModalOpen(false); // Refresh user data when modal closes
     };
 
+    const handleDeleteConfirmation = (id) => {
+        confirm({
+            title: "Are you sure you want to delete this user?",
+            icon: <ExclamationCircleOutlined />,
+            okText: "Yes",
+            okType: "danger",
+            cancelText: "No",
+            onOk() {
+                handleDeleteBooking(id);
+            },
+            onCancel() {
+                message.info("User deletion cancelled");
+            },
+        });
+    };
+
+    const handleDeleteBooking = async (id) => {
+        try {
+            const response = await AxiosInstance.delete(
+                `/api/users/deleteUser/${id}`
+            );
+            console.log(response);
+            fetchUsers();
+            message.success("User deleted successfully");
+        } catch (error) {
+            console.error("Failed to delete user:", error);
+            message.error("Failed to delete user");
+        }
+    };
+
     const columns = [
         {
             title: "",
@@ -235,6 +268,19 @@ function ManageUsers() {
                     >
                         <Icon icon="uil:setting" />
                     </button>
+                    <button
+                                style={{
+                                    fontSize: "20px",
+                                    color: "#757171",
+                                    border: "none",
+                                    background: "transparent",
+                                }}
+                                onClick={() =>
+                                    handleDeleteConfirmation(record._id)
+                                }
+                            >
+                                <Icon icon="material-symbols:delete-outline" />
+                            </button>
                 </Space>
             ),
         },

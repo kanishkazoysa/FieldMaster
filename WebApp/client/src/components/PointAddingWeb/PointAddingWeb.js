@@ -18,6 +18,8 @@ import * as turf from "@turf/turf";
 import html2canvas from "html2canvas";
 import axios from "axios";
 
+
+
 const { Option } = Select;
 
 const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
@@ -666,7 +668,7 @@ export default function PointAddingWeb() {
   return (
     <div style={styles.container} className="map-outer-container">
       <LoadScript
-        googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
+        googleMapsApiKey={process.env.REACT_APP_GOOGLE_CLOUD_API_KEY}
         libraries={["places"]}
       >
         <GoogleMap
