@@ -79,8 +79,8 @@ export default function PlantationDetails({ route }) {
   // edit button pressed function
   const handleEditIconPress = () => {
     Alert.alert(
-      "Update Data",
-      "Do you want to update data?",
+      "Delete Data",
+      "Do you want to Delete data?",
       [
         {
           text: "No",
@@ -272,7 +272,7 @@ export default function PlantationDetails({ route }) {
         {/* pencil/ pen icon  */}
         <TouchableOpacity onPress={handleEditIconPress}>
           <MaterialCommunityIcons
-            name="square-edit-outline"
+            name="delete"
             size={23}
             color="white"
             style={{ marginRight: 5 }}
@@ -344,7 +344,7 @@ export default function PlantationDetails({ route }) {
                   />
                   <View style={styles.box2PropertyDetails}>
                     <Text style={styles.Box2PropertyLabel}>Area </Text>
-                    <Text style={styles.Box2PropertyValue}>{area} perches</Text>
+                    <Text style={styles.Box2PropertyValue}>{area} perch</Text>
                   </View>
                 </View>
               </View>
@@ -364,7 +364,7 @@ export default function PlantationDetails({ route }) {
                         size={30}
                         color="#65676B"
                       />
-                      <Text style={styles.LeftText}>Plant :</Text>
+                      <Text style={styles.LeftText}>Plant              :</Text>
                     </View>
                     <View style={styles.innersquareright}>
                       <Text style={styles.RightText}>{textPlant}</Text>

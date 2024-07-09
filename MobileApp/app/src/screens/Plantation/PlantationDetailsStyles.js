@@ -69,7 +69,7 @@ export const styles = StyleSheet.create({
       flexDirection: "column",
       backgroundColor: "white",
       width: responsiveWidth(86),
-      height: responsiveHeight(13),
+      height: responsiveHeight(14),
       marginTop: responsiveHeight(6),
       alignItems: "center",
       borderRadius: 11,
@@ -144,6 +144,7 @@ export const styles = StyleSheet.create({
       height: "80%",
       width: "95%",
       backgroundColor: "white",
+      
     },
     box2Property: {
       flexDirection: "row",
@@ -151,19 +152,21 @@ export const styles = StyleSheet.create({
       justifyContent: "left",
       backgroundColor: "white",
       width: "46%",
+      
     },
     box2PropertyDetails: {
       flexDirection: "column",
       marginLeft: 5,
-      width: "70%",
+      width: "80%",
       height: responsiveHeight(8.5),
       backgroundColor: "white",
+      paddingTop:responsiveHeight(1.5),
     },
     Box2PropertyLabel: {
       fontSize: responsiveFontSize(1.7),
     },
     Box2PropertyValue: {
-      fontSize: responsiveFontSize(1.8),
+      fontSize: responsiveFontSize(1.7),
       fontWeight: "bold",
     },
   

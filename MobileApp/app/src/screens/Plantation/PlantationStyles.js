@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
   
     Box1: {
       width: responsiveWidth(86),
-      height: responsiveHeight(12),
+      height: responsiveHeight(13),
       justifyContent: "center",
       backgroundColor: "white",
       marginTop: responsiveHeight(3),
@@ -89,7 +89,7 @@ export const styles = StyleSheet.create({
     propertyDetails: {
       flexDirection: "column",
       marginLeft: responsiveWidth(2),
-      width: "60%",
+      width: "70%",
       height: responsiveHeight(4.6),
       backgroundColor: "white",
     },
@@ -107,6 +107,34 @@ export const styles = StyleSheet.create({
   
     Box2: {
       width: "93%",
+      height:responsiveHeight(10),
+      
+      backgroundColor: "#FFFFFF",
+      marginTop: responsiveHeight(1.5),
+      borderRadius: 11,
+      padding: 18,
+      shadowColor: "#000",
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
+      elevation: 4,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "Space-between",
+      
+    },
+    dropdownContainerPlant: {
+      backgroundColor: "#F0F2F5",
+      borderRadius: 10,
+      borderColor: "black",
+      width: "56%",
+      height: responsiveHeight(4.5),
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 1,
+      borderColor: "#CED0D4",
+    },
+    Box3: {
+      width: "93%",
       height:responsiveHeight(12),
       justifyContent: "center",
       backgroundColor: "#FFFFFF",
@@ -117,6 +145,8 @@ export const styles = StyleSheet.create({
       shadowOpacity: 0.1,
       shadowRadius: 5,
       elevation: 4,
+      
+      
     },
   
     TopText: {
