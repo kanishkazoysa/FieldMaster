@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
     cardTop:{
       flexDirection: "row",
       alignItems: "center",
-      marginTop: responsiveHeight(-2),
+      marginTop: responsiveHeight(-1.5),
       marginBottom: responsiveHeight(-3),
       backgroundColor: "white",
     },

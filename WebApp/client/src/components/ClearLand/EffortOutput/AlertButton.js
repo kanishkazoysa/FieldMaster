@@ -5,7 +5,7 @@ import { FaExclamationCircle } from 'react-icons/fa'; // Import the alert icon
 
 const handleAlert = () => {
   toast.info(
-    <div>
+    <div style={{ marginLeft: '20px' }}>
       <p><strong>Important</strong></p>
       <p>This is an estimated count for the given details, allowing for a variance of +/- 1 to 2 days from the actual value for flexibility and potential contingencies</p>
       

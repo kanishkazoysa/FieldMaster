@@ -198,13 +198,6 @@ export default function ClearLand({ route }) {
         navigation.navigate("EffortOutput", {
           id: id,
           item: item,
-          // data: displayValues,
-          // data1: displayValues1,
-          // data2: displayValues2,
-          // weedType: pressed,
-          // stonesCount: stonesCount,
-          // laborCount: laborCount,
-          // workHours: workHours,
         });
 
         setPressed(" ");

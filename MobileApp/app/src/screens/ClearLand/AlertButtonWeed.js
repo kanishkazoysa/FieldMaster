@@ -40,7 +40,7 @@ export default function AlertButton() {
 const styles = StyleSheet.create({
   topSection: {
     flexDirection: "row",
-    marginLeft: 230,
+    marginLeft: 259,
     width: "5%",
     height: "66%",
     backgroundColor: "white",

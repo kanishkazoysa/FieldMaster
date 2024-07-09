@@ -437,7 +437,7 @@ export const styles = StyleSheet.create({
       flexDirection:"column",
       alignItems: "center",
       justifyContent:  "center",
-      bottom: responsiveHeight(17),
+      bottom: responsiveHeight(12),
     },
 
     buttonContainer: {

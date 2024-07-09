@@ -195,9 +195,9 @@ export default function EffortOutput({
               <AlertEffort></AlertEffort>
             </div>
              <div style={styles.boxInner}>
-                <p style={styles.boxInnerText}>Weed Effort &nbsp;&nbsp;   :&nbsp;&nbsp; {weedEffort} hrs</p>
-                <p style={styles.boxInnerText}>Tree Effort  &nbsp;&nbsp;&nbsp;&nbsp;  :&nbsp;&nbsp; {plantEffort} hrs</p>
-                <p>Stone Effort  &nbsp;&nbsp; :&nbsp;&nbsp; {stoneEffort} hrs</p>
+                <p style={styles.boxInnerText}>Weed Effort &nbsp;&nbsp;   :&nbsp;&nbsp; {(weedEffort ?? 0).toFixed(2)} hrs</p>
+                <p style={styles.boxInnerText}>Tree Effort  &nbsp;&nbsp;&nbsp;&nbsp;  :&nbsp;&nbsp; {(plantEffort ?? 0).toFixed(2)} hrs</p>
+                <p>Stone Effort  &nbsp;&nbsp; :&nbsp;&nbsp; {(stoneEffort ?? 0).toFixed(2)} hrs</p>
              </div>
           </div>
 

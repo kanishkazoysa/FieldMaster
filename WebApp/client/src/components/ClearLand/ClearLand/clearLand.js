@@ -454,10 +454,10 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
           {/* fifth box */}
           <div style={styles.box5}>
-            <div style={styles.box5leftcontainer}>
+            <div style={{ ...styles.box5leftcontainer, width: "35%" }}>
               <GrUserWorker color="gray" size={20} />
               <div style={styles.box2PropertyDetails}>
-                <p style={styles.Box2PropertyLabel}>Labors : </p>
+                <p style={styles.Box2PropertyLabel}>Labors  : </p>
               </div>
             </div>
             <div style={styles.box5inputContainer}>
@@ -575,7 +575,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
           transform: animatePage ? "translateX(0)" : "translateX(-100%)",
           transition: "transform 0.3s ease-in-out",
           backgroundColor: "whitesmoke",
-          overflow: "auto", // Add scrollbar if content exceeds container height
+          // overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
         {currentPage === "EffortOutput" && (

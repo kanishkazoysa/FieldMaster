@@ -6,7 +6,7 @@ export const styles = {
       
     },
     editbutton: {
-      marginRight: "1px",
+      marginRight: "15px",
       cursor: "pointer",
       color: "white",
     },
@@ -35,6 +35,7 @@ export const styles = {
       marginBottom: 0,
       color: "white",
       marginLeft: "0px",
+      marginRight:5,
     },
     Box1: {
       width: "90%",

@@ -5,7 +5,7 @@ import { FaExclamationCircle } from 'react-icons/fa'; // Import the alert icon
 
 const handleAlert = () => {
   toast.info(
-    <div>
+    <div style={{ marginLeft: '20px' }}>
       <p><strong>Calculation happens based on those assumptions:</strong></p>
       <p>For <strong>High</strong> weed types a <strong>backhoe</strong> is added if not added by user.</p>
       <p>For <strong>tress</strong> a <strong>chainsaw</strong> is added if not added by user.</p>

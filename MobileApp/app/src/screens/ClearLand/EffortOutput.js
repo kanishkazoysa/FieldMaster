@@ -265,9 +265,9 @@ export default function EffortOutput({ route }) {
               </View>
               <View style={styles.box4inner}>
               <View style={styles.box4Inner}>
-                <Text style={styles.box4Text}>Remove weeds     :   {Math.ceil(weedEffort)} hrs</Text>
-                <Text>Cut trees                :   {Math.ceil(plantEffort)} hrs</Text>
-                <Text style={styles.box4Text2}>Break stones         :   {Math.ceil(stoneEffort)} hrs</Text>
+                <Text style={styles.box4Text}>Remove weeds     :   {(weedEffort ?? 0).toFixed(2)} hrs</Text>
+                <Text>Cut trees                :   {(plantEffort ?? 0).toFixed(2)} hrs</Text>
+                <Text style={styles.box4Text2}>Break stones         :   {(stoneEffort ?? 0).toFixed(2)} hrs</Text>
                 </View>
               </View>
             </View>

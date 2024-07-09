@@ -5,7 +5,7 @@ import { FaExclamationCircle } from 'react-icons/fa'; // Import the alert icon
 
 const handleAlert = () => {
   toast.info(
-    <div>
+    <div style={{ marginLeft: '20px' }}>
       <p><strong>Select to calculate effort for breaking large stones</strong></p>
       <p><strong>Small:</strong>0.5m³ stone. Enter stone count as well.</p>
       <p><strong>Large</strong>1m³ stone. Enter stone count as well.</p>
