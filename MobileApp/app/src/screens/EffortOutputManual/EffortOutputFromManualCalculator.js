@@ -31,6 +31,7 @@ import {
   import Headersection from "../../components/Headersection";
   import AlertButton from "../../components/AlertButton";
   import CustomButton from "../../components/CustomButton";
+  import EffortAlert from "../ClearLand/AlertButtonEffort";
   import axios from "axios";
   import AxiosInstance from "../../AxiosInstance";
   import { effortOutputManualPrint } from "./EffortOutputFromManualCalculatorPrint";
@@ -39,6 +40,9 @@ import {
     const {
         area,
         perimeter,
+        weedEffort,
+        plantEffort,
+        stoneEffort,
         effort,
         workHours,
         workDays,
@@ -147,12 +151,26 @@ import {
                     source={require("../../../assets/Calendar.png")}
                   ></Image>
                   <View style={{ display: "flex", flexDirection: "column" }}>
+                    <Text style={styles.card2Text4}>{area} m²</Text>
                     <Text style={styles.card2Text3}>Area</Text>
-                    <Text style={styles.card2Text4}>{area} perches</Text>
                   </View>
                 </View>
               </Card.Content>
             </Card>
+
+            <View style={styles.box4}>
+              <View style={styles.box4Header}>
+              <Text style={styles.innertopText}>Effort Values</Text>
+              <EffortAlert></EffortAlert>
+              </View>
+              <View style={styles.box4inner}>
+              <View style={styles.box4Inner}>
+                <Text style={styles.box4Text}>Remove weeds     :   {Math.ceil(weedEffort)} hrs</Text>
+                <Text>Cut trees                :   {Math.ceil(plantEffort)} hrs</Text>
+                <Text style={styles.box4Text2}>Break stones         :   {Math.ceil(stoneEffort)} hrs</Text>
+                </View>
+              </View>
+            </View>
   
             <Card style={styles.card3}>
               <Card.Content style={{ display: "flex", flexDirection: "colum" }}>

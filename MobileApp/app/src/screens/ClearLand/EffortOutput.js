@@ -29,6 +29,7 @@ import { shareAsync } from "expo-sharing";
 import { styles } from "./EffortOutputStyles";
 import Headersection from "../../components/Headersection";
 import AlertButton from "../../components/AlertButton";
+import EffortAlert from "./AlertButtonEffort";
 import CustomButton from "../../components/CustomButton";
 import axios from "axios";
 import AxiosInstance from "../../AxiosInstance";
@@ -45,6 +46,9 @@ export default function EffortOutput({ route }) {
   const [Perimeter, setPerimeter] = useState(null);
   const [effortOutput, setEffortOutput] = useState(null);
   const [workDays, setWorkDays] = useState(null);
+  const [weedEffort, setWeedEffort] = useState(null);
+  const [plantEffort, setPlantEffort] = useState(null);
+  const [stoneEffort, setStoneEffort] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state
 
   //Fetch data from database
@@ -59,6 +63,9 @@ export default function EffortOutput({ route }) {
       setArea(response.data.Area);
       setPerimeter(response.data.Perimeter);
       setEffortOutput(response.data.effortOutput);
+      setWeedEffort(response.data.weedEffort);
+      setPlantEffort(response.data.plantEffort);
+      setStoneEffort(response.data.stoneEffort);
       setWorkDays(response.data.workDays);
       setLoading(false);
     } catch (error) {
@@ -163,14 +170,10 @@ export default function EffortOutput({ route }) {
 
   return (
     <PaperProvider>
-
-
       <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
         <Appbar.BackAction
-          onPress={() => {
-            navigation.goBack();
-            color = "white";
-          }}
+          onPress={() => navigation.navigate("TemplateView", { item: item })}
+          color="white"
         />
 
         <Text style={styles.headerText}>Effort Output</Text>
@@ -208,7 +211,7 @@ export default function EffortOutput({ route }) {
                   />
                   <View style={styles.propertyDetails}>
                     <Text style={styles.propertyLabel}>Total Hours</Text>
-                    
+
                     <Text style={styles.propertyValue}>{effortOutput}</Text>
                   </View>
                 </View>
@@ -219,7 +222,9 @@ export default function EffortOutput({ route }) {
                     color="#65676B"
                   />
                   <View style={styles.propertyDetails}>
-                    <Text style={styles.propertyLabel}>{workHours} hrs per day</Text>
+                    <Text style={styles.propertyLabel}>
+                      {workHours} hrs per day
+                    </Text>
                     <Text style={styles.propertyValue}>{workDays} days</Text>
                   </View>
                 </View>
@@ -236,7 +241,9 @@ export default function EffortOutput({ route }) {
                 />
                 <View style={styles.box2PropertyDetails}>
                   <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                  <Text style={styles.Box2PropertyValue}>{Perimeter}Km</Text>
+                  <Text style={styles.Box2PropertyValue}>
+                    {parseFloat(Perimeter).toFixed(2)} km
+                  </Text>
                 </View>
               </View>
               <View style={styles.box2Property}>
@@ -247,49 +254,69 @@ export default function EffortOutput({ route }) {
                 />
                 <View style={styles.box2PropertyDetails}>
                   <Text style={styles.Box2PropertyLabel}>Area</Text>
-                  <Text style={styles.Box2PropertyValue}>{Area}perches</Text>
+                  <Text style={styles.Box2PropertyValue}>
+                    {parseFloat(Area).toFixed(2)} Perch
+                  </Text>
                 </View>
               </View>
             </View>
 
             {/* section 3 */}
+            <View style={styles.box4}>
+              <View style={styles.box4Header}>
+                <Text style={styles.innertopText}>Effort Values</Text>
+                <EffortAlert></EffortAlert>
+              </View>
+              <View style={styles.box4inner}>
+                <View style={styles.box4Inner}>
+                  <Text style={styles.box4Text}>
+                    Remove weeds : {(weedEffort ?? 0).toFixed(2)} hrs
+                  </Text>
+                  <Text>Cut trees : {(plantEffort ?? 0).toFixed(2)} hrs</Text>
+                  <Text style={styles.box4Text2}>
+                    Break stones : {(stoneEffort ?? 0).toFixed(2)} hrs
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            {/* section 4 */}
             <View style={styles.box3}>
               <View style={styles.inner}>
                 <Text style={styles.innertopText}>Results based on</Text>
 
-                <View style={styles.center}>
+                <View>
                   <View style={styles.innercenter}>
                     <View style={styles.innersquareleft}>
                       <MaterialCommunityIcons
                         name="account-hard-hat"
-                        size={30}
+                        size={25}
                         color="#65676B"
                       />
-                      <Text style={styles.LeftText}>Labors            :</Text>
+                      <Text style={styles.LeftText}>Labors :</Text>
                     </View>
                     <View style={styles.innersquareright}>
                       <Text style={styles.RightText}>{laborCount}</Text>
                     </View>
                   </View>
 
-
                   <View style={styles.innercenter}>
                     <View style={styles.innersquareleft}>
                       <MaterialCommunityIcons
                         name="shovel"
-                        size={30}
+                        size={25}
                         color="#65676B"
                       />
-                      <Text style={styles.LeftText}>Machinery      :</Text>
+                      <Text style={styles.LeftText}>Machinery :</Text>
                     </View>
-                    <View style={styles.innersquareright}>
-                      <Text style={styles.RightText}>{data1.map((machine, index) => (
-                        <Text key={index}>{machine}</Text>
-                      ))}</Text>
+                    <View style={styles.innersquareright1}>
+                      {data1.map((machine, index) => (
+                        <Text key={index} style={styles.RightText}>
+                          {machine}
+                        </Text>
+                      ))}
                     </View>
                   </View>
-
-           
                 </View>
               </View>
             </View>
@@ -368,7 +395,6 @@ export default function EffortOutput({ route }) {
               Back To Home
             </Button>
           </View>
-
         </ScrollView>
       )}
     </PaperProvider>

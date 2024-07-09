@@ -24,6 +24,15 @@ const clearLandSchema = mongoose.Schema(
         MachineDetails: [{
             type: String,
         }],
+        WeedEffort: {
+            type: Number,
+        },
+        PlantEffort: {
+            type: Number,
+        },
+        StoneEffort: {
+            type: Number,
+        },
         EffortOutput: {
             type: Number,
         },
