@@ -118,6 +118,22 @@ export const styles = StyleSheet.create({
       shadowRadius: 5,
       elevation: 4,
     },
+    Box2Plants: {
+      width: "93%",
+      height:responsiveHeight(12),
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      backgroundColor: "#FFFFFF",
+      marginTop: responsiveHeight(1.5),
+      borderRadius: 11,
+      padding: 18,
+      shadowColor: "#000",
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
+      elevation: 4,
+    },
   
     TopText: {
       flexDirection: "row",
@@ -128,11 +144,6 @@ export const styles = StyleSheet.create({
       fontWeight: "bold",
       marginLeft: responsiveHeight(2),
     },
-  
-    Box2input: {},
-  
-    /*Third section*/
-  
   
   
     Box3propertyBox: {
@@ -149,6 +160,17 @@ export const styles = StyleSheet.create({
       borderRadius: 10,
       borderColor: "black",
       width: "36%",
+      height: responsiveHeight(4.5),
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 1,
+      borderColor: "#CED0D4",
+    },
+    dropdownContainerPlants: {
+      backgroundColor: "#F0F2F5",
+      borderRadius: 10,
+      borderColor: "black",
+      width: "66%",
       height: responsiveHeight(4.5),
       alignItems: "center",
       justifyContent: "center",

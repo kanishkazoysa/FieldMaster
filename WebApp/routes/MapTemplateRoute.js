@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const router = express.Router();
 const MapTemplateModel = require('../models/MapTemplateModel');
+const fenceModel = require("../models/fence");
+const plantationModel = require("../models/plantation");
 
 const turf = require('@turf/turf');
 const MapModel = require('../models/MapModel');
@@ -20,6 +22,7 @@ router.post('/saveTemplate', async (req, res) => {
       location,
       description,
       locationPoints,
+      imageUrl,
     } = req.body;
     area = parseFloat(area).toFixed(2);
     perimeter = parseFloat(perimeter).toFixed(2);
@@ -32,6 +35,7 @@ router.post('/saveTemplate', async (req, res) => {
       location,
       description,
       locationPoints,
+      imageUrl,
       userId: req.userId,
     });
     const savedMapTemplate = await mapTemplate.save();
@@ -203,5 +207,53 @@ router.get('/getLocationAnalytics', async (req, res) => {
     res.status(500).send('Error while fetching location analytics.');
   }
 });
+
+router.get("/getAllmapData/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const Fence = await fenceModel.findOne({ Id: id });
+    const Plantation = await plantationModel.findOne({ Id: id });
+    const map = await MapTemplateModel.findOne({ _id: id });
+    
+    if (!map) {
+      return res.status(404).json({ status: "error", message: "Map not found" });
+    }
+
+    const response = {
+      status: "success",
+      mapDetails: {
+        Area: map.area,
+        Perimeter: map.perimeter,
+        templateName: map.templateName,
+        landType: map.landType,
+        location: map.location,
+        description: map.description,
+      },
+      fenceDetails: Fence ? {
+        postSpace: Fence.PostSpace,
+        postSpaceUnit: Fence.PostSpaceUnit,
+        gateDetails: Fence.GateDetails,
+        numberOfSticks: Fence.NumberofSticks,
+        fenceType: Fence.FenceType,
+        fenceAmount: Fence.NumberofGates,
+        fenceLength: Fence.Gatelength,
+      } : null,
+      plantationDetails: Plantation ? {
+        numberOfPlants: Plantation.NoOfPlants,
+        plantType: Plantation.PlantType,
+        plantSpace: Plantation.PlantSpace,
+        rowSpace: Plantation.RowSpace,
+        plantDensity: Plantation.PlantDensity,
+        unit: Plantation.Unit,
+      } : null,
+    };
+
+    res.json(response);
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
+});
+
+
 
 module.exports = router;

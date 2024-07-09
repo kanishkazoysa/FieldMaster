@@ -1,11 +1,22 @@
+.user_table
+{
+    border: 2px solid #dbdbdb; /* Add this line */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
+}
+
+
 .admin-dashboard-header{
-    width: 100%;
+    width: 99.5%;
     height: 80px;
+    border-radius: 10px;
     padding: 10px 30px;
     margin-top: 20px;
     display: flex;
     flex-direction: row;
-    justify-content:flex-end;
+    background-color: #fff;
+    justify-content:space-between;
+    border: 2px solid #dbdbdb; /* Add this line */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
 }
 
 .image-admin {
@@ -111,12 +122,15 @@
     border-radius: 11px;
     box-shadow: 3px 3px 9px 0px rgba(190, 190, 190, 0.13);
     font-family: "SF Pro Display-Regular";
+    border: 2px solid #dbdbdb; /* Add this line */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
 }
 .admin_dashboard_card h1 {
     font-family: "";
     font-size: 20px;
     font-family: "SF Pro Display-Regular";
     font-weight: 500;
+    
 }
 .admin_dashboard_card h2 {
     font-family: "SF Pro Display-Regular";
@@ -155,8 +169,8 @@
     width: 320px;
     height: 146px;
     flex-shrink: 0;
-
-    box-shadow: 3px 3px 9px 0px rgba(190, 190, 190, 0.13);
+    border: 2px solid #cac9c9; /* Add this line */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     gap: 30px;
     padding: 0 0 0 20px;
 }
@@ -234,20 +248,24 @@
     background-color: #f4f3f3;
 }
 .Admin_SideMenu {
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     height: calc(100vh - 30px);
     width: fit-content;
     margin: 15px 0 15px 15px;
     padding: 0 0 0 0;
-    border-radius: 11px;
+    border-radius: 11px; 
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    border: 2px solid #dbdbdb; /* Add this line */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
 }
 .admin_sidebar_logo{
     width: 136px;
     padding: 34px 0 20px 0;
+    margin-bottom: 10%;
+    cursor: pointer;
 }
 
 .Admin_PageContent {
@@ -275,6 +293,14 @@
     border-radius: 11px;
     margin: 15px;
     padding: 0 15px;
+}
+
+.mapHeader {
+    margin-left: 30px;
+    margin-bottom: 30px;
+}
+.map {
+    margin-bottom: 30px;
 }
 
 

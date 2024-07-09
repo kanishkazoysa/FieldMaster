@@ -10,19 +10,17 @@ import SideNavbar from "../components/SideNavbar/sideNavbar";
 import { styles, containerStyle } from "./ManagemapStyles";
 import AxiosInstance from "../AxiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
-import { FiMapPin, FiGrid, FiEdit, FiX, FiSave, FiTag } from "react-icons/fi";
+import { FiGrid, FiEdit, FiSave, FiTag } from "react-icons/fi";
 import { MdDeleteForever } from "react-icons/md";
 import { GrUndo } from "react-icons/gr";
 import { message, Button, Modal, Input } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { TbTopologyComplex } from "react-icons/tb";
 import { GrCompliance } from "react-icons/gr";
 
 const { confirm } = Modal;
 
 const Managemap = () => {
   const { templateId } = useParams();
-  const apiKey = "AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U";
   const [points, setPoints] = useState([]);
   const [partitionPolygons, setPartitionPolygons] = useState([]);
   const [drawingEnabled, setDrawingEnabled] = useState(false);
@@ -38,6 +36,7 @@ const Managemap = () => {
   const [showLabelInput, setShowLabelInput] = useState(false);
   const [currentLabel, setCurrentLabel] = useState("");
   const navigate = useNavigate();
+  
 
   const handleAddLabel = () => {
     if (selectedPolygonIndex !== null) {
@@ -357,7 +356,7 @@ const Managemap = () => {
   };
 
   const handleCancel = () => {
-    navigate('/home');
+    navigate("/home");
   };
 
   return (
@@ -367,7 +366,7 @@ const Managemap = () => {
       </div>
 
       <LoadScript
-        googleMapsApiKey={apiKey}
+        googleMapsApiKey={process.env.REACT_APP_GOOGLE_CLOUD_API_KEY}
         libraries={["places", "drawing", "geometry"]}
       >
         <GoogleMap
@@ -430,16 +429,15 @@ const Managemap = () => {
                 >
                   <div
                     style={{
-  background: "rgba(255, 255, 255, 0.9)", // Slight transparency for a modern look
-  padding: "10px 15px", // More padding for better spacing
-  border: "1px solid #ddd", // Light gray border for a softer appearance
-  borderRadius: "8px", // Slightly more rounded corners
-  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
-  position: "absolute",
-  transform: "translate(-50%, -50%)",
-  whiteSpace: "nowrap",
-}}
-
+                      background: "rgba(255, 255, 255, 0.9)", // Slight transparency for a modern look
+                      padding: "10px 15px", // More padding for better spacing
+                      border: "1px solid #ddd", // Light gray border for a softer appearance
+                      borderRadius: "8px", // Slightly more rounded corners
+                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
+                      position: "absolute",
+                      transform: "translate(-50%, -50%)",
+                      whiteSpace: "nowrap",
+                    }}
                   >
                     {polygon.label}
                   </div>
@@ -492,68 +490,70 @@ const Managemap = () => {
               Save Partition
             </Button>
             {selectedPolygonIndex !== null && (
-  <>
-    <Button
-      onClick={deleteSelectedPolygon}
-      icon={<MdDeleteForever />}
-      style={styles.toolButton}
-    >
-      Delete Partition
-    </Button>
-    <Button
-      onClick={editSelectedPolygon}
-      icon={<FiEdit />}
-      style={styles.toolButton}
-    >
-      Edit Partition
-    </Button>
-    {partitionPolygons[selectedPolygonIndex].label ? (
-      <Button
-        onClick={handleAddLabel}
-        icon={<FiTag />}
-        style={styles.toolButton}
-      >
-        Edit Label
-      </Button>
-    ) : (
-      <Button
-        onClick={handleAddLabel}
-        icon={<FiTag />}
-        style={styles.toolButton}
-      >
-        Add Label
-      </Button>
-    )}
-  </>
-)}
-           {showLabelInput && (
-  <div>
-    <Input
-      value={labelText}
-      onChange={(e) => setLabelText(e.target.value)}
-      placeholder="Enter label"
-      style={{
-        ...styles.toolButton,
-        borderColor: '#4CAF50',
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        outline: 'none',
-        boxShadow: 'none',
-      }}
-    />
-    <Button
-      onClick={handleLabelSubmit}
-      style={{
-        ...styles.toolButton,
-        backgroundColor: "#4CAF50",
-        borderColor: "#4CAF50",
-        color: "white",
-      }}
-    >
-      {partitionPolygons[selectedPolygonIndex].label ? "Update Label" : "Submit Label"}
-    </Button>
-  </div>
-)}
+              <>
+                <Button
+                  onClick={deleteSelectedPolygon}
+                  icon={<MdDeleteForever />}
+                  style={styles.toolButton}
+                >
+                  Delete Partition
+                </Button>
+                <Button
+                  onClick={editSelectedPolygon}
+                  icon={<FiEdit />}
+                  style={styles.toolButton}
+                >
+                  Edit Partition
+                </Button>
+                {partitionPolygons[selectedPolygonIndex].label ? (
+                  <Button
+                    onClick={handleAddLabel}
+                    icon={<FiTag />}
+                    style={styles.toolButton}
+                  >
+                    Edit Label
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleAddLabel}
+                    icon={<FiTag />}
+                    style={styles.toolButton}
+                  >
+                    Add Label
+                  </Button>
+                )}
+              </>
+            )}
+            {showLabelInput && (
+              <div>
+                <Input
+                  value={labelText}
+                  onChange={(e) => setLabelText(e.target.value)}
+                  placeholder="Enter label"
+                  style={{
+                    ...styles.toolButton,
+                    borderColor: "#4CAF50",
+                    borderWidth: "1px",
+                    borderStyle: "solid",
+                    outline: "none",
+                    boxShadow: "none",
+                  }}
+                />
+                <Button
+                  onClick={handleLabelSubmit}
+                  style={{
+                    ...styles.toolButton,
+                    backgroundColor: "#4CAF50",
+                    borderColor: "#4CAF50",
+                    color: "white",
+                  }}
+                >
+                  {partitionPolygons[selectedPolygonIndex].label
+                    ? "Update Label"
+                    : "Submit Label"}
+                </Button>
+              </div>
+            )}
             {editingPolygonIndex !== null && (
               <>
                 <Button

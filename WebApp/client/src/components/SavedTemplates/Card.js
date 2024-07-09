@@ -3,7 +3,15 @@ import './Card.css';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { BiEdit } from 'react-icons/bi';
 
-const Card = ({ templateName, location, date, onClick, onDelete, onEdit }) => {
+const Card = ({
+  templateName,
+  location,
+  date,
+  imageUrl,
+  onClick,
+  onDelete,
+  onEdit,
+}) => {
   const handleDelete = (e) => {
     e.stopPropagation();
     onDelete();
@@ -20,11 +28,7 @@ const Card = ({ templateName, location, date, onClick, onDelete, onEdit }) => {
       <RiDeleteBin6Line className='delete-icon' onClick={handleDelete} />
       <div className='card-flex'>
         <div className='card-image-container'>
-          <img
-            src='https://i.ibb.co/9TQd2Bb/map-image.jpg'
-            className='card-image'
-            alt='mapImg'
-          />
+          <img src={imageUrl} className='card-image' alt='mapImg' />
         </div>
         <div className='card-content'>
           <div className='templateName'>{templateName}</div>

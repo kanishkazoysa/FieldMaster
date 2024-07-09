@@ -59,10 +59,7 @@ const handleFrequencyChange = (selectedFrequency) => {
     setFertilizerAmountUnitselectedValue(selectedOption.value);
   };
 
-  const backtotemp = () =>{
-    setCurrentPage("TemplateDetails"); 
-    setAnimatePage(true);
-  }
+  
   const handleFertilizingDetails = async (e) => {
 
     
@@ -283,7 +280,7 @@ const handleFrequencyChange = (selectedFrequency) => {
                   onChange={handleInputAmount}
                 />
                 <Select
-                  placeholder="mg"
+                  placeholder="unit"
                   options={[
                     { value: "mg", label: "mg" },
                     { value: "g", label: "g" },

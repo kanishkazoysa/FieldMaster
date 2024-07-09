@@ -3,7 +3,6 @@ import "./contact.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faGithub, faFacebook, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import video3 from "../../../assets/contact_video.mp4";
-import axios from 'axios';
 
 function ContactForm() {
   const [formData, setFormData] = useState({
@@ -34,9 +33,15 @@ function ContactForm() {
         body: JSON.stringify(formData)
       });
 
-      const result = await response.json();
+      
       if (response.ok) {
         setStatus('Message Sent!');
+        // Clear input fields
+        setFormData({
+          name: '',
+          email: '',
+          message: ''
+        });
       } else {
         setStatus('Error sending message');
       }

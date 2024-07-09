@@ -1,6 +1,6 @@
-// SideNavbar.js
+
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { MdArrowBack } from "react-icons/md";
 import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";

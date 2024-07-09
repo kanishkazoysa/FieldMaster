@@ -6,10 +6,12 @@ import logo from "../../../images/logo.png"
 import GetStarted from "../../GetStarted"; 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from 'react-router-dom';
 
 
 function NavBar() {
   const [openMenu, setOpenMenu] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setOpenMenu(!openMenu);
@@ -18,7 +20,6 @@ function NavBar() {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-
   return (
     <>
       <MobileNav isOpen={openMenu} toggleMenu={toggleMenu} />
