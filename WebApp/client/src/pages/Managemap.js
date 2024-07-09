@@ -11,17 +11,20 @@ import { styles, containerStyle } from "./ManagemapStyles";
 import AxiosInstance from "../AxiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
 import { FiMapPin, FiGrid, FiEdit, FiX, FiSave, FiTag,FiTrash2 } from "react-icons/fi";
+import { FaArrowPointer } from "react-icons/fa6";
 import { PiPlantLight } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
 import { GrUndo } from "react-icons/gr";
 import { message, Button, Modal, Input } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { TbTopologyComplex } from "react-icons/tb";
+import { PiSelectionForeground } from "react-icons/pi";
 import { GrCompliance } from "react-icons/gr";
 import PlantationSetupModal from "./PlantationSetupModal";
 import { TbFence } from "react-icons/tb";
 import FenceSetupModal from "./FenceSetupModal";
 import ClearLandSetupModal from './ClearLandSetupModal ';
+import TemplateDataModal from "./TemplateDataModal ";
 
 const { confirm } = Modal;
 
@@ -55,7 +58,72 @@ const Managemap = () => {
   const [clearLandSetupModalVisible, setClearLandSetupModalVisible] = useState(false);
   const [clearLandSetupData, setClearLandSetupData] = useState({});
   const [drawingMode, setDrawingMode] = useState(null);
+  const [multiSelectMode, setMultiSelectMode] = useState(false);
+  const [multiSelectedPolygons, setMultiSelectedPolygons] = useState([]);
+  const [templateData, setTemplateData] = useState(null);
+  const [templateDataModalVisible, setTemplateDataModalVisible] = useState(false);
 
+
+  const deleteSelectedPolygons = async () => {
+    if (multiSelectedPolygons.length > 0) {
+      const updatedPolygons = partitionPolygons.filter(
+        (_, index) => !multiSelectedPolygons.includes(index)
+      );
+  
+      confirm({
+        title: "Are you sure?",
+        content: `Do you want to delete ${multiSelectedPolygons.length} selected partition${multiSelectedPolygons.length > 1 ? 's' : ''}?`,
+        icon: <ExclamationCircleOutlined />,
+        okText: "Yes",
+        okType: "primary",
+        cancelText: "No",
+        async onOk() {
+          try {
+            await AxiosInstance.put(
+              `/api/auth/mapTemplate/savePartitionPoints/${templateId}`,
+              {
+                partitionPolygons: updatedPolygons,
+              }
+            );
+            setPartitionPolygons(updatedPolygons);
+            setMultiSelectedPolygons([]);
+            setMultiSelectMode(false);
+            message.success(`${multiSelectedPolygons.length} partition${multiSelectedPolygons.length > 1 ? 's' : ''} deleted successfully!`);
+            window.location.reload();
+          } catch (error) {
+            console.error("Error deleting partition polygons:", error);
+            message.error("Failed to delete partition polygons.");
+          }
+        },
+        onCancel() {
+          console.log("Cancelled");
+        },
+      });
+    } else {
+      message.warning("No polygons selected for deletion.");
+    }
+  };
+
+  const toggleMultiSelectMode = () => {
+    setDrawingMode(null);
+    setMultiSelectMode(!multiSelectMode);
+    if (multiSelectMode) {
+      // Clear selections when exiting multi-select mode
+      setMultiSelectedPolygons([]);
+    }
+  };
+
+  const handleMultiSelect = (index) => {
+    if (multiSelectMode) {
+      setMultiSelectedPolygons(prevSelected => {
+        if (prevSelected.includes(index)) {
+          return prevSelected.filter(i => i !== index);
+        } else {
+          return [...prevSelected, index];
+        }
+      });
+    }
+  };
 
   const handleClearLandSetup = () => {
     if (selectedPolygonIndex !== null) {
@@ -829,11 +897,13 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
           `/api/auth/mapTemplate/getOneTemplate/${templateId}`
         );
         console.log("Fetched template data:", response.data);
+        const fetchedTemplateData = response.data;
         const fetchedPoints = response.data.locationPoints;
         const fetchedPartitionPolygons = response.data.partitionPolygons || [];
         setPoints(fetchedPoints);
         setPartitionPolygons(fetchedPartitionPolygons);
-  
+        setTemplateData(fetchedTemplateData);
+
         // Set plantation setup data
         const fetchedPlantationSetupData = {};
         // Set fence setup data
@@ -930,16 +1000,16 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
                   lng: point.longitude,
                 }))}
                 options={{
-                  strokeColor: selectedPolygonIndex === index ? "#FF0000" : "#0000FF",
+                  strokeColor: (multiSelectMode && multiSelectedPolygons.includes(index)) || (!multiSelectMode && selectedPolygonIndex === index) ? "#FF0000" : "#0000FF",
                   strokeOpacity: 1.0,
                   strokeWeight: 2,
-                  fillColor: selectedPolygonIndex === index ? "rgba(255, 0, 0, 0.2)" : "rgba(0, 0, 255, 0.2)",
+                  fillColor: (multiSelectMode && multiSelectedPolygons.includes(index)) || (!multiSelectMode && selectedPolygonIndex === index) ? "rgba(255, 0, 0, 0.2)" : "rgba(0, 0, 255, 0.2)",
                   fillOpacity: 0.4,
                   zIndex: 2,
                   editable: editingPolygonIndex === index,
                   clickable: true,
                 }}
-                onClick={() => handlePolygonClick(index)}
+                onClick={() => multiSelectMode ? handleMultiSelect(index) : handlePolygonClick(index)}
                 onMouseUp={() => handlePolygonEdit(index)}
                 onLoad={(polygon) => {
                   polygonRefs.current[index] = polygon;
@@ -1000,6 +1070,13 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
             <p style={styles.toolTitle}>Tools</p>
             <hr style={styles.toolHr}></hr>
             <Button
+  onClick={() => setTemplateDataModalVisible(true)}
+  icon={<FiGrid />}
+  style={styles.toolButton}
+>
+  Template Data
+</Button>
+            <Button
               onClick={toggleDrawingMode}
               icon={<FiGrid />}
               style={styles.toolButton}
@@ -1009,10 +1086,10 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
 
             <Button
               onClick={toggleSelectionMode}
-              icon={<FiSave />}
+              icon={<FaArrowPointer />}
               style={styles.toolButton}
             >
-              Select
+              Select polygon
             </Button>
             <Button
               onClick={savePartitionPoints}
@@ -1021,6 +1098,29 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
             >
               Save Partition
             </Button>
+
+            <Button
+  onClick={toggleMultiSelectMode}
+  icon={<PiSelectionForeground />}
+  style={{
+    ...styles.toolButton,
+    backgroundColor: multiSelectMode ? "#4CAF50" : undefined,
+    color: multiSelectMode ? "white" : undefined,
+  }}
+>
+  {multiSelectMode ? "Exit Multi-Select" : "Select Multiple"}
+</Button>
+
+{multiSelectMode && (
+  <Button
+    onClick={deleteSelectedPolygons}
+    icon={<MdDeleteForever />}
+    style={styles.toolButton}
+    disabled={multiSelectedPolygons.length === 0}
+  >
+    <span style={{ fontSize: "10px" }}>Delete Selected ({multiSelectedPolygons.length})</span>
+  </Button>
+)}
             {selectedPolygonIndex !== null && (
               <>
                 <Button
@@ -1227,6 +1327,12 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
   perimeter={selectedPolygonData?.perimeter}
   onSave={handleClearLandSetupSave}
   existingData={clearLandSetupData[selectedPolygonIndex]}
+/>
+
+<TemplateDataModal
+  visible={templateDataModalVisible}
+  onClose={() => setTemplateDataModalVisible(false)}
+  data={templateData}
 />
         </GoogleMap>
       </LoadScript>
