@@ -36,13 +36,15 @@ export default function Plantation({
   const [editMode,setEditMode]=useState(false);
   
   useEffect(() => {
+    fetchPlants();
+
     if (plantationdata) {
       setEditMode(true);
-      setTextPlant({ value: plantationdata.textPlant, label: plantationdata.textPlant });
-      settextplantspace(plantationdata.textplantspace);
-      setPlantSpaceUnitselectedValue(plantationdata.PlantSpaceUnitselectedValue);
-      settextRowspace(plantationdata.textRowspace);
-      setRowSpaceUnitselectedValue(plantationdata.RowSpaceUnitselectedValue);
+      setTextPlant( {value:plantationdata.PlnatType,label:plantationdata.PlnatType} );
+      settextplantspace(plantationdata.plantspace);
+      setPlantSpaceUnitselectedValue(plantationdata.Unit);
+      settextRowspace(plantationdata.rowSpace);
+      setRowSpaceUnitselectedValue(plantationdata.Unit);
     }
   }, [plantationdata]);
 
