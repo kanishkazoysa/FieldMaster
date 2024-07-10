@@ -1,4 +1,4 @@
-export const effortOutputManualPrint = (perimeter,area,laborCount,workHours,displayValues2) => `
+export const effortOutputManualPrint = (perimeter,area,laborCount,workHours,effort) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,7 +75,7 @@ export const effortOutputManualPrint = (perimeter,area,laborCount,workHours,disp
         <h2>Clear land Details</h2>
 
         <ul>
-        <li> Total Effort Count= </li>
+        <li> Total Effort Count= ${effort}</li>
         
         <li> Number of labours = ${laborCount} </li>
         <li> Work hours per day = ${workHours} </li>
