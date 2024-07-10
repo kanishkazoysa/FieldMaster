@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,useEffect } from "react";
 import {
   Text,
   View,
@@ -32,6 +32,24 @@ export default function FenceFromManualCal({route}) {
   const [fenceAmountsArray, setFenceAmountsArray] = useState([]);
   const [displayValues, setDisplayValues] = useState([]);
   let inputValueFenceAmountRef = useRef(null);
+  const [fenceType, setFenceType] = useState([]);
+
+
+  useEffect(() => {
+    fetchPlants();
+  }, []);
+
+  const fetchPlants = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/FenceTypes"
+      );
+      setFenceType(response.data);
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+      Alert.alert("Error", "Failed to fetch plants. Please try again.");
+    }
+  };
 
   const handleInputPostspaceChange = (text) => {
     setinputValuePostspace(text);
@@ -266,7 +284,10 @@ export default function FenceFromManualCal({route}) {
               <View style={styles.Box2DropdownContainer}>
                 <RNPickerSelect
                   placeholder={placeholderFenceType}
-                  items={fenceTypeOptions}
+                  items={fenceType.map((Fence) => ({
+                    label: Fence.Name,
+                    value: Fence.Name,
+                  }))}                  
                   onValueChange={(value) => setFenceTypeSelectedValue(value)}
                   value={FenceTypeselectedValue}
                   style={{
