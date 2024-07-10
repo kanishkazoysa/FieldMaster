@@ -473,7 +473,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
           {/* sixth box */}
           <div style={styles.box5}>
-            <div style={{ ...styles.box5leftcontainer, width: "65%" }}>
+            <div style={{ ...styles.box5leftcontainer, width: "80%" }}>
               <PiClock color="gray" size={20} />
               <div style={styles.box2PropertyDetails}>
                 <p style={styles.Box2PropertyLabel}>Work hours : </p>
@@ -484,8 +484,8 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                 type="text"
                 style={{
                   ...styles.box3input,
-                  width: "100%",
-                  marginLeft: "-30px",
+                  width: "150%",
+                  marginLeft: "-65px",
                 }}
                 placeholder="Enter hours per day"
                 value={workHours}
