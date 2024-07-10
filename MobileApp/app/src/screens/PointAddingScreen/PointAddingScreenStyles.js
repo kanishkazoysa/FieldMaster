@@ -9,14 +9,28 @@ import {
 export const styles = StyleSheet.create({
   loadingScreen: {
     flex: 1,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  loadingText: {
+    color: '#fff',
+    marginTop: 10,
   },
   dotsWrapper: {
     width: 100,
   },
-  
+
   testingText: {
     color: 'red',
   },
@@ -104,8 +118,8 @@ export const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   locationFocusBtn: {
-    position: "absolute",
-    backgroundColor: "rgba(0,0,0, 0.7)",
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0, 0.7)',
     padding: responsiveHeight(1.2),
     borderRadius: 5,
     top: responsiveHeight(17),
@@ -119,15 +133,15 @@ export const styles = StyleSheet.create({
     zIndex: 1,
   },
   layerIconContainer: {
-    position: "absolute",
-    backgroundColor: "rgba(0,0,0, 0.7)",
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0, 0.7)',
     padding: responsiveHeight(1.2),
     borderRadius: 5,
     right: responsiveWidth(3),
     top: responsiveHeight(24),
     zIndex: 1,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   searchbar: {
     width: '100%',
@@ -148,9 +162,9 @@ export const styles = StyleSheet.create({
     marginLeft: responsiveWidth(2),
   },
   locationIconContainer: {
-   position: "absolute",
+    position: 'absolute',
     left: responsiveWidth(11),
-    top: "50%",
+    top: '50%',
     transform: [{ translateY: responsiveHeight(-1.4) }], // Adjust translateY to vertically center the icon
     zIndex: 1,
   },
