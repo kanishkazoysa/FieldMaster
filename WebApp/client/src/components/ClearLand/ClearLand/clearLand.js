@@ -487,7 +487,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                   width: "100%",
                   marginLeft: "-30px",
                 }}
-                placeholder="Enter no of hours"
+                placeholder="Enter hours per day"
                 value={workHours}
                 onChange={handleWorkHourChange}
               />

@@ -9,6 +9,7 @@ const handleAlert = () => {
       <p><strong>Select to calculate effort for breaking large stones</strong></p>
       <p><strong>Small:</strong>0.5m³ stone. Enter stone count as well.</p>
       <p><strong>Large</strong>1m³ stone. Enter stone count as well.</p>
+      <p><strong>Note : If you only want to break stones in your land choose only "Stones" options.</strong></p>
       
     </div>,
     {
