@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect ,useCallback} from "react";
 import {
   GoogleMap,
   LoadScript,
@@ -39,7 +39,7 @@ const Managemap = () => {
   const drawingManagerRef = useRef(null);
   const polygonRefs = useRef([]);
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
-  const [mapTypeId, setMapTypeId] = useState("roadmap");
+  const [mapTypeId, setMapTypeId] = useState("satellite");
   const [toolButtonHovered, setToolButtonHovered] = useState(null);
   const [labelText, setLabelText] = useState("");
   const [showLabelInput, setShowLabelInput] = useState(false);
@@ -629,7 +629,7 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
     <div style={styles.modalContent}>
       {modalContent}
       <div style={styles.section}>
-        <h4 style={styles.heading}>Clear Land Data:</h4>
+       
         
         {/* Weed Data */}
         
@@ -637,6 +637,7 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
           <div>
            {clearLandData.weedData.weedType && (
   <>
+   <h4 style={styles.heading}>Clear Land Data:</h4>
     <h6 style={{ marginTop: "0.2em" }}>Weed Data:</h6>
     <p style={styles.paragraph}>
       Weed Type: <span style={styles.highlight}>{clearLandData.weedData.weedType}</span>
@@ -953,11 +954,45 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
     navigate("/home");
   };
 
+  const mapOptions = useCallback(() => {
+    if (!window.google || typeof window.google === "undefined") return {};
+  
+    return {
+      minZoom: 2,
+      maxZoom: 40,
+      mapTypeId: window.google.maps.MapTypeId.SATELLITE, // Add this line
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+      mapTypeControl: true,
+      mapTypeControlOptions: {
+        style: window.google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+        position: window.google.maps.ControlPosition.LEFT_BOTTOM,
+      },
+      fullscreenControl: false,
+      fullscreenControlOptions: {
+        position: window.google.maps.ControlPosition.BOTTOM_LEFT,
+      },
+      zoomControl: true,
+      zoomControlOptions: {
+        position: window.google.maps.ControlPosition.LEFT_BOTTOM,
+      },
+      streetViewControl: true,
+      streetViewControlOptions: {
+        position: window.google.maps.ControlPosition.RIGHT_BOTTOM,
+      },
+    };
+  }, []);
+
   return (
     <div style={styles.container}>
-      <div style={styles.sidebar}>
-        <SideNavbar />
-      </div>
+    
 
       <LoadScript
         googleMapsApiKey={process.env.REACT_APP_GOOGLE_CLOUD_API_KEY}
@@ -967,13 +1002,7 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
           mapContainerStyle={containerStyle}
           center={center}
           zoom={20}
-          mapTypeId={mapTypeId}
-          options={{
-            //mapTypeControl: false,
-            streetViewControl: false,
-            fullscreenControl: false,
-            gestureHandling: "greedy",
-          }}
+          options={mapOptions()}
           onClick={handleMapClick}
         >
           {points.length > 1 && (
@@ -1050,6 +1079,8 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
                 drawingControl: true,
                 drawingControlOptions: {
                   position: window.google.maps.ControlPosition.TOP_CENTER,
+                  drawingModes: [window.google.maps.drawing.OverlayType.POLYGON],
+
                 },
                 polygonOptions: {
                   fillColor: "#0000FF",
