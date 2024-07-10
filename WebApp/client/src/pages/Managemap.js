@@ -636,7 +636,7 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
     <div style={styles.modalContent}>
       {modalContent}
       <div style={styles.section}>
-        <h4 style={styles.heading}>Clear Land Data:</h4>
+       
         
         {/* Weed Data */}
         
@@ -644,6 +644,7 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
           <div>
            {clearLandData.weedData.weedType && (
   <>
+   <h4 style={styles.heading}>Clear Land Data:</h4>
     <h6 style={{ marginTop: "0.2em" }}>Weed Data:</h6>
     <p style={styles.paragraph}>
       Weed Type: <span style={styles.highlight}>{clearLandData.weedData.weedType}</span>
@@ -998,9 +999,7 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
 
   return (
     <div style={styles.container}>
-      <div style={styles.sidebar}>
-        <SideNavbar />
-      </div>
+    
 
       <LoadScript
         googleMapsApiKey={process.env.REACT_APP_GOOGLE_CLOUD_API_KEY}
