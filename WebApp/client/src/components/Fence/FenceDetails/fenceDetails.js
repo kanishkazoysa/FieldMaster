@@ -90,42 +90,44 @@ export default function FenceDetails({
       onCancel: () => {},
       maskClosable: true,
       closable: true,
+      footer: (_, { OkBtn, CancelBtn }) => (
+        <>
+          <CancelBtn />
+          <Button 
+            onClick={() => {
+              Modal.destroyAll(); // This closes all open modals
+              handledeletefence();
+            }} 
+            danger
+          >
+            Delete
+          </Button>
+          <OkBtn />
+        </>
+      ),
     });
   };
 
-  const handledeletefence = (e) => {
-    confirm({
-      title: 'Are you sure?',
-      content: 'Do you want to delete Fence data?',
-      icon: <ExclamationCircleOutlined />,
-      okText: 'Yes',
-      okType: 'primary',
-      cancelText: 'No',
-      onOk() {
-        try {
-          FenceDelete(id)
-            .then(() => {
-              // Navigate to the desired screen
-              setCurrentPage('Fence');
-              setAnimatePage(true);
-              e.preventDefault();
-            })
-            .catch((error) => {
-              // Show detailed error message
-              const errorMessage = error.response ? error.response.data.message : error.message;
-              Modal.error({
-                title: 'Failed to delete fence',
-                content: errorMessage,
-              });
-            });
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      },
-      onCancel() {
-        console.log('Cancelled');
-      },
-    });
+  const handledeletefence = () => {
+    try {
+      FenceDelete(id)
+        .then(() => {
+          // Navigate to the desired screen
+          setCurrentPage('Fence');
+          setAnimatePage(true);
+          setfencedata(null);
+        })
+        .catch((error) => {
+          // Show detailed error message
+          const errorMessage = error.response ? error.response.data.message : error.message;
+          Modal.error({
+            title: 'Failed to delete fence',
+            content: errorMessage,
+          });
+        });
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const handleEditfencedata = () => {
