@@ -29,6 +29,7 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
   const [perimeter, setPerimeter] = useState(calculatedData.perimeter);
   const [location, setLocation] = useState(calculatedData.location);
   const [screenshot, setScreenshot] = useState(calculatedData.screenshot);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     setArea(calculatedData.area);
@@ -38,6 +39,26 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
     }
     setScreenshot(calculatedData.screenshot);
   }, [calculatedData]);
+
+  useEffect(() => {
+    const isValid =
+      templateName.trim() !== "" &&
+      measureName.trim() !== "" &&
+      landType !== "" &&
+      description.trim() !== "" &&
+      area.trim() !== "" &&
+      perimeter.trim() !== "" &&
+      location.trim() !== "";
+    setIsFormValid(isValid);
+  }, [
+    templateName,
+    measureName,
+    landType,
+    description,
+    area,
+    perimeter,
+    location,
+  ]);
 
   const handleSave = () => {
     onSave({
@@ -80,7 +101,12 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
         <Button key="cancel" onClick={onClose}>
           Cancel
         </Button>,
-        <Button key="save" type="primary" onClick={handleSave}>
+        <Button
+          key="save"
+          type="primary"
+          onClick={handleSave}
+          disabled={!isFormValid}
+        >
           Save
         </Button>,
       ]}
@@ -148,20 +174,6 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
           style={{ ...inputStyle, height: "auto" }}
         />
       </div>
-      {/*  {screenshot && (
-        <div style={{ marginTop: '20px' }}>
-          <label
-            style={{ ...labelStyle, display: 'block', marginBottom: '10px' }}
-          >
-            Map Screenshot:
-          </label>
-          <img
-            src={screenshot}
-            alt='Map Screenshot'
-            style={{ width: '100%', maxHeight: '300px', objectFit: 'contain' }}
-          />
-        </div>
-      )} */}
     </Modal>
   );
 };
@@ -790,7 +802,7 @@ export default function PointAddingWeb() {
               icon={{
                 path: window.google.maps.SymbolPath.CIRCLE,
                 scale: 7,
-                fillColor: "#FFFFFF",
+                fillColor: "#ff6a6a",
                 fillOpacity: 1,
                 strokeWeight: 2,
                 strokeColor: "#000000",
