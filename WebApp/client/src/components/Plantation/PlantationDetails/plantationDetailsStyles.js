@@ -51,6 +51,11 @@ export const styles = {
       padding: "6px",
     },
     editorbutton: {
+      marginRight: "-32px",
+      cursor: "pointer",
+      color: "white",
+    },
+    editorbuttondelete: {
       marginRight: "12px",
       cursor: "pointer",
       color: "white",
@@ -117,7 +122,7 @@ export const styles = {
   
     Box2: {
       width: "90%",
-      height: "68px",
+      height: "69px",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",

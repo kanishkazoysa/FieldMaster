@@ -17,6 +17,7 @@ export default function Plantation({
   area,
   onEditTemplateClick,
   template,
+  plantationdata,
 }) {
   const [PlantSpaceUnitselectedValue, setPlantSpaceUnitselectedValue] =
     useState("");
@@ -32,10 +33,18 @@ export default function Plantation({
   const [animatePage, setAnimatePage] = useState(false);
   const [plants, setPlants] = useState([]);
   const [textPlant, setTextPlant] = useState(null);
-
+  const [editMode,setEditMode]=useState(false);
+  
   useEffect(() => {
-    fetchPlants();
-  }, []);
+    if (plantationdata) {
+      setEditMode(true);
+      setTextPlant({ value: plantationdata.textPlant, label: plantationdata.textPlant });
+      settextplantspace(plantationdata.textplantspace);
+      setPlantSpaceUnitselectedValue(plantationdata.PlantSpaceUnitselectedValue);
+      settextRowspace(plantationdata.textRowspace);
+      setRowSpaceUnitselectedValue(plantationdata.RowSpaceUnitselectedValue);
+    }
+  }, [plantationdata]);
 
   const fetchPlants = async () => {
     try {
@@ -58,7 +67,7 @@ export default function Plantation({
   };
 
   const backtotemp = () => {
-    setCurrentPage("TemplateDetails"); // Update this line
+    setCurrentPage("TemplateDetails"); 
     setAnimatePage(true);
   };
   const handlePlantSpaceUnitChange = (selectedOption) => {
@@ -107,33 +116,31 @@ export default function Plantation({
       return;
     }
 
-    AxiosInstance.post("/api/plantation/plantation", {
-      id,
-      area,
-      textPlant: textPlant ? textPlant.value : null,
-      textplantspace: plantSpaceInMeters,
-      textRowspace: rowSpaceInMeters,
-      PlantSpaceUnitselectedValue: "m", // Send 'm' as the unit
-      //RowSpaceUnitselectedValue,
-    })
-      .then((response) => {
-        // If backend response is successful, navigate to detail page
-        setCurrentPage("plantationDetails");
-        setAnimatePage(true);
-        e.preventDefault();
-        console.log("Response:", response.data);
-      })
-      .catch((error) => {
-        console.error(
-          "Error:",
-          error.response ? error.response.data : error.message
-        );
-        message.error(
-          "Error",
-          "Failed to create plantation. Please try again."
-        );
-        alert("Error", "Failed to create plantation. Please try again.");
+    try {
+      const method = editMode ? 'put' : 'post';
+      const url = editMode ? `/api/plantation/plantation/${id}` : '/api/plantation/plantation';
+  
+      const response = await AxiosInstance[method](url, {
+        id,
+        area,
+        textPlant: textPlant ? textPlant.value : null,
+        textplantspace: plantSpaceInMeters,
+        textRowspace: rowSpaceInMeters,
+        PlantSpaceUnitselectedValue: "m", // Send 'm' as the unit
       });
+
+      console.log("Response:", response.data);
+      setCurrentPage("plantationDetails");
+      setAnimatePage(true);
+    } catch (error) {
+      console.error(
+        "Error:",
+        error.response ? error.response.data : error.message
+      );
+      message.error(
+        `Failed to ${editMode ? 'update' : 'create'} plantation. Please try again.`
+      );
+    }
   };
 
   const handleBackClick = () => {

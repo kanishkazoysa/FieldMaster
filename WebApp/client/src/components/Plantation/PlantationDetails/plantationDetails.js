@@ -13,7 +13,7 @@ import { RxRowSpacing } from "react-icons/rx";
 import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
 import AxiosInstance from "../../../AxiosInstance";
 import Plantation from "../PlantationPage/plantation";
- 
+import { RiEditBoxLine } from "react-icons/ri"; 
 import { BeatLoader } from 'react-spinners';
 import TemplateDetails from "../../SavedTemplates/TemplateDetails"
 import { ExclamationCircleOutlined } from '@ant-design/icons';
@@ -36,7 +36,7 @@ export default function PlantationDetails({
     useState("");
   const [RowSpaceUnitselectedValue, setRowSpaceUnitselectedValue] =
     useState("");
-  
+  const [plantationdata,setplantationdata]=useState(null);
 
   const [textplantspace, settextplantspace] = useState("");
   const [textRowspace, settextRowspace] = useState("");
@@ -66,6 +66,7 @@ export default function PlantationDetails({
       try {
         const response = await AxiosInstance.get(`/api/plantation/numberOfPlants/${id}`);
         const data = response.data;
+        setplantationdata(data);
         setnumberOfPlants(data.numberOfPlants);
         setPlantDensity(data.PlantDensity);
         setArea(data.area);
@@ -110,6 +111,8 @@ export default function PlantationDetails({
       okText: 'Yes',
       okType: 'primary',
       cancelText: 'No',
+      maskClosable:true,
+      closable:true,
       onOk() {
         try {
           PlantationDelete(id)
@@ -136,13 +139,34 @@ export default function PlantationDetails({
       },
     });
   };
+
+  const handleeditIconPress = (e) => {
+    confirm({
+      title: 'Are you sure ?',
+      content: 'Do you want to update plantation data?',
+      okText: 'Update',
+      okType: 'primary',
+      cancelText: 'No',
+      onOk:handleEditPlantationdata,
+      onCancel() {
+        console.log('Cancelled');
+      },
+      maskClosable:true,
+      closable:true,
+    });
+  };
+const handleEditPlantationdata=()=>{
+  setCurrentPage("Plantation");
+    setAnimatePage(true);
+  
+};
   const handleback = () => {
     setCurrentPage("TemplateDetails");
     setAnimatePage(true);
   };
   const handleSave = () => {
     const htmlContent = getPlantationDetailsHtml(
-      PlantDensity,numberOfPlants,textPlant,textRowspace,textplantspace,perimeter,area);
+    PlantDensity,numberOfPlants,textPlant,textRowspace,textplantspace,perimeter,area);
     const newWindow = window.open();
     newWindow.document.write(htmlContent);
     newWindow.document.close();
@@ -164,9 +188,14 @@ export default function PlantationDetails({
           fontSize={20}
         />
         <p style={styles.titleText1}>Plantation Details</p>
+        <RiEditBoxLine
+                onClick={handleeditIconPress}
+                style={styles.editorbutton}
+                fontSize={19}
+              />
         <FiTrash2
                 onClick={handleIconPress}
-                style={styles.editorbutton}
+                style={styles.editorbuttondelete}
                 fontSize={19}
               />
       </div>
@@ -312,6 +341,7 @@ export default function PlantationDetails({
             Perimeter={perimeter}
             onEditTemplateClick={onEditTemplateClick}
             template={template}
+            plantationdata={plantationdata}
           />
         )}
   
@@ -321,6 +351,7 @@ export default function PlantationDetails({
             id={id}
             onEditTemplateClick={onEditTemplateClick}
             template={template}
+            plantationdata={plantationdata}
           />
         )}
       </div>
