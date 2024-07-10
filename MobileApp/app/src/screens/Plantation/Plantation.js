@@ -120,7 +120,7 @@ export default function Plantation({ route }) {
         plantType: selectedPlantType.value,
         textplantspace: plantSpaceInMeters,
         textRowspace: rowSpaceInMeters,
-        PlantSpaceUnitselectedValue: "m", // Send 'm' as the unit
+        PlantSpaceUnitselectedValue: "m", 
         id,
         area,
       });
