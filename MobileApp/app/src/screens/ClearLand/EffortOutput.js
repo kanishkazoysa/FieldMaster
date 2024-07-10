@@ -143,7 +143,7 @@ export default function EffortOutput({ route }) {
   };
 
   //Generate pdf
-  const html = effortOutputPrint(Perimeter, Area, laborCount, workHours);
+  const html = effortOutputPrint(Perimeter, Area, laborCount, workHours,effortOutput,weedEffort,plantEffort,stoneEffort);
 
   // Print
   const [selectedPrinter, setSelectedPrinter] = React.useState();

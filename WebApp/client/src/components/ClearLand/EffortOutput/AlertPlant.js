@@ -9,7 +9,8 @@ const handleAlert = () => {
       <p><strong>Select to calculate effort for cutting trees</strong></p>
       <p><strong>Low:</strong>Tree with 0.5m average circumference. Enter tree count as well.</p>
       <p><strong>Medium</strong>Tree with 1m average circumference. Enter tree count as well.</p>
-      <p><strong>Hign</strong>Tree with 2m average circumference. Enter tree count as well.</p>
+      <p><strong>High</strong>Tree with 2m average circumference. Enter tree count as well.</p>
+      <p><strong>Note : If you only want to cut trees in your land choose only "Plants" options.</strong></p>
       
     </div>,
     {

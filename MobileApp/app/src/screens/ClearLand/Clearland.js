@@ -63,12 +63,6 @@ export default function ClearLand({ route }) {
     setMachineCount(text);
   };
 
-  // const handleEffortOutput = () => {
-  //   navigation.navigate("EffortOutput",{
-  //     id:id,
-  //   });
-  // };
-
   const placeholder1 = {
     label: "Select Type",
     value: null,
@@ -525,7 +519,7 @@ export default function ClearLand({ route }) {
                     paddingHorizontal: 8,
                   }}
                   keyboardType="numeric"
-                  placeholder="Enter count of hours"
+                  placeholder="Enter hours per day"
                   mode="flat"
                   onChangeText={handleWorkHourChange}
                   value={workHours}
