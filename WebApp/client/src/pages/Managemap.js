@@ -14,6 +14,8 @@ import { FiMapPin, FiGrid, FiEdit, FiX, FiSave, FiTag,FiTrash2 } from "react-ico
 import { FaArrowPointer } from "react-icons/fa6";
 import { PiPlantLight } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
+import { BsClipboardData } from "react-icons/bs";
+
 import { GrUndo } from "react-icons/gr";
 import { message, Button, Modal, Input } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
@@ -62,6 +64,12 @@ const Managemap = () => {
   const [templateData, setTemplateData] = useState(null);
   const [templateDataModalVisible, setTemplateDataModalVisible] = useState(false);
 
+
+  const handleMapClick = () => {
+    if (selectedPolygonIndex !== null) {
+      setSelectedPolygonIndex(null);
+    }
+  };
 
   const deleteSelectedPolygons = async () => {
     if (multiSelectedPolygons.length > 0) {
@@ -973,6 +981,7 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
             fullscreenControl: false,
             gestureHandling: "greedy",
           }}
+          onClick={handleMapClick}
         >
           {points.length > 1 && (
             <Polygon
@@ -999,10 +1008,10 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
                   lng: point.longitude,
                 }))}
                 options={{
-                  strokeColor: (multiSelectMode && multiSelectedPolygons.includes(index)) || (!multiSelectMode && selectedPolygonIndex === index) ? "#FF0000" : "#0000FF",
+                  strokeColor: (multiSelectMode && multiSelectedPolygons.includes(index)) || (!multiSelectMode && selectedPolygonIndex === index) ? "#00B640" : "#0000FF",
                   strokeOpacity: 1.0,
                   strokeWeight: 2,
-                  fillColor: (multiSelectMode && multiSelectedPolygons.includes(index)) || (!multiSelectMode && selectedPolygonIndex === index) ? "rgba(255, 0, 0, 0.2)" : "rgba(0, 0, 255, 0.2)",
+                  fillColor: (multiSelectMode && multiSelectedPolygons.includes(index)) || (!multiSelectMode && selectedPolygonIndex === index) ? "rgba(0, 182, 64, 0.2)" : "rgba(0, 0, 255, 0.2)",
                   fillOpacity: 0.4,
                   zIndex: 2,
                   editable: editingPolygonIndex === index,
@@ -1065,12 +1074,12 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
 
           {/* //toolbox */}
 
-          <div style={{ ...styles.toolbox, top: "140px", right: "0" }}>
+          <div style={{ ...styles.toolbox, top: "0px", right: "0" }}>
             <p style={styles.toolTitle}>Tools</p>
             <hr style={styles.toolHr}></hr>
             <Button
   onClick={() => setTemplateDataModalVisible(true)}
-  icon={<FiGrid />}
+  icon={<BsClipboardData />}
   style={styles.toolButton}
 >
   Template Data
@@ -1098,19 +1107,21 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
               Save Partition
             </Button>
 
-            <Button
-  onClick={toggleMultiSelectMode}
-  icon={<PiSelectionForeground />}
-  style={{
-    ...styles.toolButton,
-    backgroundColor: multiSelectMode ? "#4CAF50" : undefined,
-    color: multiSelectMode ? "white" : undefined,
-  }}
->
-  {multiSelectMode ? "Exit Multi-Select" : "Select Multiple"}
-</Button>
+            {selectedPolygonIndex === null && (
+    <Button
+      onClick={toggleMultiSelectMode}
+      icon={<PiSelectionForeground />}
+      style={{
+        ...styles.toolButton,
+        backgroundColor: multiSelectMode ? "#4CAF50" : undefined,
+        color: multiSelectMode ? "white" : undefined,
+      }}
+    >
+      {multiSelectMode ? "Exit Multi-Select" : "Select Multiple"}
+    </Button>
+  )}
 
-{multiSelectMode && (
+{multiSelectMode &&  (
   <Button
     onClick={deleteSelectedPolygons}
     icon={<MdDeleteForever />}
