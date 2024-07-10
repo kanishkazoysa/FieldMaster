@@ -91,7 +91,7 @@ export const styles = {
     backgroundColor: "#fff",
     padding: "15px",
     borderRadius: "5px",
-    height: "80vh",
+    height: "100vh",
   },
   toolTitle: {
     fontSize: "16px",
