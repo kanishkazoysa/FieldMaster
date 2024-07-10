@@ -22,7 +22,23 @@ export default function PlantationFromManualCalculator({ route }) {
   const {area, perimeter } = route.params;
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   route = useRoute();
-  console.log(area, perimeter);
+  const [plants, setPlants] = useState([]);
+
+  useEffect(() => {
+    fetchPlants();
+  }, []);
+
+  const fetchPlants = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/Plants"
+      );
+      setPlants(response.data);
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+      Alert.alert("Error", "Failed to fetch plants. Please try again.");
+    }
+  };
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -46,11 +62,8 @@ export default function PlantationFromManualCalculator({ route }) {
   const [textPlant, setTextPlant] = useState("");
   const [textplantspace, setTextPlantSpace] = useState("");
   const [textRowspace, setTextRowSpace] = useState("");
-
   const navigation = useNavigation();
-
-  const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] =
-    useState(null);
+  const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] = useState(null);
   const PlantSpaceUnitPlaceholder = {
     label: "M",
     value: null,
@@ -178,23 +191,27 @@ export default function PlantationFromManualCalculator({ route }) {
 
           {/* Second section */}
 
-          <View style={styles.Box2}>
+          <View style={styles.Box2Plants}>
             <View style={styles.TopText}>
               <MaterialCommunityIcons name="sprout" size={20} color="gray" />
               <Text style={styles.Box2titleText}>Plant</Text>
             </View>
-            <TextInput
-              keyboardType="default"
-              style={styles.Box2input}
-              placeholder="Enter Name of the plant"
-              value={textPlant}
-              onChangeText={setTextPlant}
-              placeholderTextColor={"#838383"}
-              borderBottomColor="lightgray"
-              borderBottomWidth={1}
-              width={"100%"}
-              marginTop={12}
-            />
+            <View style={styles.dropdownContainerPlants}>
+              <RNPickerSelect
+                placeholder={{ label: "Select a plant", value: null }}
+                items={plants.map((plant) => ({
+                  label: plant.Name,
+                  value: plant.Name,
+                }))}
+                onValueChange={(value) => setTextPlant(value)}
+                value={textPlant}
+                style={{
+                  inputAndroid: {
+                    textAlign: "center",
+                  },
+                }}
+              />
+            </View>
           </View>
 
           {/* Third section */}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StatusBar } from 'react-native';
+import { Text, View, StatusBar, Image } from 'react-native';
 import { Appbar, TextInput } from 'react-native-paper';
 import { styles } from './SaveScreenStyles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -7,9 +7,7 @@ import { ScrollView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { errorUtils } from '../../../common.app';
 import AxiosInstance from '../../../AxiosInstance';
-import {
-  responsiveFontSize,
-} from 'react-native-responsive-dimensions';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
 
 const CustomPerimeterIcon = (props) => (
   <MaterialCommunityIcons
@@ -28,22 +26,62 @@ const CustomAreaIcon = (props) => (
   />
 );
 
+const reverseGeocode = async (latitude, longitude) => {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
+    );
+    const data = await response.json();
+    if (data.address) {
+      const city =
+        data.address.city || data.address.town || data.address.village;
+      const country = data.address.country;
+      return `${city}, ${country}`;
+    }
+    return 'Location not found';
+  } catch (error) {
+    console.error('Error during reverse geocoding:', error);
+    return 'Error getting location';
+  }
+};
+
+const truncateLocation = (location, maxLength = 25) => {
+  if (location.length <= maxLength) return location;
+  const [city, country] = location.split(', ');
+  const truncatedCountry =
+    country.slice(0, maxLength - city.length - 5) + '...';
+  return `${city}, ${truncatedCountry}`;
+};
 export function SaveScreen({ navigation, route }) {
   const {
     area: initialArea,
     perimeter: initialPerimeter,
     locationPoints,
+    imageUrl,
   } = route.params;
   const [perimeter, setPerimeter] = React.useState(
     parseFloat(initialPerimeter).toFixed(2)
   );
   const [area, setArea] = React.useState(parseFloat(initialArea).toFixed(2));
-  // rest of the code
-  const [templateName, setTemplateName] = React.useState('');
-  const [measureName, setMeasureName] = React.useState('');
-  const [landType, setLandType] = React.useState('');
+  const [templateName, setTemplateName] = React.useState('test');
+  const [measureName, setMeasureName] = React.useState('test');
+  const [landType, setLandType] = React.useState('test');
   const [location, setLocation] = React.useState('');
-  const [descriptionText, setDescriptionText] = React.useState('');
+  const [descriptionText, setDescriptionText] = React.useState('test');
+
+  React.useEffect(() => {
+    const getLocation = async () => {
+      if (locationPoints && locationPoints.length > 0) {
+        const [firstPoint] = locationPoints;
+        const locationName = await reverseGeocode(
+          firstPoint.latitude,
+          firstPoint.longitude
+        );
+        setLocation(truncateLocation(locationName));
+      }
+    };
+    getLocation();
+  }, [locationPoints]);
 
   /* this function is used to save the data */
   const onSaveButtonPress = () => {
@@ -57,6 +95,7 @@ export function SaveScreen({ navigation, route }) {
       location: location,
       description: descriptionText,
       locationPoints: locationPoints,
+      imageUrl: imageUrl,
     };
     console.log(dataItem);
 
@@ -75,15 +114,15 @@ export function SaveScreen({ navigation, route }) {
       <StatusBar barStyle={'light-content'} backgroundColor={'#007BFF'} />
       <Appbar.Header style={styles.top_Bar_Whole} statusBarHeight={0}>
         <View style={styles.top_Bar_View}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <View>
-            <Text style={styles.top_Text_Styling}>Cancel</Text>
-          </View>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <View>
+              <Text style={styles.top_Text_Styling}>Cancel</Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={onSaveButtonPress}>
             <View>
               <Text style={styles.top_Text_Styling}>Save</Text>
@@ -141,15 +180,15 @@ export function SaveScreen({ navigation, route }) {
                 />
               </View>
               <View style={styles.input_view}>
-                <Text style={styles.bold_text}>Location             :</Text>
+                <Text style={styles.bold_text}>Location :</Text>
                 <TextInput
                   style={styles.input_text}
                   value={location}
-                  onChangeText={(text) => setLocation(text)}
+                  onChangeText={(text) => setLocation(truncateLocation(text))}
                 />
               </View>
               <View style={styles.input_view}>
-                <Text style={styles.bold_text}>Land Type          :</Text>
+                <Text style={styles.bold_text}>Land Type :</Text>
                 <TextInput
                   style={styles.input_text}
                   value={landType}
@@ -157,7 +196,6 @@ export function SaveScreen({ navigation, route }) {
                 />
               </View>
             </View>
-
             <View style={styles.inner_view_03}>
               <Text style={styles.bold_text1}>Description:</Text>
 
@@ -170,6 +208,9 @@ export function SaveScreen({ navigation, route }) {
                 style={styles.description_input}
                 underlineColor="transparent"
               />
+            </View>
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: imageUrl }} style={styles.base64Image} />
             </View>
           </View>
         </View>

@@ -31,6 +31,10 @@ function SideMenu() {
     const [openKeys, setOpenKeys] = useState(["/admin"]);
     const [selectedKeys, setSelectedKeys] = useState("/admin");
 
+    const handleIconPress = () => {
+        navigate("/home");
+    }
+
     useEffect(() => {
         const pathName = location.pathname;
         setSelectedKeys(pathName);
@@ -46,7 +50,7 @@ function SideMenu() {
     };
     return (
         <div className="Admin_SideMenu">
-            <img src={logo} alt="logo" className="admin_sidebar_logo" />
+            <img src={logo} alt="logo" className="admin_sidebar_logo" onClick={handleIconPress} />
             <ConfigProvider
                 theme={{
                     components: {

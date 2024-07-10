@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import ManageUsers from "./ManageUsers";
 import InputControl from "./InputControl";
 import AnalyticsSection from "./AnalyticsSection";
+import ManageMails from "./ManageMails";
 import AxiosInstance from "../../AxiosInstance";
 import { message } from "antd";
 import { BeatLoader } from "react-spinners";
@@ -39,7 +40,7 @@ function AdminRoutes() {
                         setLoading={setIsLoading}
                     />} />
                 <Route path="/users" element={<ManageUsers />} />
-                <Route path="/mails" element={<InputControl />} />
+                <Route path="/mails" element={<ManageMails />} />
                 <Route path="/inputcontrol" element={<InputControl />} />
                 <Route path="*" element={<ManageUsers />} />
 

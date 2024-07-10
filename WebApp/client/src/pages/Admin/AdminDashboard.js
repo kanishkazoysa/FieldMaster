@@ -1,11 +1,9 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import AdminRoutes from "./AdminRoutes";
 import NavBar from "./NavBar";
 import SideMenu from "./SideMenu";
 
 function AdminDashboard() {
-    const navigate = useNavigate();
 
     return (
         <>
