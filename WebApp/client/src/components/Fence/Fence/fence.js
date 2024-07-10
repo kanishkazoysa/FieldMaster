@@ -19,6 +19,7 @@ export default function Fence({
   Perimeter,
   onEditTemplateClick,
   template,
+  fencedata,
 }) {
   const [PostSpaceUnitselectedValue, setPostSpaceUnitselectedValue] = useState("");
   const [PostSpaceUnitselectedValue1, setPostSpaceUnitselectedValue1] = useState("");
@@ -33,10 +34,22 @@ export default function Fence({
   const [animatePage, setAnimatePage] = useState(false);
   const [fenceType, setfenceType] = useState([]);
   const [textFence, setTextFence] = useState(null);
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     fetchFenceType();
-  }, []);
+
+    // If fenceData is provided, we're in edit mode
+    if (fencedata) {
+      setEditMode(true);
+      setTextFence({ value: fencedata.fenceType, label: fencedata.fenceType });
+      setInputValuePostspace(fencedata.postSpace);
+      setPostSpaceUnitselectedValue(fencedata.postSpaceUnit);
+      //setPostSpaceUnitselectedValue1({ value: fencedata.postSpaceUnit, label: fenceData.postSpaceUnit });
+      setDisplayValues(fencedata.gateDetails || []);
+      // You might need to parse the gateDetails to set fenceLengthsArray and fenceAmountsArray
+    }
+  }, [fencedata]);
 
   const fetchFenceType = async () => {
     try {
@@ -47,7 +60,7 @@ export default function Fence({
       console.log(response.data);
     } catch (error) {
       console.error("Error fetching plants:", error);
-      message.error("Failed to fetch plants. Please try again.");
+      message.error("Failed to fetch Fencetype. Please try again.");
     }
   };
 
@@ -130,27 +143,33 @@ export default function Fence({
       return;
     }
 
-    AxiosInstance.post("/api/fence/fence", {
-      id,
-      FenceTypeselectedValue : textFence ? textFence.value : null,
-      inputValuePostspace,
-      PostSpaceUnitselectedValue,
-      displayValues,
-      fenceAmountsArray,
-      fenceLengthsArray,
-      Perimeter,
-    })
-      .then((response) => {
-        // If backend response is successful, navigate to detail page
-        setCurrentPage("FenceDetails"); // Update this line
-        setAnimatePage(true);
-        e.preventDefault();
-      })
-      .catch((error) => {
-        console.error("Error:", error.response.data);
-        message.error("Error", "Failed to create fence. Please try again.");
-        alert("Error", "Failed to create fence. Please try again.");
+    try {
+      const method = editMode ? 'put' : 'post';
+      const url = editMode ? `/api/fence/fence/${id}` : '/api/fence/fence';
+  
+      const response = await AxiosInstance[method](url, {
+        id,
+        FenceTypeselectedValue: textFence ? textFence.value : null,
+        inputValuePostspace,
+        PostSpaceUnitselectedValue,
+        displayValues,
+        fenceAmountsArray,
+        fenceLengthsArray,
+        Perimeter,
       });
+  
+      console.log("Response:", response.data);
+      setCurrentPage("FenceDetails");
+      setAnimatePage(true);
+    } catch (error) {
+      console.error("Error:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
+      }
+      message.error(`Failed to ${editMode ? 'update' : 'create'} fence: ${error.message}`);
+    }
   };
 
   const handleBackClick = () => {

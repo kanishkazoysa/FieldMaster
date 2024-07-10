@@ -35,6 +35,7 @@ export default function FenceDetails({
   const [data1 , setdata1] = useState([]);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
+  const [fencedata, setfencedata] = useState(null);
 
 
   useEffect(() => {
@@ -42,6 +43,7 @@ export default function FenceDetails({
       try {
         const response = await AxiosInstance.get(`/api/fence/numberOfSticks/${id}`);
         const data = response.data;
+        setfencedata(data);
         console.log(data);
   
         setnumberOfSticks(data.numberOfSticks);
@@ -63,7 +65,6 @@ export default function FenceDetails({
     // Cleanup function if needed
     return () => {};
   }, [id]);
-  
 
 
   const FenceDelete = async (id) => {
@@ -78,10 +79,24 @@ export default function FenceDetails({
     }
   };
 
-  const handleIconPress = (e) => {
+  const handleEditIconPressd = () => {
+    Modal.confirm({
+      title: 'Do you want to update Fence data',
+      content: 'Choose an action:',
+      okText: 'Update',
+      cancelText: 'Close',
+      okType: 'primary',
+      onOk: handleEditfencedata,
+      onCancel: () => {},
+      maskClosable: true,
+      closable: true,
+    });
+  };
+
+  const handledeletefence = (e) => {
     confirm({
       title: 'Are you sure?',
-      content: 'Do you want to update Fence?',
+      content: 'Do you want to delete Fence data?',
       icon: <ExclamationCircleOutlined />,
       okText: 'Yes',
       okType: 'primary',
@@ -111,6 +126,11 @@ export default function FenceDetails({
         console.log('Cancelled');
       },
     });
+  };
+
+  const handleEditfencedata = () => {
+    setCurrentPage('Fence');
+    setAnimatePage(true);
   };
 
  
@@ -144,7 +164,7 @@ export default function FenceDetails({
               />
               <p style={styles.titleText1}>Fence Details</p>
               <RiEditBoxLine
-                onClick={handleIconPress}
+                onClick={handleEditIconPressd}
                 style={styles.editbutton}
                 fontSize={19}
               />
@@ -257,6 +277,7 @@ export default function FenceDetails({
             Perimeter={Perimeter}
             onEditTemplateClick={onEditTemplateClick}
             template={template}
+            fencedata={fencedata}
           />
         )}
   

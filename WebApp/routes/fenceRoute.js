@@ -179,5 +179,60 @@ router.post("/fenceFromManualcal", async (req, res) => {
   }
 });
 
+router.put("/fence/:id", async (req, res) => {
+  try {
+    const {
+      FenceTypeselectedValue,
+      inputValuePostspace,
+      PostSpaceUnitselectedValue,
+      displayValues,
+      fenceAmountsArray,
+      fenceLengthsArray,
+      Perimeter,
+    } = req.body;
+
+    const id = req.params.id;
+
+    const perimeter = Perimeter * 1000;
+    const gapBetweenSticks = inputValuePostspace;
+    const gapUnit = PostSpaceUnitselectedValue;
+    const gateLength = fenceLengthsArray;
+    const numberOfGates = fenceAmountsArray;
+    const gateCount = calculateSum(numberOfGates);
+
+    const totalGateLengths = calculateTotalGateLengths(numberOfGates, gateLength);
+    const numberOfSticks = calculateNumberOfSticks(perimeter, gapBetweenSticks, gapUnit, totalGateLengths, gateCount);
+
+    const updatedFence = await fenceModel.findOneAndUpdate(
+      { Id: id },
+      {
+        FenceType: FenceTypeselectedValue,
+        PostSpace: inputValuePostspace,
+        PostSpaceUnit: PostSpaceUnitselectedValue,
+        Gatelength: fenceLengthsArray,
+        NumberofGates: fenceAmountsArray,
+        NumberofSticks: numberOfSticks,
+        GateDetails: displayValues,
+      },
+      { new: true }
+    );
+
+    if (!updatedFence) {
+      return res.status(404).json({ status: "error", data: "Fence not found" });
+    }
+
+    res.json({
+      status: "ok",
+      data: "Fence Updated",
+      totalGateLengths,
+      gateCount,
+      numberOfSticks,
+      updatedFence,
+    });
+  } catch (error) {
+    res.status(500).json({ status: "error", data: error.message });
+  }
+});
+
 
 module.exports = router;
