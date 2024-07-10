@@ -70,9 +70,60 @@ export const styles = StyleSheet.create({
       flexDirection: "row",
       height: responsiveHeight(2.9),
     },
+    box4: {
+      width: "87%",
+      height: responsiveHeight(18),
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "white",
+      marginTop: responsiveHeight(1),
+      borderRadius: 11,
+      shadowColor: "#000",
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
+      elevation: 3,
+    },
+    box4Header: {
+      fontSize: responsiveFontSize(1.8),
+      marginLeft:responsiveHeight(4.5),
+      marginTop:responsiveHeight(6.5),
+      fontWeight: "bold",
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: "90%",
+    },
+
+    box4inner :{
+        width: "80%",
+        height: "60%",
+        backgroundColor: "white",
+        marginBottom: responsiveHeight(8),
+        marginTop: responsiveHeight(0),
+      },
+
+      innertopText: {
+        fontSize: responsiveFontSize(1.8),
+        fontWeight: "bold",
+      },
+
+    box4Inner: {
+      marginLeft: 15,
+      marginTop: responsiveHeight(-1),
+      height:responsiveHeight(5),
+    },
+    box4Text:{
+      marginTop: responsiveHeight(1),
+      marginBottom: responsiveHeight(1)
+    },
+    box4Text2: {
+      marginTop: responsiveHeight(1),
+      marginBottom: responsiveHeight(-100),
+    },
+  
     card2: {
       height: responsiveHeight(10),
-      marginTop: responsiveHeight(1.5),
+      marginTop: responsiveHeight(-2.5),
       backgroundColor: "#fff",
       width: "93%",
       borderRadius: 11,
@@ -106,6 +157,7 @@ export const styles = StyleSheet.create({
       marginLeft: responsiveWidth(1),
     },
     card2Text4: {
+      marginTop: responsiveHeight(-3),
       fontSize: responsiveFontSize(2),
       marginLeft: responsiveWidth(1),
       fontWeight: "bold",

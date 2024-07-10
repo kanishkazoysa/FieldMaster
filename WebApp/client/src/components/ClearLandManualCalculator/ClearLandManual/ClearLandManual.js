@@ -1,6 +1,8 @@
 // SideNavbar.js
 import React, { useState, useRef } from "react";
+import { FaBars } from "react-icons/fa";
 import { MdArrowBack } from "react-icons/md";
+import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { BsBoundingBox } from "react-icons/bs";
 import {
@@ -12,16 +14,17 @@ import {
 import { HiTruck } from "react-icons/hi2";
 import { GiStonePile } from "react-icons/gi";
 import { GrUserWorker } from "react-icons/gr";
-import { styles } from "./clearLandStyles";
+import axios from "axios";
+import { styles } from "./ClearLandManualStyles";
 import { FiSearch } from "react-icons/fi";
-import { Input, Space, List, AutoComplete ,message,Select } from "antd";
-import EffortOutput from "../EffortOutput/effortOutput";
-import TemplateDetails from "../../SavedTemplates/TemplateDetails";
-import AxiosInstance from "../../../AxiosInstance";
-import AlertWeed from "../EffortOutput/AlertWeed"
-import AlertPlant from "../EffortOutput/AlertPlant"
-import AlertStone from "../EffortOutput/AlertStone"
-export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTemplateClick,template }) {
+import AlertWeed from "../../ClearLand/EffortOutput/AlertWeed"
+import AlertPlant from "../../ClearLand/EffortOutput/AlertPlant"
+import AlertStone from "../../ClearLand/EffortOutput/AlertStone"
+import { Input, Space, List, AutoComplete,message } from "antd";
+import { CloseSquareFilled } from "@ant-design/icons";
+import EffortOutputManual from "../EffortOutputManual/EffortOutputManual";
+
+export default function ClearLandManualCalculator({ onBackToSidebar,area,perimeter,PerimeterUnitselectedValue,AreaUnitselectedValue }) {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
@@ -69,17 +72,6 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
   const [displayValues, setDisplayValues] = useState([]);
   const handleAdd = () => {
-    if (!plantTypeSelectedValue || !plantCount) {
-      message.error("Please fill both input fields");
-      return;
-    }
-
-    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
-    if (!regex.test(plantCount)) {
-      message.error("Error: Please enter a valid plant count");
-      return;
-    }
-    
     //validation part Add button
     const combinedValue = plantCount + " x " + plantTypeSelectedValue;
     const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
@@ -97,16 +89,6 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
-    if (!stoneTypeSelectedValue || !stonesCount) {
-      message.error("Please fill both input fields");
-      return;
-    }
-
-    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
-    if (!regex.test(stonesCount)) {
-      message.error("Error: Please enter a valid stone count");
-      return;
-    }
     //validation part Add button
     const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
@@ -125,17 +107,6 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
   const [displayValues2, setDisplayValues2] = useState([]);
   const handleAdd2 = () => {
-    if (!machineTypeSelectedValue || !machineCount) {
-      message.error("Please fill both input fields");
-      return;
-    }
-
-    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
-    if (!regex.test(machineCount)) {
-      message.error("Error: Please enter a valid machine count");
-      return;
-    }
-
     //validation part Add button
     const combinedValue2 = machineCount + " x " + machineTypeSelectedValue;
     const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
@@ -153,61 +124,57 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
   };
 
   const handleClearlandDetails = async (e) => {
+    try {
       // Validate required fields
       if (!laborCount) {
-          message.error("Error:Please enter the Labor Count.");
-          return;
-        }
-    
-        if (!workHours) {
-          message.error("Error:Please enter the Work Hours.");
-          return;
-        }
-    
-        if (displayValues2.length === 0) {
-          message.error("Error:Please add at least one Machinery item.");
-          return;
-        }
-    
-        if (!pressed && displayValues.length === 0 && displayValues1.length === 0) {
-          message.error(
-            "Error:Please fill in at least one optional field: Weeds, Plants, or Stones."
-          );
-          return;
-        }
-        const regex2 = /^\d+$/; // allow only decimal numbers
-        if (!regex2.test(laborCount)) {
-          message.error("Error: Please enter a valid labor count");
-          return;
-        }
-        const regex = /^\d+$/; // allow only decimal numbers
-        if (!regex.test(workHours)) {
-          message.error("Error: Please enter a valid work hour count");
-          return;
-        }
-    
+        message.error("Error:Please enter the Labor Count.");
+        return;
+      }
+  
+      if (!workHours) {
+        message.error("Error:Please enter the Work Hours.");
+        return;
+      }
+  
+      if (displayValues2.length === 0) {
+        message.error("Error:Please add at least one Machinery item.");
+        return;
+      }
+  
+      if (!pressed && displayValues.length === 0 && displayValues1.length === 0) {
+        message.error(
+          "Error:Please fill in at least one optional field: Weeds, Plants, or Stones."
+        );
+        return;
+      }
 
-       // Make POST request to the backend
-       AxiosInstance.post("/api/clearLand/clearLand", {
-        id,
+      setCurrentPage("effortOutputManual"); // Update this line
+      setAnimatePage(true);
+      e.preventDefault();
+
+      // Prepare data for the request
+      const requestData = {
         pressed,
         laborCount,
         workHours,
         displayValues,
         displayValues1,
         displayValues2,
-       })
-       .then((response) => {
-        setCurrentPage("EffortOutput"); // Update this line
-        setAnimatePage(true);
-        e.preventDefault();
-  
-       })
-       .catch((error) => {
-        console.error("Error:", error.response.data);
-        message.error("Error", "Failed to create clear land. Please try again.")
-        alert("Error", "Failed to create clear land. Please try again.");
-      });
+      };
+
+      // Make POST request to the backend
+      const response = await axios.post(
+        "http://192.168.8.173:3000/api/clearLand/clearLandFromManualCalculator",
+        requestData
+      );
+
+      // Handle successful response
+      console.log("Response:", response.data);
+    } catch (error) {
+      // Handle errors
+      console.error("Error:", error.message);
+      alert("Error: " + error.message);
+    }
   };
 
   const handleBackClick = () => {
@@ -217,18 +184,147 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
     }, 300);
   };
 
-  const backtoTemp = () =>{
-    setCurrentPage("TemplateDetails"); 
-    setAnimatePage(true);
+  //calculate the effort output function
+const convertArea = (area,AreaUnitselectedValue) => {
+    if(AreaUnitselectedValue === "Acres"){
+      return area * 4046.86;
+    }
+    else if(AreaUnitselectedValue === "Perch"){
+        return area*25.2929;
+    }
+    else if(AreaUnitselectedValue === "m²"){
+      return area;
+    }
   }
 
-  return (
+const Area = convertArea(area,AreaUnitselectedValue);
+function calculateEffortOutput(
+    weedEffort,
+    plantEffort,
+    stoneEffort,
+  ) {
+    const effortCount = Math.ceil(weedEffort+plantEffort+stoneEffort);
+    return effortCount;
+  }
+  const calculateWeedEffort = (weedType,Area,laborsCount,machineDetails) => {
+    let weedEffort = 0;
+    let totalWeedEffort = 0;
+    let excavatorCount = 0;
+    let backhoeCount = 0;
+    let backhoePresent = false;
+    let excavatorPresent = false;
+    const machineEffortValues = { Backhoes: 0.714, Excavators: 0.0593 }; // time in minutes to clear 1 square meter 
+    const weedEffortValues = { Low: 0.036, Medium: 0.042, High: 0.714 };//hours per 1 square meter and per 1 labor.for high assume already one backhoe exists
+    if(weedType === "Low" || weedType === "Medium"){
+        weedEffort = weedEffortValues[weedType];
+        totalWeedEffort = (weedEffort/laborsCount)*Area;
+      }
+      if (weedType === "High") {
+        totalWeedEffort = 0; // Initialize total weed effort
+        if (machineDetails) {
+          machineDetails.forEach(({ count, type }) => {
+            if (type === "Excavators") {
+              excavatorPresent = true;
+              excavatorCount = parseInt(count);
+            } else if (type === "Backhoes") {
+              backhoePresent = true;
+              backhoeCount = parseInt(count);
+            }
+          });
+        }
+        if(excavatorPresent && backhoePresent){
+          weedEffort = ((0.714/backhoeCount)+(0.0593/excavatorCount))/2;	
+        }else if(excavatorPresent){
+          weedEffort = 0.0593/excavatorCount;
+        }else if(backhoePresent){
+          weedEffort = 0.714/backhoeCount;
+        }else{
+          weedEffort = 0.714;
+        }
+        totalWeedEffort = (weedEffort*Area)/60; 
+      }
+     return totalWeedEffort;
+  }
+  
+  
+  const calculatePlantEffort = (plantDetails,machineDetails) => {
+    let plantEffort = 0;
+    let chainsawCount = 1;
+    let totalPlantEffort = 0;
+    const plantEffortValues = { Low: 1 / 12, Medium: 0.25, High: 0.5 };//for 1 chainsaw
+    if(machineDetails){
+      machineDetails.forEach(({count,type}) => {
+        if(type === "Chainsaws"){
+            chainsawCount = parseInt(count);
+        }
+    })
+    }
+    plantDetails.forEach(({ count, type }) => {
+      const effortPerPlant = plantEffortValues[type];
+      plantEffort += effortPerPlant * parseInt(count);
+    });
+  
+    totalPlantEffort = plantEffort/chainsawCount;
+    return totalPlantEffort;
+  }
+  
+  const calculateStoneEffort = (stoneDetails,machineDetails) => {
+    let stoneEffort = 0;
+    let breakerCount = 1;
+    let totalStoneEffort = 0;
+    const stoneEffortValues = { Small:0.5 , Large: 1 };
+    if(machineDetails){
+      machineDetails.forEach(({count,type}) => {
+        if(type === "Excavator breakers"){
+            breakerCount = parseInt(count);
+        }
+    })
+    }
+    stoneDetails.forEach(({ count, type }) => {
+      const effortPerStone = stoneEffortValues[type];
+      stoneEffort += effortPerStone * parseInt(count);
+    });
+  
+    totalStoneEffort = stoneEffort/breakerCount;
+    return totalStoneEffort;
+  }
+  
+  const calculateWorkDays = (effort,workHours) => {
+    const fulldays = Math.floor(effort / workHours);
+    const remainingHours = effort % workHours;
+    const totalDays = remainingHours === 0 ? fulldays : fulldays + 1;
+    return totalDays;
+  }
+
+const laborsCount = parseInt(laborCount);
+const weedType = pressed;
+const plantDetails = displayValues.map((value) => {
+  const [count, type] = value.split(" x ");
+  return {count, type: type.trim() };
+});
+ 
+const stoneDetails = displayValues1.map((value) => {
+  const [count, type] = value.split(" x ");
+  return {count, type: type.trim() };
+});;
+const machineDetails = displayValues2.map((value) => {
+    const [count, type] = value.split(" x ");
+    return { count, type: type.trim()};
+  });
+console.log(Area);
+const weedEffort = calculateWeedEffort(weedType,Area,laborsCount,machineDetails);
+const plantEffort = calculatePlantEffort(plantDetails,machineDetails);  
+const stoneEffort = calculateStoneEffort(stoneDetails,machineDetails);
+const effort = calculateEffortOutput(weedEffort,plantEffort,stoneEffort);
+const workDays = calculateWorkDays(effort,workHours);
+
+    return (
     <div>
       {!currentPage && (
         <div style={styles.content}>
           <div style={styles.header}>
             <MdArrowBack
-              onClick={backtoTemp}
+              onClick={onBackToSidebar}
               style={styles.backButton}
               fontSize={20}
             />
@@ -243,7 +339,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{Perimeter}Km</p>
+                  <p style={styles.propertyValue}>{perimeter} {PerimeterUnitselectedValue}</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -251,7 +347,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} m<sup>2</sup>
+                    {area} {AreaUnitselectedValue}
                   </p>
                 </div>
               </div>
@@ -261,7 +357,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
           {/* second box */}
           <div style={styles.box2}>
             <div>
-              <div style={styles.box2InnerTop}>
+            <div style={styles.box2InnerTop}>
                 <PiPlantFill color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
                   <p style={styles.BoxPropertyLabel}>Weeds</p>
@@ -327,7 +423,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
           {/* third box */}
           <div style={styles.box3}>
-            <div>
+          <div>
               <div style={styles.box2InnerTop}>
                 <PiTreeFill color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
@@ -391,7 +487,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
           {/* fourth box */}
           <div style={styles.box3}>
-            <div>
+          <div>
               <div style={styles.box2InnerTop}>
                 <GiStonePile color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
@@ -454,10 +550,10 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
           {/* fifth box */}
           <div style={styles.box5}>
-            <div style={{ ...styles.box5leftcontainer, width: "35%" }}>
+            <div style={styles.box5leftcontainer}>
               <GrUserWorker color="gray" size={20} />
               <div style={styles.box2PropertyDetails}>
-                <p style={styles.Box2PropertyLabel}>Labors  : </p>
+                <p style={styles.Box2PropertyLabel}>Labors : </p>
               </div>
             </div>
             <div style={styles.box5inputContainer}>
@@ -494,8 +590,8 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
             </div>
           </div>
 
-          {/* seventh box */}
-          <div style={styles.box7}>
+         {/* seventh box */}
+         <div style={styles.box7}>
             <div>
               <div style={styles.box2InnerTop}>
                 <HiTruck color="gray" size={20} />
@@ -561,7 +657,6 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
               ))}
             </div>
           </div>
-
           <div style={styles.bottom}>
             <button style={styles.Button1} onClick={handleClearlandDetails}>
               <p style={styles.addButtonText}>Calculate</p>
@@ -575,24 +670,24 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
           transform: animatePage ? "translateX(0)" : "translateX(-100%)",
           transition: "transform 0.3s ease-in-out",
           backgroundColor: "whitesmoke",
-          // overflow: "auto", // Add scrollbar if content exceeds container height
+          overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
-        {currentPage === "EffortOutput" && (
-          <EffortOutput
-            onBackToSidebar={onBackToSidebar}
-            onback = {handleBackClick}
-            id={id}
-            onEditTemplateClick = {onEditTemplateClick}
-            template = {template}
-          />
-        )}
-        {currentPage === "TemplateDetails" && (
-          <TemplateDetails
-            onBackToSidebar={onBackToSidebar}
-            id={id}
-            onEditTemplateClick = {onEditTemplateClick}
-            template = {template}
+        {currentPage === "effortOutputManual" && (
+          <EffortOutputManual
+            onBackToSidebar={handleBackClick}
+            weedEffort={weedEffort}
+            plantEffort={plantEffort}
+            stoneEffort={stoneEffort}
+            effort={effort}
+            workDays = {workDays}
+            laborCount={laborCount}
+            workHours={workHours}
+            displayValues2={displayValues2}
+            area = {area}
+            perimeter = {perimeter}
+            AreaUnitSelectedValue = {AreaUnitselectedValue}
+            PerimeterUnitSelectedValue = {PerimeterUnitselectedValue}
           />
         )}
       </div>

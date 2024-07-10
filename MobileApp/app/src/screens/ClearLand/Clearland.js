@@ -28,6 +28,9 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { styles } from "./ClearLandStyles";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
+import WeedAlert from "./AlertButtonWeed";
+import PlantAlert from "./AlertButtonPlant";
+import StoneAlert from "./AlertButtonStones";
 import AxiosInstance from "../../AxiosInstance";
 
 export default function ClearLand({ route }) {
@@ -41,32 +44,8 @@ export default function ClearLand({ route }) {
   const [stonesCount, setStonesCount] = useState("");
   const [laborCount, setLaborCount] = useState("");
   const [workHours, setWorkHours] = useState("");
-  const [searchItem, setSearchItem] = useState("");
+  const [machineTypeSelectedValue, setMachineTypeSelectedValue] = useState(null);
   const [machineCount, setMachineCount] = useState("");
-  const [searchSuggestions, setSearchSuggestions] = useState([]);
-  const [suggestions, setSuggestions] = useState([
-    "Excavators",
-    "Backhoes",
-    "Chainsaws",
-    "Excavator breakers",
-  ]);
-
-  const handleSearch = (query) => {
-    if (query === "") {
-      setSearchSuggestions([]);
-      return;
-    }
-    const filteredSuggestions = suggestions.filter((item) =>
-      item.toLowerCase().includes(query.toLowerCase())
-    );
-    setSearchSuggestions(filteredSuggestions);
-  };
-
-  const handleSuggestionSelect = (item) => {
-    setSearchItem(item);
-    setSearchSuggestions([]);
-  };
-
   const handlePlantCountChange = (text) => {
     setPlantCount(text);
   };
@@ -110,8 +89,20 @@ export default function ClearLand({ route }) {
 
   const options = [
     { label: "Small", value: "Small" },
-    { label: "Medium", value: "Medium" },
-    { label: "High", value: "High" },
+    { label: "Large", value: "Large" },
+  ];
+
+  const placeholder2 = {
+    label: "Select Machine Type",
+    value: null,
+    color: "red",
+  };
+
+  const options2 = [
+    { label: "Excavators", value: "Excavators" },
+    { label: "Backhoes", value: "Backhoes" },
+    { label: "Chainsaws", value: "Chainsaws" },
+    { label: "Excavator breakers", value: "Excavator breakers" },
   ];
 
   /display/;
@@ -137,7 +128,7 @@ export default function ClearLand({ route }) {
 
   const handleAdd1 = () => {
     //validation part Add button
-    const combinedValue1 = stoneTypeSelectedValue;
+    const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
       Boolean
     );
@@ -156,12 +147,12 @@ export default function ClearLand({ route }) {
 
   const handleAdd2 = () => {
     //validation part Add button
-    const combinedValue2 = searchItem + " x " + machineCount;
+    const combinedValue2 = machineCount + " x " + machineTypeSelectedValue;
     const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
       Boolean
     );
     setDisplayValues2(newDisplayValues2);
-    setSearchItem("");
+    setMachineTypeSelectedValue("");
     setMachineCount("");
   };
 
@@ -182,28 +173,31 @@ export default function ClearLand({ route }) {
       displayValues2,
     })
       .then((response) => {
-        if (
-          !pressed ||
-          !(displayValues.length > 0) ||
-          !(displayValues1.length > 0) ||
-          !laborCount ||
-          !workHours ||
-          !(displayValues2.length > 0)
-        ) {
-          // Display error message
-          Alert.alert("Error", "Please fill in all fields");
-          return; // Stop execution if fields are empty
+        if (!laborCount) {
+          Alert.alert("Error", "Please enter the Labor Count.");
+          return;
+        }
+    
+        if (!workHours) {
+          Alert.alert("Error", "Please enter the Work Hours.");
+          return;
+        }
+    
+        if (displayValues2.length === 0) {
+          Alert.alert("Error", "Please add at least one Machinery item.");
+          return;
+        }
+    
+        if (!pressed && displayValues.length === 0 && displayValues1.length === 0) {
+          Alert.alert(
+            "Error",
+            "Please fill in at least one optional field: Weeds, Plants, or Stones."
+          );
+          return;
         }
         navigation.navigate("EffortOutput", {
           id: id,
           item: item,
-          // data: displayValues,
-          // data1: displayValues1,
-          // data2: displayValues2,
-          // weedType: pressed,
-          // stonesCount: stonesCount,
-          // laborCount: laborCount,
-          // workHours: workHours,
         });
 
         setPressed(" ");
@@ -242,16 +236,22 @@ export default function ClearLand({ route }) {
       <ScrollView>
         <View style={styles.container2}>
           {/* Weeds box */}
-          <Card style={styles.card1}>
-            <Card.Content style={styles.cardContent}>
+          <Card style={styles.card}>
+          
+            <Card.Content style={styles.cardContent1}>
+              <View style={styles.cardTop}>
+              <View style={styles.cardHeader}>
               <MaterialCommunityIcons
                 name="sprout-outline"
                 size={responsiveFontSize(3)}
                 color="#65676B"
               />
-              <Text style={styles.cardTopText} variant="titleLarge">
+                <Text style={styles.cardTopText} variant="titleLarge">
                 Weeds
-              </Text>
+                </Text>
+              </View>
+              <WeedAlert></WeedAlert>
+              </View>
               <PaperProvider>
                 <View style={styles.weedButton}>
                   <Button
@@ -304,6 +304,8 @@ export default function ClearLand({ route }) {
           {/* Plants box */}
           <Card style={styles.card1}>
             <Card.Content style={styles.cardContent}>
+            <View style={styles.card1Top}>
+              <View style={styles.card1Header}>
               <MaterialCommunityIcons
                 name="sprout"
                 size={responsiveFontSize(3)}
@@ -312,6 +314,10 @@ export default function ClearLand({ route }) {
               <Text style={styles.cardTopText} variant="titleLarge">
                 Plants
               </Text>
+              </View>
+              <PlantAlert></PlantAlert>
+              </View>
+              
               <View style={styles.Dropdown1}>
                 <RNPickerSelect
                   placeholder={placeholder1}
@@ -384,12 +390,20 @@ export default function ClearLand({ route }) {
 
           {/* Stones box */}
           <Card style={styles.card1}>
+            
             <Card.Content style={styles.cardContent}>
+            <View style={styles.card2Top}>
+              <View style={styles.card2Header}>
+              
               <Image source={require("../../../assets/Stones.png")} />
               <Text style={styles.cardTopText} variant="titleLarge">
                 Stones
               </Text>
-              <View style={styles.Dropdown1}>
+              </View>
+              </View>
+              <StoneAlert></StoneAlert>
+              
+              <View style={styles.Dropdown2}>
                 <RNPickerSelect
                   placeholder={placeholder}
                   items={options}
@@ -541,28 +555,14 @@ export default function ClearLand({ route }) {
                   alignItems: "center",
                 }}
               >
-                <View style={styles.SearchbarContainer}>
-                  <Searchbar
-                    placeholder="Search for machines"
-                    placeholderStyle={{ fontSize: 16, marginTop: -14 }}
-                    inputStyle={{ fontSize: 16, marginTop: -14 }}
-                    style={styles.Searchbar}
-                    onChangeText={(text) => {
-                      setSearchItem(text);
-                      handleSearch(text);
-                    }}
-                    value={searchItem}
-                  ></Searchbar>
-                  {searchSuggestions.map((item, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      style={styles.suggestionItem}
-                      onPress={() => handleSuggestionSelect(item)}
-                    >
-                      <Text>{item}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
+                <View style={styles.Dropdown3}>
+                <RNPickerSelect
+                  placeholder={placeholder2}
+                  items={options2}
+                  onValueChange={(value) => setMachineTypeSelectedValue(value)}
+                  value={machineTypeSelectedValue}
+                />
+              </View>
                 <Text
                   style={{
                     fontSize: 16,
@@ -615,7 +615,7 @@ export default function ClearLand({ route }) {
                   >
                     <MaterialCommunityIcons
                       name="close-circle-outline"
-                      size={20}
+                      size={responsiveFontSize(2.7)}
                       color="#007BFF"
                     />
                   </TouchableOpacity>
