@@ -12,7 +12,7 @@ import { MdLocationOn, MdSearch } from "react-icons/md";
 import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
 import { styles, containerStyle, center } from "./HomeStyles";
 import { useLocation, useNavigate } from "react-router-dom";
-import { message ,Button } from "antd";
+import { message, Button } from "antd";
 import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
 import AxiosInstance from "../../AxiosInstance";
 import MapDetailsPanel from "./MapDetailsPanel";
@@ -36,33 +36,32 @@ export default function Home() {
   const [zoomLevel, setZoomLevel] = useState(2);
   const sriLankaCenter = { lat: 7.8731, lng: 80.7718 };
   const defaultZoom = 7;
-  const [isMobileOnlyModalVisible, setIsMobileOnlyModalVisible] = useState(false);
+  const [isMobileOnlyModalVisible, setIsMobileOnlyModalVisible] =
+    useState(false);
   const [isMapLoading, setIsMapLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
-
-const GradientButton = ({ onClick, children }) => {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        ...styles.adminButton,
-        ...styles.gradientButton
-      }}
-    >
-      {children}
-    </button>
-  );
-}
-
+  const GradientButton = ({ onClick, children }) => {
+    return (
+      <button
+        onClick={onClick}
+        style={{
+          ...styles.adminButton,
+          ...styles.gradientButton,
+        }}
+      >
+        {children}
+      </button>
+    );
+  };
 
   useEffect(() => {
-    const adminToken = localStorage.getItem('AdminToken');
+    const adminToken = localStorage.getItem("AdminToken");
     setIsAdmin(!!adminToken);
   }, []);
 
   const handleAdminClick = () => {
-    navigate('/admin');
+    navigate("/admin");
   };
 
   const showMobileOnlyModal = () => {
@@ -291,12 +290,9 @@ const GradientButton = ({ onClick, children }) => {
   return (
     <div style={styles.container}>
       <div style={styles.sidebar}>
-      <SideNavbar onShowMobileOnlyModal={showMobileOnlyModal} />
+        <SideNavbar onShowMobileOnlyModal={showMobileOnlyModal} />
       </div>
-      <LoadScript
-        googleMapsApiKey={apiKey}
-        libraries={["places"]}
-      >
+      <LoadScript googleMapsApiKey={apiKey} libraries={["places"]}>
         <GoogleMap
           ref={mapRef}
           mapContainerStyle={containerStyle}
@@ -306,12 +302,11 @@ const GradientButton = ({ onClick, children }) => {
           onZoomChanged={handleZoomChanged}
           onLoad={() => setIsMapLoading(false)}
         >
-        
-        {isMapLoading && (
-          <div style={styles.loadingOverlay}>
-            <p>Loading map...</p>
-          </div>
-        )}
+          {isMapLoading && (
+            <div style={styles.loadingOverlay}>
+              <p>Loading map...</p>
+            </div>
+          )}
           <div
             onClick={handleGetCurrentLocation}
             style={{
@@ -406,14 +401,11 @@ const GradientButton = ({ onClick, children }) => {
               <div style={styles.avatar} onClick={handleAvatarClick}>
                 <Avatar userData={user} size={30} />
               </div>
-              </div>
-              </StandaloneSearchBox>
-              {isAdmin && (
-                <GradientButton onClick={handleAdminClick}>
-        Admin
-      </GradientButton>
-              )}
-
+            </div>
+          </StandaloneSearchBox>
+          {isAdmin && (
+            <GradientButton onClick={handleAdminClick}>Admin</GradientButton>
+          )}
 
           {isModalOpen && (
             <ProfileModal
@@ -425,9 +417,9 @@ const GradientButton = ({ onClick, children }) => {
           )}
         </GoogleMap>
       </LoadScript>
-      <MobileOnlyModal 
-        isVisible={isMobileOnlyModalVisible} 
-        onClose={handleMobileOnlyModalClose} 
+      <MobileOnlyModal
+        isVisible={isMobileOnlyModalVisible}
+        onClose={handleMobileOnlyModalClose}
       />
     </div>
   );
