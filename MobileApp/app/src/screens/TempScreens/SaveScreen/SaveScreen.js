@@ -63,11 +63,11 @@ export function SaveScreen({ navigation, route }) {
     parseFloat(initialPerimeter).toFixed(2)
   );
   const [area, setArea] = React.useState(parseFloat(initialArea).toFixed(2));
-  const [templateName, setTemplateName] = React.useState('test');
-  const [measureName, setMeasureName] = React.useState('test');
-  const [landType, setLandType] = React.useState('test');
+  const [templateName, setTemplateName] = React.useState('');
+  const [measureName, setMeasureName] = React.useState('');
+  const [landType, setLandType] = React.useState('');
   const [location, setLocation] = React.useState('');
-  const [descriptionText, setDescriptionText] = React.useState('test');
+  const [descriptionText, setDescriptionText] = React.useState('');
 
   React.useEffect(() => {
     const getLocation = async () => {
@@ -209,9 +209,9 @@ export function SaveScreen({ navigation, route }) {
                 underlineColor="transparent"
               />
             </View>
-            <View style={styles.imageContainer}>
+            {/* <View style={styles.imageContainer}>
               <Image source={{ uri: imageUrl }} style={styles.base64Image} />
-            </View>
+            </View> */}
           </View>
         </View>
       </ScrollView>
