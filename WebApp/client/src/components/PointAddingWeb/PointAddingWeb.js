@@ -185,6 +185,7 @@ export default function PointAddingWeb() {
     location: "",
   });
   const [isImageCaptureComplete, setIsImageCaptureComplete] = useState(false);
+  const [searchMarker, setSearchMarker] = useState(null);
 
   useEffect(() => {
     fetchUserDetails();
@@ -247,6 +248,7 @@ export default function PointAddingWeb() {
       return;
 
     const location = selectedPlace.geometry.location.toJSON();
+    setSearchMarker(location);
     setSelectedLocation(location);
 
     const bounds = new window.google.maps.LatLngBounds();
@@ -256,7 +258,6 @@ export default function PointAddingWeb() {
       mapRef.current.state.map.setZoom(15);
     }
   }, []);
-
   const handleMapClick = useCallback(
     (e) => {
       if (!isPolygonComplete) {
@@ -781,6 +782,19 @@ export default function PointAddingWeb() {
               onRequestClose={closeModal}
               user={user}
               updateUserInHome={setUser}
+            />
+          )}
+          {searchMarker && (
+            <Marker
+              position={searchMarker}
+              icon={{
+                path: window.google.maps.SymbolPath.CIRCLE,
+                scale: 7,
+                fillColor: "#FFFFFF",
+                fillOpacity: 1,
+                strokeWeight: 2,
+                strokeColor: "#000000",
+              }}
             />
           )}
         </GoogleMap>
