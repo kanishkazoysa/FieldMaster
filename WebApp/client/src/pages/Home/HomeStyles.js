@@ -10,6 +10,31 @@ export const styles = {
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
     transition: "background-color 0.3s",
   },
+  adminButton: {
+    position: "fixed",
+    right: "20px",
+    top: "17px",
+    padding: '10px 20px',
+    cursor: 'pointer',
+    zIndex: 1000,
+    border: 'none',
+    borderRadius: '5px',
+    color: 'white',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    transition: 'all 0.3s ease',
+  },
+
+  gradientButton: {
+    background: 'linear-gradient(45deg,#2a1b66,#2196F3,#21cbf3,#2a1b66)',
+    backgroundSize: '200% auto',
+    boxShadow: '0 4px 6px rgba(33, 150, 243, 0.3), 0 1px 3px rgba(0, 0, 0, 0.1)',
+    '&:hover': {
+      backgroundPosition: 'right center',
+      boxShadow: '0 6px 8px rgba(33, 150, 243, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1)',
+    },
+  },
   completeButton: {
     position: "absolute",
     bottom: "200px", // This places it above the undo button

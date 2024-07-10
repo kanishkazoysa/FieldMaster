@@ -12,7 +12,7 @@ import { MdLocationOn, MdSearch } from "react-icons/md";
 import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
 import { styles, containerStyle, center } from "./HomeStyles";
 import { useLocation, useNavigate } from "react-router-dom";
-import { message } from "antd";
+import { message ,Button } from "antd";
 import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
 import AxiosInstance from "../../AxiosInstance";
 import MapDetailsPanel from "./MapDetailsPanel";
@@ -38,6 +38,32 @@ export default function Home() {
   const defaultZoom = 7;
   const [isMobileOnlyModalVisible, setIsMobileOnlyModalVisible] = useState(false);
   const [isMapLoading, setIsMapLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+
+const GradientButton = ({ onClick, children }) => {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        ...styles.adminButton,
+        ...styles.gradientButton
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+
+  useEffect(() => {
+    const adminToken = localStorage.getItem('AdminToken');
+    setIsAdmin(!!adminToken);
+  }, []);
+
+  const handleAdminClick = () => {
+    navigate('/admin');
+  };
 
   const showMobileOnlyModal = () => {
     setIsMobileOnlyModalVisible(true);
@@ -280,6 +306,7 @@ export default function Home() {
           onZoomChanged={handleZoomChanged}
           onLoad={() => setIsMapLoading(false)}
         >
+        
         {isMapLoading && (
           <div style={styles.loadingOverlay}>
             <p>Loading map...</p>
@@ -379,8 +406,14 @@ export default function Home() {
               <div style={styles.avatar} onClick={handleAvatarClick}>
                 <Avatar userData={user} size={30} />
               </div>
-            </div>
-          </StandaloneSearchBox>
+              </div>
+              </StandaloneSearchBox>
+              {isAdmin && (
+                <GradientButton onClick={handleAdminClick}>
+        Admin
+      </GradientButton>
+              )}
+
 
           {isModalOpen && (
             <ProfileModal
