@@ -18,15 +18,13 @@ import * as turf from "@turf/turf";
 import html2canvas from "html2canvas";
 import axios from "axios";
 
-
-
 const { Option } = Select;
 
 const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
-  const [templateName, setTemplateName] = useState("myTemplate");
-  const [measureName, setMeasureName] = useState("tea");
-  const [landType, setLandType] = useState("slope");
-  const [description, setDescription] = useState("testingDesc");
+  const [templateName, setTemplateName] = useState("");
+  const [measureName, setMeasureName] = useState("");
+  const [landType, setLandType] = useState("");
+  const [description, setDescription] = useState("");
   const [area, setArea] = useState(calculatedData.area);
   const [perimeter, setPerimeter] = useState(calculatedData.perimeter);
   const [location, setLocation] = useState(calculatedData.location);
@@ -238,15 +236,22 @@ export default function PointAddingWeb() {
     if (!searchBoxRef.current) return;
 
     const places = searchBoxRef.current.getPlaces();
-    if (places.length === 0) return;
+    if (!places || places.length === 0) return;
 
     const selectedPlace = places[0];
+    if (
+      !selectedPlace ||
+      !selectedPlace.geometry ||
+      !selectedPlace.geometry.location
+    )
+      return;
+
     const location = selectedPlace.geometry.location.toJSON();
     setSelectedLocation(location);
 
     const bounds = new window.google.maps.LatLngBounds();
     bounds.extend(location);
-    if (mapRef.current && mapRef.current.state.map) {
+    if (mapRef.current && mapRef.current.state && mapRef.current.state.map) {
       mapRef.current.state.map.fitBounds(bounds);
       mapRef.current.state.map.setZoom(15);
     }
