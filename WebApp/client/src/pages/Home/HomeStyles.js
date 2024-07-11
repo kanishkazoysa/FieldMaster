@@ -25,6 +25,19 @@ export const styles = {
     letterSpacing: '1px',
     transition: 'all 0.3s ease',
   },
+  loadingOverlay: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 1000,
+},
 
   gradientButton: {
     background: 'linear-gradient(45deg,#2a1b66,#2196F3,#21cbf3,#2a1b66)',
