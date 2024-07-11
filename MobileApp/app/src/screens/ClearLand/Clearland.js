@@ -35,7 +35,7 @@ import AxiosInstance from "../../AxiosInstance";
 
 export default function ClearLand({ route }) {
   const navigation = useNavigation();
-  const { id, Area ,item } = route.params;
+  const { id, Area ,item,ClearLandData } = route.params;
   const [text, setText] = React.useState("");
   const [pressed, setPressed] = useState(null);
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
@@ -46,6 +46,18 @@ export default function ClearLand({ route }) {
   const [workHours, setWorkHours] = useState("");
   const [machineTypeSelectedValue, setMachineTypeSelectedValue] = useState(null);
   const [machineCount, setMachineCount] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  useEffect(() => {
+    if (ClearLandData) {
+      setEditMode(true);
+      setPressed(ClearLandData.weedsType);
+      setLaborCount(ClearLandData.laborCount);
+      setWorkHours(ClearLandData.workHours);
+      setDisplayValues(ClearLandData.plantDetails || []);
+      setDisplayValues1(ClearLandData.stoneDetails || []);
+      setDisplayValues2(ClearLandData.machineDetails || []);
+    }
+  }, [ClearLandData]);
   const handlePlantCountChange = (text) => {
     setPlantCount(text);
   };
@@ -187,7 +199,42 @@ export default function ClearLand({ route }) {
   };
 
   const handleClear = async () => {
-    AxiosInstance.post("/api/clearLand/clearLand", {
+    if (!laborCount) {
+      Alert.alert("Error", "Please enter the Labor Count.");
+      return;
+    }
+
+    if (!workHours) {
+      Alert.alert("Error", "Please enter the Work Hours.");
+      return;
+    }
+
+    if (displayValues2.length === 0) {
+      Alert.alert("Error", "Please add at least one Machinery item.");
+      return;
+    }
+
+    if (!pressed && displayValues.length === 0 && displayValues1.length === 0) {
+      Alert.alert(
+        "Error",
+        "Please fill in at least one optional field: Weeds, Plants, or Stones."
+      );
+      return;
+    }
+    const regex2 = /^\d+$/; // allow only decimal numbers
+    if (!regex2.test(laborCount)) {
+      Alert.alert("Error","Please enter a valid labor count");
+      return;
+    }
+    const regex = /^\d+$/; // allow only decimal numbers
+    if (!regex.test(workHours)) {
+      Alert.alert("Error"," Please enter a valid work hour count");
+      return;
+    }
+
+    const method = editMode ? 'put' : 'post';
+    const url = editMode ? `/api/clearLand/clearLand/${id}` : '/api/clearLand/clearLand';
+    AxiosInstance[method](url, {
       id,
       pressed,
       displayValues,
@@ -197,49 +244,12 @@ export default function ClearLand({ route }) {
       displayValues2,
     })
       .then((response) => {
-        if (!laborCount) {
-          Alert.alert("Error", "Please enter the Labor Count.");
-          return;
-        }
-    
-        if (!workHours) {
-          Alert.alert("Error", "Please enter the Work Hours.");
-          return;
-        }
-    
-        if (displayValues2.length === 0) {
-          Alert.alert("Error", "Please add at least one Machinery item.");
-          return;
-        }
-    
-        if (!pressed && displayValues.length === 0 && displayValues1.length === 0) {
-          Alert.alert(
-            "Error",
-            "Please fill in at least one optional field: Weeds, Plants, or Stones."
-          );
-          return;
-        }
-        const regex2 = /^\d+$/; // allow only decimal numbers
-        if (!regex2.test(laborCount)) {
-          Alert.alert("Error","Please enter a valid labor count");
-          return;
-        }
-        const regex = /^\d+$/; // allow only decimal numbers
-        if (!regex.test(workHours)) {
-          Alert.alert("Error"," Please enter a valid work hour count");
-          return;
-        }
+        
         navigation.navigate("EffortOutput", {
           id: id,
           item: item,
         });
 
-        setPressed(" ");
-        setLaborCount(" ");
-        setWorkHours(" ");
-        setDisplayValues([]);
-        setDisplayValues1([]);
-        setDisplayValues2([]);
       })
       .catch((error) => {
         console.error("Error:", error.response.data);
@@ -346,7 +356,7 @@ export default function ClearLand({ route }) {
                 color="#65676B"
               />
               <Text style={styles.cardTopText} variant="titleLarge">
-                Plants
+                Trees
               </Text>
               </View>
               <PlantAlert></PlantAlert>

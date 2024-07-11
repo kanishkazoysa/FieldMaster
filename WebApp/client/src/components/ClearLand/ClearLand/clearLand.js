@@ -350,7 +350,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
               <div style={styles.box2InnerTop}>
                 <PiTreeFill color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
-                  <p style={styles.BoxPropertyLabel}>Plants</p>
+                  <p style={styles.BoxPropertyLabel}>Trees</p>
                   <AlertPlant></AlertPlant>
                 </div>
               </div>

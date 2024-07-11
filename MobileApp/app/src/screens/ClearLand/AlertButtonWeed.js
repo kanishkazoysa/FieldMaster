@@ -10,9 +10,9 @@ const handleIconPress = () => {
     
 Medium: Distributed all over the land in a height below 75cm. Can be removed by laborers. No need machines.
     
-High: Distributed all over the land. Can't be removed by laborers. Need machines (Backhoe, Excavator).
+High: Distributed all over the land. Can't be removed by laborers. There can be small plants as well.Need machines (Backhoe, Excavator).
 
-Note : If you only want to remove weeds in your land choose only "Weeds" options.`,
+Note : If you only want to remove weeds or small plants in your land  choose only "Weeds" options.`,
     
     [
       {
