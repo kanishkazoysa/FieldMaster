@@ -352,7 +352,7 @@ export default function ClearLandFromManualCalculator({ route }) {
                 color="#65676B"
               />
               <Text style={styles.cardTopText} variant="titleLarge">
-                Plants
+                Trees
               </Text>
               </View>
               <PlantAlert></PlantAlert>

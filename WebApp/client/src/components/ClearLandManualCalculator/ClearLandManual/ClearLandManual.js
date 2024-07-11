@@ -468,7 +468,7 @@ const workDays = calculateWorkDays(effort,workHours);
               <div style={styles.box2InnerTop}>
                 <PiTreeFill color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
-                  <p style={styles.BoxPropertyLabel}>Plants</p>
+                  <p style={styles.BoxPropertyLabel}>Trees</p>
                   <AlertPlant></AlertPlant>
                 </div>
               </div>

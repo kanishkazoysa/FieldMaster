@@ -168,7 +168,7 @@ export default function EffortOutput({
         <div style={styles.content}>
           <div style={styles.header}>
             <MdArrowBack
-              onClick={onback}
+              onClick={handleback}
               style={styles.backButton}
               fontSize={20}
             />
