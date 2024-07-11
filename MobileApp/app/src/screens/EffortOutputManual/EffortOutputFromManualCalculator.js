@@ -58,7 +58,7 @@ import {
     };
   
     //Generate pdf
-    const html = effortOutputManualPrint(perimeter, area, laborCount, workHours);
+    const html = effortOutputManualPrint(perimeter, area, laborCount, workHours,effort);
   
     // Print
     const [selectedPrinter, setSelectedPrinter] = React.useState();

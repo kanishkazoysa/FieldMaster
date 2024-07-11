@@ -9,7 +9,7 @@ import { HiTruck } from "react-icons/hi2";
 import { GrUserWorker } from "react-icons/gr";
 import { RiEditBoxLine } from "react-icons/ri"; 
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Modal } from "antd";
+import { Modal,Button } from "antd";
 import ClearLand from "../ClearLand/clearLand";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails";
 import AxiosInstance from "../../../AxiosInstance";
@@ -38,6 +38,10 @@ export default function EffortOutput({
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [ClearLandData, setClearLandData] = useState(null);
+  const [weedType, setWeedType] = useState(null);
+  const [plantDetails, setPlantDetails] = useState(null);
+  const [stoneDetails, setStoneDetails] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,18 +50,22 @@ export default function EffortOutput({
           `/api/clearLand/effortOutput/${id}`
         );
         const data = response.data;
+        setClearLandData(data);
         console.log(data);
 
-        setworkHours(response.data.workHours);
-        setlaborCount(response.data.laborCount);
-        setdata1(response.data.machineDetails);
-        setArea(response.data.Area);
-        setPerimeter(response.data.Perimeter);
-        setEffortOutput(response.data.effortOutput);
-        setWeedEffort(response.data.weedEffort);
-        setPlantEffort(response.data.plantEffort);
-        setStoneEffort(response.data.stoneEffort);
-        setWorkDays(response.data.workDays);
+        setworkHours(data.workHours);
+        setlaborCount(data.laborCount);
+        setdata1(data.machineDetails);
+        setArea(data.Area);
+        setPerimeter(data.Perimeter);
+        setEffortOutput(data.effortOutput);
+        setWeedEffort(data.weedEffort);
+        setPlantEffort(data.plantEffort);
+        setStoneEffort(data.stoneEffort);
+        setWorkDays(data.workDays);
+        setWeedType(data.weedsType);
+        setPlantDetails(data.plantDetails);
+        setStoneDetails(data.stoneDetails);
 
         setLoading(false);
       } catch (error) {
@@ -83,40 +91,59 @@ export default function EffortOutput({
   };
 
   const handleIconPress = (e) => {
-    confirm({
-      title: 'Are you sure?',
-      content: 'Do you want to update Clear land?',
-      icon: <ExclamationCircleOutlined />,
-      okText: 'Yes',
+    Modal.confirm({
+      title: 'Do you want to update Clear land data',
+      content: 'Choose an action:',
+      okText: 'Update',
+      cancelText: 'Close',
       okType: 'primary',
-      cancelText: 'No',
-      onOk() {
-        try {
-          ClearLandDelete(id)
-            .then(() => {
-              // Navigate to the desired screen
-              setCurrentPage('ClearLand');
-              setAnimatePage(true);
-              e.preventDefault();
-            })
-            .catch((error) => {
-              // Show detailed error message
-              const errorMessage = error.response ? error.response.data.message : error.message;
-              Modal.error({
-                title: 'Failed to delete clear land',
-                content: errorMessage,
-              });
-            });
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      },
-      onCancel() {
-        console.log('Cancelled');
-      },
+      onOk: handleEditClearland,
+      onCancel: () => {},
+      maskClosable: true,
+      closable: true,
+      footer: (_, { OkBtn, CancelBtn }) => (
+        <>
+          <CancelBtn />
+          <Button 
+            onClick={() => {
+              Modal.destroyAll(); // This closes all open modals
+              handledeleteClearland();
+            }} 
+            danger
+          >
+            Delete
+          </Button>
+          <OkBtn />
+        </>
+      ),
     });
   };
+  const handledeleteClearland = () => {
+    try {
+      ClearLandDelete(id)
+        .then(() => {
+          // Navigate to the desired screen
+          setCurrentPage('ClearLand');
+          setAnimatePage(true);
+          setClearLandData(null);
+        })
+        .catch((error) => {
+          // Show detailed error message
+          const errorMessage = error.response ? error.response.data.message : error.message;
+          Modal.error({
+            title: 'Failed to delete clear land',
+            content: errorMessage,
+          });
+        });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
+  const handleEditClearland = () => {
+    setCurrentPage("ClearLand");
+    setAnimatePage(true);
+  };
   const handleback = () => {
     setCurrentPage("TemplateDetails");
     setAnimatePage(true);
@@ -141,7 +168,7 @@ export default function EffortOutput({
         <div style={styles.content}>
           <div style={styles.header}>
             <MdArrowBack
-              onClick={onback}
+              onClick={handleback}
               style={styles.backButton}
               fontSize={20}
             />
@@ -274,6 +301,7 @@ export default function EffortOutput({
             Perimeter={Perimeter}
             onEditTemplateClick={onEditTemplateClick}
             template={template}
+            ClearLandData={ClearLandData}
           />
         )}
 

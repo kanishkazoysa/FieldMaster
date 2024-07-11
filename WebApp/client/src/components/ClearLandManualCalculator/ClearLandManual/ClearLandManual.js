@@ -89,6 +89,16 @@ export default function ClearLandManualCalculator({ onBackToSidebar,area,perimet
 
   const [displayValues, setDisplayValues] = useState([]);
   const handleAdd = () => {
+    if (!plantTypeSelectedValue || !plantCount) {
+      message.error("Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(plantCount)) {
+      message.error("Error: Please enter a valid plant count");
+      return;
+    }
     //validation part Add button
     const combinedValue = plantCount + " x " + plantTypeSelectedValue;
     const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
@@ -106,6 +116,16 @@ export default function ClearLandManualCalculator({ onBackToSidebar,area,perimet
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
+    if (!stoneTypeSelectedValue || !stonesCount) {
+      message.error("Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(stonesCount)) {
+      message.error("Error: Please enter a valid stone count");
+      return;
+    }
     //validation part Add button
     const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
@@ -124,6 +144,16 @@ export default function ClearLandManualCalculator({ onBackToSidebar,area,perimet
 
   const [displayValues2, setDisplayValues2] = useState([]);
   const handleAdd2 = () => {
+    if (!machineTypeSelectedValue || !machineCount) {
+      message.error("Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(machineCount)) {
+      message.error("Error: Please enter a valid machine count");
+      return;
+    }
     //validation part Add button
     const combinedValue2 = machineCount + " x " + machineTypeSelectedValue;
     const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
@@ -164,6 +194,17 @@ export default function ClearLandManualCalculator({ onBackToSidebar,area,perimet
         );
         return;
       }
+      const regex2 = /^\d+$/; // allow only decimal numbers
+        if (!regex2.test(laborCount)) {
+          message.error("Error: Please enter a valid labor count");
+          return;
+        }
+        const regex = /^\d+$/; // allow only decimal numbers
+        if (!regex.test(workHours)) {
+          message.error("Error: Please enter a valid work hour count");
+          return;
+        }
+    
 
       setCurrentPage("effortOutputManual"); // Update this line
       setAnimatePage(true);
@@ -444,7 +485,7 @@ const workDays = calculateWorkDays(effort,workHours);
               <div style={styles.box2InnerTop}>
                 <PiTreeFill color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
-                  <p style={styles.BoxPropertyLabel}>Plants</p>
+                  <p style={styles.BoxPropertyLabel}>Trees</p>
                   <AlertPlant></AlertPlant>
                 </div>
               </div>

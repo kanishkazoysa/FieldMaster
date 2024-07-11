@@ -199,7 +199,7 @@ export const styles = StyleSheet.create({
       backgroundColor: "white",
       width: responsiveWidth(86),
       height: responsiveHeight(15),
-      marginTop: responsiveHeight(3),
+      marginTop: responsiveHeight(2),
       alignItems: "center",
       borderRadius: 11,
       shadowColor: "#000",
