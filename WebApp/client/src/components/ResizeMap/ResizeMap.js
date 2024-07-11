@@ -3,7 +3,7 @@ import { GoogleMap, LoadScript, PolygonF } from "@react-google-maps/api";
 import { styles } from "./ResizeMapStyles";
 import AxiosInstance from "../../AxiosInstance";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import html2canvas from "html2canvas";
 import axios from "axios";
 
@@ -20,6 +20,7 @@ const ResizeMapScreen = () => {
   const [history, setHistory] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
   const mapRef = useRef(null);
+  const mapContainerRef = useRef(null);
 
   const containerStyle = {
     width: "100%",
@@ -113,8 +114,40 @@ const ResizeMapScreen = () => {
   };
 
   const captureMap = async () => {
-    if (mapRef.current) {
-      const canvas = await html2canvas(mapRef.current);
+    if (mapContainerRef.current) {
+      const map = mapRef.current.state.map;
+
+      // Hide UI elements
+      map.setOptions({
+        disableDefaultUI: true,
+        zoomControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+      });
+
+      // Wait for the next render cycle
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const canvas = await html2canvas(mapContainerRef.current, {
+        useCORS: true,
+        allowTaint: true,
+        scale: 0.5,
+        ignoreElements: (element) => {
+          return (
+            element.tagName === "LINK" &&
+            element.href.includes("fonts.googleapis.com")
+          );
+        },
+      });
+
+      // Restore UI elements
+      map.setOptions({
+        disableDefaultUI: false,
+        zoomControl: true,
+        streetViewControl: true,
+        fullscreenControl: false,
+      });
+
       return new Promise((resolve) => {
         canvas.toBlob(resolve, "image/png");
       });
@@ -125,8 +158,12 @@ const ResizeMapScreen = () => {
   const saveMapPoints = async () => {
     try {
       setIsSaving(true);
+      message.loading("Capturing map image...", 0);
+
       const imageBlob = await captureMap();
       const imageUrl = await uploadToImgbb(imageBlob);
+
+      message.success("Map image captured successfully!");
 
       const locationPoints = appArray[0].path.map((point) => ({
         latitude: point.lat,
@@ -151,8 +188,10 @@ const ResizeMapScreen = () => {
       }
     } catch (error) {
       console.error("An error occurred while updating the location:", error);
+      message.error("Failed to update location. Please try again.");
     } finally {
       setIsSaving(false);
+      message.destroy();
     }
   };
 
@@ -214,12 +253,13 @@ const ResizeMapScreen = () => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.mapContainer} ref={mapRef}>
+      <div style={styles.mapContainer} ref={mapContainerRef}>
         <LoadScript
           googleMapsApiKey={process.env.REACT_APP_GOOGLE_CLOUD_API_KEY}
           libraries={["places"]}
         >
           <GoogleMap
+            ref={mapRef}
             mapContainerStyle={containerStyle}
             zoom={19}
             center={center}
