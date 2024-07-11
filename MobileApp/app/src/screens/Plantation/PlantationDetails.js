@@ -29,12 +29,13 @@ export default function PlantationDetails({ route }) {
   const [area, setArea] = useState(null);
   const [perimeter, setPerimeter] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [plantationdata,setplantationdata]=useState(null);
   const fetchData = async (id) => {
     try {
       const response = await AxiosInstance.get(
         `/api/plantation/numberOfPlants/${id}`
       );
+      setplantationdata(response.data);
       setnumberOfPlants(response.data.numberOfPlants);
       setPlantDensity(response.data.PlantDensity);
       setTextPlant(response.data.PlnatType);
@@ -77,18 +78,19 @@ export default function PlantationDetails({ route }) {
   };
 
   // edit button pressed function
-  const handleEditIconPress = () => {
+  const handleIconPress = () => {
     Alert.alert(
-      "Delete Data",
-      "Do you want to Delete data?",
+      "Edit Options",
+      "What would you like to do ?",
       [
         {
-          text: "No",
+          text: "Close",
           onPress: () => console.log("No pressed"),
           style: "cancel",
         },
         {
-          text: "Yes",
+          text: "Delete",
+          style:"destructive",
           onPress: async () => {
             try {
               await PlantationDelete(id);
@@ -105,13 +107,26 @@ export default function PlantationDetails({ route }) {
             }
           },
         },
+        {
+          text:"Update",
+          onPress:()=>handleUpdate()
+        }
       ],
       { cancelable: false }
     );
   };
+const handleUpdate=()=>{
+  navigation.navigate("Plantation",{
+        id:id,
+        area:area,
+        perimeter:perimeter,
+        item:item,
+        plantationdata:plantationdata
+});
 
+};
   const backToHome = () => {
-    navigation.navigate("Home");
+    navigation.navigate("TemplateView",{item:item});
   };
 
   const html = `
@@ -269,10 +284,10 @@ export default function PlantationDetails({ route }) {
 
         <Text style={styles.headerText}>Plantation Details</Text>
 
-        {/* pencil/ pen icon  */}
-        <TouchableOpacity onPress={handleEditIconPress}>
+        
+        <TouchableOpacity onPress={handleIconPress}>
           <MaterialCommunityIcons
-            name="delete"
+            name="square-edit-outline"
             size={23}
             color="white"
             style={{ marginRight: 5 }}
