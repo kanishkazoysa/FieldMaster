@@ -1,5 +1,9 @@
 import { StyleSheet, StatusBar, Platform } from "react-native";
-import { responsiveHeight, responsiveWidth, responsiveFontSize } from "react-native-responsive-dimensions";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
 
 const styles = StyleSheet.create({
   layerIconContainer: {
@@ -48,16 +52,16 @@ const styles = StyleSheet.create({
   markerTouchArea: {
     width: 30,
     height: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   marker: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: "black",
   },
   header: {
     height: responsiveHeight(6.5),
@@ -106,6 +110,20 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.7)",
     borderRadius: responsiveWidth(1),
     padding: responsiveWidth(2.1),
+  },
+  loadingOverlay: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingText: {
+    color: "#fff",
+    marginTop: 10,
   },
 });
 

@@ -6,6 +6,7 @@ import {
   Text,
   FlatList,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import MapView, {
   PROVIDER_GOOGLE,
@@ -51,6 +52,7 @@ export default function WalkaroundLand() {
   const [showUndoButton, setShowUndoButton] = useState(true);
   const [showFillColor, setShowFillColor] = useState(false);
   const [isPolygonClosed, setIsPolygonClosed] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   //define taskmanager to request location permission
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
@@ -263,6 +265,7 @@ export default function WalkaroundLand() {
   // save map data
   const saveMapData = async () => {
     try {
+      setIsSaving(true);
       let imageUrl = "";
       if (mapRef.current) {
         const uri = await captureRef(mapRef.current, {
@@ -283,6 +286,8 @@ export default function WalkaroundLand() {
     } catch (error) {
       console.error("Error capturing or uploading map screenshot:", error);
       Alert.alert("Error", "Failed to save map data. Please try again.");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -537,6 +542,12 @@ export default function WalkaroundLand() {
           </TouchableOpacity>
         )}
       </View>
+      {isSaving && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator color="#007BFF" size={45} />
+          <Text style={styles.loadingText}>Saving...</Text>
+        </View>
+      )}
     </View>
   );
 }

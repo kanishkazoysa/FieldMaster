@@ -100,14 +100,14 @@ export default function PlantationDetails({
             <BsBoundingBox color="gray" size={28} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>{perimeter} {PerimeterUnitselectedValue}</p>
+              <p style={styles.propertyValue}>{parseFloat(perimeter).toFixed(2)} {PerimeterUnitselectedValue}</p>
             </div>
           </div>
           <div className="property" style={styles.property}>
             <PiSquareDuotone color="gray" size={40} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
-              <p style={styles.propertyValue}>{area} {AreaUnitselectedValue}</p>
+              <p style={styles.propertyValue}>{parseFloat(area).toFixed(2)} {AreaUnitselectedValue}</p>
             </div>
           </div>
         </div>

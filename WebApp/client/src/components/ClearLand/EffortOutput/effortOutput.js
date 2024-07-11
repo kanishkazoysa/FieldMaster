@@ -213,14 +213,14 @@ export default function EffortOutput({
                 <BsBoundingBox color="gray" size={25} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{Perimeter}Km</p>
+                  <p style={styles.propertyValue}>{parseFloat(Perimeter).toFixed(2)} km</p>
                 </div>
               </div>
               <div style={styles.property}>
                 <PiSquareDuotone color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
-                  <p style={styles.propertyValue}>{Area} perches</p>
+                  <p style={styles.propertyValue}>{parseFloat(Area).toFixed(2)} perch</p>
                 </div>
               </div>
             </div>
