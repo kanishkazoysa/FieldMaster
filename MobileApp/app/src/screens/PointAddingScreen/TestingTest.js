@@ -1,3 +1,4 @@
+/* this is the PointAddingScreen before */
 import React, { useEffect, useState, useRef } from "react";
 import { Polygon } from "react-native-maps";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
@@ -9,7 +10,7 @@ import {
   Modal,
   ActivityIndicator,
 } from "react-native";
-import { Alert } from "react-native";
+import { TextInput, Alert } from "react-native";
 import { Polyline } from "react-native-maps";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { polygon, area, length } from "@turf/turf";
@@ -26,9 +27,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { captureRef } from "react-native-view-shot";
 import axios from "axios";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-
-const apiKey = "AIzaSyCmDfdWl4TZegcfinTmC0LlmFCiEcdRbmU";
 
 const PointAddingScreen = ({ navigation, route }) => {
   const [showUserLocation, setShowUserLocation] = useState(false);
@@ -49,20 +47,6 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [capturedImageUri, setCapturedImageUri] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-
-  const handlePlaceSelect = (data, details = null) => {
-    if (details) {
-      const { lat, lng } = details.geometry.location;
-      const newRegion = {
-        latitude: lat,
-        longitude: lng,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
-      };
-      setRegion(newRegion);
-      mapRef.current.animateToRegion(newRegion);
-    }
-  };
 
   const getLocationName = async (latitude, longitude) => {
     try {
@@ -323,21 +307,40 @@ const PointAddingScreen = ({ navigation, route }) => {
         </View>
       ) : (
         <View style={{ flex: 1 }}>
-          <GooglePlacesAutocomplete
-            placeholder="Search Location"
-            onPress={handlePlaceSelect}
-            fetchDetails={true}
-            query={{
-              key: apiKey,
-              language: "en",
-            }}
-            styles={{
-              container: styles.searchBarContainer,
-              textInputContainer: styles.searchBarInputContainer,
-              textInput: styles.searchBarInput,
-            }}
-          />
-
+          <View style={styles.searchbar}>
+            <View style={styles.locationIconContainer}>
+              <MaterialIcons
+                name="location-on"
+                size={responsiveFontSize(2.5)}
+                color="#007BFF"
+              />
+            </View>
+            <TextInput
+              placeholder="Search Location"
+              placeholderTextColor="rgba(0, 0, 0, 0.5)"
+              onFocus={onFocus}
+              onBlur={onBlur}
+              style={[
+                styles.searchbarInput,
+                isFocused ? styles.searchbarInputFocused : null,
+              ]}
+              onChangeText={setSearchQuery}
+              value={searchQuery}
+              onSubmitEditing={searchLocation}
+            />
+            {searchQuery !== "" && (
+              <TouchableOpacity
+                onPress={clearSearchQuery}
+                style={styles.clearIconContainer}
+              >
+                <MaterialIcons
+                  name="cancel"
+                  size={responsiveFontSize(2.5)}
+                  color="#707070"
+                />
+              </TouchableOpacity>
+            )}
+          </View>
           <Modal
             animationType="slide"
             transparent={true}

@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 /* import responsive library of react nativ */
 import {
   responsiveFontSize,
@@ -7,11 +7,42 @@ import {
 } from "react-native-responsive-dimensions";
 
 export const styles = StyleSheet.create({
+  searchBarContainer: {
+    position: "absolute",
+    top: 20,
+    left: 12,
+    right: 10,
+    width: "93%",
+    zIndex: 1,
+  },
+  searchBarInputContainer: {
+    backgroundColor: "white",
+    borderRadius: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: responsiveWidth(2),
+    borderRadius: 25,
+  },
+  searchBarInput: {
+    height: responsiveHeight(5),
+    marginTop: 4,
+    marginLeft: 0,
+    marginRight: 0,
+    color: "#5d5d5d",
+    fontSize: 16,
+  },
   loadingScreen: {
     flex: 1,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  searchBarWrapper: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    right: 10,
+    zIndex: 1,
   },
   searchBarContainer: {
     position: "absolute",
