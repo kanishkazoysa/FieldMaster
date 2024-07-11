@@ -26,25 +26,29 @@ const AnalyticsSection = ({ users, setLoading }) => {
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
   const [isMapLoading, setIsMapLoading] = useState(true);
+  const [map, setMap] = useState(null);
 
+
+  const onMapLoad = useCallback((mapInstance) => {
+    setMap(mapInstance);
+    setIsMapLoading(false);
+  }, []);
 
   const handlePlacesChanged = useCallback(() => {
     if (!searchBoxRef.current) return;
-
+  
     const places = searchBoxRef.current.getPlaces();
-    if (places.length === 0) return;
-
+    if (places.length === 0 || !map) return;
+  
     const selectedPlace = places[0];
     const location = selectedPlace.geometry.location.toJSON();
     setSelectedLocation(location);
-
-    if (mapRef.current && mapRef.current.fitBounds) {
-      const bounds = new window.google.maps.LatLngBounds();
-      bounds.extend(location);
-      mapRef.current.fitBounds(bounds);
-      mapRef.current.setZoom(15);
-    }
-  }, []);
+  
+    const bounds = new window.google.maps.LatLngBounds();
+    bounds.extend(location);
+    map.fitBounds(bounds);
+    map.setZoom(15);
+  }, [map]);
 
   const onSearchBoxLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
@@ -372,9 +376,9 @@ const AnalyticsSection = ({ users, setLoading }) => {
             <GoogleMap
               mapContainerStyle={mapContainerStyle}
               center={selectedLocation || mapCenter}
-              zoom={8}
+              zoom={selectedLocation ? 15 : 8}
               ref={mapRef}
-              onLoad={() => setIsMapLoading(false)}
+              onLoad={onMapLoad}
             >
             {isMapLoading && (
               <div style={styles.loadingOverlay}>

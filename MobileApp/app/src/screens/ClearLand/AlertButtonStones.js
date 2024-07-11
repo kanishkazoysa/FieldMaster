@@ -8,7 +8,9 @@ const handleIconPress = () => {
     "Select to calculate effort for breaking large stones",
     `Small: 0.5m³ stone. Enter stone count as well.
     
-Large: 1m³ stone. Enter stone count as well.`,
+Large: 1m³ stone. Enter stone count as well.
+
+Note : If you only want to break stones in your land choose only "Stones" options.`,
     
     [
       {

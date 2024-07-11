@@ -210,7 +210,7 @@ export default function PlantationDetails({
             <BsBoundingBox color="gray" size={28} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>{perimeter} Km</p>
+              <p style={styles.propertyValue}>{parseFloat(perimeter).toFixed(2)} km</p>
             </div>
           </div>
           <div className="property" style={styles.property}>

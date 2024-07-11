@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { MdArrowBack } from 'react-icons/md';
-import './SaveScreenWebStyles.css';
-import { FaVectorSquare } from 'react-icons/fa6';
-import { RiPieChart2Fill } from 'react-icons/ri';
-import { FaRegSave } from 'react-icons/fa';
-import axios from 'axios';
-import AxiosInstance from '../../AxiosInstance';
+import React, { useState, useEffect } from "react";
+import { MdArrowBack } from "react-icons/md";
+import "./SaveScreenWebStyles.css";
+import { FaVectorSquare } from "react-icons/fa6";
+import { RiPieChart2Fill } from "react-icons/ri";
+import { FaRegSave } from "react-icons/fa";
+import axios from "axios";
+import AxiosInstance from "../../AxiosInstance";
 
 const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
-  const [area, setArea] = useState('0');
-  const [perimeter, setPerimeter] = useState('0');
+  const [area, setArea] = useState("0");
+  const [perimeter, setPerimeter] = useState("0");
   const [locationPoints, setLocationPoints] = useState([]);
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState("");
 
-  const [templateName, setTemplateName] = useState(' ');
-  const [measureName, setMeasureName] = useState(' coffee trees');
-  const [landType, setLandType] = useState(' ');
-  const [location, setLocation] = useState('');
-  const [description, setDescription] = useState(' ');
+  const [templateName, setTemplateName] = useState(" ");
+  const [measureName, setMeasureName] = useState(" coffee trees");
+  const [landType, setLandType] = useState(" ");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState(" ");
 
   useEffect(() => {
     if (landInfo) {
@@ -37,7 +37,7 @@ const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
   const handleSave = async () => {
     try {
       const response = await AxiosInstance.post(
-        '/api/auth/mapTemplate/saveTemplate',
+        "/api/auth/mapTemplate/saveTemplate",
         {
           perimeter,
           area,
@@ -51,20 +51,20 @@ const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
         },
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
 
       if (response.status === 200) {
-        console.log('Template saved successfully:', response.data);
-        alert('Template saved successfully');
+        console.log("Template saved successfully:", response.data);
+        alert("Template saved successfully");
       } else {
-        console.error('Unexpected response status:', response.status);
+        console.error("Unexpected response status:", response.status);
       }
     } catch (error) {
       console.error(
-        'Error saving template:',
+        "Error saving template:",
         error.response ? error.response.data : error.message
       );
     }
@@ -75,7 +75,7 @@ const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
         <div className="save-screen-header">
           <MdArrowBack
             onClick={() => {
-              console.log('clicked back btn');
+              console.log("clicked back btn");
               hideMapButtons();
               onBackToSidebar();
             }}
@@ -90,14 +90,16 @@ const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
               <FaVectorSquare className="info-icon" size={22} />
               <div>
                 <p>Perimeter</p>
-                <p className="bold-text">{perimeter} km</p>
+                <p className="bold-text">
+                  {parseFloat(perimeter).toFixed(2)} km
+                </p>
               </div>
             </div>
             <div className="info-block">
               <RiPieChart2Fill className="info-icon" size={25} />
               <div>
                 <p>Area</p>
-                <p className="bold-text">{area} perches</p>
+                <p className="bold-text">{parseFloat(area).toFixed(2)} perch</p>
               </div>
             </div>
           </div>
@@ -148,7 +150,7 @@ const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
         </div>
         {imageUrl && (
           <div className="map-snapshot">
-            <img src={imageUrl} alt="Map Snapshot" height={'150px'} />
+            <img src={imageUrl} alt="Map Snapshot" height={"150px"} />
           </div>
         )}
         <div className="save-button-div">
