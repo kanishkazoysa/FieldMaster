@@ -19,10 +19,40 @@ import AxiosInstance from "../../AxiosInstance";
 import { Appbar } from "react-native-paper";
 
 export default function Plantation({ route }) {
-  const { id, area, perimeter, item,plantationdata } = route.params;
+  const { id, area, perimeter, item, plantationdata } = route.params;
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const[editMode,setEditMode]=useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedPlantType, setSelectedPlantType] = useState(null);
+  const [textplantspace, setTextPlantSpace] = useState("");
+  const [textRowspace, setTextRowSpace] = useState("");
+  const [plants, setPlants] = useState([]);
+
   console.log(id, area, perimeter);
+
+  useEffect(() => {
+    fetchPlants();
+
+    if (plantationdata) {
+      setEditMode(true);
+      setSelectedPlantType(plantationdata.PlnatType);
+      setTextPlantSpace(plantationdata.plantspace);
+      PlantSpaceUnitSetSelectedValue(plantationdata.Unit);
+      setTextRowSpace(plantationdata.rowSpace);
+      PlantSpaceUnitSetSelectedValue(plantationdata.Unit);
+    }
+  }, [plantationdata]);
+
+  const fetchPlants = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/Plants"
+      );
+      setPlants(response.data);
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+      message.error("Failed to fetch plants. Please try again.");
+    }
+  };
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -43,24 +73,6 @@ export default function Plantation({ route }) {
       keyboardDidHideListener.remove();
     };
   }, []);
-
-  
-
-  const [selectedPlantType, setSelectedPlantType] = useState(null);
-  const [textplantspace, setTextPlantSpace] = useState("");
-  const [textRowspace, setTextRowSpace] = useState("");
-
-  const fetchPlants = async () => {
-    try {
-      const response = await AxiosInstance.get(
-        "/api/auth/inputControl/getItems/Plants"
-      );
-      setPlants(response.data);
-    } catch (error) {
-      console.error("Error fetching plants:", error);
-      message.error("Failed to fetch plants. Please try again.");
-    }
-  };
 
   const navigation = useNavigation();
 
@@ -129,15 +141,17 @@ export default function Plantation({ route }) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
-    const method = editMode ? 'put' : 'post';
-      const url = editMode ? `/api/plantation/plantation/${id}` : '/api/plantation/plantation';
+    const method = editMode ? "put" : "post";
+    const url = editMode
+      ? `/api/plantation/plantation/${id}`
+      : "/api/plantation/plantation";
 
     try {
       const response = await AxiosInstance[method](url, {
-        plantType: selectedPlantType.value,
+        textPlant: selectedPlantType,
         textplantspace: plantSpaceInMeters,
         textRowspace: rowSpaceInMeters,
-        PlantSpaceUnitselectedValue: "m", 
+        PlantSpaceUnitselectedValue: "m",
         id,
         area,
       });
@@ -148,18 +162,7 @@ export default function Plantation({ route }) {
       Alert.alert("Error", "Something went wrong");
     }
   };
-  useEffect(() => {
-    fetchPlants();
 
-    if (plantationdata) {
-      setEditMode(true);
-      setSelectedPlantType( {value:plantationdata.PlnatType,label:plantationdata.PlnatType} );
-      setTextPlantSpace(plantationdata.plantspace);
-      PlantSpaceUnitSetSelectedValue(plantationdata.Unit);
-      setTextRowSpace(plantationdata.rowSpace);
-      PlantSpaceUnitSetSelectedValue(plantationdata.Unit);
-    }
-  }, [plantationdata]);
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -213,14 +216,17 @@ export default function Plantation({ route }) {
           <View style={styles.Box2}>
             <View style={styles.TopText}>
               <MaterialCommunityIcons name="sprout" size={20} color="gray" />
-              <Text style={styles.Box2titleText}>Plant              </Text>
+              <Text style={styles.Box2titleText}>Plant </Text>
             </View>
             <View style={styles.dropdownContainerPlant}>
               <RNPickerSelect
                 placeholder={{ label: "Plant type", value: null }}
-                items={plantOptions}
-                onValueChange={(value) => setSelectedPlantType({ value })}
-                value={selectedPlantType?.value}
+                items={plants.map((plant) => ({
+                  label: plant.Name,
+                  value: plant.Name,
+                }))}
+                onValueChange={(value) => setSelectedPlantType(value)}
+                value={selectedPlantType}
                 style={{
                   inputIOS: {
                     textAlign: "center",
