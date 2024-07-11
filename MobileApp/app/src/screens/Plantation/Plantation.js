@@ -216,7 +216,7 @@ export default function Plantation({ route }) {
           <View style={styles.Box2}>
             <View style={styles.TopText}>
               <MaterialCommunityIcons name="sprout" size={20} color="gray" />
-              <Text style={styles.Box2titleText}>Plant </Text>
+              <Text style={styles.Box2titleText}>Plant              </Text>
             </View>
             <View style={styles.dropdownContainerPlant}>
               <RNPickerSelect

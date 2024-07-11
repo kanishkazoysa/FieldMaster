@@ -199,20 +199,18 @@ const handleUpdate=()=>{
             </div>
             <h2>Map Information</h2>
             <ul>
-                <li>Perimeter = 1.5 km</li>
-                <li>Area = 100 accres</li>
+                <li>Perimeter =  ${perimeter} km</li>
+                <li>Area =  ${area} perch</li>
             </ul>
   
             <h2>Plantation Details</h2>
   
             <ul>
-            <li>Total plants = 200 </li>
-            <li>Density = 30 </li>
-            <li> plat type = ${textPlant}</li>
-            <li> Plant Space = ${textplantspace} </li>
-            <li> Row Space = ${textRowspace} </li>
-            <li> Plant count = ${numberOfPlants}</li>
-            <li> Plant Density = ${PlantationDensity}</li>
+            <li> Plant type = ${textPlant}</li>
+            <li> Plant Space = ${textplantspace} m</li>
+            <li> Row Space = ${textRowspace} m</li>
+            <li> Plant count = ${numberOfPlants} plants</li>
+            <li> Plant Density = ${PlantationDensity} /m<sup>2</sup></li>
             <ul>
             
             </ul></li>

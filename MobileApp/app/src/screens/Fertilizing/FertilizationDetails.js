@@ -129,8 +129,8 @@ export default function FertilizationDetails({ route }) {
           </div>
           <h2>Map Information</h2>
           <ul>
-              <li>Perimeter = 1.5 km</li>
-              <li>Area = 100 accres</li>
+              <li>Perimeter =  ${perimeter} km</li>
+              <li>Area =  ${area} perch</li>
           </ul>
 
           <h2>Fertilizing Details</h2>
@@ -253,7 +253,7 @@ const navigation = useNavigation();
               />
               <View style={styles.box2PropertyDetails}>
                 <Text style={styles.Box2PropertyLabel}>Area</Text>
-                <Text style={styles.Box2PropertyValue}>{area}perches</Text>
+                <Text style={styles.Box2PropertyValue}>{area} perch</Text>
               </View>
             </View>
           </View>
