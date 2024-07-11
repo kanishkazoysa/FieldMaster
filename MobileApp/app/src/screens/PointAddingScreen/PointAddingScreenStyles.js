@@ -13,6 +13,24 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  searchBarContainer: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    right: 10,
+    zIndex: 1,
+  },
+  searchBarInputContainer: {
+    backgroundColor: "white",
+    borderRadius: 5,
+    borderColor: "#007BFF",
+    borderWidth: 1,
+  },
+  searchBarInput: {
+    height: 40,
+    color: "#000",
+    fontSize: 16,
+  },
   loadingOverlay: {
     position: "absolute",
     left: 0,
@@ -142,6 +160,13 @@ export const styles = StyleSheet.create({
     zIndex: 1,
     flexDirection: "row",
     alignItems: "center",
+  },
+  searchBarWrapper: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    right: 10,
+    zIndex: 1,
   },
   searchbar: {
     width: "100%",

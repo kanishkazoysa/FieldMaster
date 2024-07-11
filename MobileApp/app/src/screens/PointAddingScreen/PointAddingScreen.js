@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Polygon } from 'react-native-maps';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import React, { useEffect, useState, useRef } from "react";
+import { Polygon } from "react-native-maps";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import {
   View,
   Text,
@@ -8,24 +8,26 @@ import {
   TouchableOpacity,
   Modal,
   ActivityIndicator,
-} from 'react-native';
-import { TextInput, Alert } from 'react-native';
-import { Polyline } from 'react-native-maps';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { polygon, area, length } from '@turf/turf';
+} from "react-native";
+import { TextInput, Alert } from "react-native";
+import { Polyline } from "react-native-maps";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { polygon, area, length } from "@turf/turf";
 import {
   faLayerGroup,
   faLocationCrosshairs,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { styles } from './PointAddingScreenStyles';
-import MapView, { MAP_TYPES } from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-import * as Location from 'expo-location';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { responsiveFontSize } from 'react-native-responsive-dimensions';
-import { captureRef } from 'react-native-view-shot';
-import axios from 'axios';
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { styles } from "./PointAddingScreenStyles";
+import MapView, { MAP_TYPES } from "react-native-maps";
+import { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { captureRef } from "react-native-view-shot";
+import axios from "axios";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+const apiKey = "AIzaSyCmDfdWl4TZegcfinTmC0LlmFCiEcdRbmU";
 
 const PointAddingScreen = ({ navigation, route }) => {
   const [showUserLocation, setShowUserLocation] = useState(false);
@@ -41,8 +43,6 @@ const PointAddingScreen = ({ navigation, route }) => {
   const mapRef = React.useRef(null);
   const viewShotRef = useRef(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
   const [capturedImageUri, setCapturedImageUri] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -57,30 +57,30 @@ const PointAddingScreen = ({ navigation, route }) => {
         const addressComponents = data.results[0].address_components;
         const city = addressComponents.find(
           (component) =>
-            component.types.includes('locality') ||
-            component.types.includes('administrative_area_level_2')
+            component.types.includes("locality") ||
+            component.types.includes("administrative_area_level_2")
         );
         const country = addressComponents.find((component) =>
-          component.types.includes('country')
+          component.types.includes("country")
         );
         if (city && country) {
           return `${city.long_name}, ${country.long_name}`;
         }
       }
-      return '';
+      return "";
     } catch (error) {
-      console.error('Error getting location name:', error);
-      return '';
+      console.error("Error getting location name:", error);
+      return "";
     }
   };
 
   const uploadToImgbb = async (imageUri) => {
-    const apiKey = 'a08fb8cde558efecce3f05b7f97d4ef7';
+    const apiKey = "a08fb8cde558efecce3f05b7f97d4ef7";
     const formData = new FormData();
-    formData.append('image', {
+    formData.append("image", {
       uri: imageUri,
-      type: 'image/jpeg',
-      name: 'map_image.jpg',
+      type: "image/jpeg",
+      name: "map_image.jpg",
     });
 
     try {
@@ -89,13 +89,13 @@ const PointAddingScreen = ({ navigation, route }) => {
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         }
       );
       return response.data.data.url;
     } catch (error) {
-      console.error('Error uploading image to imgbb:', error);
+      console.error("Error uploading image to imgbb:", error);
       throw error;
     }
   };
@@ -130,8 +130,8 @@ const PointAddingScreen = ({ navigation, route }) => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access location was denied');
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
         return;
       }
       let location = await Location.getCurrentPositionAsync({
@@ -159,7 +159,7 @@ const PointAddingScreen = ({ navigation, route }) => {
     if (points.length > 2) {
       setIsPolygonComplete(true);
     } else {
-      alert('You need at least 3 points to complete a polygon');
+      alert("You need at least 3 points to complete a polygon");
     }
   };
   /* the handleUndoLastPoint function is used to undo the last point */
@@ -173,20 +173,20 @@ const PointAddingScreen = ({ navigation, route }) => {
     try {
       setIsSaving(true);
       if (points.length < 3) {
-        alert('You need at least 3 points to calculate area and perimeter');
+        alert("You need at least 3 points to calculate area and perimeter");
         setIsSaving(false);
         return;
       }
 
-      let imageUrl = '';
+      let imageUrl = "";
       if (mapRef.current) {
         const uri = await captureRef(mapRef.current, {
-          format: 'jpg',
+          format: "jpg",
           quality: 0.3,
         });
-        console.log('Captured image URI:', uri);
+        console.log("Captured image URI:", uri);
         imageUrl = await uploadToImgbb(uri);
-        console.log('Uploaded image URL:', imageUrl);
+        console.log("Uploaded image URL:", imageUrl);
       }
 
       const formattedPoints = points.map((point) => [
@@ -197,24 +197,24 @@ const PointAddingScreen = ({ navigation, route }) => {
 
       const poly = polygon([formattedPoints]);
       const areaMeters = area(poly);
-      const perimeterMeters = length(poly, { units: 'meters' });
+      const perimeterMeters = length(poly, { units: "meters" });
       const areaPerches = areaMeters / 25.29285264;
       const perimeterKilometers = perimeterMeters / 1000;
       setIsSaving(false);
 
       Alert.alert(
-        'Confirmation',
+        "Confirmation",
         `Area: ${areaPerches.toFixed(2)} perches, Perimeter: ${perimeterKilometers.toFixed(2)} kilometers`,
         [
           {
-            text: 'Cancel',
+            text: "Cancel",
             onPress: () => setPoints([]),
-            style: 'cancel',
+            style: "cancel",
           },
           {
-            text: 'OK',
+            text: "OK",
             onPress: () => {
-              navigation.navigate('SaveScreen', {
+              navigation.navigate("SaveScreen", {
                 locationPoints: points,
                 area: areaPerches,
                 perimeter: perimeterKilometers,
@@ -226,8 +226,8 @@ const PointAddingScreen = ({ navigation, route }) => {
         { cancelable: false }
       );
     } catch (error) {
-      console.error('Error saving map:', error);
-      alert('An error occurred while saving the map. Please try again.');
+      console.error("Error saving map:", error);
+      alert("An error occurred while saving the map. Please try again.");
       setIsSaving(false);
     }
   };
@@ -240,60 +240,33 @@ const PointAddingScreen = ({ navigation, route }) => {
 
   /* the handleCancel function is used to navigate to the home screen */
   const handleCancel = () => {
-    navigation.navigate('Home');
+    navigation.navigate("Home");
   };
   const mapTypes = [
-    { name: 'Satellite', value: 'satellite' },
-    { name: 'Standard', value: 'standard' },
-    { name: 'Hybrid', value: 'hybrid' },
-    { name: 'Terrain', value: 'terrain' },
+    { name: "Satellite", value: "satellite" },
+    { name: "Standard", value: "standard" },
+    { name: "Hybrid", value: "hybrid" },
+    { name: "Terrain", value: "terrain" },
   ];
 
   /* the toggleMapType function is used to toggle the map type */
   const toggleMapType = () => {
     setShowDropdown(!showDropdown);
   };
-  const onFocus = () => {
-    setIsFocused(true);
-  };
-  const onBlur = () => {
-    setIsFocused(false);
-  };
 
-  /* the searchLocation function is used to search for a location */
-  const searchLocation = async () => {
-    if (searchQuery) {
-      try {
-        const response = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-            searchQuery
-          )}&key=AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U`
-        );
-        const data = await response.json();
-        if (data.results && data.results.length > 0) {
-          const { lat, lng } = data.results[0].geometry.location;
-          setShowCurrentLocation(false); // Hide current location
-          setSearchedLocation({ latitude: lat, longitude: lng });
-          if (mapRef.current) {
-            mapRef.current.animateToRegion({
-              latitude: lat,
-              longitude: lng,
-              latitudeDelta: 0.05,
-              longitudeDelta: 0.05,
-            });
-          }
-        } else {
-          console.error('Location not found');
-        }
-      } catch (error) {
-        console.error('Error searching for location:', error);
+  const handlePlaceSelect = (data, details = null) => {
+    if (details) {
+      const { lat, lng } = details.geometry.location;
+      setSearchedLocation({ latitude: lat, longitude: lng });
+      if (mapRef.current) {
+        mapRef.current.animateToRegion({
+          latitude: lat,
+          longitude: lng,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        });
       }
     }
-  };
-
-  /* the clearSearchQuery function is used to clear the search query */
-  const clearSearchQuery = () => {
-    setSearchQuery('');
   };
 
   return (
@@ -306,39 +279,21 @@ const PointAddingScreen = ({ navigation, route }) => {
         </View>
       ) : (
         <View style={{ flex: 1 }}>
-          <View style={styles.searchbar}>
-            <View style={styles.locationIconContainer}>
-              <MaterialIcons
-                name="location-on"
-                size={responsiveFontSize(2.5)}
-                color="#007BFF"
-              />
-            </View>
-            <TextInput
+          <View style={styles.searchBarWrapper} pointerEvents="box-none">
+            <GooglePlacesAutocomplete
               placeholder="Search Location"
-              placeholderTextColor="rgba(0, 0, 0, 0.5)"
-              onFocus={onFocus}
-              onBlur={onBlur}
-              style={[
-                styles.searchbarInput,
-                isFocused ? styles.searchbarInputFocused : null,
-              ]}
-              onChangeText={setSearchQuery}
-              value={searchQuery}
-              onSubmitEditing={searchLocation}
+              onPress={handlePlaceSelect}
+              fetchDetails={true}
+              query={{
+                key: apiKey,
+                language: "en",
+              }}
+              styles={{
+                container: styles.searchBarContainer,
+                textInputContainer: styles.searchBarInputContainer,
+                textInput: styles.searchBarInput,
+              }}
             />
-            {searchQuery !== '' && (
-              <TouchableOpacity
-                onPress={clearSearchQuery}
-                style={styles.clearIconContainer}
-              >
-                <MaterialIcons
-                  name="cancel"
-                  size={responsiveFontSize(2.5)}
-                  color="#707070"
-                />
-              </TouchableOpacity>
-            )}
           </View>
           <Modal
             animationType="slide"
@@ -349,9 +304,9 @@ const PointAddingScreen = ({ navigation, route }) => {
             <View
               style={{
                 flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
               }}
             >
               <View style={styles.centeredView}>
@@ -399,7 +354,7 @@ const PointAddingScreen = ({ navigation, route }) => {
                   }}
                   mapType={mapTypes[mapTypeIndex].value}
                   onPress={(event) => {
-                    if (!isButtonPressed) {
+                    if (!isButtonPressed && !event.target) {
                       setPoints([...points, event.nativeEvent.coordinate]);
                     }
                   }}
@@ -446,7 +401,7 @@ const PointAddingScreen = ({ navigation, route }) => {
                             style={styles.dropdownItem}
                             onPress={() => selectMapType(index)}
                           >
-                            <Text style={{ color: '#fff' }}>{item.name}</Text>
+                            <Text style={{ color: "#fff" }}>{item.name}</Text>
                           </TouchableOpacity>
                         )}
                         keyExtractor={(item) => item.value}
