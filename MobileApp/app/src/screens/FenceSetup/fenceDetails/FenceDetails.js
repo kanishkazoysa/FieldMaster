@@ -33,6 +33,7 @@ export default function FenceDetails({ route }) {
   const [perimeter, setPerimeter] = useState(null);
   const [data1, setData1] = useState([]);
   const [loading, setLoading] = useState(true); // Add loading state
+  const [fencedata, setfencedata] = useState(null);
 
   // Fetch data from database
   const fetchData = async (id) => {
@@ -40,6 +41,7 @@ export default function FenceDetails({ route }) {
       const response = await AxiosInstance.get(
         `/api/fence/numberOfSticks/${id}`
       );
+      setfencedata(response.data);
       setNumberOfSticks(response.data.numberOfSticks);
       setFenceType(response.data.fenceType);
       setPostSpace(response.data.postSpace);
@@ -79,11 +81,34 @@ export default function FenceDetails({ route }) {
     }
   };
 
-  // Edit button pressed function
   const handleIconPress = () => {
     Alert.alert(
+      "Edit Options",
+      "What would you like to do?",
+      [
+        {
+          text: "Close",
+          style: "cancel"
+        },
+        {
+          text: "Delete",
+          onPress: () => handleDelete(),
+          style: "destructive"
+        },
+        {
+          text: "Update",
+          onPress: () => handleUpdate()
+        }
+      ],
+      { cancelable: false }
+    );
+  };
+
+  // Edit button pressed function
+  const handleDelete = () => {
+    Alert.alert(
       "Update Data",
-      "Do you want to update data?",
+      "Do you want to delete Fence data?",
       [
         {
           text: "No",
@@ -116,9 +141,19 @@ export default function FenceDetails({ route }) {
     );
   };
 
+  const handleUpdate = () => {
+    navigation.navigate("Fence", {
+      id: id,
+      Area: area,
+      Perimeter: perimeter,
+      item: item,
+      fencedata: fencedata,
+    });
+  };
+
   // Back to home function
   const backToHome = () => {
-    navigation.navigate("Home");
+    navigation.navigate("TemplateView",{item : item})
   };
 
   // HTML file to be printed
@@ -338,6 +373,8 @@ export default function FenceDetails({ route }) {
                 marginTop: 15,
                 borderRadius: 18,
                 width: "87%",
+                backgroundColor: "#007BFF",
+                color: "white",
                 borderColor: "#007BFF", // Add this line for the border color
                 borderWidth: 0.2, // Ensure the border is visible by setting the borderWidth
               }}
@@ -352,7 +389,7 @@ export default function FenceDetails({ route }) {
                 />
               )}
             >
-              Back To Home
+              Back To TemplateView
             </Button>
           </View>
         </ScrollView>

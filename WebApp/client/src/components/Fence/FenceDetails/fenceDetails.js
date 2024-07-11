@@ -81,7 +81,7 @@ export default function FenceDetails({
 
   const handleEditIconPressd = () => {
     Modal.confirm({
-      title: 'Do you want to update Fence data',
+      title: 'Do you want to delete Fence data',
       content: 'Choose an action:',
       okText: 'Update',
       cancelText: 'Close',
@@ -115,7 +115,6 @@ export default function FenceDetails({
           // Navigate to the desired screen
           setCurrentPage('Fence');
           setAnimatePage(true);
-          setfencedata(null);
         })
         .catch((error) => {
           // Show detailed error message
