@@ -307,9 +307,8 @@ const ResizeMapScreen = () => {
           type="primary"
           style={styles.controlBtn}
           onClick={saveMapPoints}
-          disabled={isSaving}
         >
-          {isSaving ? "Saving..." : "Save"}
+          Save
         </Button>
         <Button
           type="primary"
@@ -322,7 +321,6 @@ const ResizeMapScreen = () => {
       {isSaving && (
         <div style={styles.loadingOverlay}>
           <div style={styles.loadingSpinner}></div>
-          <p style={styles.loadingText}>Saving...</p>
         </div>
       )}
     </div>
