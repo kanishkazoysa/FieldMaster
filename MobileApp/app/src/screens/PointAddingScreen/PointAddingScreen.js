@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Polygon } from "react-native-maps";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import React, { useEffect, useState, useRef } from 'react';
+import { Polygon } from 'react-native-maps';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import {
   View,
   Text,
@@ -8,24 +8,24 @@ import {
   TouchableOpacity,
   Modal,
   ActivityIndicator,
-} from "react-native";
-import { TextInput, Alert } from "react-native";
-import { Polyline } from "react-native-maps";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { polygon, area, length } from "@turf/turf";
+} from 'react-native';
+import { TextInput, Alert } from 'react-native';
+import { Polyline } from 'react-native-maps';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { polygon, area, length } from '@turf/turf';
 import {
   faLayerGroup,
   faLocationCrosshairs,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { styles } from "./PointAddingScreenStyles";
-import MapView, { MAP_TYPES } from "react-native-maps";
-import { Marker } from "react-native-maps";
-import * as Location from "expo-location";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { responsiveFontSize } from "react-native-responsive-dimensions";
-import { captureRef } from "react-native-view-shot";
-import axios from "axios";
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { styles } from './PointAddingScreenStyles';
+import MapView, { MAP_TYPES } from 'react-native-maps';
+import { Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { responsiveFontSize } from 'react-native-responsive-dimensions';
+import { captureRef } from 'react-native-view-shot';
+import axios from 'axios';
 
 const PointAddingScreen = ({ navigation, route }) => {
   const [showUserLocation, setShowUserLocation] = useState(false);
@@ -41,10 +41,11 @@ const PointAddingScreen = ({ navigation, route }) => {
   const mapRef = React.useRef(null);
   const viewShotRef = useRef(null);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [capturedImageUri, setCapturedImageUri] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   const getLocationName = async (latitude, longitude) => {
     try {
@@ -56,30 +57,30 @@ const PointAddingScreen = ({ navigation, route }) => {
         const addressComponents = data.results[0].address_components;
         const city = addressComponents.find(
           (component) =>
-            component.types.includes("locality") ||
-            component.types.includes("administrative_area_level_2")
+            component.types.includes('locality') ||
+            component.types.includes('administrative_area_level_2')
         );
         const country = addressComponents.find((component) =>
-          component.types.includes("country")
+          component.types.includes('country')
         );
         if (city && country) {
           return `${city.long_name}, ${country.long_name}`;
         }
       }
-      return "";
+      return '';
     } catch (error) {
-      console.error("Error getting location name:", error);
-      return "";
+      console.error('Error getting location name:', error);
+      return '';
     }
   };
 
   const uploadToImgbb = async (imageUri) => {
-    const apiKey = "a08fb8cde558efecce3f05b7f97d4ef7";
+    const apiKey = 'a08fb8cde558efecce3f05b7f97d4ef7';
     const formData = new FormData();
-    formData.append("image", {
+    formData.append('image', {
       uri: imageUri,
-      type: "image/jpeg",
-      name: "map_image.jpg",
+      type: 'image/jpeg',
+      name: 'map_image.jpg',
     });
 
     try {
@@ -88,13 +89,13 @@ const PointAddingScreen = ({ navigation, route }) => {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
         }
       );
       return response.data.data.url;
     } catch (error) {
-      console.error("Error uploading image to imgbb:", error);
+      console.error('Error uploading image to imgbb:', error);
       throw error;
     }
   };
@@ -129,8 +130,8 @@ const PointAddingScreen = ({ navigation, route }) => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.error("Permission to access location was denied");
+      if (status !== 'granted') {
+        console.error('Permission to access location was denied');
         return;
       }
       let location = await Location.getCurrentPositionAsync({
@@ -158,7 +159,7 @@ const PointAddingScreen = ({ navigation, route }) => {
     if (points.length > 2) {
       setIsPolygonComplete(true);
     } else {
-      alert("You need at least 3 points to complete a polygon");
+      alert('You need at least 3 points to complete a polygon');
     }
   };
   /* the handleUndoLastPoint function is used to undo the last point */
@@ -170,20 +171,22 @@ const PointAddingScreen = ({ navigation, route }) => {
   /* the handleSaveMap function is used to save the map */
   const handleSaveMap = async () => {
     try {
+      setIsSaving(true);
       if (points.length < 3) {
-        alert("You need at least 3 points to calculate area and perimeter");
+        alert('You need at least 3 points to calculate area and perimeter');
+        setIsSaving(false);
         return;
       }
 
-      let imageUrl = "";
+      let imageUrl = '';
       if (mapRef.current) {
         const uri = await captureRef(mapRef.current, {
-          format: "jpg",
-          quality: 0.8,
+          format: 'jpg',
+          quality: 0.3,
         });
-        console.log("Captured image URI:", uri);
+        console.log('Captured image URI:', uri);
         imageUrl = await uploadToImgbb(uri);
-        console.log("Uploaded image URL:", imageUrl);
+        console.log('Uploaded image URL:', imageUrl);
       }
 
       const formattedPoints = points.map((point) => [
@@ -194,23 +197,24 @@ const PointAddingScreen = ({ navigation, route }) => {
 
       const poly = polygon([formattedPoints]);
       const areaMeters = area(poly);
-      const perimeterMeters = length(poly, { units: "meters" });
+      const perimeterMeters = length(poly, { units: 'meters' });
       const areaPerches = areaMeters / 25.29285264;
       const perimeterKilometers = perimeterMeters / 1000;
+      setIsSaving(false);
 
       Alert.alert(
-        "Confirmation",
+        'Confirmation',
         `Area: ${areaPerches.toFixed(2)} perches, Perimeter: ${perimeterKilometers.toFixed(2)} kilometers`,
         [
           {
-            text: "Cancel",
+            text: 'Cancel',
             onPress: () => setPoints([]),
-            style: "cancel",
+            style: 'cancel',
           },
           {
-            text: "OK",
+            text: 'OK',
             onPress: () => {
-              navigation.navigate("SaveScreen", {
+              navigation.navigate('SaveScreen', {
                 locationPoints: points,
                 area: areaPerches,
                 perimeter: perimeterKilometers,
@@ -222,8 +226,9 @@ const PointAddingScreen = ({ navigation, route }) => {
         { cancelable: false }
       );
     } catch (error) {
-      console.error("Error saving map:", error);
-      alert("An error occurred while saving the map. Please try again.");
+      console.error('Error saving map:', error);
+      alert('An error occurred while saving the map. Please try again.');
+      setIsSaving(false);
     }
   };
 
@@ -235,13 +240,13 @@ const PointAddingScreen = ({ navigation, route }) => {
 
   /* the handleCancel function is used to navigate to the home screen */
   const handleCancel = () => {
-    navigation.navigate("Home");
+    navigation.navigate('Home');
   };
   const mapTypes = [
-    { name: "Satellite", value: "satellite" },
-    { name: "Standard", value: "standard" },
-    { name: "Hybrid", value: "hybrid" },
-    { name: "Terrain", value: "terrain" },
+    { name: 'Satellite', value: 'satellite' },
+    { name: 'Standard', value: 'standard' },
+    { name: 'Hybrid', value: 'hybrid' },
+    { name: 'Terrain', value: 'terrain' },
   ];
 
   /* the toggleMapType function is used to toggle the map type */
@@ -278,17 +283,17 @@ const PointAddingScreen = ({ navigation, route }) => {
             });
           }
         } else {
-          console.error("Location not found");
+          console.error('Location not found');
         }
       } catch (error) {
-        console.error("Error searching for location:", error);
+        console.error('Error searching for location:', error);
       }
     }
   };
 
   /* the clearSearchQuery function is used to clear the search query */
   const clearSearchQuery = () => {
-    setSearchQuery("");
+    setSearchQuery('');
   };
 
   return (
@@ -322,7 +327,7 @@ const PointAddingScreen = ({ navigation, route }) => {
               value={searchQuery}
               onSubmitEditing={searchLocation}
             />
-            {searchQuery !== "" && (
+            {searchQuery !== '' && (
               <TouchableOpacity
                 onPress={clearSearchQuery}
                 style={styles.clearIconContainer}
@@ -344,9 +349,9 @@ const PointAddingScreen = ({ navigation, route }) => {
             <View
               style={{
                 flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
               }}
             >
               <View style={styles.centeredView}>
@@ -441,7 +446,7 @@ const PointAddingScreen = ({ navigation, route }) => {
                             style={styles.dropdownItem}
                             onPress={() => selectMapType(index)}
                           >
-                            <Text style={{ color: "#fff" }}>{item.name}</Text>
+                            <Text style={{ color: '#fff' }}>{item.name}</Text>
                           </TouchableOpacity>
                         )}
                         keyExtractor={(item) => item.value}
@@ -504,6 +509,12 @@ const PointAddingScreen = ({ navigation, route }) => {
               </View>
             )}
           </View>
+          {isSaving && (
+            <View style={styles.loadingOverlay}>
+              <ActivityIndicator color="#007BFF" size={45} />
+              <Text style={styles.loadingText}>Saving...</Text>
+            </View>
+          )}
         </View>
       )}
     </>
