@@ -1,5 +1,5 @@
 // SideNavbar.js
-import React, { useState, useRef } from "react";
+import React, { useState, useRef ,useEffect} from "react";
 import { FaBars } from "react-icons/fa";
 import { MdArrowBack } from "react-icons/md";
 import { GiGate } from "react-icons/gi";
@@ -23,6 +23,7 @@ import AlertStone from "../../ClearLand/EffortOutput/AlertStone"
 import { Input, Space, List, AutoComplete,message } from "antd";
 import { CloseSquareFilled } from "@ant-design/icons";
 import EffortOutputManual from "../EffortOutputManual/EffortOutputManual";
+import AxiosInstance from "../../../AxiosInstance";
 
 export default function ClearLandManualCalculator({ onBackToSidebar,area,perimeter,PerimeterUnitselectedValue,AreaUnitselectedValue }) {
   const [currentPage, setCurrentPage] = useState(null);
@@ -36,8 +37,25 @@ export default function ClearLandManualCalculator({ onBackToSidebar,area,perimet
   const [laborCount, setLaborCount] = useState("");
   const [workHours, setWorkHours] = useState("");
   const [machineCount, setMachineCount] = useState("");
+  const [machineList, setMachineList] = useState([]);
 
   const prefix = <FiSearch style={{ fontSize: 16, color: "#d3d3d3" }} />;
+
+  useEffect(() => {
+    fetchMchineList();
+  }, []);
+
+  const fetchMchineList = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/Machines"
+      );
+      setMachineList(response.data);
+    } catch (error) {
+      console.error("Error fetching machiList:", error);
+      message.error("Failed to fetch machiList. Please try again.");
+    }
+  };
 
   const handlePlantTypeChange = (event) => {
     setPlantTypeSelectedValue(event.target.value);
@@ -603,19 +621,18 @@ const workDays = calculateWorkDays(effort,workHours);
 
             <Space direction="vertical" style={{ width: "100%" }}>
             <div style={styles.dropDown2Container}>
-                <select
-                  style={styles.dropdown2}
-                  value={machineTypeSelectedValue}
-                  onChange={handleMachineTypeChange}
-                >
-                  <option value="" disabled selected>
-                    Select Machine type
-                  </option>
-                  <option value="Excavators">Excavators</option>
-                  <option value="Backhoes">Backhoes</option>
-                  <option value="Chainsaws">Chainsaws</option>
-                  <option value="Excavator breakers">Excavator breakers</option>
-                </select>
+            <select
+  style={styles.dropdown2}
+  value={machineTypeSelectedValue}
+  onChange={(e) => setMachineTypeSelectedValue(e.target.value)}
+>
+  <option value="" disabled selected>Select a machine type</option>
+  {machineList.map((machine) => (
+    <option key={machine.Name} value={machine.Name}>
+      {machine.Name}
+    </option>
+  ))}
+</select>
               </div>
             </Space>
 
