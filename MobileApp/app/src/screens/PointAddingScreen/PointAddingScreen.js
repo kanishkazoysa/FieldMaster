@@ -267,7 +267,7 @@ const PointAddingScreen = ({ navigation, route }) => {
         const response = await fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
             searchQuery
-          )}&key=AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U`
+          )}&key=AIzaSyCmDfdWl4TZegcfinTmC0LlmFCiEcdRbmU`
         );
         const data = await response.json();
         if (data.results && data.results.length > 0) {
