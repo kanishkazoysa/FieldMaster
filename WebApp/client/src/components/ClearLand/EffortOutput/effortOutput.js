@@ -16,6 +16,7 @@ import AxiosInstance from "../../../AxiosInstance";
 import { getClearLandDetailsHtml } from "./EffortOutputTemplate";
 import AlertButton from "./AlertButton";
 import AlertEffort from "./AlertEffort";
+import { BeatLoader } from 'react-spinners';
 const { confirm } = Modal;
 export default function EffortOutput({
   onBackToSidebar,
@@ -36,6 +37,7 @@ export default function EffortOutput({
   const [stoneEffort, setStoneEffort] = useState(null);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,8 +58,11 @@ export default function EffortOutput({
         setPlantEffort(response.data.plantEffort);
         setStoneEffort(response.data.stoneEffort);
         setWorkDays(response.data.workDays);
+
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setLoading(false);
       }
     };
     fetchData();
@@ -127,7 +132,12 @@ export default function EffortOutput({
 
   return (
     <div>
-      {!currentPage && (
+      {loading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '85vh' }}>
+          <BeatLoader color="#007BFF" loading={loading} size={12} />
+        </div>
+      )  : (
+      !currentPage && (
         <div style={styles.content}>
           <div style={styles.header}>
             <MdArrowBack
@@ -176,14 +186,14 @@ export default function EffortOutput({
                 <BsBoundingBox color="gray" size={25} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{Perimeter}Km</p>
+                  <p style={styles.propertyValue}>{parseFloat(Perimeter).toFixed(2)} km</p>
                 </div>
               </div>
               <div style={styles.property}>
                 <PiSquareDuotone color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
-                  <p style={styles.propertyValue}>{Area} perches</p>
+                  <p style={styles.propertyValue}>{parseFloat(Area).toFixed(2)} perch</p>
                 </div>
               </div>
             </div>
@@ -246,6 +256,7 @@ export default function EffortOutput({
               </button>
           </div>
         </div>
+      )
       )}
       <div
         style={{

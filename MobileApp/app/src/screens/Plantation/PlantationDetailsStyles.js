@@ -156,6 +156,7 @@ export const styles = StyleSheet.create({
       flexDirection: "column",
       marginLeft: 5,
       width: "70%",
+      justifyContent: "center",
       height: responsiveHeight(8.5),
       backgroundColor: "white",
     },

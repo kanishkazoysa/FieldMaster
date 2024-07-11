@@ -129,7 +129,7 @@ export default function Fertilizing(
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} {AreaUnitselectedValue}
+                  {parseFloat(area).toFixed(2)} {AreaUnitselectedValue}
                   </p>
                 </div>
               </div>

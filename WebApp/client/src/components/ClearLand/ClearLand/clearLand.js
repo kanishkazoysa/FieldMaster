@@ -1,5 +1,5 @@
 // SideNavbar.js
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,useEffect } from "react";
 import { MdArrowBack } from "react-icons/md";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { BsBoundingBox } from "react-icons/bs";
@@ -14,7 +14,8 @@ import { GiStonePile } from "react-icons/gi";
 import { GrUserWorker } from "react-icons/gr";
 import { styles } from "./clearLandStyles";
 import { FiSearch } from "react-icons/fi";
-import { Input, Space, List, AutoComplete ,message,Select } from "antd";
+import Select from "react-select";
+import { Input, Space, List, AutoComplete ,message, } from "antd";
 import EffortOutput from "../EffortOutput/effortOutput";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails";
 import AxiosInstance from "../../../AxiosInstance";
@@ -33,8 +34,26 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
   const [laborCount, setLaborCount] = useState("");
   const [workHours, setWorkHours] = useState("");
   const [machineCount, setMachineCount] = useState("");
+  const [machineList, setMachineList] = useState([]);
 
   const prefix = <FiSearch style={{ fontSize: 16, color: "#d3d3d3" }} />;
+
+
+  useEffect(() => {
+    fetchMchineList();
+  }, []);
+
+  const fetchMchineList = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/Machines"
+      );
+      setMachineList(response.data);
+    } catch (error) {
+      console.error("Error fetching machiList:", error);
+      message.error("Failed to fetch machiList. Please try again.");
+    }
+  };
 
   const handlePlantTypeChange = (event) => {
     setPlantTypeSelectedValue(event.target.value);
@@ -243,7 +262,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{Perimeter}Km</p>
+                  <p style={styles.propertyValue}>{parseFloat(Perimeter).toFixed(2)} km</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -251,7 +270,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} m<sup>2</sup>
+                  {parseFloat(area).toFixed(2)} m<sup>2</sup>
                   </p>
                 </div>
               </div>
@@ -473,7 +492,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
           {/* sixth box */}
           <div style={styles.box5}>
-            <div style={{ ...styles.box5leftcontainer, width: "65%" }}>
+            <div style={{ ...styles.box5leftcontainer, width: "80%" }}>
               <PiClock color="gray" size={20} />
               <div style={styles.box2PropertyDetails}>
                 <p style={styles.Box2PropertyLabel}>Work hours : </p>
@@ -484,10 +503,10 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                 type="text"
                 style={{
                   ...styles.box3input,
-                  width: "100%",
-                  marginLeft: "-30px",
+                  width: "150%",
+                  marginLeft: "-65px",
                 }}
-                placeholder="Enter no of hours"
+                placeholder="Enter hours per day"
                 value={workHours}
                 onChange={handleWorkHourChange}
               />
@@ -507,19 +526,18 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
             <Space direction="vertical" style={{ width: "100%" }}>
             <div style={styles.dropDown2Container}>
-                <select
-                  style={styles.dropdown2}
-                  value={machineTypeSelectedValue}
-                  onChange={handleMachineTypeChange}
-                >
-                  <option value="" disabled selected>
-                    Select Machine type
-                  </option>
-                  <option value="Excavators">Excavators</option>
-                  <option value="Backhoes">Backhoes</option>
-                  <option value="Chainsaws">Chainsaws</option>
-                  <option value="Excavator breakers">Excavator breakers</option>
-                </select>
+            <select
+  style={styles.dropdown2}
+  value={machineTypeSelectedValue}
+  onChange={(e) => setMachineTypeSelectedValue(e.target.value)}
+>
+  <option value="" disabled selected>Select a machine type</option>
+  {machineList.map((machine) => (
+    <option key={machine.Name} value={machine.Name}>
+      {machine.Name}
+    </option>
+  ))}
+</select>
               </div>
             </Space>
 

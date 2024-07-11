@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
 import { styles } from "./EffortOutputManualStyles";
 import { MdArrowBack } from "react-icons/md";
 import { CiClock1,CiCalendar } from "react-icons/ci";
@@ -71,14 +70,14 @@ export default function EffortOutputManual({
             <BsBoundingBox color="gray" size={25} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>{perimeter} {PerimeterUnitSelectedValue}</p>
+              <p style={styles.propertyValue}>{parseFloat(perimeter).toFixed(2)} km {PerimeterUnitSelectedValue}</p>
             </div>
           </div>
           <div className="property" style={styles.property}>
             <PiSquareDuotone color="gray" size={28} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
-              <p style={styles.propertyValue}>{area} {AreaUnitSelectedValue}</p>
+              <p style={styles.propertyValue}>{parseFloat(area).toFixed(2)} perch {AreaUnitSelectedValue}</p>
             </div>
           </div>
         </div>

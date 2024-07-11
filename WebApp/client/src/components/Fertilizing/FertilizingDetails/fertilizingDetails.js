@@ -1,4 +1,3 @@
-// SideNavbar.js
 import React, { useState, useEffect } from "react";
 import { MdArrowBack } from "react-icons/md";
 import { BsBoundingBox } from "react-icons/bs";
@@ -178,14 +177,14 @@ export default function FertilizingDetails({
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{Perimeter}Km</p>
+                  <p style={styles.propertyValue}>{parseFloat(Perimeter).toFixed(2)} km</p>
                 </div>
               </div>
               <div className="property" style={styles.property}>
                 <PiSquareDuotone color="gray" size={40} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
-                  <p style={styles.propertyValue}>{area} perches</p>
+                  <p style={styles.propertyValue}>{parseFloat(area).toFixed(2)} perch</p>
                 </div>
               </div>
             </div>

@@ -16,7 +16,7 @@ import {
   Searchbar,
   TextInput,
 } from "react-native-paper";
-import { useState} from "react";
+import { useState,useEffect} from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation} from "@react-navigation/native";
@@ -46,7 +46,25 @@ export default function ClearLandFromManualCalculator({ route }) {
   // const [searchItem, setSearchItem] = useState("");
   const [machineTypeSelectedValue, setMachineTypeSelectedValue] = useState(null);
   const [machineCount, setMachineCount] = useState("");
-  
+  const [Machines, SetMachines] = useState([]);
+
+  useEffect(() => {
+    fetchMachines();
+  }, []);
+
+  const fetchMachines = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/Machines"
+      );
+      SetMachines(response.data);
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+      Alert.alert("Error", "Failed to fetch plants. Please try again.");
+    }
+  };
+
+
   const handlePlantCountChange = (text) => {
     setPlantCount(text);
   };
@@ -555,7 +573,10 @@ export default function ClearLandFromManualCalculator({ route }) {
                 <View style={styles.Dropdown3}>
                 <RNPickerSelect
                   placeholder={placeholder2}
-                  items={options2}
+                  items={Machines.map((Machine) => ({
+                    label: Machine.Name,
+                    value: Machine.Name,
+                  }))}  
                   onValueChange={(value) => setMachineTypeSelectedValue(value)}
                   value={machineTypeSelectedValue}
                 />

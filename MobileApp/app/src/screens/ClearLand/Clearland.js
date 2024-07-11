@@ -46,6 +46,24 @@ export default function ClearLand({ route }) {
   const [workHours, setWorkHours] = useState("");
   const [machineTypeSelectedValue, setMachineTypeSelectedValue] = useState(null);
   const [machineCount, setMachineCount] = useState("");
+  const [Machines, SetMachines] = useState([]);
+
+  useEffect(() => {
+    fetchMachines();
+  }, []);
+
+  const fetchMachines = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/Machines"
+      );
+      SetMachines(response.data);
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+      Alert.alert("Error", "Failed to fetch plants. Please try again.");
+    }
+  };
+
   const handlePlantCountChange = (text) => {
     setPlantCount(text);
   };
@@ -62,12 +80,6 @@ export default function ClearLand({ route }) {
   const handleMachineCountChange = (text) => {
     setMachineCount(text);
   };
-
-  // const handleEffortOutput = () => {
-  //   navigation.navigate("EffortOutput",{
-  //     id:id,
-  //   });
-  // };
 
   const placeholder1 = {
     label: "Select Type",
@@ -525,7 +537,7 @@ export default function ClearLand({ route }) {
                     paddingHorizontal: 8,
                   }}
                   keyboardType="numeric"
-                  placeholder="Enter count of hours"
+                  placeholder="Enter hours per day"
                   mode="flat"
                   onChangeText={handleWorkHourChange}
                   value={workHours}
@@ -558,7 +570,10 @@ export default function ClearLand({ route }) {
                 <View style={styles.Dropdown3}>
                 <RNPickerSelect
                   placeholder={placeholder2}
-                  items={options2}
+                  items={Machines.map((Machine) => ({
+                    label: Machine.Name,
+                    value: Machine.Name,
+                  }))}                  
                   onValueChange={(value) => setMachineTypeSelectedValue(value)}
                   value={machineTypeSelectedValue}
                 />

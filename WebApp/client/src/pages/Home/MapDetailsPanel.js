@@ -7,7 +7,7 @@ const { Title } = Typography;
 const MapDetailsPanel = ({ mapDetails, onClose }) => {
   if (!mapDetails) return null;
 
-  const { mapDetails: map, fenceDetails, plantationDetails } = mapDetails;
+  const { mapDetails: map, fenceDetails, plantationDetails,clearLandDetails  } = mapDetails;
 
   return (
     <div
@@ -57,6 +57,23 @@ const MapDetailsPanel = ({ mapDetails, onClose }) => {
               <Descriptions.Item label="Plant Space">{plantationDetails.plantSpace} {plantationDetails.unit}</Descriptions.Item>
               <Descriptions.Item label="Row Space">{plantationDetails.rowSpace} {plantationDetails.unit}</Descriptions.Item>
               <Descriptions.Item label="Plant Density">{plantationDetails.plantDensity}</Descriptions.Item>
+            </Descriptions>
+          </Panel>
+        )}
+        {clearLandDetails && (
+          <Panel header="Clear Land Details" key="4">
+            <Descriptions column={1} size="small">
+              <Descriptions.Item label="Weed Type">{clearLandDetails.weedType}</Descriptions.Item>
+              <Descriptions.Item label="Total Effort">{clearLandDetails.effortOutput.toFixed(2)} hours</Descriptions.Item>
+              <Descriptions.Item label="Weed Effort">{clearLandDetails.weedEffort.toFixed(2)} hours</Descriptions.Item>
+              <Descriptions.Item label="Plant Effort">{clearLandDetails.plantEffort.toFixed(2)} hours</Descriptions.Item>
+              <Descriptions.Item label="Stone Effort">{clearLandDetails.stoneEffort.toFixed(2)} hours</Descriptions.Item>
+              <Descriptions.Item label="Work Days">{clearLandDetails.workDays}</Descriptions.Item>
+              <Descriptions.Item label="Labor Count">{clearLandDetails.laborCount}</Descriptions.Item>
+              <Descriptions.Item label="Work Hours">{clearLandDetails.workHours}</Descriptions.Item>
+              <Descriptions.Item label="Plant Details">{clearLandDetails.plantDetails.join(', ')}</Descriptions.Item>
+              <Descriptions.Item label="Stone Details">{clearLandDetails.stoneDetails.join(', ')}</Descriptions.Item>
+              <Descriptions.Item label="Machine Details">{clearLandDetails.machineDetails.join(', ')}</Descriptions.Item>
             </Descriptions>
           </Panel>
         )}

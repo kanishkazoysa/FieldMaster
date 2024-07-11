@@ -4,6 +4,7 @@ const router = express.Router();
 const MapTemplateModel = require("../models/MapTemplateModel");
 const fenceModel = require("../models/fence");
 const plantationModel = require("../models/plantation");
+const clearLandModel = require("../models/clearLand");
 
 const turf = require("@turf/turf");
 const MapModel = require("../models/MapModel");
@@ -219,6 +220,7 @@ router.get("/getAllmapData/:id", async (req, res) => {
   try {
     const Fence = await fenceModel.findOne({ Id: id });
     const Plantation = await plantationModel.findOne({ Id: id });
+    const ClearLand = await clearLandModel.findOne({ Id: id });
     const map = await MapTemplateModel.findOne({ _id: id });
 
     if (!map) {
@@ -237,27 +239,36 @@ router.get("/getAllmapData/:id", async (req, res) => {
         location: map.location,
         description: map.description,
       },
-      fenceDetails: Fence
-        ? {
-            postSpace: Fence.PostSpace,
-            postSpaceUnit: Fence.PostSpaceUnit,
-            gateDetails: Fence.GateDetails,
-            numberOfSticks: Fence.NumberofSticks,
-            fenceType: Fence.FenceType,
-            fenceAmount: Fence.NumberofGates,
-            fenceLength: Fence.Gatelength,
-          }
-        : null,
-      plantationDetails: Plantation
-        ? {
-            numberOfPlants: Plantation.NoOfPlants,
-            plantType: Plantation.PlantType,
-            plantSpace: Plantation.PlantSpace,
-            rowSpace: Plantation.RowSpace,
-            plantDensity: Plantation.PlantDensity,
-            unit: Plantation.Unit,
-          }
-        : null,
+      fenceDetails: Fence ? {
+        postSpace: Fence.PostSpace,
+        postSpaceUnit: Fence.PostSpaceUnit,
+        gateDetails: Fence.GateDetails,
+        numberOfSticks: Fence.NumberofSticks,
+        fenceType: Fence.FenceType,
+        fenceAmount: Fence.NumberofGates,
+        fenceLength: Fence.Gatelength,
+      } : null,
+      plantationDetails: Plantation ? {
+        numberOfPlants: Plantation.NoOfPlants,
+        plantType: Plantation.PlantType,
+        plantSpace: Plantation.PlantSpace,
+        rowSpace: Plantation.RowSpace,
+        plantDensity: Plantation.PlantDensity,
+        unit: Plantation.Unit,
+      } : null,
+      clearLandDetails: ClearLand ? {
+        weedType: ClearLand.WeedType,
+        effortOutput: ClearLand.EffortOutput,
+        weedEffort: ClearLand.WeedEffort,
+        plantEffort: ClearLand.PlantEffort,
+        stoneEffort: ClearLand.StoneEffort,
+        workDays: ClearLand.WorkDays,
+        laborCount: ClearLand.LaborsCOunt,
+        workHours: ClearLand.WorkHoursCount,
+        plantDetails: ClearLand.PlantDetails,
+        stoneDetails: ClearLand.StoneDetails,
+        machineDetails: ClearLand.MachineDetails,
+      } : null,
     };
 
     res.json(response);

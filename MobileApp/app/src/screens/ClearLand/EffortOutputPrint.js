@@ -1,4 +1,4 @@
-export const effortOutputPrint = (Perimeter,Area,laborCount,workHours,data1) => `
+export const effortOutputPrint = (Perimeter,Area,laborCount,workHours,effortOutput,weedEffort,plantEffort,stoneEffort) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,7 +75,10 @@ export const effortOutputPrint = (Perimeter,Area,laborCount,workHours,data1) => 
         <h2>Clear land Details</h2>
 
         <ul>
-        <li> Total Effort Count= </li>
+        <li> Weed Effort Count= ${weedEffort}</li>
+        <li> Plant Effort Count= ${plantEffort}</li>
+        <li> Stone Effort Count= ${stoneEffort}</li>
+        <li> Total Effort Count= ${effortOutput}</li>
         
         <li> Number of labours = ${laborCount} </li>
         <li> Work hours per day = ${workHours} </li>

@@ -116,7 +116,7 @@ const html = getFenceDetailsHtml(FenceTypeselectedValue, NumberofSticks, inputVa
               />
               <View style={styles.box2PropertyDetails}>
                 <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                <Text style={styles.Box2PropertyValue}>{perimeter} km</Text>
+                <Text style={styles.Box2PropertyValue}>{parseFloat(perimeter).toFixed(2)} km</Text>
               </View>
             </View>
             <View style={styles.box2Property}>
@@ -127,7 +127,7 @@ const html = getFenceDetailsHtml(FenceTypeselectedValue, NumberofSticks, inputVa
               />
               <View style={styles.box2PropertyDetails}>
                 <Text style={styles.Box2PropertyLabel}>Area</Text>
-                <Text style={styles.Box2PropertyValue}>{area} perches</Text>
+                <Text style={styles.Box2PropertyValue}>{parseFloat(area).toFixed(2)} perch</Text>
               </View>
             </View>
           </View>

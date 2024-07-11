@@ -83,8 +83,7 @@ export default function FenceDetailsManual({
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
               <p style={styles.propertyValue}>
-                {Perimeter}
-                {PerimeterUnitselectedValue}
+              {parseFloat(Perimeter).toFixed(2)} {PerimeterUnitselectedValue}
               </p>
             </div>
           </div>
@@ -93,8 +92,7 @@ export default function FenceDetailsManual({
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
               <p style={styles.propertyValue}>
-                {area}
-                {AreaUnitselectedValue}
+              {parseFloat(area).toFixed(2)} {AreaUnitselectedValue}
               </p>
             </div>
           </div>
