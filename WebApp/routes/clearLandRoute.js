@@ -12,6 +12,8 @@ function calculateEffortOutput(
   const effortCount = Math.ceil(weedEffort+plantEffort+stoneEffort);
   return effortCount;
 }
+
+//calculate the weed effort
 const calculateWeedEffort = (weedType,area,laborsCount,machineDetails) => {
   let weedEffort = 0;
   let totalWeedEffort = 0;
@@ -50,7 +52,7 @@ const calculateWeedEffort = (weedType,area,laborsCount,machineDetails) => {
    return totalWeedEffort;
 }
 
-
+//calculate the plant effort
 const calculatePlantEffort = (plantDetails,machineDetails) => {
   let plantEffort = 0;
   let chainsawCount = 1;
@@ -72,6 +74,7 @@ const calculatePlantEffort = (plantDetails,machineDetails) => {
   return totalPlantEffort;
 }
 
+//calculate the stone effort
 const calculateStoneEffort = (stoneDetails,machineDetails) => {
   let stoneEffort = 0;
   let breakerCount = 1;
@@ -93,6 +96,7 @@ const calculateStoneEffort = (stoneDetails,machineDetails) => {
   return totalStoneEffort;
 }
 
+//calculate number of days
 const calculateWorkDays = (effort,workHours) => {
   const fulldays = Math.floor(effort / workHours);
   const remainingHours = effort % workHours;
@@ -286,5 +290,81 @@ router.delete("/deleteClearLand/:id", async (req, res) => {
     res.status(500).send("Error while deleting clear land");
   }
 });
+
+//update data in clear land
+router.put("/clearLand/:id", async (req, res) => {
+  try{
+      const{
+        pressed,
+        laborCount,
+        workHours,
+        displayValues,
+        displayValues1,
+        displayValues2,
+      } = req.body;
+      
+      const id = req.params.id;
+
+       // Fetch area from MapTemplateSchema
+     const mapData = await MapTemplateSchema.findOne({ _id: id });
+     const area = parseInt(mapData.area * 25.2929);
+     console.log(area);
+    
+    const laborsCount = parseInt(laborCount);
+    const weedType = pressed;
+    const plantDetails = displayValues.map((value) => {
+      const [count, type] = value.split(" x ");
+      return {count, type: type.trim() };
+    });
+     
+    const stoneDetails = displayValues1.map((value) => {
+      const [count, type] = value.split(" x ");
+      return {count, type: type.trim() };
+    });;
+    const machineDetails = displayValues2.map((value) => {
+        const [count, type] = value.split(" x ");
+        return { count, type: type.trim()};
+      });
+      const weedEffort = calculateWeedEffort(weedType,area,laborsCount,machineDetails);
+    const plantEffort = calculatePlantEffort(plantDetails,machineDetails);  
+    const stoneEffort = calculateStoneEffort(stoneDetails,machineDetails);
+    const effort = calculateEffortOutput(weedEffort,plantEffort,stoneEffort);
+    const workDays = calculateWorkDays(effort,workHours);
+
+    const updatedClearLand = await clearLandModel.findOneAndUpdate(
+        { Id: id },
+        {
+            WeedType: pressed,
+            PlantDetails: displayValues,
+            StoneDetails: displayValues1,
+            LaborsCOunt: laborCount,
+            WorkHoursCount: workHours,
+            MachineDetails: displayValues2,
+            WeedEffort: weedEffort,
+            PlantEffort: plantEffort,
+            StoneEffort: stoneEffort,
+            EffortOutput: effort,
+            WorkDays: workDays,
+       },
+        { new: true }
+      );
+      if(!updatedClearLand){
+        return res.status(404).json({ status: "error", data: "Clear land not found" });
+  }
+  res.json({ 
+    status: "ok", 
+    data: "Clear land updated successfully",
+    weedEffort,
+    plantEffort,
+    stoneEffort,
+    effort,
+    workDays,
+    updatedClearLand,
+  });
+  }catch(error){
+    res.status(500).json({ status: "error", data: error.message });
+  }
+});
+ 
 
 module.exports = router;
