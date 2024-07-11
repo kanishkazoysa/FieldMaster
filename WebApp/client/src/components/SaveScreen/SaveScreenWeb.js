@@ -90,14 +90,14 @@ const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
               <FaVectorSquare className='info-icon' size={22} />
               <div>
                 <p>Perimeter</p>
-                <p className='bold-text'>{perimeter} km</p>
+                <p className='bold-text'>{parseFloat(perimeter).toFixed(2)} km</p>
               </div>
             </div>
             <div className='info-block'>
               <RiPieChart2Fill className='info-icon' size={25} />
               <div>
                 <p>Area</p>
-                <p className='bold-text'>{area} perches</p>
+                <p className='bold-text'>{parseFloat(area).toFixed(2)} perch</p>
               </div>
             </div>
           </div>

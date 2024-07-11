@@ -216,8 +216,8 @@ const ResizeMapScreen = () => {
         </LoadScript>
       </div>
       <div style={styles.top}>
-        <div style={styles.area}>Area: {area} perches </div>
-        <div style={styles.perimeter}>Perimeter: {perimeter} kilometers</div>
+        <div style={styles.area}>Area: {parseFloat(area).toFixed(2)} perch </div>
+        <div style={styles.perimeter}>Perimeter: {parseFloat(perimeter).toFixed(2)} km</div>
       </div>
       <div style={styles.controls}>
         <Button

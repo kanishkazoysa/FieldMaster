@@ -262,7 +262,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{Perimeter}Km</p>
+                  <p style={styles.propertyValue}>{parseFloat(Perimeter).toFixed(2)} km</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -270,7 +270,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} m<sup>2</sup>
+                  {parseFloat(area).toFixed(2)} m<sup>2</sup>
                   </p>
                 </div>
               </div>

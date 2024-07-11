@@ -20,8 +20,7 @@ import { FiSearch } from "react-icons/fi";
 import AlertWeed from "../../ClearLand/EffortOutput/AlertWeed"
 import AlertPlant from "../../ClearLand/EffortOutput/AlertPlant"
 import AlertStone from "../../ClearLand/EffortOutput/AlertStone"
-import { Input, Space, List, AutoComplete,message } from "antd";
-import { CloseSquareFilled } from "@ant-design/icons";
+import {Space,message } from "antd";
 import EffortOutputManual from "../EffortOutputManual/EffortOutputManual";
 import AxiosInstance from "../../../AxiosInstance";
 
@@ -357,7 +356,7 @@ const workDays = calculateWorkDays(effort,workHours);
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{perimeter} {PerimeterUnitselectedValue}</p>
+                  <p style={styles.propertyValue}>{parseFloat(perimeter).toFixed(2)} {PerimeterUnitselectedValue}</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -365,7 +364,7 @@ const workDays = calculateWorkDays(effort,workHours);
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} {AreaUnitselectedValue}
+                  {parseFloat(area).toFixed(2)} {AreaUnitselectedValue}
                   </p>
                 </div>
               </div>
