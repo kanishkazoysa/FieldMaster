@@ -1,5 +1,5 @@
 // SideNavbar.js
-import React, { useState, useRef } from "react";
+import React, { useState, useRef ,useEffect} from "react";
 import { MdArrowBack } from "react-icons/md";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { BsBoundingBox } from "react-icons/bs";
@@ -21,7 +21,7 @@ import AxiosInstance from "../../../AxiosInstance";
 import AlertWeed from "../EffortOutput/AlertWeed"
 import AlertPlant from "../EffortOutput/AlertPlant"
 import AlertStone from "../EffortOutput/AlertStone"
-export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTemplateClick,template }) {
+export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTemplateClick,template,ClearLandData }) {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
@@ -33,6 +33,19 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
   const [laborCount, setLaborCount] = useState("");
   const [workHours, setWorkHours] = useState("");
   const [machineCount, setMachineCount] = useState("");
+  const [editMode, setEditMode] = useState(false);
+
+  useEffect(() => {
+    if (ClearLandData) {
+      setEditMode(true);
+      setPressed(ClearLandData.weedsType);
+      setLaborCount(ClearLandData.laborCount);
+      setWorkHours(ClearLandData.workHours);
+      setDisplayValues(ClearLandData.plantDetails || []);
+      setDisplayValues1(ClearLandData.stoneDetails || []);
+      setDisplayValues2(ClearLandData.machineDetails || []);
+    }
+  }, [ClearLandData]);
 
   const prefix = <FiSearch style={{ fontSize: 16, color: "#d3d3d3" }} />;
 
@@ -186,9 +199,11 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
           return;
         }
     
-
-       // Make POST request to the backend
-       AxiosInstance.post("/api/clearLand/clearLand", {
+        try{
+          const method = editMode ? 'put': 'post';
+          const url = editMode ? `/api/clearLand/clearLand/${id}` : '/api/clearLand/clearLand';
+          // Make POST request to the backend
+       const response = await AxiosInstance[method](url, {
         id,
         pressed,
         laborCount,
@@ -196,18 +211,22 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
         displayValues,
         displayValues1,
         displayValues2,
-       })
-       .then((response) => {
+       });
+        console.log("Response:", response.data);	
         setCurrentPage("EffortOutput"); // Update this line
         setAnimatePage(true);
-        e.preventDefault();
-  
-       })
-       .catch((error) => {
-        console.error("Error:", error.response.data);
-        message.error("Error", "Failed to create clear land. Please try again.")
-        alert("Error", "Failed to create clear land. Please try again.");
-      });
+        // e.preventDefault();
+      }catch(error){
+        console.error("Error:", error);
+        if (error.response) {
+          console.error("Response data:", error.response.data);
+          console.error("Response status:", error.response.status);
+          console.error("Response headers:", error.response.headers);
+        }
+        message.error(`Failed to ${editMode ? 'update' : 'create'} clear land: ${error.message}`);
+      }
+
+       
   };
 
   const handleBackClick = () => {
