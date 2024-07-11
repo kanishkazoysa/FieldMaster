@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,useEffect } from "react";
 import {
   Text,
   View,
@@ -23,7 +23,7 @@ import AxiosInstance from "../../../AxiosInstance";
 export default function Fence({route}) {
   const navigation = useNavigation();
 
-  const{id,Area,Perimeter,item} =  route.params;
+  const{id,Area,Perimeter,item,fencedata} =  route.params;
   const [FenceTypeselectedValue, setFenceTypeSelectedValue] = useState(null);
   const [PostSpaceUnitselectedValue, setPostSpaceUnitSelectedValue1] =useState(null);
   const [inputValueFenceLength, setinputValueFenceLength] = useState("");
@@ -33,6 +33,36 @@ export default function Fence({route}) {
   const [fenceAmountsArray, setFenceAmountsArray] = useState([]);
   const [displayValues, setDisplayValues] = useState([]);
   let inputValueFenceAmountRef = useRef(null);
+  const [fenceType, setFenceType] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+
+  useEffect(() => {
+    fetchFenceType();
+
+    if (fencedata) {
+      setEditMode(true);
+      setFenceTypeSelectedValue( fencedata.fenceType);
+      setinputValuePostspace(fencedata.postSpace);
+      setPostSpaceUnitSelectedValue1(fencedata.postSpaceUnit);
+      //setPostSpaceUnitselectedValue1({ value: fencedata.postSpaceUnit, label: fenceData.postSpaceUnit });
+      setDisplayValues(fencedata.gateDetails || []);
+      setFenceLengthsArray(fencedata.fenceLength || []);
+      setFenceAmountsArray(fencedata.fenceamount || []);
+      // You might need to parse the gateDetails to set fenceLengthsArray and fenceAmountsArray
+    }
+  }, [fencedata]);
+
+  const fetchFenceType = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/FenceTypes"
+      );
+      setFenceType(response.data);
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+      Alert.alert("Error", "Failed to fetch plants. Please try again.");
+    }
+  };
 
   const handleInputPostspaceChange = (text) => {
     setinputValuePostspace(text);
@@ -163,8 +193,11 @@ export default function Fence({route}) {
     return;
   }
 
+  const method = editMode ? 'put' : 'post';
+  const url = editMode ? `/api/fence/fence/${id}` : '/api/fence/fence';
+  
   // If validation is successful, send data to backend
-  AxiosInstance.post("/api/fence/fence", {
+  AxiosInstance[method](url, {
     id,
     FenceTypeselectedValue,
     inputValuePostspace,
@@ -261,7 +294,10 @@ export default function Fence({route}) {
               <View style={styles.Box2DropdownContainer}>
                 <RNPickerSelect
                   placeholder={placeholderFenceType}
-                  items={fenceTypeOptions}
+                  items={fenceType.map((Fence) => ({
+                    label: Fence.Name,
+                    value: Fence.Name,
+                  }))}
                   onValueChange={(value) => setFenceTypeSelectedValue(value)}
                   value={FenceTypeselectedValue}
                   style={{

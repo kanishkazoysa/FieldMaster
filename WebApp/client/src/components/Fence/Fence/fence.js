@@ -47,6 +47,8 @@ export default function Fence({
       setPostSpaceUnitselectedValue(fencedata.postSpaceUnit);
       //setPostSpaceUnitselectedValue1({ value: fencedata.postSpaceUnit, label: fenceData.postSpaceUnit });
       setDisplayValues(fencedata.gateDetails || []);
+      setFenceLengthsArray(fencedata.fenceLength || []);
+      setFenceAmountsArray(fencedata.fenceamount || []);
       // You might need to parse the gateDetails to set fenceLengthsArray and fenceAmountsArray
     }
   }, [fencedata]);
