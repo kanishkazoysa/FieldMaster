@@ -49,6 +49,7 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [capturedImageUri, setCapturedImageUri] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [searchedMarker, setSearchedMarker] = useState(null);
 
   const handlePlaceSelect = (data, details = null) => {
     if (details) {
@@ -61,9 +62,14 @@ const PointAddingScreen = ({ navigation, route }) => {
       };
       setRegion(newRegion);
       mapRef.current.animateToRegion(newRegion);
+
+      // Set the searched marker
+      setSearchedMarker({
+        latitude: lat,
+        longitude: lng,
+      });
     }
   };
-
   const getLocationName = async (latitude, longitude) => {
     try {
       const response = await fetch(
@@ -420,6 +426,23 @@ const PointAddingScreen = ({ navigation, route }) => {
                       fillColor="rgba(199, 192, 192, 0.5)"
                       strokeWidth={1}
                     />
+                  )}
+                  {searchedMarker && (
+                    <Marker
+                      coordinate={searchedMarker}
+                      tracksViewChanges={false}
+                    >
+                      <View
+                        style={{
+                          width: 12,
+                          height: 12,
+                          borderRadius: 6,
+                          backgroundColor: "red",
+                          borderWidth: 1,
+                          borderColor: "white",
+                        }}
+                      />
+                    </Marker>
                   )}
                 </MapView>
 
