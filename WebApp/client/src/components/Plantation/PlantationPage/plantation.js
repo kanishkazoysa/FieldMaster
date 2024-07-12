@@ -43,7 +43,9 @@ export default function Plantation({
       setTextPlant( {value:plantationdata.PlnatType,label:plantationdata.PlnatType} );
       settextplantspace(plantationdata.plantspace);
       setPlantSpaceUnitselectedValue(plantationdata.Unit);
+      setPlantSpaceUnitselectedValue1({ value: plantationdata.Unit, label: plantationdata.Unit });
       settextRowspace(plantationdata.rowSpace);
+      setRowSpaceUnitselectedValue1({ value: plantationdata.Unit, label: plantationdata.Unit });
       setRowSpaceUnitselectedValue(plantationdata.Unit);
     }
   }, [plantationdata]);

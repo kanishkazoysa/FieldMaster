@@ -102,25 +102,44 @@ export default function PlantationDetails({
       throw error; // Re-throw the error to handle it in the caller function
     }
   };
-  
-  const handleIconPress = (e) => {
-    confirm({
-      title: 'Are you sure?',
-      content: 'Do you want to delete Plantation?',
-      icon: <ExclamationCircleOutlined />,
-      okText: 'Yes',
+
+  const handleEditIconPressd = () => {
+    Modal.confirm({
+      title: 'Do you want to delete Fence data',
+      content: 'Choose an action:',
+      okText: 'Update',
+      cancelText: 'Close',
       okType: 'primary',
-      cancelText: 'No',
-      maskClosable:true,
-      closable:true,
-      onOk() {
+      onOk: handleEditPlantationdata,
+      onCancel: () => {},
+      maskClosable: true,
+      closable: true,
+      footer: (_, { OkBtn, CancelBtn }) => (
+        <>
+          <CancelBtn />
+          <Button 
+            onClick={() => {
+              Modal.destroyAll(); // This closes all open modals
+              handleplantationdelte();
+            }} 
+            danger
+          >
+            Delete
+          </Button>
+          <OkBtn />
+        </>
+      ),
+    });
+  };
+  
+  const handleplantationdelte = () => {
         try {
           PlantationDelete(id)
             .then(() => {
               // Navigate to the desired screen
+              setplantationdata(null);
               setCurrentPage('Plantation');
               setAnimatePage(true);
-              e.preventDefault();
             })
             .catch((error) => {
               // Show detailed error message
@@ -133,28 +152,8 @@ export default function PlantationDetails({
         } catch (error) {
           console.error('Error:', error);
         }
-      },
-      onCancel() {
-        console.log('Cancelled');
-      },
-    });
-  };
-
-  const handleeditIconPress = (e) => {
-    confirm({
-      title: 'Are you sure ?',
-      content: 'Do you want to update plantation data?',
-      okText: 'Update',
-      okType: 'primary',
-      cancelText: 'No',
-      onOk:handleEditPlantationdata,
-      onCancel() {
-        console.log('Cancelled');
-      },
-      maskClosable:true,
-      closable:true,
-    });
-  };
+      };
+      
 const handleEditPlantationdata=()=>{
   setCurrentPage("Plantation");
     setAnimatePage(true);
@@ -189,12 +188,7 @@ const handleEditPlantationdata=()=>{
         />
         <p style={styles.titleText1}>Plantation Details</p>
         <RiEditBoxLine
-                onClick={handleeditIconPress}
-                style={styles.editorbutton}
-                fontSize={19}
-              />
-        <FiTrash2
-                onClick={handleIconPress}
+                onClick={handleEditIconPressd}
                 style={styles.editorbuttondelete}
                 fontSize={19}
               />
