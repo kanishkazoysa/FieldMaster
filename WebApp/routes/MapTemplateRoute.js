@@ -199,15 +199,35 @@ router.get("/getLocationAnalytics", async (req, res) => {
   try {
     const locationAnalytics = await MapTemplateModel.aggregate([
       {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userDetails"
+        }
+      },
+      {
         $group: {
           _id: "$location",
           count: { $sum: 1 },
-        },
+          users: { 
+            $push: { 
+              userId: { $arrayElemAt: ["$userDetails._id", 0] },
+              fname: { $arrayElemAt: ["$userDetails.fname", 0] },
+              lname: { $arrayElemAt: ["$userDetails.lname", 0] },
+              email: { $arrayElemAt: ["$userDetails.email", 0] },
+              templateName: "$templateName",
+              area: "$area",
+              landType: "$landType"
+            }
+          }
+        }
       },
       {
         $sort: { count: -1 },
       },
     ]);
+    console.log(locationAnalytics);
     res.json(locationAnalytics);
   } catch (error) {
     console.error("Error fetching location analytics:", error);
