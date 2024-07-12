@@ -8,7 +8,6 @@ import { PiSquareDuotone } from "react-icons/pi";
 import { styles } from "./fenceDetailsStyles";
 import { RiEditBoxLine } from "react-icons/ri"; 
 import AxiosInstance from "../../../AxiosInstance";
-import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal,Button } from "antd";
 import Fence from "../Fence/fence";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails";
@@ -204,14 +203,14 @@ export default function FenceDetails({
                   <BsBoundingBox color="gray" size={28} />
                   <div style={styles.propertyDetails}>
                     <p style={styles.propertyLabel}>Perimeter</p>
-                    <p style={styles.propertyValue}>{Perimeter} Km</p>
+                    <p style={styles.propertyValue}>{parseFloat(Perimeter).toFixed(2)} km</p>
                   </div>
                 </div>
                 <div className="property" style={styles.property}>
                   <PiSquareDuotone color="gray" size={40} />
                   <div style={styles.propertyDetails}>
                     <p style={styles.propertyLabel}>Area</p>
-                    <p style={styles.propertyValue}>{Area} perches</p>
+                    <p style={styles.propertyValue}>{parseFloat(Area).toFixed(2)} perch</p>
                   </div>
                 </div>
               </div>

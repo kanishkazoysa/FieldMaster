@@ -201,7 +201,7 @@ export default function Plantation({
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
                   <p style={styles.propertyValue}>
-                    {perimeter} {PerimeterUnitselectedValue}
+                  {parseFloat(perimeter).toFixed(2)} {PerimeterUnitselectedValue}
                   </p>
                 </div>
               </div>
@@ -210,7 +210,7 @@ export default function Plantation({
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} {AreaUnitselectedValue}
+                  {parseFloat(area).toFixed(2)} {AreaUnitselectedValue}
                   </p>
                 </div>
               </div>

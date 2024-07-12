@@ -1,5 +1,5 @@
 // SideNavbar.js
-import React, { useState, useRef } from "react";
+import React, { useState, useRef ,useEffect} from "react";
 import { FaBars } from "react-icons/fa";
 import { MdArrowBack } from "react-icons/md";
 import { GiGate } from "react-icons/gi";
@@ -20,9 +20,9 @@ import { FiSearch } from "react-icons/fi";
 import AlertWeed from "../../ClearLand/EffortOutput/AlertWeed"
 import AlertPlant from "../../ClearLand/EffortOutput/AlertPlant"
 import AlertStone from "../../ClearLand/EffortOutput/AlertStone"
-import { Input, Space, List, AutoComplete,message } from "antd";
-import { CloseSquareFilled } from "@ant-design/icons";
+import {Space,message } from "antd";
 import EffortOutputManual from "../EffortOutputManual/EffortOutputManual";
+import AxiosInstance from "../../../AxiosInstance";
 
 export default function ClearLandManualCalculator({ onBackToSidebar,area,perimeter,PerimeterUnitselectedValue,AreaUnitselectedValue }) {
   const [currentPage, setCurrentPage] = useState(null);
@@ -36,8 +36,25 @@ export default function ClearLandManualCalculator({ onBackToSidebar,area,perimet
   const [laborCount, setLaborCount] = useState("");
   const [workHours, setWorkHours] = useState("");
   const [machineCount, setMachineCount] = useState("");
+  const [machineList, setMachineList] = useState([]);
 
   const prefix = <FiSearch style={{ fontSize: 16, color: "#d3d3d3" }} />;
+
+  useEffect(() => {
+    fetchMchineList();
+  }, []);
+
+  const fetchMchineList = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/Machines"
+      );
+      setMachineList(response.data);
+    } catch (error) {
+      console.error("Error fetching machiList:", error);
+      message.error("Failed to fetch machiList. Please try again.");
+    }
+  };
 
   const handlePlantTypeChange = (event) => {
     setPlantTypeSelectedValue(event.target.value);
@@ -72,6 +89,16 @@ export default function ClearLandManualCalculator({ onBackToSidebar,area,perimet
 
   const [displayValues, setDisplayValues] = useState([]);
   const handleAdd = () => {
+    if (!plantTypeSelectedValue || !plantCount) {
+      message.error("Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(plantCount)) {
+      message.error("Error: Please enter a valid plant count");
+      return;
+    }
     //validation part Add button
     const combinedValue = plantCount + " x " + plantTypeSelectedValue;
     const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
@@ -89,6 +116,16 @@ export default function ClearLandManualCalculator({ onBackToSidebar,area,perimet
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
+    if (!stoneTypeSelectedValue || !stonesCount) {
+      message.error("Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(stonesCount)) {
+      message.error("Error: Please enter a valid stone count");
+      return;
+    }
     //validation part Add button
     const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
@@ -107,6 +144,16 @@ export default function ClearLandManualCalculator({ onBackToSidebar,area,perimet
 
   const [displayValues2, setDisplayValues2] = useState([]);
   const handleAdd2 = () => {
+    if (!machineTypeSelectedValue || !machineCount) {
+      message.error("Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(machineCount)) {
+      message.error("Error: Please enter a valid machine count");
+      return;
+    }
     //validation part Add button
     const combinedValue2 = machineCount + " x " + machineTypeSelectedValue;
     const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
@@ -147,6 +194,17 @@ export default function ClearLandManualCalculator({ onBackToSidebar,area,perimet
         );
         return;
       }
+      const regex2 = /^\d+$/; // allow only decimal numbers
+        if (!regex2.test(laborCount)) {
+          message.error("Error: Please enter a valid labor count");
+          return;
+        }
+        const regex = /^\d+$/; // allow only decimal numbers
+        if (!regex.test(workHours)) {
+          message.error("Error: Please enter a valid work hour count");
+          return;
+        }
+    
 
       setCurrentPage("effortOutputManual"); // Update this line
       setAnimatePage(true);
@@ -339,7 +397,7 @@ const workDays = calculateWorkDays(effort,workHours);
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{perimeter} {PerimeterUnitselectedValue}</p>
+                  <p style={styles.propertyValue}>{parseFloat(perimeter).toFixed(2)} {PerimeterUnitselectedValue}</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -347,7 +405,7 @@ const workDays = calculateWorkDays(effort,workHours);
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} {AreaUnitselectedValue}
+                  {parseFloat(area).toFixed(2)} {AreaUnitselectedValue}
                   </p>
                 </div>
               </div>
@@ -427,7 +485,7 @@ const workDays = calculateWorkDays(effort,workHours);
               <div style={styles.box2InnerTop}>
                 <PiTreeFill color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
-                  <p style={styles.BoxPropertyLabel}>Plants</p>
+                  <p style={styles.BoxPropertyLabel}>Trees</p>
                   <AlertPlant></AlertPlant>
                 </div>
               </div>
@@ -603,19 +661,18 @@ const workDays = calculateWorkDays(effort,workHours);
 
             <Space direction="vertical" style={{ width: "100%" }}>
             <div style={styles.dropDown2Container}>
-                <select
-                  style={styles.dropdown2}
-                  value={machineTypeSelectedValue}
-                  onChange={handleMachineTypeChange}
-                >
-                  <option value="" disabled selected>
-                    Select Machine type
-                  </option>
-                  <option value="Excavators">Excavators</option>
-                  <option value="Backhoes">Backhoes</option>
-                  <option value="Chainsaws">Chainsaws</option>
-                  <option value="Excavator breakers">Excavator breakers</option>
-                </select>
+            <select
+  style={styles.dropdown2}
+  value={machineTypeSelectedValue}
+  onChange={(e) => setMachineTypeSelectedValue(e.target.value)}
+>
+  <option value="" disabled selected>Select a machine type</option>
+  {machineList.map((machine) => (
+    <option key={machine.Name} value={machine.Name}>
+      {machine.Name}
+    </option>
+  ))}
+</select>
               </div>
             </Space>
 

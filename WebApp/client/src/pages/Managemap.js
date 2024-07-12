@@ -16,11 +16,9 @@ import { FaArrowPointer } from "react-icons/fa6";
 import { PiPlantLight } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
 import { BsClipboardData } from "react-icons/bs";
-
 import { GrUndo } from "react-icons/gr";
 import { message, Button, Modal, Input } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { TbTopologyComplex } from "react-icons/tb";
 import { PiSelectionForeground } from "react-icons/pi";
 import { GrCompliance } from "react-icons/gr";
 import PlantationSetupModal from "./PlantationSetupModal";
@@ -46,7 +44,6 @@ const Managemap = () => {
   const [toolButtonHovered, setToolButtonHovered] = useState(null);
   const [labelText, setLabelText] = useState("");
   const [showLabelInput, setShowLabelInput] = useState(false);
-  const [currentLabel, setCurrentLabel] = useState("");
   const [PlantationSetupModalVisible, setPlantationSetupModalVisible] =
     useState(false);
   const navigate = useNavigate();
@@ -55,7 +52,6 @@ const Managemap = () => {
   const [plantationSetupData, setPlantationSetupData] = useState({});
   const [isEditingPlantation, setIsEditingPlantation] = useState(false);
   const [isEditingFence, setIsEditingFence] = useState(false);
-  const [isEditingClearLand, setIsEditingClearLand] = useState(false);
   const [fenceSetupModalVisible, setFenceSetupModalVisible] = useState(false);
   const [clearLandSetupModalVisible, setClearLandSetupModalVisible] = useState(false);
   const [clearLandSetupData, setClearLandSetupData] = useState({});
@@ -365,9 +361,6 @@ const Managemap = () => {
     };
   };
 
-  const handleToolButtonHover = (index) => {
-    setToolButtonHovered(index);
-  };
 
   const toggleDrawingMode = () => {
     setDrawingEnabled(true);

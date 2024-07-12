@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { Text, View, StatusBar, Image } from 'react-native';
-import { Appbar, TextInput } from 'react-native-paper';
-import { styles } from './SaveScreenStyles';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { ScrollView } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { errorUtils } from '../../../common.app';
-import AxiosInstance from '../../../AxiosInstance';
-import { responsiveFontSize } from 'react-native-responsive-dimensions';
+import * as React from "react";
+import { Text, View, StatusBar, Image, Alert } from "react-native";
+import { Appbar, TextInput } from "react-native-paper";
+import { styles } from "./SaveScreenStyles";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { ScrollView } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { errorUtils } from "../../../common.app";
+import AxiosInstance from "../../../AxiosInstance";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 const CustomPerimeterIcon = (props) => (
   <MaterialCommunityIcons
@@ -38,18 +38,18 @@ const reverseGeocode = async (latitude, longitude) => {
       const country = data.address.country;
       return `${city}, ${country}`;
     }
-    return 'Location not found';
+    return "Location not found";
   } catch (error) {
-    console.error('Error during reverse geocoding:', error);
-    return 'Error getting location';
+    console.error("Error during reverse geocoding:", error);
+    return "Error getting location";
   }
 };
 
 const truncateLocation = (location, maxLength = 25) => {
   if (location.length <= maxLength) return location;
-  const [city, country] = location.split(', ');
+  const [city, country] = location.split(", ");
   const truncatedCountry =
-    country.slice(0, maxLength - city.length - 5) + '...';
+    country.slice(0, maxLength - city.length - 5) + "...";
   return `${city}, ${truncatedCountry}`;
 };
 export function SaveScreen({ navigation, route }) {
@@ -63,11 +63,11 @@ export function SaveScreen({ navigation, route }) {
     parseFloat(initialPerimeter).toFixed(2)
   );
   const [area, setArea] = React.useState(parseFloat(initialArea).toFixed(2));
-  const [templateName, setTemplateName] = React.useState('test');
-  const [measureName, setMeasureName] = React.useState('test');
-  const [landType, setLandType] = React.useState('test');
-  const [location, setLocation] = React.useState('');
-  const [descriptionText, setDescriptionText] = React.useState('test');
+  const [templateName, setTemplateName] = React.useState("");
+  const [measureName, setMeasureName] = React.useState("");
+  const [landType, setLandType] = React.useState("");
+  const [location, setLocation] = React.useState("");
+  const [descriptionText, setDescriptionText] = React.useState("");
 
   React.useEffect(() => {
     const getLocation = async () => {
@@ -85,7 +85,21 @@ export function SaveScreen({ navigation, route }) {
 
   /* this function is used to save the data */
   const onSaveButtonPress = () => {
-    console.log('pressed save');
+    if (
+      !templateName.trim() ||
+      !measureName.trim() ||
+      !landType.trim() ||
+      !location.trim() ||
+      !descriptionText.trim()
+    ) {
+      Alert.alert(
+        "Incomplete Information",
+        "Please fill all the fields before saving.",
+        [{ text: "OK" }]
+      );
+      return; // Exit the function early if any field is empty
+    }
+    console.log("pressed save");
     const dataItem = {
       perimeter: perimeter,
       area: area,
@@ -99,11 +113,11 @@ export function SaveScreen({ navigation, route }) {
     };
     console.log(dataItem);
 
-    AxiosInstance.post('/api/auth/mapTemplate/saveTemplate', dataItem)
+    AxiosInstance.post("/api/auth/mapTemplate/saveTemplate", dataItem)
       .then((response) => {
-        console.log('data saved');
+        console.log("data saved");
         console.log(response.data);
-        navigation.navigate('SavedTemplatesScreen');
+        navigation.navigate("SavedTemplatesScreen");
       })
       .catch((error) => {
         console.error(errorUtils.getError(error));
@@ -111,7 +125,7 @@ export function SaveScreen({ navigation, route }) {
   };
   return (
     <View>
-      <StatusBar barStyle={'light-content'} backgroundColor={'#007BFF'} />
+      <StatusBar barStyle={"light-content"} backgroundColor={"#007BFF"} />
       <Appbar.Header style={styles.top_Bar_Whole} statusBarHeight={0}>
         <View style={styles.top_Bar_View}>
           <TouchableOpacity
@@ -209,9 +223,9 @@ export function SaveScreen({ navigation, route }) {
                 underlineColor="transparent"
               />
             </View>
-            <View style={styles.imageContainer}>
+            {/* <View style={styles.imageContainer}>
               <Image source={{ uri: imageUrl }} style={styles.base64Image} />
-            </View>
+            </View> */}
           </View>
         </View>
       </ScrollView>

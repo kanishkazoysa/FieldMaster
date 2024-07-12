@@ -7,10 +7,10 @@ const handleAlert = () => {
   toast.info(
     <div style={{ marginLeft: '20px' }}>
       <p><strong>Select to calculate effort for removing weeds</strong></p>
-      <p><strong>Low:</strong>Distributed all over the land in a height below 50cm. Can be removed by laborers. No need for machines.</p>
-      <p><strong>Medium</strong>Distributed all over the land in a height below 75cm. Can be removed by laborers. No need for machines.</p>
-      <p><strong>Hign</strong>Distributed all over the land. Can't be removed by laborers. Need machines (Backhoe, Excavator).</p>
-      
+      <p><strong>Low:</strong>Distributed all over the land in a height below 50cm. Can be removed by laborers. No need machines.</p>
+      <p><strong>Medium</strong>Distributed all over the land in a height below 75cm. Can be removed by laborers. No need machines.</p>
+      <p><strong>High</strong>Distributed all over the land. Can't be removed by laborers.There can be small plants as well.Need machines (Backhoe, Excavator).</p>
+      <p><strong>Note : If you only want to remove weeds or small plants in your land choose only "Weeds" options.</strong></p>
     </div>,
     {
       position: "top-right",

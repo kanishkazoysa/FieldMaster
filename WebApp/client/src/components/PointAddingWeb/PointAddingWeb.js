@@ -18,19 +18,18 @@ import * as turf from "@turf/turf";
 import html2canvas from "html2canvas";
 import axios from "axios";
 
-
-
 const { Option } = Select;
 
 const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
-  const [templateName, setTemplateName] = useState("myTemplate");
-  const [measureName, setMeasureName] = useState("tea");
-  const [landType, setLandType] = useState("slope");
-  const [description, setDescription] = useState("testingDesc");
+  const [templateName, setTemplateName] = useState("");
+  const [measureName, setMeasureName] = useState("");
+  const [landType, setLandType] = useState("");
+  const [description, setDescription] = useState("");
   const [area, setArea] = useState(calculatedData.area);
   const [perimeter, setPerimeter] = useState(calculatedData.perimeter);
   const [location, setLocation] = useState(calculatedData.location);
   const [screenshot, setScreenshot] = useState(calculatedData.screenshot);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     setArea(calculatedData.area);
@@ -40,6 +39,26 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
     }
     setScreenshot(calculatedData.screenshot);
   }, [calculatedData]);
+
+  useEffect(() => {
+    const isValid =
+      templateName.trim() !== "" &&
+      measureName.trim() !== "" &&
+      landType !== "" &&
+      description.trim() !== "" &&
+      area.trim() !== "" &&
+      perimeter.trim() !== "" &&
+      location.trim() !== "";
+    setIsFormValid(isValid);
+  }, [
+    templateName,
+    measureName,
+    landType,
+    description,
+    area,
+    perimeter,
+    location,
+  ]);
 
   const handleSave = () => {
     onSave({
@@ -82,7 +101,12 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
         <Button key="cancel" onClick={onClose}>
           Cancel
         </Button>,
-        <Button key="save" type="primary" onClick={handleSave}>
+        <Button
+          key="save"
+          type="primary"
+          onClick={handleSave}
+          disabled={!isFormValid}
+        >
           Save
         </Button>,
       ]}
@@ -150,20 +174,6 @@ const SavePopup = ({ isOpen, onClose, onSave, calculatedData }) => {
           style={{ ...inputStyle, height: "auto" }}
         />
       </div>
-      {/*  {screenshot && (
-        <div style={{ marginTop: '20px' }}>
-          <label
-            style={{ ...labelStyle, display: 'block', marginBottom: '10px' }}
-          >
-            Map Screenshot:
-          </label>
-          <img
-            src={screenshot}
-            alt='Map Screenshot'
-            style={{ width: '100%', maxHeight: '300px', objectFit: 'contain' }}
-          />
-        </div>
-      )} */}
     </Modal>
   );
 };
@@ -187,6 +197,7 @@ export default function PointAddingWeb() {
     location: "",
   });
   const [isImageCaptureComplete, setIsImageCaptureComplete] = useState(false);
+  const [searchMarker, setSearchMarker] = useState(null);
 
   useEffect(() => {
     fetchUserDetails();
@@ -238,20 +249,27 @@ export default function PointAddingWeb() {
     if (!searchBoxRef.current) return;
 
     const places = searchBoxRef.current.getPlaces();
-    if (places.length === 0) return;
+    if (!places || places.length === 0) return;
 
     const selectedPlace = places[0];
+    if (
+      !selectedPlace ||
+      !selectedPlace.geometry ||
+      !selectedPlace.geometry.location
+    )
+      return;
+
     const location = selectedPlace.geometry.location.toJSON();
+    setSearchMarker(location);
     setSelectedLocation(location);
 
     const bounds = new window.google.maps.LatLngBounds();
     bounds.extend(location);
-    if (mapRef.current && mapRef.current.state.map) {
+    if (mapRef.current && mapRef.current.state && mapRef.current.state.map) {
       mapRef.current.state.map.fitBounds(bounds);
       mapRef.current.state.map.setZoom(15);
     }
   }, []);
-
   const handleMapClick = useCallback(
     (e) => {
       if (!isPolygonComplete) {
@@ -776,6 +794,19 @@ export default function PointAddingWeb() {
               onRequestClose={closeModal}
               user={user}
               updateUserInHome={setUser}
+            />
+          )}
+          {searchMarker && (
+            <Marker
+              position={searchMarker}
+              icon={{
+                path: window.google.maps.SymbolPath.CIRCLE,
+                scale: 7,
+                fillColor: "#ff6a6a",
+                fillOpacity: 1,
+                strokeWeight: 2,
+                strokeColor: "#000000",
+              }}
             />
           )}
         </GoogleMap>

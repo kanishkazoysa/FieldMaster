@@ -258,7 +258,7 @@ export default function Fence({route}) {
                   />
                   <View style={styles.propertyDetails}>
                     <Text style={styles.propertyLabel}>Perimeter</Text>
-                    <Text style={styles.propertyValue}>{Perimeter} km</Text>
+                    <Text style={styles.propertyValue}>{parseFloat(Perimeter).toFixed(2)} km</Text>
                   </View>
                 </View>
                 <View style={styles.property}>
@@ -269,7 +269,7 @@ export default function Fence({route}) {
                   />
                   <View style={styles.propertyDetails}>
                     <Text style={styles.propertyLabel}>Area</Text>
-                    <Text style={styles.propertyValue}>{Area} perches</Text>
+                    <Text style={styles.propertyValue}>{parseFloat(Area).toFixed(2)} perch</Text>
                   </View>
                 </View>
               </View>

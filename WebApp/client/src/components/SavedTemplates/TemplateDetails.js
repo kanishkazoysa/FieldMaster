@@ -207,14 +207,14 @@ const TemplateDetails = ({
                   <HiChartPie className="info-icon" />
                   <div>
                     <p>Area</p>
-                    <p className="bold-text">{template.area}perches</p>
+                    <p className="bold-text">{parseFloat(template.area).toFixed(2)} perch</p>
                   </div>
                 </div>
                 <div className="info-container">
                   <TbVector className="info-icon" />
                   <div>
                     <p>Perimeter</p>
-                    <p className="bold-text">{template.perimeter}km</p>
+                    <p className="bold-text">{parseFloat(template.perimeter).toFixed(2)} km</p>
                   </div>
                 </div>
                 <div className="info-container">
