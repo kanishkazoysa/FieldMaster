@@ -11,14 +11,13 @@ import {
 } from "react-native";
 import { Alert } from "react-native";
 import { Polyline } from "react-native-maps";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { polygon, area, length } from "@turf/turf";
 import {
   faLayerGroup,
   faLocationCrosshairs,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { styles } from "./PointAddingScreenStyles";
+import styles from "./PointAddingScreenStyles";
 import MapView, { MAP_TYPES } from "react-native-maps";
 import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
@@ -27,6 +26,7 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { captureRef } from "react-native-view-shot";
 import axios from "axios";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const apiKey = "AIzaSyCmDfdWl4TZegcfinTmC0LlmFCiEcdRbmU";
 
@@ -341,6 +341,19 @@ const PointAddingScreen = ({ navigation, route }) => {
               container: styles.searchBarContainer,
               textInputContainer: styles.searchBarInputContainer,
               textInput: styles.searchBarInput,
+            }}
+            renderRightButton={() => (
+              <TouchableOpacity
+                onPress={() => {
+                  this.googlePlacesAutocomplete.clear();
+                }}
+                style={styles.clearButton}
+              >
+                <Ionicons name="close-circle" size={20} color="#999" />
+              </TouchableOpacity>
+            )}
+            ref={(instance) => {
+              this.googlePlacesAutocomplete = instance;
             }}
           />
 

@@ -7,6 +7,10 @@ import {
 } from "react-native-responsive-dimensions";
 
 export const styles = StyleSheet.create({
+  clearButton: {
+    padding: 10,
+    marginRight: 5,
+  },
   searchBarContainer: {
     position: "absolute",
     top: 20,
@@ -22,6 +26,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingLeft: responsiveWidth(2),
     borderRadius: 25,
+    paddingRight: 40,
   },
   searchBarInput: {
     height: responsiveHeight(5),
