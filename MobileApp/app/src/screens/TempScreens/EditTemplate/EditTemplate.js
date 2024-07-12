@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { View, Image, Text, ScrollView, StatusBar } from 'react-native';
-import { responsiveFontSize } from 'react-native-responsive-dimensions';
-import { Appbar, TextInput } from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { styles } from './EditTemplateStyle';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import AxiosInstance from '../../../AxiosInstance';
+import React, { useState } from "react";
+import { View, Image, Text, ScrollView, StatusBar } from "react-native";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { Appbar, TextInput } from "react-native-paper";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { styles } from "./EditTemplateStyle";
+import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import AxiosInstance from "../../../AxiosInstance";
 
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'green',
-    accent: 'red',
+    primary: "green",
+    accent: "red",
   },
 };
 
@@ -54,19 +54,19 @@ const EditTemplate = ({ route, navigation }) => {
         description: description,
       })
         .then((response) => {
-          alert('Template updated');
-          navigation.navigate('SavedTemplatesScreen');
+          alert("Template updated");
+          navigation.navigate("SavedTemplatesScreen");
         })
         .catch((error) => {
           console.error(error);
         });
     } else {
-      navigation.navigate('SavedTemplatesScreen');
+      navigation.navigate("SavedTemplatesScreen");
     }
   };
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar barStyle={'light-content'} />
+      <StatusBar barStyle={"light-content"} />
       <Appbar.Header style={styles.top_Bar_Whole}>
         <View style={styles.top_Bar_View}>
           <TouchableOpacity
@@ -103,7 +103,7 @@ const EditTemplate = ({ route, navigation }) => {
             style={styles.editIconStyle}
             color="#65676B"
             onPress={() => {
-              navigation.navigate('ResizeMap', {
+              navigation.navigate("ResizeMap", {
                 templateId: item._id,
               });
             }}
@@ -118,7 +118,7 @@ const EditTemplate = ({ route, navigation }) => {
                   <View style={styles.textView}>
                     <Text style={styles.text01Styling}>Perimeter</Text>
                     <Text style={styles.text02Styling}>
-                      {item.perimeter} km
+                      {parseFloat(item.perimeter).toFixed(2)} km
                     </Text>
                   </View>
                 </View>
@@ -128,7 +128,9 @@ const EditTemplate = ({ route, navigation }) => {
                   <AreaIcon />
                   <View style={styles.textView}>
                     <Text style={styles.text01Styling}>Area</Text>
-                    <Text style={styles.text02Styling}>{item.area} acres</Text>
+                    <Text style={styles.text02Styling}>
+                      {parseFloat(item.area).toFixed(2)} acres
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -167,7 +169,7 @@ const EditTemplate = ({ route, navigation }) => {
                 numberOfLines={4}
                 outlineColor="black"
                 activeUnderlineColor="black"
-                theme={{ colors: { primary: 'black' } }}
+                theme={{ colors: { primary: "black" } }}
               />
             </View>
           </View>
