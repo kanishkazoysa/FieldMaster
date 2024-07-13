@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback } from "react";
 import {
   TouchableOpacity,
   View,
@@ -8,13 +8,13 @@ import {
   StatusBar,
   ActivityIndicator,
   Alert,
-} from 'react-native';
-import { Appbar } from 'react-native-paper';
-import { styles } from './SavedTemplatesScreenStyles';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useFocusEffect } from '@react-navigation/native';
-import AxiosInstance from '../../../AxiosInstance';
-import { responsiveFontSize } from 'react-native-responsive-dimensions';
+} from "react-native";
+import { Appbar } from "react-native-paper";
+import { styles } from "./SavedTemplatesScreenStyles";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useFocusEffect } from "@react-navigation/native";
+import AxiosInstance from "../../../AxiosInstance";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 const CustomEditIcon = (props) => {
   <MaterialCommunityIcons
@@ -35,19 +35,24 @@ const CustomDeleteIcon = (props) => (
 
 const truncateText = (text, maxLength) => {
   if (text.length <= maxLength) return text;
-  return text.substr(0, maxLength) + '...';
+  return text.substr(0, maxLength) + "...";
 };
 
 const SavedTemplatesScreen = ({ navigation }) => {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState({});
+
+  const handleImageLoad = (id) => {
+    setImageLoading((prev) => ({ ...prev, [id]: false }));
+  };
 
   const fetchData = () => {
-    console.log('calling api to get all templates...');
+    console.log("calling api to get all templates...");
     AxiosInstance.get(`/api/auth/mapTemplate/getAllTemplates`)
       .then((response) => {
         setTemplates(response.data);
-        console.log('fetching successful');
+        console.log("fetching successful");
         setLoading(false);
       })
       .catch((error) => {
@@ -64,21 +69,21 @@ const SavedTemplatesScreen = ({ navigation }) => {
 
   const handleDelete = (deletingTemplate) => {
     Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this template?',
+      "Confirm Delete",
+      "Are you sure you want to delete this template?",
       [
         {
-          text: 'Cancel',
-          style: 'cancel',
+          text: "Cancel",
+          style: "cancel",
         },
         {
-          text: 'OK',
+          text: "OK",
           onPress: () => {
             AxiosInstance.delete(
               `/api/auth/mapTemplate/deleteTemplate/${deletingTemplate._id}`
             )
               .then((response) => {
-                alert('Template deleted');
+                alert("Template deleted");
                 setTemplates(
                   templates.filter(
                     (template) => template._id !== deletingTemplate._id
@@ -96,8 +101,8 @@ const SavedTemplatesScreen = ({ navigation }) => {
   };
 
   const handleTemplatePress = (item) => {
-    console.log('template pressed');
-    navigation.navigate('TemplateView', { item: item });
+    console.log("template pressed");
+    navigation.navigate("TemplateView", { item: item });
   };
 
   return (
@@ -107,7 +112,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
 
         <Appbar.Header style={styles.header}>
           <Appbar.BackAction
-            onPress={() => navigation.navigate('Home')}
+            onPress={() => navigation.navigate("Home")}
             color="white"
           />
           <Appbar.Content
@@ -137,13 +142,19 @@ const SavedTemplatesScreen = ({ navigation }) => {
                   >
                     <View style={styles.template_style}>
                       <View style={styles.col_01}>
+                        {imageLoading[item._id] !== false && (
+                          <View style={styles.imageLoadingContainer}>
+                            <ActivityIndicator color="#007BFF" size="small" />
+                          </View>
+                        )}
                         <Image
                           style={styles.image_style}
                           source={{
                             uri:
                               item.imageUrl ||
-                              'https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png',
+                              "https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png",
                           }}
+                          onLoad={() => handleImageLoad(item._id)}
                         />
                       </View>
                       <TouchableOpacity
@@ -157,7 +168,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
                             Location: {truncateText(item.location, 16)}
                           </Text>
                           <Text style={styles.sub_text_style}>
-                            Date: {item.date}{' '}
+                            Date: {item.date}{" "}
                           </Text>
                           <Text style={styles.sub_text_style}>
                             Time: {item.time}
@@ -168,7 +179,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
                         <TouchableOpacity
                           style={styles.icon_style}
                           onPress={() => {
-                            navigation.navigate('EditTemplate', { item: item });
+                            navigation.navigate("EditTemplate", { item: item });
                           }}
                         >
                           <MaterialCommunityIcons
