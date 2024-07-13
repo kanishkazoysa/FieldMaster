@@ -12,7 +12,8 @@ import {
   Box,
   Typography,
   ThemeProvider,
-  createTheme
+  createTheme,
+  CircularProgress
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -46,106 +47,101 @@ const blueTheme = createTheme({
 });
 
 const DetailSection = ({ data }) => {
-    const sections = ['clearLandDetails', 'plantationDetails', 'fenceDetails'];
-    const availableSections = sections.filter(section => data[section] && Object.keys(data[section]).length > 0);
-  
-    const getDisplayData = (sectionData, sectionName) => {
-      switch(sectionName) {
-        case 'clearLandDetails':
-          return {
-            'No of Labourers': sectionData.laborCount, 
-            'Work hours': sectionData.workHours + ' hours',
-            'Weed type': sectionData.weedType,
-            'Plant Details': sectionData.plantDetails,
-            'Stones Details': sectionData.stoneDetails,
-            'Machniery Details': sectionData.machineDetails,
-            'Weed Effort': parseFloat(sectionData.weedEffort).toFixed(2) + ' hours',
-            'Plant Effort': parseFloat(sectionData.plantEffort).toFixed(2)  + ' hours',
-            'Stone Effort': parseFloat(sectionData.stoneEffort).toFixed(2) + ' hours',
-            'Work Duration': sectionData.workDays + ' days '
-          };
-        case 'plantationDetails':
-          return {
-            'Plant Type': sectionData.plantType,
-            'Plant Space': sectionData.plantSpace + 'cm',
-            'Row Space': sectionData.rowSpace + 'cm',
-            'Number of Plants': sectionData.numberOfPlants,
-            'Plant Density': sectionData.plantDensity + 'sqm',
-          };
-        case 'fenceDetails':
-          return {
-            'Fence Type': sectionData.fenceType,
-            'Post Space': sectionData.postSpace + sectionData.postSpaceUnit,
-            'Number of Sticks': sectionData.numberOfSticks,
-            'Number of Gates': sectionData.fenceAmount,
-            'Gate Details': sectionData.gateDetails
-            
-          };
-        default:
-          return {};
-      }
-    };
-  
-    return (
-      <Box sx={{ margin: 1 }}>
-        <TableContainer component={Paper}>
-          <Table size="small" sx={{ borderCollapse: 'separate', borderSpacing: 0 }}>
-            <TableHead>
-              <TableRow>
-                {availableSections.map((section, index) => (
-                  <TableCell 
-                    key={section} 
-                    sx={{ 
-                      backgroundColor: '#1976d2', 
-                      color: '#fff', 
-                      fontWeight: 'bold',
-                      borderRight: index < availableSections.length - 1 ? '2px solid #fff' : 'none'
-                    }}
-                  >
-                    {section.replace('Details', '').charAt(0).toUpperCase() + section.replace('Details', '').slice(1)}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                {availableSections.map((section, columnIndex) => (
-                  <TableCell 
-                    key={section}
-                    sx={{
-                      borderRight: columnIndex < availableSections.length - 1 ? '1px solid rgba(224, 224, 224, 1)' : 'none',
-                      verticalAlign: 'top'
-                    }}
-                  >
-                    {Object.entries(getDisplayData(data[section], section)).map(([key, value]) => (
-                      <div key={key}>
-                        <Typography component="span" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-                          {key}:
-                        </Typography>{' '}
-                        {value}
-                      </div>
-                    ))}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-    );
+  const sections = ['clearLandDetails', 'plantationDetails', 'fenceDetails'];
+  const availableSections = sections.filter(section => data[section] && Object.keys(data[section]).length > 0);
+
+  const getDisplayData = (sectionData, sectionName) => {
+    switch(sectionName) {
+      case 'clearLandDetails':
+        return {
+          'No of Labourers': sectionData.laborCount, 
+          'Work hours': sectionData.workHours + ' hours',
+          'Weed type': sectionData.weedType,
+          'Plant Details': sectionData.plantDetails,
+          'Stones Details': sectionData.stoneDetails,
+          'Machniery Details': sectionData.machineDetails,
+          'Weed Effort': parseFloat(sectionData.weedEffort).toFixed(2) + ' hours',
+          'Plant Effort': parseFloat(sectionData.plantEffort).toFixed(2)  + ' hours',
+          'Stone Effort': parseFloat(sectionData.stoneEffort).toFixed(2) + ' hours',
+          'Work Duration': sectionData.workDays + ' days '
+        };
+      case 'plantationDetails':
+        return {
+          'Plant Type': sectionData.plantType,
+          'Plant Space': sectionData.plantSpace + 'cm',
+          'Row Space': sectionData.rowSpace + 'cm',
+          'Number of Plants': sectionData.numberOfPlants,
+          'Plant Density': sectionData.plantDensity + 'sqm',
+        };
+      case 'fenceDetails':
+        return {
+          'Fence Type': sectionData.fenceType,
+          'Post Space': sectionData.postSpace + sectionData.postSpaceUnit,
+          'Number of Sticks': sectionData.numberOfSticks,
+          'Number of Gates': sectionData.fenceAmount,
+          'Gate Details': sectionData.gateDetails
+        };
+      default:
+        return {};
+    }
   };
+
+  return (
+    <Box sx={{ margin: 1 }}>
+      <TableContainer component={Paper}>
+        <Table size="small" sx={{ borderCollapse: 'separate', borderSpacing: 0 }}>
+          <TableHead>
+            <TableRow>
+              {availableSections.map((section, index) => (
+                <TableCell 
+                  key={section} 
+                  sx={{ 
+                    backgroundColor: '#1976d2', 
+                    color: '#fff', 
+                    fontWeight: 'bold',
+                    borderRight: index < availableSections.length - 1 ? '2px solid #fff' : 'none'
+                  }}
+                >
+                  {section.replace('Details', '').charAt(0).toUpperCase() + section.replace('Details', '').slice(1)}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              {availableSections.map((section, columnIndex) => (
+                <TableCell 
+                  key={section}
+                  sx={{
+                    borderRight: columnIndex < availableSections.length - 1 ? '1px solid rgba(224, 224, 224, 1)' : 'none',
+                    verticalAlign: 'top'
+                  }}
+                >
+                  {Object.entries(getDisplayData(data[section], section)).map(([key, value]) => (
+                    <div key={key}>
+                      <Typography component="span" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+                        {key}:
+                      </Typography>{' '}
+                      {value}
+                    </div>
+                  ))}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+};
 
 const Row = (props) => {
   const { row } = props;
   const [open, setOpen] = useState(false);
   const [mapsOpen, setMapsOpen] = useState({});
-  const [maps, setMaps] = useState([]);
+  const [maps, setMaps] = useState(row.maps || []);
 
-  const handleExpand = async () => {
-    if (!open && maps.length === 0) {
-      const fetchedMaps = await props.fetchUserMaps(row._id);
-      setMaps(fetchedMaps);
-    }
+  const handleExpand = () => {
     setOpen(!open);
   };
 
@@ -242,29 +238,41 @@ const Row = (props) => {
 
 const UserMapsTable = () => {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchUsers();
+    fetchUsersAndMaps();
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchUsersAndMaps = async () => {
     try {
+      setLoading(true);
       const response = await AxiosInstance.get("/api/users/getAllUsers");
-      setUsers(response.data.users.map(user => ({
-        ...user,
-        key: user._id,
-        name: `${user.fname} ${user.lname}`,
-        numberOfMaps: user.maps ? user.maps.length : 0,
-        maps: user.maps || [], // Ensure maps is always an array
-      })));
+      console.log("API response:", response.data);
+
+      const usersWithMaps = await Promise.all(response.data.users.map(async user => {
+        const userMaps = await fetchUserMaps(user._id);
+        return {
+          ...user,
+          key: user._id,
+          name: `${user.fname} ${user.lname}`,
+          numberOfMaps: userMaps.length,
+          maps: userMaps,
+        };
+      }));
+
+      setUsers(usersWithMaps);
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error fetching users and maps:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchUserMaps = async (userId) => {
     try {
       const response = await AxiosInstance.get(`/api/auth/mapTemplate/getAllTemplates/${userId}`);
+      console.log("Maps for user", userId, ":", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching user maps:", error);
@@ -281,6 +289,22 @@ const UserMapsTable = () => {
       return null;
     }
   };
+
+  const updateUserMaps = (userId, mapCount) => {
+    setUsers(prevUsers => 
+      prevUsers.map(user => 
+        user._id === userId ? { ...user, numberOfMaps: mapCount } : user
+      )
+    );
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <ThemeProvider theme={blueTheme}>
@@ -301,6 +325,7 @@ const UserMapsTable = () => {
                 row={user} 
                 fetchUserMaps={fetchUserMaps}
                 fetchMapDetails={fetchMapDetails}
+                updateUserMaps={updateUserMaps}
               />
             ))}
           </TableBody>
