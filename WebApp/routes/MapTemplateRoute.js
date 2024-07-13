@@ -199,15 +199,35 @@ router.get("/getLocationAnalytics", async (req, res) => {
   try {
     const locationAnalytics = await MapTemplateModel.aggregate([
       {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userDetails"
+        }
+      },
+      {
         $group: {
           _id: "$location",
           count: { $sum: 1 },
-        },
+          users: { 
+            $push: { 
+              userId: { $arrayElemAt: ["$userDetails._id", 0] },
+              fname: { $arrayElemAt: ["$userDetails.fname", 0] },
+              lname: { $arrayElemAt: ["$userDetails.lname", 0] },
+              email: { $arrayElemAt: ["$userDetails.email", 0] },
+              templateName: "$templateName",
+              area: "$area",
+              landType: "$landType"
+            }
+          }
+        }
       },
       {
         $sort: { count: -1 },
       },
     ]);
+    console.log(locationAnalytics);
     res.json(locationAnalytics);
   } catch (error) {
     console.error("Error fetching location analytics:", error);
@@ -239,47 +259,52 @@ router.get("/getAllmapData/:id", async (req, res) => {
         location: map.location,
         description: map.description,
       },
-      fenceDetails: Fence
-        ? {
-            postSpace: Fence.PostSpace,
-            postSpaceUnit: Fence.PostSpaceUnit,
-            gateDetails: Fence.GateDetails,
-            numberOfSticks: Fence.NumberofSticks,
-            fenceType: Fence.FenceType,
-            fenceAmount: Fence.NumberofGates,
-            fenceLength: Fence.Gatelength,
-          }
-        : null,
-      plantationDetails: Plantation
-        ? {
-            numberOfPlants: Plantation.NoOfPlants,
-            plantType: Plantation.PlantType,
-            plantSpace: Plantation.PlantSpace,
-            rowSpace: Plantation.RowSpace,
-            plantDensity: Plantation.PlantDensity,
-            unit: Plantation.Unit,
-          }
-        : null,
-      clearLandDetails: ClearLand
-        ? {
-            weedType: ClearLand.WeedType,
-            effortOutput: ClearLand.EffortOutput,
-            weedEffort: ClearLand.WeedEffort,
-            plantEffort: ClearLand.PlantEffort,
-            stoneEffort: ClearLand.StoneEffort,
-            workDays: ClearLand.WorkDays,
-            laborCount: ClearLand.LaborsCOunt,
-            workHours: ClearLand.WorkHoursCount,
-            plantDetails: ClearLand.PlantDetails,
-            stoneDetails: ClearLand.StoneDetails,
-            machineDetails: ClearLand.MachineDetails,
-          }
-        : null,
+      fenceDetails: Fence ? {
+        postSpace: Fence.PostSpace,
+        postSpaceUnit: Fence.PostSpaceUnit,
+        gateDetails: Fence.GateDetails,
+        numberOfSticks: Fence.NumberofSticks,
+        fenceType: Fence.FenceType,
+        fenceAmount: Fence.NumberofGates,
+        fenceLength: Fence.Gatelength,
+      } : null,
+      plantationDetails: Plantation ? {
+        numberOfPlants: Plantation.NoOfPlants,
+        plantType: Plantation.PlantType,
+        plantSpace: Plantation.PlantSpace,
+        rowSpace: Plantation.RowSpace,
+        plantDensity: Plantation.PlantDensity,
+        unit: Plantation.Unit,
+      } : null,
+      clearLandDetails: ClearLand ? {
+        weedType: ClearLand.WeedType,
+        effortOutput: ClearLand.EffortOutput,
+        weedEffort: ClearLand.WeedEffort,
+        plantEffort: ClearLand.PlantEffort,
+        stoneEffort: ClearLand.StoneEffort,
+        workDays: ClearLand.WorkDays,
+        laborCount: ClearLand.LaborsCOunt,
+        workHours: ClearLand.WorkHoursCount,
+        plantDetails: ClearLand.PlantDetails,
+        stoneDetails: ClearLand.StoneDetails,
+        machineDetails: ClearLand.MachineDetails,
+      } : null,
+      locationPoints: map.locationPoints,
+      
     };
 
     res.json(response);
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
+  }
+});
+
+router.get("/getAllTemplates/:userId", async (req, res) => {
+  try {
+    const templates = await MapTemplateModel.find({ userId: req.params.userId });
+    res.json(templates);
+  } catch (error) {
+    res.status(500).send("Error while getting templates.");
   }
 });
 

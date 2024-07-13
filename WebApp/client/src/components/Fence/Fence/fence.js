@@ -45,6 +45,7 @@ export default function Fence({
       setTextFence({ value: fencedata.fenceType, label: fencedata.fenceType });
       setInputValuePostspace(fencedata.postSpace);
       setPostSpaceUnitselectedValue(fencedata.postSpaceUnit);
+      setPostSpaceUnitselectedValue1({value:fencedata.postSpaceUnit, label:fencedata.postSpaceUnit})
       //setPostSpaceUnitselectedValue1({ value: fencedata.postSpaceUnit, label: fenceData.postSpaceUnit });
       setDisplayValues(fencedata.gateDetails || []);
       setFenceLengthsArray(fencedata.fenceLength || []);
@@ -272,7 +273,7 @@ export default function Fence({
                   onChange={handleInputChange}
                 />
                 <Select
-                  placeholder="m"
+                  placeholder="unit"
                   options={[
                     { value: "m", label: "m" },
                     { value: "cm", label: "cm" },

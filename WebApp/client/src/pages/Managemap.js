@@ -10,7 +10,8 @@ import SideNavbar from "../components/SideNavbar/sideNavbar";
 import { styles, containerStyle } from "./ManagemapStyles";
 import AxiosInstance from "../AxiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
-import { FiGrid, FiEdit, FiSave, FiTag,FiTrash2 } from "react-icons/fi";
+import { FiMapPin, FiGrid, FiEdit, FiX, FiSave, FiTag,FiTrash2 } from "react-icons/fi";
+import { GiBulldozer } from "react-icons/gi";
 import { FaArrowPointer } from "react-icons/fa6";
 import { PiPlantLight } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
@@ -1273,14 +1274,15 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
       </Button>
     )}
 
-{clearLandSetupData[selectedPolygonIndex] && 
- Object.keys(clearLandSetupData[selectedPolygonIndex]).length > 0 ? (
+{clearLandSetupData[selectedPolygonIndex] && typeof clearLandSetupData[selectedPolygonIndex] === 'object' && Object.keys(clearLandSetupData[selectedPolygonIndex]).length > 0  && (clearLandSetupData[selectedPolygonIndex].weedData.weedType|| clearLandSetupData[selectedPolygonIndex].plantData.plantList || clearLandSetupData[selectedPolygonIndex].stoneData.stoneList) 
+ ? (
   <Button
     onClick={handleClearLandSetup}
-    icon={<FiTrash2 />}
+    icon={<GiBulldozer
+    size={15} />}
     style={styles.toolButton}
   >
-    Edit Clear Land
+   Clear Land
   </Button>
 ) : (
   <Button

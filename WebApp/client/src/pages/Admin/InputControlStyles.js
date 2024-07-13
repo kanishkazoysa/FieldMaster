@@ -1,5 +1,3 @@
-import getFontSizes from "antd/es/theme/themes/shared/genFontSizes";
-
 export const styles = {
   pageWrapper: {
     height: '100vh',
@@ -72,7 +70,6 @@ export const styles = {
   leftHeader: {
     color: "white",
     alignItems: "center",
-    backgroundColor: "#007BFF",
     justifyContent: "center",
     padding: "20px",
     display: "flex",

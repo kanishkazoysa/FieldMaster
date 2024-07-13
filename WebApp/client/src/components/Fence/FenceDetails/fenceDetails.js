@@ -112,6 +112,7 @@ export default function FenceDetails({
       FenceDelete(id)
         .then(() => {
           // Navigate to the desired screen
+          setfencedata(null);
           setCurrentPage('Fence');
           setAnimatePage(true);
         })

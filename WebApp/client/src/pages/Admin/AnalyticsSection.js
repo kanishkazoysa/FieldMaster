@@ -14,7 +14,7 @@ import "./AdminDashboard.css";
 
 const apiKey = process.env.REACT_APP_GOOGLE_CLOUD_API_KEY;
 
-const AnalyticsSection = ({ users, setLoading }) => {
+const AnalyticsSection = ({ users}) => {
   const [totalUsers] = useState(users.length);
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [totalAdmins, setTotalAdmins] = useState(0);
@@ -29,6 +29,7 @@ const AnalyticsSection = ({ users, setLoading }) => {
   const [map, setMap] = useState(null);
 
 
+  
   const onMapLoad = useCallback((mapInstance) => {
     setMap(mapInstance);
     setIsMapLoading(false);
@@ -83,13 +84,12 @@ const AnalyticsSection = ({ users, setLoading }) => {
         return location._id && location._id !== "null" && location._id.trim() !== "" && location._id !== "Unknown location";
       });
   
-      console.log("validLocationNames", validLocationNames);
+      console.log("validLocationNames", validLocationNames); // Add this line
       setLocationAnalytics(validLocationNames);
     } catch (error) {
       console.error("Error fetching location analytics:", error);
     }
   };
-
 
   const geocodeLocation = async (locationName) => {
     const geocoder = new window.google.maps.Geocoder();
@@ -443,7 +443,7 @@ const styles = {
   },
 };
 
-const MarkerWithGeocoding = ({ location, geocodeLocation, index }) => {
+const MarkerWithGeocoding = ({ location, geocodeLocation, index, onMarkerClick }) => {
   const [position, setPosition] = useState(null);
 
   useEffect(() => {
@@ -477,11 +477,15 @@ const MarkerWithGeocoding = ({ location, geocodeLocation, index }) => {
           cursor: "pointer",
         }}
         title={`${location._id}: ${location.count}`}
+       
       >
         {location.count}
       </div>
     </OverlayView>
   );
 };
+
+
+
 
 export default AnalyticsSection;

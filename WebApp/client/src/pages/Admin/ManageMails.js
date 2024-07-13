@@ -203,11 +203,7 @@ const EmailManage = () => {
             okText="Yes"
             cancelText="No"
           >
-            <Button
-              type="danger"
-              icon={<DeleteOutlined />}
-              style={{ color: "red" }}
-            />
+          <DeleteOutlined style={{ color: 'red', marginRight:10, marginBottom:10 }} />
           </Popconfirm>
             </div>
         )
