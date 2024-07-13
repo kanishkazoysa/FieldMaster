@@ -4,6 +4,7 @@ import ManageUsers from "./ManageUsers";
 import InputControl from "./InputControl";
 import AnalyticsSection from "./AnalyticsSection";
 import ManageMails from "./ManageMails";
+import UserMapsTable from "./UserMapsTable";
 import AxiosInstance from "../../AxiosInstance";
 import { message } from "antd";
 import { BeatLoader } from "react-spinners";
@@ -42,6 +43,7 @@ function AdminRoutes() {
                 <Route path="/users" element={<ManageUsers />} />
                 <Route path="/mails" element={<ManageMails />} />
                 <Route path="/inputcontrol" element={<InputControl />} />
+                <Route path="/usermaps" element={<UserMapsTable />} />
                 <Route path="*" element={<ManageUsers />} />
 
             </Routes>

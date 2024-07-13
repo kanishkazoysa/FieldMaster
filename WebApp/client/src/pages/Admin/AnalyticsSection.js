@@ -11,11 +11,10 @@ import AxiosInstance from "../../AxiosInstance";
 import LoginCountChart from "./LoginCountChart";
 import { Doughnut } from "react-chartjs-2";
 import "./AdminDashboard.css";
-import UserMapsTable from "./UserMapsTable";
 
 const apiKey = process.env.REACT_APP_GOOGLE_CLOUD_API_KEY;
 
-const AnalyticsSection = ({ users, setLoading }) => {
+const AnalyticsSection = ({ users}) => {
   const [totalUsers] = useState(users.length);
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [totalAdmins, setTotalAdmins] = useState(0);
@@ -28,7 +27,6 @@ const AnalyticsSection = ({ users, setLoading }) => {
   const searchBoxRef = useRef(null);
   const [isMapLoading, setIsMapLoading] = useState(true);
   const [map, setMap] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
 
   
@@ -413,8 +411,6 @@ const AnalyticsSection = ({ users, setLoading }) => {
           </div>
         </LoadScript>
       </div>
-      <hr />
-      <UserMapsTable />
     </div>
   );
 };
