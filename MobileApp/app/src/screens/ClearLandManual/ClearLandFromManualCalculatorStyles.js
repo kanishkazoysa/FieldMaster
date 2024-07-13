@@ -55,6 +55,7 @@ export const styles = StyleSheet.create({
     },
     cardHeader:{
       flexDirection: "row",
+      marginRight: responsiveWidth(64),
     },
     card1: {
       height: "max-content",
