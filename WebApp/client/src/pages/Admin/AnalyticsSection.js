@@ -30,55 +30,7 @@ const AnalyticsSection = ({ users, setLoading }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
-  const handleMarkerClick = (location) => {
-    console.log("Marker clicked:", location); // Add this line for debugging
-    setSelectedLocation(location);
-    setIsModalOpen(true);
-  };
-
-  const UserDetailsModal = ({ isOpen, onClose, location }) => {
-    if (!isOpen || !location) return null;
   
-    return (
-      <div className="modal" style={{
-        display: isOpen ? 'block' : 'none',
-        position: 'fixed',
-        zIndex: 1000,
-        left: 0,
-        top: 0,
-        width: '100%',
-        height: '100%',
-        overflow: 'auto',
-        backgroundColor: 'rgba(0,0,0,0.4)'
-      }}>
-        <div className="modal-content" style={{
-          backgroundColor: '#fefefe',
-          margin: '15% auto',
-          padding: '20px',
-          border: '1px solid #888',
-          width: '80%'
-        }}>
-          <h2>{location._id}</h2>
-          <p>Total Maps: {location.count}</p>
-          <h3>Users who created maps in this location:</h3>
-          <ul>
-            {location.users && location.users.map((user, index) => (
-              <li key={index}>
-                <p>Name: {user.fname} {user.lname}</p>
-                <p>Email: {user.email}</p>
-                <p>Template Name: {user.templateName}</p>
-                <p>Area: {user.area}</p>
-                <p>Land Type: {user.landType}</p>
-              </li>
-            ))}
-          </ul>
-          <button onClick={onClose}>Close</button>
-        </div>
-      </div>
-    );
-  };
-
-
   const onMapLoad = useCallback((mapInstance) => {
     setMap(mapInstance);
     setIsMapLoading(false);
@@ -454,18 +406,12 @@ const AnalyticsSection = ({ users, setLoading }) => {
                   location={location}
                   geocodeLocation={geocodeLocation}
                   index={index}
-                  onMarkerClick={handleMarkerClick}
                 />
               ))}
             </GoogleMap>
           </div>
         </LoadScript>
       </div>
-      <UserDetailsModal
-  isOpen={isModalOpen}
-  onClose={() => setIsModalOpen(false)}
-  location={selectedLocation}
-/>
     </div>
   );
 };
@@ -532,7 +478,7 @@ const MarkerWithGeocoding = ({ location, geocodeLocation, index, onMarkerClick }
           cursor: "pointer",
         }}
         title={`${location._id}: ${location.count}`}
-        onClick={() => onMarkerClick(location)}
+       
       >
         {location.count}
       </div>
