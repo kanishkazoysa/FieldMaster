@@ -10,7 +10,9 @@ const handleIconPress = () => {
     
 Medium: Tree with 1m average circumference. Enter tree count as well.
     
-High: Tree with 2m average circumference. Enter tree count as well.`,
+High: Tree with 2m average circumference. Enter tree count as well.
+
+Note : If you only want to cut trees in your land choose only "Plants" options.`,
 
     
     [

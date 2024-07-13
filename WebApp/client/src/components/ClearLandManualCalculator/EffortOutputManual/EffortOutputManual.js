@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
 import { styles } from "./EffortOutputManualStyles";
 import { MdArrowBack } from "react-icons/md";
 import { CiClock1,CiCalendar } from "react-icons/ci";
@@ -9,6 +8,7 @@ import { HiTruck } from "react-icons/hi2";
 import { GrUserWorker } from "react-icons/gr";
 import AlertButton from "../../ClearLand/EffortOutput/AlertButton";
 import AlertEffort from "../../ClearLand/EffortOutput/AlertEffort";
+import { getEffortOutputHtml } from "./EffortOutputTemplate";
 export default function EffortOutputManual({
     onBackToSidebar,
     weedEffort,
@@ -24,6 +24,25 @@ export default function EffortOutputManual({
     AreaUnitSelectedValue,
     PerimeterUnitSelectedValue,
 }) {
+
+  const handleSave = () => {
+    const htmlContent = getEffortOutputHtml(
+      weedEffort,
+      plantEffort,
+      stoneEffort,
+      effort,
+      workDays,
+      displayValues2,
+      area,
+      perimeter,
+      AreaUnitSelectedValue,
+      PerimeterUnitSelectedValue
+    );
+    const newWindow = window.open();
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
+    newWindow.print();
+  };
 
     return (
         <div style={styles.content}>
@@ -71,14 +90,14 @@ export default function EffortOutputManual({
             <BsBoundingBox color="gray" size={25} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>{perimeter} {PerimeterUnitSelectedValue}</p>
+              <p style={styles.propertyValue}>{parseFloat(perimeter).toFixed(2)} km {PerimeterUnitSelectedValue}</p>
             </div>
           </div>
           <div className="property" style={styles.property}>
             <PiSquareDuotone color="gray" size={28} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
-              <p style={styles.propertyValue}>{area} {AreaUnitSelectedValue}</p>
+              <p style={styles.propertyValue}>{parseFloat(area).toFixed(2)} perch {AreaUnitSelectedValue}</p>
             </div>
           </div>
         </div>
@@ -90,9 +109,9 @@ export default function EffortOutputManual({
               <AlertEffort></AlertEffort>
             </div>
              <div style={styles.boxInner}>
-                <p style={styles.boxInnerText}>Weed Effort &nbsp;&nbsp;   :&nbsp;&nbsp; {weedEffort} hrs</p>
-                <p style={styles.boxInnerText}>Tree Effort  &nbsp;&nbsp;&nbsp;&nbsp;  :&nbsp;&nbsp; {plantEffort} hrs</p>
-                <p>Stone Effort  &nbsp;&nbsp; :&nbsp;&nbsp; {stoneEffort} hrs</p>
+                <p style={styles.boxInnerText}>Weed Effort &nbsp;&nbsp;   :&nbsp;&nbsp; {(weedEffort ?? 0).toFixed(2)} hrs</p>
+                <p style={styles.boxInnerText}>Tree Effort  &nbsp;&nbsp;&nbsp;&nbsp;  :&nbsp;&nbsp; {(plantEffort ?? 0).toFixed(2)} hrs</p>
+                <p>Stone Effort  &nbsp;&nbsp; :&nbsp;&nbsp; {(stoneEffort ?? 0).toFixed(2)} hrs</p>
              </div>
           </div>
 
@@ -129,10 +148,10 @@ export default function EffortOutputManual({
         </div>
       </div>
       <div style={styles.bottom}>
-            <button style={styles.Button2}>
-                <p style={styles.Box4ButtonText}>Back to Template</p>
-              </button>
-          </div>
+        <button style={styles.Button1} onClick={handleSave}>
+          <p style={styles.Box4ButtonText}>Save Data</p>
+        </button>
+      </div>
         </div>
     );
 }

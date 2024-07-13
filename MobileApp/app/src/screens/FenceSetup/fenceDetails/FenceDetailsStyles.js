@@ -21,16 +21,7 @@ export const styles = StyleSheet.create({
     },
 
     /*Top Section*/
-    loadingScreen: {
-      flex: 1,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    dotsWrapper: {
-      width: 100,
-    },
-    
+  
     scrollContent: {
       flexDirection: "column",
       justifyContent: "space-between",

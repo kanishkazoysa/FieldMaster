@@ -55,6 +55,7 @@ export const styles = StyleSheet.create({
     },
     cardHeader:{
       flexDirection: "row",
+      marginRight: responsiveWidth(65),
     },
     card1Top:{
       flexDirection: "row",

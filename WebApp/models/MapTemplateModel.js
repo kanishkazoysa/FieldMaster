@@ -5,6 +5,20 @@ const PointSchema = new mongoose.Schema({
   latitude: Number,
 });
 
+const GateSchema = new mongoose.Schema({
+  length: Number,
+  count: Number,
+});
+
+const FenceSetupSchema = new mongoose.Schema({
+  fenceType: String,
+  postSpacing: Number,
+  postSpacingUnit: String,
+  gates: [GateSchema],
+  numberOfSticks: Number,
+});
+
+
 const PartitionPolygonSchema = new mongoose.Schema({
   points: {
     type: [PointSchema],
@@ -23,6 +37,57 @@ const PartitionPolygonSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+
+  plantationSetup: {
+    plantType: String,
+    plantSpacing: Number,
+    rowSpacing: Number,
+    numberOfPlants: Number,
+    plantationDensity: Number,
+    fertilizerData: {
+      fertilizerType: String,
+      fertilizerFrequency: String,
+      fertilizerTimes: Number,
+      fertilizerAmount: Number,
+      fertilizerUnit: String,
+      totalFertilizerPerYear: Number,
+      fertilizerPerPlant: Number,
+    },
+  },
+
+  fenceSetup: FenceSetupSchema,
+
+  clearLandSetup: {
+    weedData: {
+      weedType: String,
+      labourCount: Number,
+      workHours: Number,
+      machineList: [String],
+      weedCalculationResults: {
+        weedEffort: Number,
+        totalTime: Number,
+      },
+    },
+    plantData: {
+      plantList: [String],
+      plantWorkHours: Number,
+      plantMachineList: [String],
+      plantCalculationResults: {
+        plantEffort: Number,
+        totalTime: Number,
+      },
+    },
+    stoneData: {
+      stoneList: [String],
+      stoneWorkHours: Number,
+      stoneMachineList: [String],
+      stoneCalculationResults: {
+        stoneEffort: Number,
+        totalTime: Number,
+      },
+    },
+  },
+
 });
 
 /* this schema is used to save map template */
@@ -62,6 +127,7 @@ const MapTemplateSchema = new mongoose.Schema({
   },
   userId: {
     type: String,
+    ref: 'User',
     required: true,
   },
   imageUrl: {

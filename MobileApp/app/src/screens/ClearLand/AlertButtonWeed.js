@@ -6,11 +6,13 @@ const handleIconPress = () => {
   // Display an alert message when the icon is pressed
   Alert.alert(
     "Select to calculate effort for removing weeds",
-    `Low: Distributed all over the land in a height below 50cm. Can be removed by laborers. No need for machines.
+    `Low: Distributed all over the land in a height below 50cm. Can be removed by laborers. No need machines.
     
-Medium: Distributed all over the land in a height below 75cm. Can be removed by laborers. No need for machines.
+Medium: Distributed all over the land in a height below 75cm. Can be removed by laborers. No need machines.
     
-High: Distributed all over the land. Can't be removed by laborers. Need machines (Backhoe, Excavator).`,
+High: Distributed all over the land. Can't be removed by laborers. There can be small plants as well.Need machines (Backhoe, Excavator).
+
+Note : If you only want to remove weeds or small plants in your land  choose only "Weeds" options.`,
     
     [
       {
@@ -40,7 +42,7 @@ export default function AlertButton() {
 const styles = StyleSheet.create({
   topSection: {
     flexDirection: "row",
-    marginLeft: 259,
+    marginLeft: 2,
     width: "5%",
     height: "66%",
     backgroundColor: "white",

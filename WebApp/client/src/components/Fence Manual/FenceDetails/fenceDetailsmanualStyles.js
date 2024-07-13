@@ -190,7 +190,7 @@ export const styles = {
       display: "flex",
       width: "100%",
       height: 38,
-      backgroundColor: "red",
+ 
       alignItems: "center",
       justifyContent: "center",
       marginTop: 10,

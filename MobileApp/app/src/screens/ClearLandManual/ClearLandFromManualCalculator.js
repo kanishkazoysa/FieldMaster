@@ -16,7 +16,7 @@ import {
   Searchbar,
   TextInput,
 } from "react-native-paper";
-import { useState} from "react";
+import { useState,useEffect} from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
 import { useNavigation} from "@react-navigation/native";
@@ -46,7 +46,25 @@ export default function ClearLandFromManualCalculator({ route }) {
   // const [searchItem, setSearchItem] = useState("");
   const [machineTypeSelectedValue, setMachineTypeSelectedValue] = useState(null);
   const [machineCount, setMachineCount] = useState("");
-  
+  const [Machines, SetMachines] = useState([]);
+
+  useEffect(() => {
+    fetchMachines();
+  }, []);
+
+  const fetchMachines = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/Machines"
+      );
+      SetMachines(response.data);
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+      Alert.alert("Error", "Failed to fetch plants. Please try again.");
+    }
+  };
+
+
   const handlePlantCountChange = (text) => {
     setPlantCount(text);
   };
@@ -105,6 +123,16 @@ export default function ClearLandFromManualCalculator({ route }) {
   const [displayValues, setDisplayValues] = useState([]);
 
   const handleAdd = () => {
+    if (!plantTypeSelectedValue || !plantCount) {
+      Alert.alert("Error","Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(plantCount)) {
+      Alert.alert("Error","Please enter a valid plant count");
+      return;
+    }
     //validation part Add button
     const combinedValue = plantCount + " x " + plantTypeSelectedValue;
     const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
@@ -122,6 +150,16 @@ export default function ClearLandFromManualCalculator({ route }) {
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
+    if (!stoneTypeSelectedValue || !stonesCount) {
+      Alert.alert("Error","Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(stonesCount)) {
+      Alert.alert("Error","Please enter a valid stone count");
+      return;
+    }
   //validation part Add button
     const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
@@ -141,6 +179,16 @@ export default function ClearLandFromManualCalculator({ route }) {
   const [displayValues2, setDisplayValues2] = useState([]);
 
   const handleAdd2 = () => {
+    if (!machineTypeSelectedValue || !machineCount) {
+      Alert.alert("Error","Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(machineCount)) {
+      Alert.alert("Error","Please enter a valid machine count");
+      return;
+    }
     //validation part Add button
     const combinedValue2 = machineCount + " x " + machineTypeSelectedValue;
     const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
@@ -180,6 +228,16 @@ export default function ClearLandFromManualCalculator({ route }) {
       );
       return;
     }
+    const regex2 = /^\d+$/; // allow only decimal numbers
+        if (!regex2.test(laborCount)) {
+          Alert.alert("Error","Please enter a valid labor count");
+          return;
+        }
+        const regex = /^\d+$/; // allow only decimal numbers
+        if (!regex.test(workHours)) {
+          Alert.alert("Error"," Please enter a valid work hour count");
+          return;
+        }
         try{
             const response = await AxiosInstance.post(
               "/api/clearLand/clearLandFromManualCalculator",
@@ -312,7 +370,7 @@ export default function ClearLandFromManualCalculator({ route }) {
                 color="#65676B"
               />
               <Text style={styles.cardTopText} variant="titleLarge">
-                Plants
+                Trees
               </Text>
               </View>
               <PlantAlert></PlantAlert>
@@ -555,7 +613,10 @@ export default function ClearLandFromManualCalculator({ route }) {
                 <View style={styles.Dropdown3}>
                 <RNPickerSelect
                   placeholder={placeholder2}
-                  items={options2}
+                  items={Machines.map((Machine) => ({
+                    label: Machine.Name,
+                    value: Machine.Name,
+                  }))}  
                   onValueChange={(value) => setMachineTypeSelectedValue(value)}
                   value={machineTypeSelectedValue}
                 />

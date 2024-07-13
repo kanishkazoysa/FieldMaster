@@ -248,25 +248,32 @@
     background-color: #f4f3f3;
 }
 .Admin_SideMenu {
-    background-color: rgb(255, 255, 255);
-    height: calc(100vh - 30px);
-    width: fit-content;
-    margin: 15px 0 15px 15px;
-    padding: 0 0 0 0;
-    border-radius: 11px; 
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    border: 2px solid #dbdbdb; /* Add this line */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
+    background-color: #ffffff;
+    height: 100vh;
+    width: 250px;
+    box-shadow: 2px 0 8px 0 rgba(29,35,41,.05);
+    border-right: 1px solid #f0f0f0;
+    overflow-y: auto;
 }
-.admin_sidebar_logo{
-    width: 136px;
-    padding: 34px 0 20px 0;
-    margin-bottom: 10%;
-    cursor: pointer;
-}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
 
 .Admin_PageContent {
     flex: 1;
@@ -274,7 +281,6 @@
     overflow-x: hidden;
     overflow-y: auto;
     margin-left: 270px;
-    width: calc(100% - 271px);
 }
 
 .admin_sidebar_container {
@@ -302,5 +308,6 @@
 .map {
     margin-bottom: 30px;
 }
+
 
 

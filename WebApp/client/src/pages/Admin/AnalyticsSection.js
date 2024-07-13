@@ -14,7 +14,7 @@ import "./AdminDashboard.css";
 
 const apiKey = process.env.REACT_APP_GOOGLE_CLOUD_API_KEY;
 
-const AnalyticsSection = ({ users, setLoading }) => {
+const AnalyticsSection = ({ users}) => {
   const [totalUsers] = useState(users.length);
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [totalAdmins, setTotalAdmins] = useState(0);
@@ -26,25 +26,30 @@ const AnalyticsSection = ({ users, setLoading }) => {
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
   const [isMapLoading, setIsMapLoading] = useState(true);
+  const [map, setMap] = useState(null);
 
+
+  
+  const onMapLoad = useCallback((mapInstance) => {
+    setMap(mapInstance);
+    setIsMapLoading(false);
+  }, []);
 
   const handlePlacesChanged = useCallback(() => {
     if (!searchBoxRef.current) return;
-
+  
     const places = searchBoxRef.current.getPlaces();
-    if (places.length === 0) return;
-
+    if (places.length === 0 || !map) return;
+  
     const selectedPlace = places[0];
     const location = selectedPlace.geometry.location.toJSON();
     setSelectedLocation(location);
-
-    if (mapRef.current && mapRef.current.fitBounds) {
-      const bounds = new window.google.maps.LatLngBounds();
-      bounds.extend(location);
-      mapRef.current.fitBounds(bounds);
-      mapRef.current.setZoom(15);
-    }
-  }, []);
+  
+    const bounds = new window.google.maps.LatLngBounds();
+    bounds.extend(location);
+    map.fitBounds(bounds);
+    map.setZoom(15);
+  }, [map]);
 
   const onSearchBoxLoad = useCallback((ref) => {
     searchBoxRef.current = ref;
@@ -79,13 +84,12 @@ const AnalyticsSection = ({ users, setLoading }) => {
         return location._id && location._id !== "null" && location._id.trim() !== "" && location._id !== "Unknown location";
       });
   
-      console.log("validLocationNames", validLocationNames);
+      console.log("validLocationNames", validLocationNames); // Add this line
       setLocationAnalytics(validLocationNames);
     } catch (error) {
       console.error("Error fetching location analytics:", error);
     }
   };
-
 
   const geocodeLocation = async (locationName) => {
     const geocoder = new window.google.maps.Geocoder();
@@ -372,9 +376,9 @@ const AnalyticsSection = ({ users, setLoading }) => {
             <GoogleMap
               mapContainerStyle={mapContainerStyle}
               center={selectedLocation || mapCenter}
-              zoom={8}
+              zoom={selectedLocation ? 15 : 8}
               ref={mapRef}
-              onLoad={() => setIsMapLoading(false)}
+              onLoad={onMapLoad}
             >
             {isMapLoading && (
               <div style={styles.loadingOverlay}>
@@ -439,7 +443,7 @@ const styles = {
   },
 };
 
-const MarkerWithGeocoding = ({ location, geocodeLocation, index }) => {
+const MarkerWithGeocoding = ({ location, geocodeLocation, index, onMarkerClick }) => {
   const [position, setPosition] = useState(null);
 
   useEffect(() => {
@@ -473,11 +477,15 @@ const MarkerWithGeocoding = ({ location, geocodeLocation, index }) => {
           cursor: "pointer",
         }}
         title={`${location._id}: ${location.count}`}
+       
       >
         {location.count}
       </div>
     </OverlayView>
   );
 };
+
+
+
 
 export default AnalyticsSection;
