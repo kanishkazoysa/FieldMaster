@@ -255,12 +255,6 @@
     border-right: 1px solid #f0f0f0;
     overflow-y: auto;
 }
-.admin_sidebar_logo{
-    width: 136px;
-    padding: 34px 0 20px 0;
-    margin-bottom: 10%;
-    cursor: pointer;
-}
 .modal {
     display: none;
     position: fixed;
