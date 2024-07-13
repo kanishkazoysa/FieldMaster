@@ -17,13 +17,17 @@ import {
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import DeleteIcon from '@mui/icons-material/Delete';
 import AxiosInstance from '../../AxiosInstance';
+import { GoogleMap, LoadScript, Polygon } from '@react-google-maps/api';
+
+const apiKey = process.env.REACT_APP_GOOGLE_CLOUD_API_KEY;
 
 // Create a blue theme
 const blueTheme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2', // Blue color
+      main: '#1976d2',
     },
   },
   components: {
@@ -86,6 +90,30 @@ const DetailSection = ({ data }) => {
     }
   };
 
+  const mapContainerStyle = {
+    width: '100%',
+    height: '400px'
+  };
+
+  const getLocationPoints = (data) => {
+    if (data.locationPoints) return data.locationPoints;
+    if (data.mapDetails && data.mapDetails.locationPoints) return data.mapDetails.locationPoints;
+    return [];
+  };
+
+  const locationPoints = getLocationPoints(data);
+
+  const center = locationPoints.length > 0
+    ? { lat: parseFloat(locationPoints[0].latitude), lng: parseFloat(locationPoints[0].longitude) }
+    : { lat: 0, lng: 0 };
+
+  const polygonPath = locationPoints.map(point => ({
+    lat: parseFloat(point.latitude),
+    lng: parseFloat(point.longitude)
+  }));
+
+  console.log("Polygon Path:", polygonPath);
+
   return (
     <Box sx={{ margin: 1 }}>
       <TableContainer component={Paper}>
@@ -131,6 +159,34 @@ const DetailSection = ({ data }) => {
           </TableBody>
         </Table>
       </TableContainer>
+      
+      <Box sx={{ marginTop: 2 }}>
+        <Typography variant="h6" gutterBottom component="div">
+          Map View
+        </Typography>
+        {polygonPath.length > 0 ? (
+          <LoadScript googleMapsApiKey={apiKey}>
+            <GoogleMap
+              mapContainerStyle={mapContainerStyle}
+              center={center}
+              zoom={15}
+            >
+              <Polygon
+                paths={polygonPath}
+                options={{
+                  fillColor: "#00FF00",
+                  fillOpacity: 0.35,
+                  strokeColor: "#0000FF",
+                  strokeOpacity: 0.8,
+                  strokeWeight: 2,
+                }}
+              />
+            </GoogleMap>
+          </LoadScript>
+        ) : (
+          <Typography>No location data available for this map.</Typography>
+        )}
+      </Box>
     </Box>
   );
 };
@@ -150,11 +206,21 @@ const Row = (props) => {
       const details = await props.fetchMapDetails(mapId);
       setMaps(prevMaps => 
         prevMaps.map(map => 
-          map._id === mapId ? { ...map, details } : map
+          map._id === mapId ? { ...map, details, locationPoints: details.locationPoints } : map
         )
       );
     }
     setMapsOpen(prev => ({ ...prev, [mapId]: !prev[mapId] }));
+  };
+
+  const handleDelete = async (mapId) => {
+    try {
+      await AxiosInstance.delete(`/api/auth/mapTemplate/deleteTemplate/${mapId}`);
+      setMaps(prevMaps => prevMaps.filter(map => map._id !== mapId));
+      props.updateUserMaps(row._id, maps.length - 1);
+    } catch (error) {
+      console.error("Error deleting map template:", error);
+    }
   };
 
   return (
@@ -190,6 +256,7 @@ const Row = (props) => {
                     <TableCell>Location</TableCell>
                     <TableCell>Perimeter</TableCell>
                     <TableCell>Description</TableCell>
+                    <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -206,14 +273,23 @@ const Row = (props) => {
                           </IconButton>
                         </TableCell>
                         <TableCell component="th" scope="row">{map.templateName}</TableCell>
-                        <TableCell>{map.location}</TableCell>
                         <TableCell>{map.landType}</TableCell>
                         <TableCell>{map.area} perch</TableCell>
+                        <TableCell>{map.location}</TableCell>
                         <TableCell>{map.perimeter} km</TableCell>
                         <TableCell>{map.description}</TableCell>
+                        <TableCell>
+                          <IconButton
+                            aria-label="delete map"
+                            size="small"
+                            onClick={() => handleDelete(map._id)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
                           <Collapse in={mapsOpen[map._id]} timeout="auto" unmountOnExit>
                             <Box sx={{ margin: 1 }}>
                               <Typography variant="h6" gutterBottom component="div">
@@ -283,6 +359,7 @@ const UserMapsTable = () => {
   const fetchMapDetails = async (mapId) => {
     try {
       const response = await AxiosInstance.get(`/api/auth/mapTemplate/getAllmapData/${mapId}`);
+      console.log("Map details response:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching map details:", error);
