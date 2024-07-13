@@ -297,4 +297,13 @@ router.get("/getAllmapData/:id", async (req, res) => {
   }
 });
 
+router.get("/getAllTemplates/:userId", async (req, res) => {
+  try {
+    const templates = await MapTemplateModel.find({ userId: req.params.userId });
+    res.json(templates);
+  } catch (error) {
+    res.status(500).send("Error while getting templates.");
+  }
+});
+
 module.exports = router;

@@ -127,6 +127,7 @@ const MapTemplateSchema = new mongoose.Schema({
   },
   userId: {
     type: String,
+    ref: 'User',
     required: true,
   },
   imageUrl: {

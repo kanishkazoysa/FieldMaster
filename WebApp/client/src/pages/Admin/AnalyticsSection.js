@@ -11,6 +11,7 @@ import AxiosInstance from "../../AxiosInstance";
 import LoginCountChart from "./LoginCountChart";
 import { Doughnut } from "react-chartjs-2";
 import "./AdminDashboard.css";
+import UserMapsTable from "./UserMapsTable";
 
 const apiKey = process.env.REACT_APP_GOOGLE_CLOUD_API_KEY;
 
@@ -412,6 +413,8 @@ const AnalyticsSection = ({ users, setLoading }) => {
           </div>
         </LoadScript>
       </div>
+      <hr />
+      <UserMapsTable />
     </div>
   );
 };
