@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Table } from 'antd';
 import AxiosInstance from "../../AxiosInstance";
 
 const UserMapsTable = () => {
   const [users, setUsers] = useState([]);
-  const [expandedUser, setExpandedUser] = useState(null);
-  const [expandedMap, setExpandedMap] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -29,112 +28,102 @@ const UserMapsTable = () => {
     }
   };
 
-  const handleUserClick = async (userId) => {
-    if (expandedUser === userId) {
-      setExpandedUser(null);
-      setExpandedMap(null);
-    } else {
-      const userMaps = await fetchUserMaps(userId);
-      setExpandedUser(userId);
-      setUsers(users.map(user => 
-        user._id === userId ? { ...user, maps: userMaps } : user
-      ));
+  const fetchMapDetails = async (mapId) => {
+    try {
+      const response = await AxiosInstance.get(`/api/auth/mapTemplate/getAllmapData/${mapId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching map details:", error);
+      return null;
     }
   };
 
-  const handleMapClick = async (mapId) => {
-    if (expandedMap === mapId) {
-      setExpandedMap(null);
-    } else {
-      try {
-        const response = await AxiosInstance.get(`/api/auth/mapTemplate/getAllmapData/${mapId}`);
-        setExpandedMap(mapId);
-        setUsers(users.map(user => {
-          if (user._id === expandedUser) {
-            return {
-              ...user,
-              maps: user.maps.map(map => 
-                map._id === mapId ? { ...map, details: response.data } : map
-              )
-            };
-          }
-          return user;
-        }));
-      } catch (error) {
-        console.error("Error fetching map details:", error);
-      }
-    }
+  const columns = [
+    { title: 'Name', dataIndex: 'name', key: 'name' },
+    { title: 'Email', dataIndex: 'email', key: 'email' },
+    { title: 'Number of Maps', dataIndex: 'numberOfMaps', key: 'numberOfMaps' },
+  ];
+
+  const expandedRowRender = (record) => {
+    const mapColumns = [
+      { title: 'Template Name', dataIndex: 'templateName', key: 'templateName' },
+      { title: 'Land Type', dataIndex: 'landType', key: 'landType' },
+      { title: 'Area', dataIndex: 'area', key: 'area' },
+      { title: 'Location', dataIndex: 'location', key: 'location' },
+      { title: 'Perimeter', dataIndex: 'perimeter', key: 'perimeter' },
+      { title: 'Description', dataIndex: 'description', key: 'description' },
+    ];
+
+    return (
+      <Table
+        columns={mapColumns}
+        dataSource={record.maps}
+        pagination={false}
+        expandable={{
+          expandedRowRender: (mapRecord) => {
+            const detailColumns = [
+              { title: 'Detail Type', dataIndex: 'detailType', key: 'detailType' },
+              { 
+                title: 'Details', 
+                dataIndex: 'details', 
+                key: 'details',
+                render: (text) => <pre>{text}</pre>
+              },
+            ];
+
+            const detailData = [
+              { key: 1, detailType: 'Fence Details', details: JSON.stringify(mapRecord.details?.fenceDetails, null, 2) },
+              { key: 2, detailType: 'Plantation Details', details: JSON.stringify(mapRecord.details?.plantationDetails, null, 2) },
+              { key: 3, detailType: 'Clear Land Details', details: JSON.stringify(mapRecord.details?.clearLandDetails, null, 2) },
+            ];
+
+            return <Table columns={detailColumns} dataSource={detailData} pagination={false} />;
+          },
+          onExpand: async (expanded, mapRecord) => {
+            if (expanded && !mapRecord.details) {
+              const details = await fetchMapDetails(mapRecord._id);
+              setUsers(prevUsers => 
+                prevUsers.map(user => ({
+                  ...user,
+                  maps: user.maps?.map(map => 
+                    map._id === mapRecord._id ? { ...map, details } : map
+                  )
+                }))
+              );
+            }
+          },
+          rowExpandable: (record) => true,
+        }}
+      />
+    );
   };
 
   return (
     <div className="user-maps-table">
       <h3>User Maps</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Number of Maps</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(user => (
-            <React.Fragment key={user._id}>
-              <tr onClick={() => handleUserClick(user._id)}>
-                <td>{`${user.fname} ${user.lname}`}</td>
-                <td>{user.email}</td>
-                <td>{user.maps ? user.maps.length : 0}</td>
-              </tr>
-              {expandedUser === user._id && user.maps && (
-                <tr>
-                  <td colSpan="3">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Template Name</th>
-                          <th>Land Type</th>
-                          <th>Area</th>
-                          <th>Location</th>
-                          <th>Perimeter</th>
-                          <th>Description</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {user.maps.map(map => (
-                          <React.Fragment key={map._id}>
-                            <tr onClick={() => handleMapClick(map._id)}>
-                              <td>{map.templateName}</td>
-                              <td>{map.landType}</td>
-                              <td>{map.area}</td>
-                              <td>{map.location}</td>
-                              <td>{map.perimeter}</td>
-                              <td>{map.description}</td>
-                            </tr>
-                            {expandedMap === map._id && map.details && (
-                              <tr>
-                                <td colSpan="6">
-                                  <div>
-                                    <h5>Fence Details</h5>
-                                    <pre>{JSON.stringify(map.details.fenceDetails, null, 2)}</pre>
-                                    <h5>Plantation Details</h5>
-                                    <pre>{JSON.stringify(map.details.plantationDetails, null, 2)}</pre>
-                                    <h5>Clear Land Details</h5>
-                                    <pre>{JSON.stringify(map.details.clearLandDetails, null, 2)}</pre>
-                                  </div>
-                                </td>
-                              </tr>
-                            )}
-                          </React.Fragment>
-                        ))}
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              )}
-            </React.Fragment>
-          ))}
-        </tbody>
-      </table>
+      <Table
+        columns={columns}
+        dataSource={users.map(user => ({
+          key: user._id,
+          name: `${user.fname} ${user.lname}`,
+          email: user.email,
+          numberOfMaps: user.maps ? user.maps.length : 0,
+          maps: user.maps,
+        }))}
+        expandable={{
+          expandedRowRender,
+          onExpand: async (expanded, record) => {
+            if (expanded && (!record.maps || record.maps.length === 0)) {
+              const userMaps = await fetchUserMaps(record.key);
+              setUsers(prevUsers => 
+                prevUsers.map(user => 
+                  user._id === record.key ? { ...user, maps: userMaps.map(map => ({ ...map, key: map._id })) } : user
+                )
+              );
+            }
+          },
+        }}
+      />
     </div>
   );
 };
