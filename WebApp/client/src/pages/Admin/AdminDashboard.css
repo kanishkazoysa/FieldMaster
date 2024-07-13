@@ -324,21 +324,3 @@
 
 
 
-.user-maps-table .ant-table-wrapper {
-    margin-bottom: 16px;
-  }
-  
-  .user-maps-table .ant-table-expanded-row > td {
-    padding: 0 !important;
-  }
-  
-  .user-maps-table .ant-table-expanded-row .ant-table-wrapper {
-    margin: 0;
-  }
-  
-  .user-maps-table pre {
-    margin: 0;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-  }
-

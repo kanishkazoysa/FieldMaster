@@ -1,6 +1,244 @@
 import React, { useState, useEffect } from 'react';
-import { Table } from 'antd';
-import AxiosInstance from "../../AxiosInstance";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Collapse,
+  Box,
+  Typography,
+  ThemeProvider,
+  createTheme
+} from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import AxiosInstance from '../../AxiosInstance';
+
+// Create a blue theme
+const blueTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2', // Blue color
+    },
+  },
+  components: {
+    MuiTableCell: {
+      styleOverrides: {
+        head: {
+          backgroundColor: '#1976d2',
+          color: '#fff',
+          fontWeight: 'bold',
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: '#1976d2',
+        },
+      },
+    },
+  },
+});
+
+const DetailSection = ({ data }) => {
+    const sections = ['clearLandDetails', 'plantationDetails', 'fenceDetails'];
+    const availableSections = sections.filter(section => data[section] && Object.keys(data[section]).length > 0);
+  
+    const getDisplayData = (sectionData, sectionName) => {
+      switch(sectionName) {
+        case 'clearLandDetails':
+          return {
+            'No of Labourers': sectionData.laborCount, 
+            'Work hours': sectionData.workHours + ' hours',
+            'Weed type': sectionData.weedType,
+            'Plant Details': sectionData.plantDetails,
+            'Stones Details': sectionData.stoneDetails,
+            'Machniery Details': sectionData.machineDetails,
+            'Weed Effort': parseFloat(sectionData.weedEffort).toFixed(2) + ' hours',
+            'Plant Effort': parseFloat(sectionData.plantEffort).toFixed(2)  + ' hours',
+            'Stone Effort': parseFloat(sectionData.stoneEffort).toFixed(2) + ' hours',
+            'Work Duration': sectionData.workDays + ' days '
+          };
+        case 'plantationDetails':
+          return {
+            'Plant Type': sectionData.plantType,
+            'Plant Space': sectionData.plantSpace + 'cm',
+            'Row Space': sectionData.rowSpace + 'cm',
+            'Number of Plants': sectionData.numberOfPlants,
+            'Plant Density': sectionData.plantDensity + 'sqm',
+          };
+        case 'fenceDetails':
+          return {
+            'Fence Type': sectionData.fenceType,
+            'Post Space': sectionData.postSpace + sectionData.postSpaceUnit,
+            'Number of Sticks': sectionData.numberOfSticks,
+            'Number of Gates': sectionData.fenceAmount,
+            'Gate Details': sectionData.gateDetails
+            
+          };
+        default:
+          return {};
+      }
+    };
+  
+    return (
+      <Box sx={{ margin: 1 }}>
+        <TableContainer component={Paper}>
+          <Table size="small" sx={{ borderCollapse: 'separate', borderSpacing: 0 }}>
+            <TableHead>
+              <TableRow>
+                {availableSections.map((section, index) => (
+                  <TableCell 
+                    key={section} 
+                    sx={{ 
+                      backgroundColor: '#1976d2', 
+                      color: '#fff', 
+                      fontWeight: 'bold',
+                      borderRight: index < availableSections.length - 1 ? '2px solid #fff' : 'none'
+                    }}
+                  >
+                    {section.replace('Details', '').charAt(0).toUpperCase() + section.replace('Details', '').slice(1)}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                {availableSections.map((section, columnIndex) => (
+                  <TableCell 
+                    key={section}
+                    sx={{
+                      borderRight: columnIndex < availableSections.length - 1 ? '1px solid rgba(224, 224, 224, 1)' : 'none',
+                      verticalAlign: 'top'
+                    }}
+                  >
+                    {Object.entries(getDisplayData(data[section], section)).map(([key, value]) => (
+                      <div key={key}>
+                        <Typography component="span" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+                          {key}:
+                        </Typography>{' '}
+                        {value}
+                      </div>
+                    ))}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+    );
+  };
+
+const Row = (props) => {
+  const { row } = props;
+  const [open, setOpen] = useState(false);
+  const [mapsOpen, setMapsOpen] = useState({});
+  const [maps, setMaps] = useState([]);
+
+  const handleExpand = async () => {
+    if (!open && maps.length === 0) {
+      const fetchedMaps = await props.fetchUserMaps(row._id);
+      setMaps(fetchedMaps);
+    }
+    setOpen(!open);
+  };
+
+  const handleMapExpand = async (mapId) => {
+    if (!mapsOpen[mapId]) {
+      const details = await props.fetchMapDetails(mapId);
+      setMaps(prevMaps => 
+        prevMaps.map(map => 
+          map._id === mapId ? { ...map, details } : map
+        )
+      );
+    }
+    setMapsOpen(prev => ({ ...prev, [mapId]: !prev[mapId] }));
+  };
+
+  return (
+    <>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={handleExpand}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">{row.name}</TableCell>
+        <TableCell>{row.email}</TableCell>
+        <TableCell>{row.numberOfMaps}</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
+                Maps
+              </Typography>
+              <Table size="small" aria-label="maps">
+                <TableHead>
+                  <TableRow>
+                    <TableCell />
+                    <TableCell>Template Name</TableCell>
+                    <TableCell>Land Type</TableCell>
+                    <TableCell>Area</TableCell>
+                    <TableCell>Location</TableCell>
+                    <TableCell>Perimeter</TableCell>
+                    <TableCell>Description</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {maps.map((map) => (
+                    <React.Fragment key={map._id}>
+                      <TableRow>
+                        <TableCell>
+                          <IconButton
+                            aria-label="expand map"
+                            size="small"
+                            onClick={() => handleMapExpand(map._id)}
+                          >
+                            {mapsOpen[map._id] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                          </IconButton>
+                        </TableCell>
+                        <TableCell component="th" scope="row">{map.templateName}</TableCell>
+                        <TableCell>{map.location}</TableCell>
+                        <TableCell>{map.landType}</TableCell>
+                        <TableCell>{map.area} perch</TableCell>
+                        <TableCell>{map.perimeter} km</TableCell>
+                        <TableCell>{map.description}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                          <Collapse in={mapsOpen[map._id]} timeout="auto" unmountOnExit>
+                            <Box sx={{ margin: 1 }}>
+                              <Typography variant="h6" gutterBottom component="div">
+                                Details
+                              </Typography>
+                              <DetailSection data={map.details || {}} />
+                            </Box>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
+                    </React.Fragment>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+}
 
 const UserMapsTable = () => {
   const [users, setUsers] = useState([]);
@@ -12,7 +250,13 @@ const UserMapsTable = () => {
   const fetchUsers = async () => {
     try {
       const response = await AxiosInstance.get("/api/users/getAllUsers");
-      setUsers(response.data.users);
+      setUsers(response.data.users.map(user => ({
+        ...user,
+        key: user._id,
+        name: `${user.fname} ${user.lname}`,
+        numberOfMaps: user.maps ? user.maps.length : 0,
+        maps: user.maps || [], // Ensure maps is always an array
+      })));
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -38,94 +282,32 @@ const UserMapsTable = () => {
     }
   };
 
-  const columns = [
-    { title: 'Name', dataIndex: 'name', key: 'name' },
-    { title: 'Email', dataIndex: 'email', key: 'email' },
-    { title: 'Number of Maps', dataIndex: 'numberOfMaps', key: 'numberOfMaps' },
-  ];
-
-  const expandedRowRender = (record) => {
-    const mapColumns = [
-      { title: 'Template Name', dataIndex: 'templateName', key: 'templateName' },
-      { title: 'Land Type', dataIndex: 'landType', key: 'landType' },
-      { title: 'Area', dataIndex: 'area', key: 'area' },
-      { title: 'Location', dataIndex: 'location', key: 'location' },
-      { title: 'Perimeter', dataIndex: 'perimeter', key: 'perimeter' },
-      { title: 'Description', dataIndex: 'description', key: 'description' },
-    ];
-
-    return (
-      <Table
-        columns={mapColumns}
-        dataSource={record.maps}
-        pagination={false}
-        expandable={{
-          expandedRowRender: (mapRecord) => {
-            const detailColumns = [
-              { title: 'Detail Type', dataIndex: 'detailType', key: 'detailType' },
-              { 
-                title: 'Details', 
-                dataIndex: 'details', 
-                key: 'details',
-                render: (text) => <pre>{text}</pre>
-              },
-            ];
-
-            const detailData = [
-              { key: 1, detailType: 'Fence Details', details: JSON.stringify(mapRecord.details?.fenceDetails, null, 2) },
-              { key: 2, detailType: 'Plantation Details', details: JSON.stringify(mapRecord.details?.plantationDetails, null, 2) },
-              { key: 3, detailType: 'Clear Land Details', details: JSON.stringify(mapRecord.details?.clearLandDetails, null, 2) },
-            ];
-
-            return <Table columns={detailColumns} dataSource={detailData} pagination={false} />;
-          },
-          onExpand: async (expanded, mapRecord) => {
-            if (expanded && !mapRecord.details) {
-              const details = await fetchMapDetails(mapRecord._id);
-              setUsers(prevUsers => 
-                prevUsers.map(user => ({
-                  ...user,
-                  maps: user.maps?.map(map => 
-                    map._id === mapRecord._id ? { ...map, details } : map
-                  )
-                }))
-              );
-            }
-          },
-          rowExpandable: (record) => true,
-        }}
-      />
-    );
-  };
-
   return (
-    <div className="user-maps-table">
-      <h3>User Maps</h3>
-      <Table
-        columns={columns}
-        dataSource={users.map(user => ({
-          key: user._id,
-          name: `${user.fname} ${user.lname}`,
-          email: user.email,
-          numberOfMaps: user.maps ? user.maps.length : 0,
-          maps: user.maps,
-        }))}
-        expandable={{
-          expandedRowRender,
-          onExpand: async (expanded, record) => {
-            if (expanded && (!record.maps || record.maps.length === 0)) {
-              const userMaps = await fetchUserMaps(record.key);
-              setUsers(prevUsers => 
-                prevUsers.map(user => 
-                  user._id === record.key ? { ...user, maps: userMaps.map(map => ({ ...map, key: map._id })) } : user
-                )
-              );
-            }
-          },
-        }}
-      />
-    </div>
+    <ThemeProvider theme={blueTheme}>
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Number of Maps</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {users.map((user) => (
+              <Row 
+                key={user._id} 
+                row={user} 
+                fetchUserMaps={fetchUserMaps}
+                fetchMapDetails={fetchMapDetails}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </ThemeProvider>
   );
-};
+}
 
 export default UserMapsTable;
