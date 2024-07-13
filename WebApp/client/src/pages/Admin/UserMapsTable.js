@@ -18,10 +18,10 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Modal } from 'antd'; // Import Modal from Ant Design
 import AxiosInstance from '../../AxiosInstance';
-import { GoogleMap, LoadScript, Polygon } from '@react-google-maps/api';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-const apiKey = process.env.REACT_APP_GOOGLE_CLOUD_API_KEY;
 
 // Create a blue theme
 const blueTheme = createTheme({
@@ -90,29 +90,7 @@ const DetailSection = ({ data }) => {
     }
   };
 
-  const mapContainerStyle = {
-    width: '100%',
-    height: '400px'
-  };
 
-  const getLocationPoints = (data) => {
-    if (data.locationPoints) return data.locationPoints;
-    if (data.mapDetails && data.mapDetails.locationPoints) return data.mapDetails.locationPoints;
-    return [];
-  };
-
-  const locationPoints = getLocationPoints(data);
-
-  const center = locationPoints.length > 0
-    ? { lat: parseFloat(locationPoints[0].latitude), lng: parseFloat(locationPoints[0].longitude) }
-    : { lat: 0, lng: 0 };
-
-  const polygonPath = locationPoints.map(point => ({
-    lat: parseFloat(point.latitude),
-    lng: parseFloat(point.longitude)
-  }));
-
-  console.log("Polygon Path:", polygonPath);
 
   return (
     <Box sx={{ margin: 1 }}>
@@ -159,34 +137,6 @@ const DetailSection = ({ data }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      
-      <Box sx={{ marginTop: 2 }}>
-        <Typography variant="h6" gutterBottom component="div">
-          Map View
-        </Typography>
-        {polygonPath.length > 0 ? (
-          <LoadScript googleMapsApiKey={apiKey}>
-            <GoogleMap
-              mapContainerStyle={mapContainerStyle}
-              center={center}
-              zoom={15}
-            >
-              <Polygon
-                paths={polygonPath}
-                options={{
-                  fillColor: "#00FF00",
-                  fillOpacity: 0.35,
-                  strokeColor: "#0000FF",
-                  strokeOpacity: 0.8,
-                  strokeWeight: 2,
-                }}
-              />
-            </GoogleMap>
-          </LoadScript>
-        ) : (
-          <Typography>No location data available for this map.</Typography>
-        )}
-      </Box>
     </Box>
   );
 };
@@ -213,14 +163,23 @@ const Row = (props) => {
     setMapsOpen(prev => ({ ...prev, [mapId]: !prev[mapId] }));
   };
 
-  const handleDelete = async (mapId) => {
-    try {
-      await AxiosInstance.delete(`/api/auth/mapTemplate/deleteTemplate/${mapId}`);
-      setMaps(prevMaps => prevMaps.filter(map => map._id !== mapId));
-      props.updateUserMaps(row._id, maps.length - 1);
-    } catch (error) {
-      console.error("Error deleting map template:", error);
-    }
+  const handleDelete = (mapId) => {
+    Modal.confirm({
+      title: 'Are you sure you want to delete this template?',
+      content: 'This action cannot be undone.',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk: async () => {
+        try {
+          await AxiosInstance.delete(`/api/auth/mapTemplate/deleteTemplate/${mapId}`);
+          setMaps(prevMaps => prevMaps.filter(map => map._id !== mapId));
+          props.updateUserMaps(row._id, maps.length - 1);
+        } catch (error) {
+          console.error("Error deleting map template:", error);
+        }
+      },
+    });
   };
 
   return (
@@ -282,9 +241,10 @@ const Row = (props) => {
                           <IconButton
                             aria-label="delete map"
                             size="small"
+                            style={{ color: 'red' }}
                             onClick={() => handleDelete(map._id)}
                           >
-                            <DeleteIcon />
+                            <DeleteOutlineIcon />
                           </IconButton>
                         </TableCell>
                       </TableRow>
