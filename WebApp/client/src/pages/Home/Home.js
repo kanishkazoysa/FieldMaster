@@ -1,7 +1,7 @@
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { message} from "antd";
-import { GoogleMap,StandaloneSearchBox, Marker, Polygon, OverlayView } from "@react-google-maps/api";
+import { GoogleMap,StandaloneSearchBox, Marker, Polygon, OverlayView, LoadScript } from "@react-google-maps/api";
 import { MdLocationOn, MdSearch, MdMyLocation } from "react-icons/md";
 import AxiosInstance from "../../AxiosInstance";
 import SideNavbar from "../../components/SideNavbar/sideNavbar";
@@ -11,7 +11,6 @@ import MapDetailsPanel from "./MapDetailsPanel";
 import MobileOnlyModal from "./MobileOnlyModal";
 import { styles, containerStyle, center } from "./HomeStyles";
 import { BeatLoader } from "react-spinners";
-import useGoogleMapsScript from './useGoogleMapsScript';
 
 const apiKey = process.env.REACT_APP_GOOGLE_CLOUD_API_KEY;
 
@@ -30,7 +29,7 @@ export default function Home() {
   const [isUserLoading, setIsUserLoading] = useState(true);
   const [isUserMapsLoading, setIsUserMapsLoading] = useState(true);
   const [isMapDetailsLoading, setIsMapDetailsLoading] = useState(false);
-  const isGoogleMapsLoaded = useGoogleMapsScript(apiKey);
+ 
   // Constants
   const sriLankaCenter = { lat: 7.8731, lng: 80.7718 };
   const defaultZoom = 7;
@@ -361,23 +360,20 @@ return (
     <div style={styles.sidebar}>
       <SideNavbar onShowMobileOnlyModal={showMobileOnlyModal} />
     </div>
-    {isGoogleMapsLoaded ? (
-        <GoogleMap
-          ref={mapRef}
-          mapContainerStyle={containerStyle}
-          center={userMaps.length > 0 ? center : sriLankaCenter}
-          zoom={userMaps.length > 0 ? 2 : defaultZoom}
-          options={mapOptions()}
-          onZoomChanged={handleZoomChanged}
-          onLoad={() => setIsMapLoading(false)}
-        >
-          {!isUserLoading && !isUserMapsLoading && renderMapContent()}
-        </GoogleMap>
-      ) : (
-        <div style={styles.loadingOverlay}>
-          <p>Loading Google Maps...</p>
-        </div>
-      )}
+    <LoadScript googleMapsApiKey={apiKey} libraries={["places"]}>
+      <GoogleMap
+        ref={mapRef}
+        mapContainerStyle={containerStyle}
+        center={userMaps.length > 0 ? center : sriLankaCenter}
+        zoom={userMaps.length > 0 ? 2 : defaultZoom}
+        options={mapOptions()}
+        onZoomChanged={handleZoomChanged}
+        onLoad={() => setIsMapLoading(false)}
+      >
+        {!isUserLoading && !isUserMapsLoading && renderMapContent()}
+      </GoogleMap>
+    </LoadScript>
+
     {(isUserLoading || isUserMapsLoading) && (
       <div style={styles.loadingOverlay}>
         <BeatLoader color="#36D7B7" loading={true} size={15} />
