@@ -126,29 +126,8 @@ export default function Home() {
       setZoomLevel(mapRef.current.state.map.getZoom());
     }
   };
-  const handleGetCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setSelectedLocation(userLocation);
-          if (mapRef.current && mapRef.current.state.map) {
-            mapRef.current.state.map.panTo(userLocation);
-            mapRef.current.state.map.setZoom(15);
-          }
-        },
-        (error) => {
-          console.error("Error getting user's location:", error);
-          message.error("Unable to retrieve your location");
-        }
-      );
-    } else {
-      message.error("Geolocation is not supported by this browser");
-    }
-  };
+
+
   const handleLabelClick = useCallback(
     async (mapId) => {
       if (mapId === selectedMapId) {
@@ -247,21 +226,7 @@ export default function Home() {
           <p>Loading map...</p>
         </div>
       )}
-      <div
-        onClick={handleGetCurrentLocation}
-        style={{
-          position: "absolute",
-          bottom: "100px",
-          right: "10px",
-          background: "white",
-          padding: "7px",
-          borderRadius: "50%",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-          cursor: "pointer",
-        }}
-      >
-        <MdMyLocation size={24} />
-      </div>
+      
       {userMaps.map((map, index) => (
         <React.Fragment key={map._id}>
           <Polygon
