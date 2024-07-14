@@ -44,15 +44,17 @@ function ManageUsers() {
     }, []);
 
     const fetchUsers = async () => {
+        setIsLoading(true);
         try {
-            const response = await AxiosInstance.get("/api/users/getAllUsers");
-            setUserList(response.data.users);
-            setIsLoading(false);
+          const response = await AxiosInstance.get("/api/users/getAllUsers");
+          setUserList(response.data.users);
         } catch (error) {
-            console.error("Failed to fetch users:", error);
-            message.error("Failed to fetch users");
+          console.error("Failed to fetch users:", error);
+          message.error("Failed to fetch users");
+        } finally {
+          setIsLoading(false);
         }
-    };
+      };
 
     useEffect(() => {
         fetchUsers();
@@ -367,13 +369,19 @@ function ManageUsers() {
                         )}
                     </Modal>
 
-                    <Table
-                    className="user_table"
-                        columns={columns}
-                        dataSource={userList}
-                        pagination={userList.length > 10 ? pagination : false}
-                        onChange={handleTableChange}
-                    />
+                    {isLoading ? (
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+                          <BeatLoader color="#36D7B7" loading={isLoading} size={15} />
+                        </div>
+                      ) : (
+                        <Table
+                          className="user_table"
+                          columns={columns}
+                          dataSource={userList}
+                          pagination={userList.length > 10 ? pagination : false}
+                          onChange={handleTableChange}
+                        />
+                      )}
                 </div>
                 <Modal
                     title="Edit User"
