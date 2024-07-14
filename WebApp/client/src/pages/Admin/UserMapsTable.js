@@ -13,14 +13,16 @@ import {
   Typography,
   ThemeProvider,
   createTheme,
-  CircularProgress
+  CircularProgress,
+  TextField,
+  InputAdornment
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Modal } from 'antd'; // Import Modal from Ant Design
-import AxiosInstance from '../../AxiosInstance';
+import SearchIcon from '@mui/icons-material/Search';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-
+import { Modal } from 'antd';
+import AxiosInstance from '../../AxiosInstance';
 
 // Create a blue theme
 const blueTheme = createTheme({
@@ -274,6 +276,7 @@ const Row = (props) => {
 const UserMapsTable = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchUsersAndMaps();
@@ -315,19 +318,19 @@ const UserMapsTable = () => {
     }
   };
 
- const fetchMapDetails = async (mapId) => {
-  try {
-    const response = await AxiosInstance.get(`/api/auth/mapTemplate/getAllmapData/${mapId}`);
-    console.log("Map details response:", response.data);
-    return {
-      ...response.data,
-      locationPoints: response.data.locationPoints || []
-    };
-  } catch (error) {
-    console.error("Error fetching map details:", error);
-    return null;
-  }
-};
+  const fetchMapDetails = async (mapId) => {
+    try {
+      const response = await AxiosInstance.get(`/api/auth/mapTemplate/getAllmapData/${mapId}`);
+      console.log("Map details response:", response.data);
+      return {
+        ...response.data,
+        locationPoints: response.data.locationPoints || []
+      };
+    } catch (error) {
+      console.error("Error fetching map details:", error);
+      return null;
+    }
+  };
 
   const updateUserMaps = (userId, mapCount) => {
     setUsers(prevUsers => 
@@ -336,6 +339,15 @@ const UserMapsTable = () => {
       )
     );
   };
+
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+  };
+
+  const filteredUsers = users.filter(user => 
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (loading) {
     return (
@@ -347,6 +359,27 @@ const UserMapsTable = () => {
 
   return (
     <ThemeProvider theme={blueTheme}>
+      <TextField
+        placeholder="Search by name or email"
+        variant="outlined"
+        style={{ margin: '1rem', width: '35%' , borderRadius: '5px' , float: "right" ,}}
+        value={searchTerm}
+        onChange={(e) => handleSearch(e.target.value)}
+       InputProps={{
+    startAdornment: (
+      <InputAdornment position="start">
+        <SearchIcon />
+      </InputAdornment>
+    ),
+    style: { height: '40px' } // Adjust this value to your preferred height
+  }}
+  sx={{
+    '& .MuiOutlinedInput-root': {
+      height: '40px', // Adjust this value to match the InputProps height
+    },
+    marginBottom: '20px' // Add some space below the search box
+  }}
+      />
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <TableHead>
@@ -358,7 +391,7 @@ const UserMapsTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
+            {filteredUsers.map((user) => (
               <Row 
                 key={user._id} 
                 row={user} 
