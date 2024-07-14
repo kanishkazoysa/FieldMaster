@@ -17,7 +17,6 @@ import {
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { Modal } from 'antd'; // Import Modal from Ant Design
 import AxiosInstance from '../../AxiosInstance';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -316,16 +315,19 @@ const UserMapsTable = () => {
     }
   };
 
-  const fetchMapDetails = async (mapId) => {
-    try {
-      const response = await AxiosInstance.get(`/api/auth/mapTemplate/getAllmapData/${mapId}`);
-      console.log("Map details response:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching map details:", error);
-      return null;
-    }
-  };
+ const fetchMapDetails = async (mapId) => {
+  try {
+    const response = await AxiosInstance.get(`/api/auth/mapTemplate/getAllmapData/${mapId}`);
+    console.log("Map details response:", response.data);
+    return {
+      ...response.data,
+      locationPoints: response.data.locationPoints || []
+    };
+  } catch (error) {
+    console.error("Error fetching map details:", error);
+    return null;
+  }
+};
 
   const updateUserMaps = (userId, mapCount) => {
     setUsers(prevUsers => 
