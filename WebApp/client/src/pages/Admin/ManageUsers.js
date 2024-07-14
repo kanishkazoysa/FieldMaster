@@ -7,6 +7,7 @@ import { Tag, Space, Table, Button, Modal, Input, Alert } from "antd";
 import ProfileModal from "../../components/profileManage/ProfileModal/ProfileModal";
 import AxiosInstance from "../../AxiosInstance";
 import Avatar from "../../components/profileManage/ProfileManageModal/Avatar";
+import { Input as AntInput } from "antd";
 
 const { confirm } = Modal;
 
@@ -26,6 +27,24 @@ function ManageUsers() {
   });
   const [locationAnalytics, setLocationAnalytics] = useState([]);
   const [isNewUserVerified, setIsNewUserVerified] = useState(false);
+  const { Search } = AntInput;
+  const [searchTerm, setSearchTerm] = useState("");
+const [filteredUserList, setFilteredUserList] = useState([]);
+
+
+useEffect(() => {
+  const filtered = userList.filter(
+    (user) =>
+      user.fname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.lname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  setFilteredUserList(filtered);
+}, [searchTerm, userList]);
+
+const handleSearch = (value) => {
+  setSearchTerm(value);
+};
 
   const fetchLocationAnalytics = async () => {
     try {
@@ -321,6 +340,11 @@ function ManageUsers() {
             <h1>Manage Users</h1>
             <button onClick={showAddModal}>Add New</button>
           </div>
+          <Search
+  placeholder="Search users by name or email"
+  onChange={(e) => handleSearch(e.target.value)}
+  style={{ width: 300, marginBottom: 16 }}
+/>
           <Modal
             title="Add User"
             visible={isAddModalOpen}
@@ -389,8 +413,8 @@ function ManageUsers() {
             <Table
               className="user_table"
               columns={columns}
-              dataSource={userList}
-              pagination={userList.length > 10 ? pagination : false}
+              dataSource={filteredUserList}
+pagination={filteredUserList.length > 10 ? pagination : false}
               onChange={handleTableChange}
             />
           )}
