@@ -1,7 +1,7 @@
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { message, Button } from "antd";
-import { GoogleMap, LoadScript, StandaloneSearchBox, Marker, Polygon, OverlayView } from "@react-google-maps/api";
+import { message} from "antd";
+import { GoogleMap,StandaloneSearchBox, Marker, Polygon, OverlayView, LoadScript } from "@react-google-maps/api";
 import { MdLocationOn, MdSearch, MdMyLocation } from "react-icons/md";
 import AxiosInstance from "../../AxiosInstance";
 import SideNavbar from "../../components/SideNavbar/sideNavbar";
@@ -29,7 +29,7 @@ export default function Home() {
   const [isUserLoading, setIsUserLoading] = useState(true);
   const [isUserMapsLoading, setIsUserMapsLoading] = useState(true);
   const [isMapDetailsLoading, setIsMapDetailsLoading] = useState(false);
-
+ 
   // Constants
   const sriLankaCenter = { lat: 7.8731, lng: 80.7718 };
   const defaultZoom = 7;
@@ -126,29 +126,8 @@ export default function Home() {
       setZoomLevel(mapRef.current.state.map.getZoom());
     }
   };
-  const handleGetCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setSelectedLocation(userLocation);
-          if (mapRef.current && mapRef.current.state.map) {
-            mapRef.current.state.map.panTo(userLocation);
-            mapRef.current.state.map.setZoom(15);
-          }
-        },
-        (error) => {
-          console.error("Error getting user's location:", error);
-          message.error("Unable to retrieve your location");
-        }
-      );
-    } else {
-      message.error("Geolocation is not supported by this browser");
-    }
-  };
+
+
   const handleLabelClick = useCallback(
     async (mapId) => {
       if (mapId === selectedMapId) {
@@ -247,21 +226,7 @@ export default function Home() {
           <p>Loading map...</p>
         </div>
       )}
-      <div
-        onClick={handleGetCurrentLocation}
-        style={{
-          position: "absolute",
-          bottom: "100px",
-          right: "10px",
-          background: "white",
-          padding: "7px",
-          borderRadius: "50%",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-          cursor: "pointer",
-        }}
-      >
-        <MdMyLocation size={24} />
-      </div>
+      
       {userMaps.map((map, index) => (
         <React.Fragment key={map._id}>
           <Polygon
@@ -373,6 +338,7 @@ return (
         {!isUserLoading && !isUserMapsLoading && renderMapContent()}
       </GoogleMap>
     </LoadScript>
+
     {(isUserLoading || isUserMapsLoading) && (
       <div style={styles.loadingOverlay}>
         <BeatLoader color="#36D7B7" loading={true} size={15} />
