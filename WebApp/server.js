@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
 const middleware = require('./middleware/middleware');
@@ -16,7 +17,6 @@ const fenceRoute = require('./routes/fenceRoute.js');
 const clearLandRoute = require('./routes/clearLandRoute.js');
 const MapTemplateRoute = require('./routes/MapTemplateRoute.js');
 const InputControlRoute = require('./routes/InputControlRoute.js');
-const cors = require('cors');
 
 const allowedOrigins = ['https://field-master-frontend.vercel.app', 'http://localhost:3000'];
 
@@ -30,12 +30,13 @@ app.use(cors({
     return callback(null, true);
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // Add this line
 }));
 
+app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use(express.json());
 
 app.use('/api/auth/*', middleware);
 app.use('/api/users', userRoute);
@@ -50,8 +51,13 @@ app.use('/api/auth/inputControl', InputControlRoute);
 
 const port = process.env.PORT || 5000;
 
-if (process.env.NODE_ENV == 'production') {
+if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
+  
+  // Handle React routing, return all requests to React app
+  app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
 }
 
-app.listen(port, () => console.log('Node Server Started using Nodemon!'));
+app.listen(port, () => console.log(`Server running on port ${port}`));
