@@ -17,6 +17,15 @@ const clearLandRoute = require('./routes/clearLandRoute.js');
 const MapTemplateRoute = require('./routes/MapTemplateRoute.js');
 const InputControlRoute = require('./routes/InputControlRoute.js');
 
+const cors = require('cors');
+
+app.use(cors({
+  origin: ['https://field-master-frontend.vercel.app', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(express.json());

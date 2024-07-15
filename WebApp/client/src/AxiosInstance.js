@@ -1,7 +1,9 @@
 import axios from 'axios';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://field-master-frontend.vercel.app';
 
 const AxiosInstance = axios.create({
   headers: {
+     baseURL: API_BASE_URL,
     'Content-Type': 'application/json',
   },
 });
