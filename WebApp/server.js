@@ -16,6 +16,11 @@ const fenceRoute = require('./routes/fenceRoute.js');
 const clearLandRoute = require('./routes/clearLandRoute.js');
 const MapTemplateRoute = require('./routes/MapTemplateRoute.js');
 const InputControlRoute = require('./routes/InputControlRoute.js');
+const cors = require('cors');
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000'
+}));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
