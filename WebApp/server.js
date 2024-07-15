@@ -18,8 +18,19 @@ const MapTemplateRoute = require('./routes/MapTemplateRoute.js');
 const InputControlRoute = require('./routes/InputControlRoute.js');
 const cors = require('cors');
 
+const allowedOrigins = ['https://field-master-frontend.vercel.app', 'http://localhost:3000'];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000'
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
