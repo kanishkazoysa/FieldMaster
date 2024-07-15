@@ -1,8 +1,8 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../Register/RegisterStyle.css";
+import AxiosInstance from "../../../AxiosInstance";
 
 const CPForm = () => {
     let params = useParams();
@@ -12,7 +12,7 @@ const CPForm = () => {
     const onFinish = (values) => {
         const { password } = values;
 
-        axios
+        AxiosInstance
             .post("/api/users/change-password", {
                 email,
                 newPassword: password,

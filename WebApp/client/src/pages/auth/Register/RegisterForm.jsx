@@ -1,15 +1,14 @@
 import React from "react";
 import { Form, Input, Button, Row, Col, message } from "antd";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import "./RegisterStyle.css";
+import AxiosInstance from "../../../AxiosInstance";
 
 const RegisterForm = () => {
     const onFinish = (values) => {
         const { firstName, lastName, email, password } = values;
 
-        axios
-            .post("/api/users/register", {
+        AxiosInstance.post("/api/users/register", {
                 fName: firstName,
                 lName: lastName,
                 email,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import Chart from "chart.js/auto";
 import { BeatLoader } from "react-spinners";
+import AxiosInstance from "../../AxiosInstance";
 
 function LoginCountChart() {
     const [loginCountData, setLoginCountData] = useState([]);
@@ -10,7 +10,7 @@ function LoginCountChart() {
 
     const fetchLoginCountData = async () => {
         try {
-            const response = await axios.post("/api/users/loginData");
+            const response = await  AxiosInstance.post("/api/users/loginData");
             const data = response.data;
     
             // Generate an array of the last 30 days

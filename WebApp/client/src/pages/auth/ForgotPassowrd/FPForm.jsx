@@ -1,8 +1,8 @@
 import React from "react";
 import { Form, Input, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../Register/RegisterStyle.css";
+import AxiosInstance from "../../../AxiosInstance";
 
 const FPForm = () => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ const FPForm = () => {
   const onFinish = (values) => {
     const { email } = values;
 
-    axios
+    AxiosInstance
       .post("/api/mail/otp", {
         email,
       })

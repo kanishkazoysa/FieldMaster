@@ -14,14 +14,14 @@ import { GiStonePile } from "react-icons/gi";
 import { GrUserWorker } from "react-icons/gr";
 import { styles } from "./clearLandStyles";
 import { FiSearch } from "react-icons/fi";
-import Select from "react-select";
-import { Input, Space, List, AutoComplete ,message, } from "antd";
+import { Space,message, } from "antd";
 import EffortOutput from "../EffortOutput/effortOutput";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails";
 import AxiosInstance from "../../../AxiosInstance";
 import AlertWeed from "../EffortOutput/AlertWeed"
 import AlertPlant from "../EffortOutput/AlertPlant"
 import AlertStone from "../EffortOutput/AlertStone"
+
 export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTemplateClick,template,ClearLandData }) {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);

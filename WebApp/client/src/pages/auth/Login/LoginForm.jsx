@@ -1,11 +1,8 @@
 import React from "react";
 import { Form, Input, Button, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../Register/RegisterStyle.css";
-
-
-
+import AxiosInstance from "../../../AxiosInstance";
 
 const LoginForm = () => {
   const navigate = useNavigate(); // Use useNavigate hook
@@ -13,8 +10,7 @@ const LoginForm = () => {
   const onFinish = (values) => {
     const { email, password } = values;
     
-    axios
-      .post("/api/users/login", {
+    AxiosInstance.post("/api/users/login", {
         email,
         password,
       })

@@ -2,8 +2,8 @@ import React from "react";
 
 import { Form, Input, Button, message } from "antd";
 import { useParams,useNavigate, Link } from "react-router-dom";
-import axios from "axios";
 import "../Register/RegisterStyle.css";
+import AxiosInstance from "../../../AxiosInstance";
 
 const FPForm = () => {
   let params = useParams();
@@ -13,7 +13,7 @@ const FPForm = () => {
   const onFinish = (values) => {
     const { enteredOTP } = values;
 
-    axios
+    AxiosInstance
       .post("/api/mail/verify", {
         enteredOTP,
         email,
