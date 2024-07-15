@@ -2,10 +2,11 @@
   "name": "webapp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"nodemon server.js\" \"cd client && npm start\""
+    "start": "node server.js",
+    "build": "cd client && npm install && npm run build",
+    "dev": "concurrently \"nodemon server.js\" \"cd client && npm start\""
   },
   "author": "",
   "license": "ISC",
