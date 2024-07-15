@@ -53,7 +53,6 @@ export default function WalkaroundLand() {
   const [showFillColor, setShowFillColor] = useState(false);
   const [isPolygonClosed, setIsPolygonClosed] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-
   //define taskmanager to request location permission
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
@@ -91,6 +90,27 @@ export default function WalkaroundLand() {
       });
     }
   });
+
+  const handleReMeasure = () => {
+    // Reset all relevant state
+    setPathCoordinates([]);
+    setUndoStack([]);
+    setTrackingStarted(false);
+    setTrackingPaused(false);
+    setDrawPolyline(false);
+    setCalculatedArea(0);
+    setPolygonPerimeter(0);
+    setIsResizeButtonDisabled(true);
+    setIsStartPauseButtonDisabled(false);
+    setIsSaveButtonDisabled(true);
+    setResizingMode(false);
+    setShowUndoButton(true);
+    setShowFillColor(false);
+    setIsPolygonClosed(false);
+
+    // Restart location tracking
+    startTracking();
+  };
 
   const uploadToImgbb = async (imageUri) => {
     const apiKey = "a08fb8cde558efecce3f05b7f97d4ef7";
@@ -144,47 +164,45 @@ export default function WalkaroundLand() {
     calculateAreaAndPerimeter();
   };
 
-  useEffect(() => {
-    //start tracking location
-    const startTracking = async () => {
-      try {
-        const { coords } = await Location.getCurrentPositionAsync({}); // get current location data
+  const startTracking = async () => {
+    try {
+      const { coords } = await Location.getCurrentPositionAsync({});
 
-        const { status } = await Location.requestForegroundPermissionsAsync(); // request location permission
-        if (status !== "granted") {
-          console.error("Foreground location permission not granted");
-          return;
-        }
-        //start location updates  and set location data to initial location and current location
-        await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
-          accuracy: Location.Accuracy.Highest,
-          timeInterval: 1000,
-          distanceInterval: 0,
-          showsBackgroundLocationIndicator: true,
-          foregroundService: {
-            notificationTitle: "Tracking location",
-            notificationBody:
-              "Your location is being tracked in the background",
-          },
-        });
-
-        setInitialLocation({
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-        });
-
-        setCurrentLocation({
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-        });
-
-        console.log("Background location updates started");
-        setTrackingStarted(true);
-      } catch (error) {
-        console.error("Error starting background location updates:", error);
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.error("Foreground location permission not granted");
+        return;
       }
-    };
 
+      await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
+        accuracy: Location.Accuracy.Highest,
+        timeInterval: 1000,
+        distanceInterval: 0,
+        showsBackgroundLocationIndicator: true,
+        foregroundService: {
+          notificationTitle: "Tracking location",
+          notificationBody: "Your location is being tracked in the background",
+        },
+      });
+
+      setInitialLocation({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      });
+
+      setCurrentLocation({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      });
+
+      console.log("Background location updates started");
+      setTrackingStarted(true);
+    } catch (error) {
+      console.error("Error starting background location updates:", error);
+    }
+  };
+
+  useEffect(() => {
     startTracking();
 
     return () => {
@@ -494,7 +512,7 @@ export default function WalkaroundLand() {
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
           <Button
-            icon={trackingPaused ? "pause" : "play-outline"}
+            icon={trackingPaused ? "check" : "play-outline"}
             mode="contained"
             onPress={handleStartPress}
             disabled={isStartPauseButtonDisabled}
@@ -530,6 +548,16 @@ export default function WalkaroundLand() {
             onPress={handleResize}
           >
             {resizingMode ? "Done" : "Resize"}
+          </Button>
+        </View>
+        <View style={styles.buttonWrapper}>
+          <Button
+            icon="refresh"
+            mode="contained"
+            onPress={handleReMeasure}
+            style={styles.button}
+          >
+            Retry
           </Button>
         </View>
         {undoStack.length > 0 && showUndoButton && resizingMode && (
