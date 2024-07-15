@@ -10,7 +10,7 @@ const LoginForm = () => {
   const onFinish = (values) => {
     const { email, password } = values;
     
-    AxiosInstance.post("/api/users/login", {
+    AxiosInstance.post("/apiauth/users/login", {
         email,
         password,
       })
