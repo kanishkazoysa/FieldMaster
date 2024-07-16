@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser'); // Import body-parser
 const middleware = require('./middleware/middleware');
 const app = express();
 
@@ -12,7 +12,7 @@ const userRoute = require('./routes/usersRoute.js');
 const mailRoute = require('./routes/mailRoute.js');
 const contactRoute = require('./routes/contactRoute.js');
 const plantationRoute = require('./routes/plantationRoute.js');
-const fertilizerRoute= require('./routes/fertilizerRoute.js');
+const fertilizerRoute = require('./routes/fertilizerRoute.js');
 const fenceRoute = require('./routes/fenceRoute.js');
 const clearLandRoute = require('./routes/clearLandRoute.js');
 const MapTemplateRoute = require('./routes/MapTemplateRoute.js');
@@ -21,10 +21,14 @@ const InputControlRoute = require('./routes/InputControlRoute.js');
 app.use(cors());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Use body-parser middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(
   cors({
-    origin: ["https://fieldmaster-sage.vercel.app/" , "http://localhost:3000" ],
-    methods: ["POST", "GET" , "PUT", "DELETE" , "PATCH" , "OPTIONS" , "HEAD" ],
+    origin: ["https://fieldmaster-sage.vercel.app/", "http://localhost:3000"],
+    methods: ["POST", "GET", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"],
     credentials: true,
   })
 );
@@ -39,8 +43,6 @@ app.use('/api/fence', fenceRoute);
 app.use('/api/clearLand', clearLandRoute);
 app.use('/api/auth/mapTemplate', MapTemplateRoute);
 app.use('/api/auth/inputControl', InputControlRoute);
-
-
 
 // Add this route to show the server is running
 app.get('/', (req, res) => {
