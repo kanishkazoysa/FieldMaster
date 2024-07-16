@@ -18,8 +18,6 @@ const clearLandRoute = require('./routes/clearLandRoute.js');
 const MapTemplateRoute = require('./routes/MapTemplateRoute.js');
 const InputControlRoute = require('./routes/InputControlRoute.js');
 
-
-
 app.use(cors());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -50,6 +48,11 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 }
+
+// Add this route to show the server is running
+app.get('/status', (req, res) => {
+  res.send('<html><body><h1>FieldMaster Server Running Here</h1></body></html>');
+});
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
