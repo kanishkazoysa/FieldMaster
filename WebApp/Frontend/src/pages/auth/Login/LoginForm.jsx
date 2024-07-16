@@ -10,7 +10,7 @@ const LoginForm = () => {
   const onFinish = (values) => {
     const { email, password } = values;
     
-    AxiosInstance.post("https://field-master-backen.vercel.app//api/users/login", {
+    AxiosInstance.post("/api/users/login", {
         email,
         password,
       })
