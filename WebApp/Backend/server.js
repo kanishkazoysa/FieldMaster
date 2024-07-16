@@ -40,17 +40,10 @@ app.use('/api/clearLand', clearLandRoute);
 app.use('/api/auth/mapTemplate', MapTemplateRoute);
 app.use('/api/auth/inputControl', InputControlRoute);
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'client/build')));
 
-  // Handle React routing, return all requests to React app
-  app.get('*', function(req, res) {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-  });
-}
 
 // Add this route to show the server is running
-app.get('/status', (req, res) => {
+app.get('/', (req, res) => {
   res.send('<html><body><h1>FieldMaster Server Running Here</h1></body></html>');
 });
 
