@@ -183,34 +183,6 @@ const AnalyticsSection = ({ users}) => {
     return count;
   };
 
-  const fetchLoginCountData = async () => {
-    try {
-      const response = await AxiosInstance.post("/api/users/loginData");
-      const data = response.data;
-
-      // Generate an array of the last 30 days
-      const last30Days = generateLast30Days();
-
-      // Create an array of view count data for the last 30 days
-      const last30DaysData = last30Days.map((day) => {
-        const entry = data.find((item) => item._id === day);
-        return { date: day, count: entry ? entry.count : 0 };
-      });
-
-      setLoginCountData(last30DaysData);
-      setDateData(last30Days);
-
-      setTotalLogins(countLogins(last30DaysData));
-
-      // createChart(last30Days, last30DaysData);
-    } catch (error) {
-      console.error("Error fetching login data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchLoginCountData();
-  }, []);
 
   //Time count
   const [currentTime, setCurrentTime] = useState(new Date());
