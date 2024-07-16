@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faGithub, faFacebook, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import video3 from "../../../assets/contact_video.mp4";
 
+const API_URL = process.env.REACT_APP_BACKEND_URL || "https://field-master-backen.vercel.app";
+
 function ContactForm() {
   const [formData, setFormData] = useState({
     name: '',
@@ -25,7 +27,7 @@ function ContactForm() {
     setStatus('Sending...');
 
     try {
-      const response = await fetch('/api/contact/send', {
+      const response = await fetch(`${API_URL}/api/contact/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
