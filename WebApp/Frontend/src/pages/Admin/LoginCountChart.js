@@ -6,27 +6,26 @@ import AxiosInstance from "../../AxiosInstance";
 function LoginCountChart() {
     const [loginCountData, setLoginCountData] = useState([]);
     const chartRef = useRef(null);
+    const canvasRef = useRef(null);
     const [isLoading, setIsLoading] = useState(true);
 
     const fetchLoginCountData = async () => {
         try {
-            const response = await  AxiosInstance.post("/api/users/loginData");
+            const response = await AxiosInstance.post("/api/users/loginData");
             const data = response.data;
     
-            // Generate an array of the last 30 days
             const last30Days = generateLast30Days();
     
-            // Create an array of view count data for the last 30 days
             const last30DaysData = last30Days.map((day) => {
                 const entry = data.find((item) => item._id === day);
                 return { date: day, count: entry ? entry.count : 0 };
             });
     
             setLoginCountData(last30DaysData);
-            createChart(last30Days, last30DaysData);
             setIsLoading(false);
         } catch (error) {
             console.error("Error fetching login data:", error);
+            setIsLoading(false);
         }
     };
 
@@ -41,25 +40,27 @@ function LoginCountChart() {
         return days;
     };
 
-    const createChart = (labels, data) => {
-        const ctx = document.getElementById("LoginCountChart");
+    const createChart = () => {
         if (chartRef.current) {
             chartRef.current.destroy();
         }
+
+        const ctx = canvasRef.current.getContext('2d');
         chartRef.current = new Chart(ctx, {
             type: "bar",
             data: {
-                labels: labels,
+                labels: loginCountData.map(item => item.date),
                 datasets: [
                     {
-                        data: data.map((item) => item.count),
+                        data: loginCountData.map(item => item.count),
                         backgroundColor: "#533C56",
                         borderRadius: 60,
                     },
                 ],
             },
-            width: 500,
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     x: {
                         display: false,
@@ -81,14 +82,20 @@ function LoginCountChart() {
         fetchLoginCountData();
     }, []);
 
+    useEffect(() => {
+        if (!isLoading && loginCountData.length > 0 && canvasRef.current) {
+            createChart();
+        }
+    }, [isLoading, loginCountData]);
+
     return (
-        <div className="daily-login-count-chart-container">
-        {isLoading ? (
+        <div className="daily-login-count-chart-container" style={{ height: '300px', width: '100%' }}>
+            {isLoading ? (
                 <div className="center" style={{marginTop : "150px"}}>
                     <BeatLoader size={14} color="#007BFF" />
                 </div>
             ) : (
-            <canvas id="LoginCountChart"></canvas>
+                <canvas ref={canvasRef}></canvas>
             )}
         </div>
     );

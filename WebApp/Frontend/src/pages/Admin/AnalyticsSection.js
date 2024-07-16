@@ -158,32 +158,7 @@ const AnalyticsSection = ({ users}) => {
     setTotalUnverified(unverified);
   }, [users]);
 
-  //Fetch login data
-  const [setLoginCountData] = useState([]);
-  const [setDateData] = useState([]);
-
-  const generateLast30Days = () => {
-    const today = new Date();
-    const days = [];
-    for (let i = 29; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(today.getDate() - i);
-      days.push(date.toISOString().slice(0, 10));
-    }
-    return days;
-  };
-
-  const countLogins = (loginData) => {
-    let count = 0;
-
-    loginData.forEach((lData) => {
-      count = count + lData.count;
-    });
-
-    return count;
-  };
-
-
+ 
   //Time count
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isDaytime, setIsDaytime] = useState(true);
