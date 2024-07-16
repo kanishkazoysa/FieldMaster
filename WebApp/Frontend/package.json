@@ -75,7 +75,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000/",
+  "proxy": "https://field-master-backen.vercel.app/",
   "devDependencies": {
     "daisyui": "^4.7.2"
   }
