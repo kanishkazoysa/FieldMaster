@@ -14,7 +14,8 @@ import {
   message,
 } from "antd";
 import { DeleteOutlined,  SearchOutlined } from "@ant-design/icons";
-import AxiosInstance from "../../AxiosInstance";
+
+const API_URL = process.env.REACT_APP_BACKEND_URL || "https://field-master-backen.vercel.app";
 
 const { TextArea } = Input;
 
@@ -29,7 +30,7 @@ const EmailManage = () => {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const response = await AxiosInstance.get("/api/contact/submissions");
+        const response = await fetch(`${API_URL}/api/contact/submissions`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -51,7 +52,7 @@ const EmailManage = () => {
 
   const handleSendReply = async () => {
     try {
-      const response = await AxiosInstance.post("/api/contact/reply", {
+      const response = await fetch(`${API_URL}/api/contact/reply`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +86,7 @@ const EmailManage = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response =  await AxiosInstance.delete(`/api/contact/submissions/${id}`, {
+      const response = await fetch(`${API_URL}/api/contact/submissions/${id}`, {
         method: "DELETE",
       });
 
