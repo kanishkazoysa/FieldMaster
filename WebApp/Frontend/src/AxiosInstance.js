@@ -1,7 +1,9 @@
 import axios from 'axios';
+
+
 const AxiosInstance = axios.create({
+  baseURL: process.env.REACT_APP_BACKEND_URL || "https://field-master-backen.vercel.app",
   headers: {
-    
     'Content-Type': 'application/json',
   },
 });
@@ -10,7 +12,7 @@ AxiosInstance.interceptors.request.use(
   async (config) => {
     const token = localStorage.getItem('UserToken');
     if (token) {
-      config.headers.authorization = `${token}`;
+      config.headers.authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -20,3 +22,4 @@ AxiosInstance.interceptors.request.use(
 );
 
 export default AxiosInstance;
+
