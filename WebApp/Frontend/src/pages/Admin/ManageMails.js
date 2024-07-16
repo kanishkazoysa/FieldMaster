@@ -29,7 +29,7 @@ const EmailManage = () => {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const response = await fetch("/api/contact/submissions");
+        const response = await AxiosInstance.get("/api/contact/submissions");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -51,7 +51,7 @@ const EmailManage = () => {
 
   const handleSendReply = async () => {
     try {
-      const response = await fetch("/api/contact/reply", {
+      const response = await AxiosInstance.post("/api/contact/reply", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +85,7 @@ const EmailManage = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/api/contact/submissions/${id}`, {
+      const response =  await AxiosInstance.delete(`/api/contact/submissions/${id}`, {
         method: "DELETE",
       });
 

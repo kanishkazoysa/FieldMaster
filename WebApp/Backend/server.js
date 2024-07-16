@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: ["https://field-master-frontend.vercel.app", "http://localhost:3000"],
-    methods: ["POST", "GET", "PUT", "DELETE", "PATCH", "FETCH", "OPTIONS", "HEAD"],
+    methods: ["POST", "GET", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
   })
