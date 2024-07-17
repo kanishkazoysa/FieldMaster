@@ -134,7 +134,7 @@ export default function Fertilizing(
                 </div>
               </div>
             </div>
-            <div style={styles.propertyBox}>
+            <div style={styles.propertyBox1}>
               <div style={styles.property}>
                 <GiGrassMushroom color="gray" size={28} />
                 <div style={styles.propertyDetails}>

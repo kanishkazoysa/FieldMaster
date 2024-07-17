@@ -34,7 +34,7 @@ export const styles = {
   
     Box1: {
       width: "90%",
-      height: "125px",
+      height: "155px",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -58,6 +58,16 @@ export const styles = {
       justifyContent: "center",
       height: 50,
       width: "100%",
+      backgroundColor: "white",
+    },
+    propertyBox1: {
+      display: "flex",
+      flexDirection: "coloumn",
+      alignItems: "center",
+      justifyContent: "center",
+      height: 50,
+      width: "100%",
+      marginTop: 10,
       backgroundColor: "white",
     },
   

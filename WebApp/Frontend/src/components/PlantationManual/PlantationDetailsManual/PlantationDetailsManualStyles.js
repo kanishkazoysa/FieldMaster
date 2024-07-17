@@ -111,7 +111,7 @@ export const styles = {
   
     Box2: {
       width: "90%",
-      height: "68px",
+      height: "78px",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -204,10 +204,10 @@ export const styles = {
       display: "flex",
       width: "100%",
       height: 38,
-      backgroundColor: "green",
+      backgroundColor: "#3DCA6F",
       alignItems: "center",
       justifyContent: "center",
-      marginTop: 10,
+      marginTop: 60,
       borderRadius: 11,
       borderWidth: 0,
    

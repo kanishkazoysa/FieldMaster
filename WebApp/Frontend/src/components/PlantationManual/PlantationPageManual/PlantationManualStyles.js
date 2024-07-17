@@ -386,7 +386,7 @@ export const styles = {
     bottom: {
       width: "92%",
       alignItems: "center",
-      marginTop: 20,
+      marginTop: 90,
     },
   
     Button1: {

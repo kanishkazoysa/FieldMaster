@@ -59,8 +59,8 @@ export const getPlantationDetailsHtml = ( calculatedPlantDensity,numberOfPlants,
           </div>
           <h2>Map Information</h2>
           <ul>
-              <li>Perimeter = ${perimeter} km</li>
-              <li>Area = ${area} perches</li>
+              <li>Perimeter = ${perimeter} m</li>
+              <li>Area = ${area} sqm</li>
           </ul>
 
           <h2>Plantation Details</h2>
