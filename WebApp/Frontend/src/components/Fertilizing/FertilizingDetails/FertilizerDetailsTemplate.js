@@ -1,4 +1,4 @@
-export const getFertilizerDetailsHtml = ( selectedFrequency,FertilizerAmountUnitselectedValue,textFertilizationAmount,textFertilizationNUmberoftime,textFertilizationType,Perimeter,area) => `
+export const getFertilizerDetailsHtml = ( selectedFrequency,FertilizerAmountUnitselectedValue,textFertilizationAmount,textFertilizationNUmberoftime,textFertilizationType,perimeter,Area,TotalFertilizer,totalAmount) => `
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -59,14 +59,16 @@ export const getFertilizerDetailsHtml = ( selectedFrequency,FertilizerAmountUnit
           </div>
           <h2>Map Information</h2>
           <ul>
-              <li>Perimeter = ${Perimeter}KM</li>
-              <li>Area = ${area} perches</li>
+              <li>Perimeter = ${perimeter} km</li>
+              <li>Area = ${Area} perches</li>
           </ul>
 
           <h2>Fence Details</h2>
 
           <ul>
           <li>Fertilizer Type = ${textFertilizationType}</li>
+          <li>Per plant = ${totalAmount} ${FertilizerAmountUnitselectedValue}</li>
+          <li>Total Fertilizer = ${TotalFertilizer} ${FertilizerAmountUnitselectedValue}</li>
           <li>Fequency = ${selectedFrequency}</li>
           <li>Amount  = ${textFertilizationAmount} ${FertilizerAmountUnitselectedValue}</li>
           <li>No of times = ${textFertilizationNUmberoftime}</li>
