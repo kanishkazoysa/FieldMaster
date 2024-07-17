@@ -1,7 +1,7 @@
 import * as React from "react";
 import { styles } from "./EffortOutputManualStyles";
 import { MdArrowBack } from "react-icons/md";
-import { CiClock1,CiCalendar } from "react-icons/ci";
+import { CiClock1, CiCalendar } from "react-icons/ci";
 import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
 import { HiTruck } from "react-icons/hi2";
@@ -10,21 +10,20 @@ import AlertButton from "../../ClearLand/EffortOutput/AlertButton";
 import AlertEffort from "../../ClearLand/EffortOutput/AlertEffort";
 import { getEffortOutputHtml } from "./EffortOutputTemplate";
 export default function EffortOutputManual({
-    onBackToSidebar,
-    weedEffort,
-    plantEffort,
-    stoneEffort,
-    effort,
-    workDays,
-    laborCount,
-    workHours,
-    displayValues2,
-    area,
-    perimeter,
-    AreaUnitSelectedValue,
-    PerimeterUnitSelectedValue,
+  onBackToSidebar,
+  weedEffort,
+  plantEffort,
+  stoneEffort,
+  effort,
+  workDays,
+  laborCount,
+  workHours,
+  displayValues2,
+  area,
+  perimeter,
+  AreaUnitSelectedValue,
+  PerimeterUnitSelectedValue,
 }) {
-
   const handleSave = () => {
     const htmlContent = getEffortOutputHtml(
       weedEffort,
@@ -44,23 +43,23 @@ export default function EffortOutputManual({
     newWindow.print();
   };
 
-    return (
-        <div style={styles.content}>
-            <div style={styles.header}>
-            <MdArrowBack
-              onClick={onBackToSidebar}
-              style={styles.backButton}
-              fontSize={20}
-            />
-            <p style={styles.titleText1}>Effort Output</p>
-          </div>
+  return (
+    <div style={styles.content}>
+      <div style={styles.header}>
+        <MdArrowBack
+          onClick={onBackToSidebar}
+          style={styles.backButton}
+          fontSize={20}
+        />
+        <p style={styles.titleText1}>Effort Output</p>
+      </div>
 
-          {/* first box */}
-          <div style={styles.Box1}>
+      {/* first box */}
+      <div style={styles.Box1}>
         <div style={styles.box1Top}>
-            <p style={styles.titleText}>Total Effort Count</p>
-            <AlertButton></AlertButton>
-            </div>
+          <p style={styles.titleText}>Total Effort Count</p>
+          <AlertButton></AlertButton>
+        </div>
         <div style={styles.propertyBox}>
           <div style={styles.property}>
             <div>
@@ -75,9 +74,7 @@ export default function EffortOutputManual({
             <CiCalendar color="gray" size={25} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>{workHours} hrs Per Day</p>
-              <p style={styles.propertyValue}> {workDays} Days
-                
-              </p>
+              <p style={styles.propertyValue}> {workDays} Days</p>
             </div>
           </div>
         </div>
@@ -90,30 +87,43 @@ export default function EffortOutputManual({
             <BsBoundingBox color="gray" size={25} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>{parseFloat(perimeter).toFixed(2)} km {PerimeterUnitSelectedValue}</p>
+              <p style={styles.propertyValue}>
+                {parseFloat(perimeter).toFixed(2)} {PerimeterUnitSelectedValue}
+              </p>
             </div>
           </div>
           <div className="property" style={styles.property}>
             <PiSquareDuotone color="gray" size={28} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
-              <p style={styles.propertyValue}>{parseFloat(area).toFixed(2)} perch {AreaUnitSelectedValue}</p>
+              <p style={styles.propertyValue}>
+                {parseFloat(area).toFixed(2)} {AreaUnitSelectedValue}
+              </p>
             </div>
           </div>
         </div>
       </div>
 
-      <div style ={styles.box}>
-            <div style={styles.boxTop}>
-              <p style={styles.boxHeader}>Effort Values</p>
-              <AlertEffort></AlertEffort>
-            </div>
-             <div style={styles.boxInner}>
-                <p style={styles.boxInnerText}>Weed Effort &nbsp;&nbsp;   :&nbsp;&nbsp; {(weedEffort ?? 0).toFixed(2)} hrs</p>
-                <p style={styles.boxInnerText}>Tree Effort  &nbsp;&nbsp;&nbsp;&nbsp;  :&nbsp;&nbsp; {(plantEffort ?? 0).toFixed(2)} hrs</p>
-                <p>Stone Effort  &nbsp;&nbsp; :&nbsp;&nbsp; {(stoneEffort ?? 0).toFixed(2)} hrs</p>
-             </div>
-          </div>
+      <div style={styles.box}>
+        <div style={styles.boxTop}>
+          <p style={styles.boxHeader}>Effort Values</p>
+          <AlertEffort></AlertEffort>
+        </div>
+        <div style={styles.boxInner}>
+          <p style={styles.boxInnerText}>
+            Weed Effort &nbsp;&nbsp; :&nbsp;&nbsp;{" "}
+            {(weedEffort ?? 0).toFixed(2)} hrs
+          </p>
+          <p style={styles.boxInnerText}>
+            Tree Effort &nbsp;&nbsp;&nbsp;&nbsp; :&nbsp;&nbsp;{" "}
+            {(plantEffort ?? 0).toFixed(2)} hrs
+          </p>
+          <p>
+            Stone Effort &nbsp;&nbsp; :&nbsp;&nbsp;{" "}
+            {(stoneEffort ?? 0).toFixed(2)} hrs
+          </p>
+        </div>
+      </div>
 
       {/* third box */}
       <div style={styles.box3}>
@@ -122,7 +132,9 @@ export default function EffortOutputManual({
         <div style={styles.innercenter}>
           <div style={styles.innersquareleft}>
             <GrUserWorker size={20} color="gray" />
-            <p style={styles.propertyLabel1}>Labors &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</p>
+            <p style={styles.propertyLabel1}>
+              Labors &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+            </p>
           </div>
           <div style={styles.innersquareright}>
             <p style={styles.propertyLabel}>{laborCount}</p>
@@ -133,18 +145,18 @@ export default function EffortOutputManual({
           <div style={styles.innersquareleft}>
             <HiTruck name="boom-gate" size={24} color="gray" />
             <p style={styles.propertyLabel1}>
-              Macinery &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+              Macinery &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
             </p>
           </div>
           <div style={styles.innersquareright1}>
             {displayValues2.length === 0 ? (
               <div>No Machines</div>
             ) : (
-              displayValues2.map((machine,index)=>(
+              displayValues2.map((machine, index) => (
                 <div key={index}>{machine}</div>
               ))
             )}
-            </div>
+          </div>
         </div>
       </div>
       <div style={styles.bottom}>
@@ -152,6 +164,6 @@ export default function EffortOutputManual({
           <p style={styles.Box4ButtonText}>Save Data</p>
         </button>
       </div>
-        </div>
-    );
+    </div>
+  );
 }

@@ -221,8 +221,8 @@ export default function ClearLandManualCalculator({ onBackToSidebar,area,perimet
       };
 
       // Make POST request to the backend
-      const response = await axios.post(
-        "http://192.168.8.173:3000/api/clearLand/clearLandFromManualCalculator",
+      const response = await AxiosInstance.post(
+        "/api/clearLand/clearLandFromManualCalculator",
         requestData
       );
 
