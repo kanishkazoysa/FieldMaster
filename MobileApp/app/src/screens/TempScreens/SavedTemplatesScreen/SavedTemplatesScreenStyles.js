@@ -16,6 +16,42 @@ export const styles = StyleSheet.create({
       },
     }),
   },
+  searchBarContainer: {
+    paddingTop: responsiveHeight(2),
+    paddingBottom: responsiveHeight(1),
+    paddingHorizontal: responsiveWidth(3),
+    borderBottomColor: "transparent",
+    marginBottom: responsiveHeight(-1),
+  },
+  searchBarWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
+  },
+  searchBar: {
+    flex: 1,
+    height: responsiveHeight(5),
+    paddingHorizontal: responsiveWidth(3),
+    fontSize: responsiveFontSize(1.8),
+  },
+  clearButton: {
+    padding: responsiveWidth(2),
+  },
+
+  scrollViewOuterStyle: {
+    flex: 1,
+    marginBottom: responsiveHeight(13),
+    marginTop: responsiveHeight(1),
+  },
 
   loadingScreen: {
     flex: 1,
@@ -51,6 +87,7 @@ export const styles = StyleSheet.create({
   low_outer: {
     marginTop: 10,
     height: "100%",
+    paddingBottom: responsiveHeight(6),
   },
   template_style: {
     backgroundColor: "white",

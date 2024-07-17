@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import {
   TouchableOpacity,
   View,
@@ -8,6 +8,7 @@ import {
   StatusBar,
   ActivityIndicator,
   Alert,
+  TextInput,
 } from "react-native";
 import { Appbar } from "react-native-paper";
 import { styles } from "./SavedTemplatesScreenStyles";
@@ -40,8 +41,10 @@ const truncateText = (text, maxLength) => {
 
 const SavedTemplatesScreen = ({ navigation }) => {
   const [templates, setTemplates] = useState([]);
+  const [filteredTemplates, setFilteredTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [imageLoading, setImageLoading] = useState({});
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleImageLoad = (id) => {
     setImageLoading((prev) => ({ ...prev, [id]: false }));
@@ -52,6 +55,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
     AxiosInstance.get(`/api/auth/mapTemplate/getAllTemplates`)
       .then((response) => {
         setTemplates(response.data);
+        setFilteredTemplates(response.data);
         console.log("fetching successful");
         setLoading(false);
       })
@@ -60,13 +64,27 @@ const SavedTemplatesScreen = ({ navigation }) => {
         setLoading(false);
       });
   };
-
   useFocusEffect(
     useCallback(() => {
       fetchData();
     }, [])
   );
 
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    if (query.trim() === "") {
+      setFilteredTemplates(templates);
+    } else {
+      const filtered = templates.filter((template) =>
+        template.templateName.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredTemplates(filtered);
+    }
+  };
+  const clearSearch = () => {
+    setSearchQuery("");
+    setFilteredTemplates(templates);
+  };
   const handleDelete = (deletingTemplate) => {
     Alert.alert(
       "Confirm Delete",
@@ -121,6 +139,21 @@ const SavedTemplatesScreen = ({ navigation }) => {
           />
         </Appbar.Header>
       </View>
+      <View style={styles.searchBarContainer}>
+        <View style={styles.searchBarWrapper}>
+          <TextInput
+            style={styles.searchBar}
+            placeholder="Search templates..."
+            value={searchQuery}
+            onChangeText={handleSearch}
+          />
+          {searchQuery !== "" && (
+            <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
+              <MaterialCommunityIcons name="close" size={20} color="#65676B" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
       {loading ? (
         <View style={styles.loadingScreen}>
           <View style={styles.dotsWrapper}>
@@ -134,72 +167,68 @@ const SavedTemplatesScreen = ({ navigation }) => {
               style={{ flex: 1 }}
               contentContainerStyle={{ paddingBottom: 20 }}
             >
-              {templates.map((item, index) => {
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => handleTemplatePress(item)}
-                  >
-                    <View style={styles.template_style}>
-                      <View style={styles.col_01}>
-                        {imageLoading[item._id] !== false && (
-                          <View style={styles.imageLoadingContainer}>
-                            <ActivityIndicator color="#007BFF" size="small" />
-                          </View>
-                        )}
-                        <Image
-                          style={styles.image_style}
-                          source={{
-                            uri:
-                              item.imageUrl ||
-                              "https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png",
-                          }}
-                          onLoad={() => handleImageLoad(item._id)}
-                        />
-                      </View>
-                      <TouchableOpacity
-                        onPress={() => handleTemplatePress(item)}
-                      >
-                        <View style={styles.col_02}>
-                          <Text style={styles.bold_text}>
-                            {item.templateName}
-                          </Text>
-                          <Text style={styles.sub_text_style}>
-                            Location: {truncateText(item.location, 16)}
-                          </Text>
-                          <Text style={styles.sub_text_style}>
-                            Date: {item.date}{" "}
-                          </Text>
-                          <Text style={styles.sub_text_style}>
-                            Time: {item.time}
-                          </Text>
+              {filteredTemplates.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleTemplatePress(item)}
+                >
+                  <View style={styles.template_style}>
+                    <View style={styles.col_01}>
+                      {imageLoading[item._id] !== false && (
+                        <View style={styles.imageLoadingContainer}>
+                          <ActivityIndicator color="#007BFF" size="small" />
                         </View>
-                      </TouchableOpacity>
-                      <View style={styles.col_03}>
-                        <TouchableOpacity
-                          style={styles.icon_style}
-                          onPress={() => {
-                            navigation.navigate("EditTemplate", { item: item });
-                          }}
-                        >
-                          <MaterialCommunityIcons
-                            name="square-edit-outline"
-                            size={responsiveFontSize(2.7)}
-                            color="#65676B"
-                          />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          style={styles.icon_style1}
-                          onPress={() => handleDelete(item)}
-                        >
-                          <CustomDeleteIcon />
-                        </TouchableOpacity>
-                      </View>
+                      )}
+                      <Image
+                        style={styles.image_style}
+                        source={{
+                          uri:
+                            item.imageUrl ||
+                            "https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png",
+                        }}
+                        onLoad={() => handleImageLoad(item._id)}
+                      />
                     </View>
-                  </TouchableOpacity>
-                );
-              })}
+                    <TouchableOpacity onPress={() => handleTemplatePress(item)}>
+                      <View style={styles.col_02}>
+                        <Text style={styles.bold_text}>
+                          {item.templateName}
+                        </Text>
+                        <Text style={styles.sub_text_style}>
+                          Location: {truncateText(item.location, 16)}
+                        </Text>
+                        <Text style={styles.sub_text_style}>
+                          Date: {item.date}{" "}
+                        </Text>
+                        <Text style={styles.sub_text_style}>
+                          Time: {item.time}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                    <View style={styles.col_03}>
+                      <TouchableOpacity
+                        style={styles.icon_style}
+                        onPress={() => {
+                          navigation.navigate("EditTemplate", { item: item });
+                        }}
+                      >
+                        <MaterialCommunityIcons
+                          name="square-edit-outline"
+                          size={responsiveFontSize(2.7)}
+                          color="#65676B"
+                        />
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        style={styles.icon_style1}
+                        onPress={() => handleDelete(item)}
+                      >
+                        <CustomDeleteIcon />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
             </ScrollView>
           </View>
         </View>
@@ -207,5 +236,4 @@ const SavedTemplatesScreen = ({ navigation }) => {
     </>
   );
 };
-
 export default SavedTemplatesScreen;
