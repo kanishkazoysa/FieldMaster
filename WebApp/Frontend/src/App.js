@@ -13,7 +13,7 @@ import Navbar from "./components/HomeComponents/navbar/Navbar";
 import Hero from "./components/HomeComponents/Hero/Hero";
 import About from "./components/HomeComponents/About";
 import Pricing from "./components/HomeComponents/Pricing";
-import Setup from "./components/HomeComponents/SetupCard";
+import Setup from "./components/HomeComponents/Setup";
 import ContactForm from "./components/HomeComponents/contact/contact";
 import "./index.css";
 import Home from "./pages/Home/Home";

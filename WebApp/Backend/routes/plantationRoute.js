@@ -235,6 +235,44 @@ router.get("/plantTypeFromManualCalculator", async (req, res) => {
         res.status(500).json({ status: "error", message: error.message });
     }
 });
+router.post("/plantation/:id", async (req, res) => {
+    const id = req.params.id;
+    const { textplantspace, textRowspace, textPlant, PlantSpaceUnitselectedValue, area } = req.body;
+  
+    try {
+        const plantSpacing = convertToCommonUnit(textplantspace, PlantSpaceUnitselectedValue);
+        const rowSpacing = convertToCommonUnit(textRowspace, PlantSpaceUnitselectedValue);
+        const numberOfPlants = calculateNumberOfPlants(area, plantSpacing, rowSpacing);
+        const calculatedPlantDensity = calculatePlantationDensity(area, plantSpacing, rowSpacing);
+
+        const updatedPlantation = await plantationModel.findOneAndUpdate(
+            { Id: id },
+            {
+                PlantType: textPlant,
+                PlantSpace: textplantspace,
+                RowSpace: textRowspace,
+                NoOfPlants: numberOfPlants,
+                PlantDensity: calculatedPlantDensity,
+                Unit: PlantSpaceUnitselectedValue,
+            },
+            { new: true }
+        );
+
+        if (!updatedPlantation) {
+            return res.status(404).json({ status: "error", data: "Plantation not found" });
+        }
+
+        res.json({
+            status: "ok",
+            data: "Plantation Updated",
+            numberOfPlants,
+            calculatedPlantDensity,
+            updatedPlantation,
+        });
+    } catch (error) {
+        res.status(500).json({ status: "error", data: error.message });
+    }
+});
 
 
 module.exports = router;

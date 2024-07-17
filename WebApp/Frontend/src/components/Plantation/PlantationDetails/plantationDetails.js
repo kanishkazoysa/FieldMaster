@@ -1,4 +1,3 @@
-
 import React from "react";
 import { FiTrash2 } from "react-icons/fi";
 import { useState, useEffect } from "react";
@@ -13,7 +12,7 @@ import { RxRowSpacing } from "react-icons/rx";
 import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
 import AxiosInstance from "../../../AxiosInstance";
 import Plantation from "../PlantationPage/plantation";
- 
+import { RiEditBoxLine } from "react-icons/ri"; 
 import { BeatLoader } from 'react-spinners';
 import TemplateDetails from "../../SavedTemplates/TemplateDetails"
 import { ExclamationCircleOutlined } from '@ant-design/icons';
@@ -36,7 +35,7 @@ export default function PlantationDetails({
     useState("");
   const [RowSpaceUnitselectedValue, setRowSpaceUnitselectedValue] =
     useState("");
-  
+  const [plantationdata,setplantationdata]=useState(null);
 
   const [textplantspace, settextplantspace] = useState("");
   const [textRowspace, settextRowspace] = useState("");
@@ -66,6 +65,7 @@ export default function PlantationDetails({
       try {
         const response = await AxiosInstance.get(`/api/plantation/numberOfPlants/${id}`);
         const data = response.data;
+        setplantationdata(data);
         setnumberOfPlants(data.numberOfPlants);
         setPlantDensity(data.PlantDensity);
         setArea(data.area);
@@ -101,23 +101,44 @@ export default function PlantationDetails({
       throw error; // Re-throw the error to handle it in the caller function
     }
   };
-  
-  const handleIconPress = (e) => {
-    confirm({
-      title: 'Are you sure?',
-      content: 'Do you want to delete Plantation?',
-      icon: <ExclamationCircleOutlined />,
-      okText: 'Yes',
+
+  const handleEditIconPressd = () => {
+    Modal.confirm({
+      title: 'Do you want to delete Fence data',
+      content: 'Choose an action:',
+      okText: 'Update',
+      cancelText: 'Close',
       okType: 'primary',
-      cancelText: 'No',
-      onOk() {
+      onOk: handleEditPlantationdata,
+      onCancel: () => {},
+      maskClosable: true,
+      closable: true,
+      footer: (_, { OkBtn, CancelBtn }) => (
+        <>
+          <CancelBtn />
+          <Button 
+            onClick={() => {
+              Modal.destroyAll(); // This closes all open modals
+              handleplantationdelte();
+            }} 
+            danger
+          >
+            Delete
+          </Button>
+          <OkBtn />
+        </>
+      ),
+    });
+  };
+  
+  const handleplantationdelte = () => {
         try {
           PlantationDelete(id)
             .then(() => {
               // Navigate to the desired screen
+              setplantationdata(null);
               setCurrentPage('Plantation');
               setAnimatePage(true);
-              e.preventDefault();
             })
             .catch((error) => {
               // Show detailed error message
@@ -130,19 +151,20 @@ export default function PlantationDetails({
         } catch (error) {
           console.error('Error:', error);
         }
-      },
-      onCancel() {
-        console.log('Cancelled');
-      },
-    });
-  };
+      };
+      
+const handleEditPlantationdata=()=>{
+  setCurrentPage("Plantation");
+    setAnimatePage(true);
+  
+};
   const handleback = () => {
     setCurrentPage("TemplateDetails");
     setAnimatePage(true);
   };
   const handleSave = () => {
     const htmlContent = getPlantationDetailsHtml(
-      PlantDensity,numberOfPlants,textPlant,textRowspace,textplantspace,perimeter,area);
+    PlantDensity,numberOfPlants,textPlant,textRowspace,textplantspace,perimeter,area);
     const newWindow = window.open();
     newWindow.document.write(htmlContent);
     newWindow.document.close();
@@ -164,9 +186,9 @@ export default function PlantationDetails({
           fontSize={20}
         />
         <p style={styles.titleText1}>Plantation Details</p>
-        <FiTrash2
-                onClick={handleIconPress}
-                style={styles.editorbutton}
+        <RiEditBoxLine
+                onClick={handleEditIconPressd}
+                style={styles.editorbuttondelete}
                 fontSize={19}
               />
       </div>
@@ -210,14 +232,14 @@ export default function PlantationDetails({
             <BsBoundingBox color="gray" size={28} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>{parseFloat(perimeter).toFixed(2)} km</p>
+              <p style={styles.propertyValue}>{formatArea(perimeter)} Km</p>
             </div>
           </div>
           <div className="property" style={styles.property}>
             <PiSquareDuotone color="gray" size={40} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
-              <p style={styles.propertyValue}>{formatArea(area)} Perches</p>
+              <p style={styles.propertyValue}>{formatArea(area)} Perch</p>
             </div>
           </div>
         </div>
@@ -312,6 +334,7 @@ export default function PlantationDetails({
             Perimeter={perimeter}
             onEditTemplateClick={onEditTemplateClick}
             template={template}
+            plantationdata={plantationdata}
           />
         )}
   
@@ -321,6 +344,7 @@ export default function PlantationDetails({
             id={id}
             onEditTemplateClick={onEditTemplateClick}
             template={template}
+            plantationdata={plantationdata}
           />
         )}
       </div>
