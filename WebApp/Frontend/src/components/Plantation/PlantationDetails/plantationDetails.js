@@ -1,5 +1,4 @@
 import React from "react";
-import { FiTrash2 } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import { MdArrowBack } from "react-icons/md";
 import { BsBoundingBox } from "react-icons/bs";
@@ -15,10 +14,8 @@ import Plantation from "../PlantationPage/plantation";
 import { RiEditBoxLine } from "react-icons/ri"; 
 import { BeatLoader } from 'react-spinners';
 import TemplateDetails from "../../SavedTemplates/TemplateDetails"
-import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal,Button} from "antd";
 import { getPlantationDetailsHtml } from "./plantationDetailsTemplate";
-const { confirm } = Modal;
 export default function PlantationDetails({
   onBackToSidebar,
   onEditTemplateClick,

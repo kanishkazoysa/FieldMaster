@@ -235,7 +235,7 @@ router.get("/plantTypeFromManualCalculator", async (req, res) => {
         res.status(500).json({ status: "error", message: error.message });
     }
 });
-router.post("/plantation/:id", async (req, res) => {
+router.put("/plantation/:id", async (req, res) => {
     const id = req.params.id;
     const { textplantspace, textRowspace, textPlant, PlantSpaceUnitselectedValue, area } = req.body;
   
