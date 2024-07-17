@@ -2,7 +2,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AxiosInstance = axios.create({
-  baseURL: "http://192.168.1.100:5000",
+  baseURL: "https://field-master-backen.vercel.app/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,7 +12,8 @@ AxiosInstance.interceptors.request.use(
   async (config) => {
     const token = await AsyncStorage.getItem("token");
     if (token) {
-      config.headers.authorization = `${token}`;
+      // Adjusting the token to include 'Bearer' prefix if required by your backend
+      config.headers.authorization = `Bearer ${token}`;
     }
     return config;
   },
