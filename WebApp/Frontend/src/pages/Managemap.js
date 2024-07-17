@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect ,useCallback} from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   GoogleMap,
   LoadScript,
@@ -10,7 +10,15 @@ import SideNavbar from "../components/SideNavbar/sideNavbar";
 import { styles, containerStyle } from "./ManagemapStyles";
 import AxiosInstance from "../AxiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
-import { FiMapPin, FiGrid, FiEdit, FiX, FiSave, FiTag,FiTrash2 } from "react-icons/fi";
+import {
+  FiMapPin,
+  FiGrid,
+  FiEdit,
+  FiX,
+  FiSave,
+  FiTag,
+  FiTrash2,
+} from "react-icons/fi";
 import { GiBulldozer } from "react-icons/gi";
 import { FaArrowPointer } from "react-icons/fa6";
 import { PiPlantLight } from "react-icons/pi";
@@ -24,7 +32,7 @@ import { GrCompliance } from "react-icons/gr";
 import PlantationSetupModal from "./PlantationSetupModal";
 import { TbFence } from "react-icons/tb";
 import FenceSetupModal from "./FenceSetupModal";
-import ClearLandSetupModal from './ClearLandSetupModal ';
+import ClearLandSetupModal from "./ClearLandSetupModal ";
 import TemplateDataModal from "./TemplateDataModal ";
 
 const { confirm } = Modal;
@@ -53,14 +61,15 @@ const Managemap = () => {
   const [isEditingPlantation, setIsEditingPlantation] = useState(false);
   const [isEditingFence, setIsEditingFence] = useState(false);
   const [fenceSetupModalVisible, setFenceSetupModalVisible] = useState(false);
-  const [clearLandSetupModalVisible, setClearLandSetupModalVisible] = useState(false);
+  const [clearLandSetupModalVisible, setClearLandSetupModalVisible] =
+    useState(false);
   const [clearLandSetupData, setClearLandSetupData] = useState({});
   const [drawingMode, setDrawingMode] = useState(null);
   const [multiSelectMode, setMultiSelectMode] = useState(false);
   const [multiSelectedPolygons, setMultiSelectedPolygons] = useState([]);
   const [templateData, setTemplateData] = useState(null);
-  const [templateDataModalVisible, setTemplateDataModalVisible] = useState(false);
-
+  const [templateDataModalVisible, setTemplateDataModalVisible] =
+    useState(false);
 
   const handleMapClick = () => {
     if (selectedPolygonIndex !== null) {
@@ -73,10 +82,12 @@ const Managemap = () => {
       const updatedPolygons = partitionPolygons.filter(
         (_, index) => !multiSelectedPolygons.includes(index)
       );
-  
+
       confirm({
         title: "Are you sure?",
-        content: `Do you want to delete ${multiSelectedPolygons.length} selected partition${multiSelectedPolygons.length > 1 ? 's' : ''}?`,
+        content: `Do you want to delete ${
+          multiSelectedPolygons.length
+        } selected partition${multiSelectedPolygons.length > 1 ? "s" : ""}?`,
         icon: <ExclamationCircleOutlined />,
         okText: "Yes",
         okType: "primary",
@@ -92,8 +103,11 @@ const Managemap = () => {
             setPartitionPolygons(updatedPolygons);
             setMultiSelectedPolygons([]);
             setMultiSelectMode(false);
-            message.success(`${multiSelectedPolygons.length} partition${multiSelectedPolygons.length > 1 ? 's' : ''} deleted successfully!`);
-            window.location.reload();
+            message.success(
+              `${multiSelectedPolygons.length} partition${
+                multiSelectedPolygons.length > 1 ? "s" : ""
+              } deleted successfully!`
+            );
           } catch (error) {
             console.error("Error deleting partition polygons:", error);
             message.error("Failed to delete partition polygons.");
@@ -119,9 +133,9 @@ const Managemap = () => {
 
   const handleMultiSelect = (index) => {
     if (multiSelectMode) {
-      setMultiSelectedPolygons(prevSelected => {
+      setMultiSelectedPolygons((prevSelected) => {
         if (prevSelected.includes(index)) {
-          return prevSelected.filter(i => i !== index);
+          return prevSelected.filter((i) => i !== index);
         } else {
           return [...prevSelected, index];
         }
@@ -141,14 +155,13 @@ const Managemap = () => {
       message.warning("Please select a partition first.");
     }
   };
-  
 
   const handleClearLandSetupSave = (data) => {
     setClearLandSetupData((prevData) => ({
       ...prevData,
       [selectedPolygonIndex]: data,
     }));
-  
+
     // Update the partitionPolygons state
     setPartitionPolygons((prevPolygons) => {
       const updatedPolygons = [...prevPolygons];
@@ -158,10 +171,10 @@ const Managemap = () => {
       };
       return updatedPolygons;
     });
-  
+
     // Save the updated data to the backend
     savePartitionPoints();
-  
+
     message.success("Clear land setup data saved successfully!");
     setClearLandSetupModalVisible(false);
   };
@@ -295,7 +308,7 @@ const Managemap = () => {
       setShowLabelInput(false);
       setLabelText("");
       message.success("Label deleted successfully");
-      
+
       // Save the updated data to the backend
       savePartitionPoints();
     }
@@ -336,7 +349,7 @@ const Managemap = () => {
     setPartitionPolygons((prevPolygons) => [...prevPolygons, newPolygon]);
     //setDrawingEnabled(false);
 
-      polygon.setMap(null);
+    polygon.setMap(null);
 
     // Show popup with area and perimeter
     Modal.info({
@@ -361,7 +374,6 @@ const Managemap = () => {
     };
   };
 
-
   const toggleDrawingMode = () => {
     setDrawingEnabled(true);
     setEditingPolygonIndex(null);
@@ -382,8 +394,7 @@ const Managemap = () => {
           ...polygon,
           plantationSetup: plantationSetupData[index] || {},
           fenceSetup: fenceSetupData[index] || {},
-          clearLandSetup: clearLandSetupData[index] || {}, 
-
+          clearLandSetup: clearLandSetupData[index] || {},
         })
       );
 
@@ -415,26 +426,35 @@ const Managemap = () => {
             const updatedPartitionPolygons = partitionPolygons.map(
               (polygon, index) => {
                 const updatedPolygon = { ...polygon };
-  
+
                 // Only include plantationSetup if it has content
-                if (plantationSetupData[index] && Object.keys(plantationSetupData[index]).length > 0) {
+                if (
+                  plantationSetupData[index] &&
+                  Object.keys(plantationSetupData[index]).length > 0
+                ) {
                   updatedPolygon.plantationSetup = plantationSetupData[index];
                 }
-  
+
                 // Only include fenceSetup if it has content
-                if (fenceSetupData[index] && Object.keys(fenceSetupData[index]).length > 0) {
+                if (
+                  fenceSetupData[index] &&
+                  Object.keys(fenceSetupData[index]).length > 0
+                ) {
                   updatedPolygon.fenceSetup = fenceSetupData[index];
                 }
-  
+
                 // Only include clearLandSetup if it has content
-                if (clearLandSetupData[index] && Object.keys(clearLandSetupData[index]).length > 0) {
+                if (
+                  clearLandSetupData[index] &&
+                  Object.keys(clearLandSetupData[index]).length > 0
+                ) {
                   updatedPolygon.clearLandSetup = clearLandSetupData[index];
                 }
-  
+
                 return updatedPolygon;
               }
             );
-  
+
             const response = await AxiosInstance.put(
               `/api/auth/mapTemplate/savePartitionPoints/${templateId}`,
               {
@@ -470,7 +490,6 @@ const Managemap = () => {
 
     console.log("Clear land data:", clearLandData);
 
-
     const styles = {
       modalContent: {
         fontFamily: "Arial, sans-serif",
@@ -502,17 +521,24 @@ const Managemap = () => {
     let modalContent = (
       <div style={styles.modalContent}>
         <p style={styles.paragraph}>
-          Area: <span style={styles.highlight}>{selectedPolygon.area} sq meters</span>
+          Area:{" "}
+          <span style={styles.highlight}>{selectedPolygon.area} sq meters</span>
         </p>
         <p style={styles.paragraph}>
-          Perimeter: <span style={styles.highlight}>{selectedPolygon.perimeter} meters</span>
+          Perimeter:{" "}
+          <span style={styles.highlight}>
+            {selectedPolygon.perimeter} meters
+          </span>
         </p>
         <p style={styles.paragraph}>
-          Label: <span style={styles.highlight}>{selectedPolygon.label || "No label"}</span>
+          Label:{" "}
+          <span style={styles.highlight}>
+            {selectedPolygon.label || "No label"}
+          </span>
         </p>
       </div>
     );
-  
+
     if (PlantationData) {
       modalContent = (
         <div style={styles.modalContent}>
@@ -520,64 +546,107 @@ const Managemap = () => {
           <div style={styles.firstSection}>
             <h4 style={styles.heading}>Plantation Data:</h4>
             <p style={styles.paragraph}>
-              Plant Type: <span style={styles.highlight}>{PlantationData.plantType || "N/A"}</span>
+              Plant Type:{" "}
+              <span style={styles.highlight}>
+                {PlantationData.plantType || "N/A"}
+              </span>
             </p>
             <p style={styles.paragraph}>
               Plant Spacing:{" "}
               <span style={styles.highlight}>
-                {PlantationData.plantSpacing ? PlantationData.plantSpacing.toFixed(2) : "N/A"} meters
+                {PlantationData.plantSpacing
+                  ? PlantationData.plantSpacing.toFixed(2)
+                  : "N/A"}{" "}
+                meters
               </span>
             </p>
             <p style={styles.paragraph}>
               Row Spacing:{" "}
               <span style={styles.highlight}>
-                {PlantationData.rowSpacing ? PlantationData.rowSpacing.toFixed(2) : "N/A"} meters
+                {PlantationData.rowSpacing
+                  ? PlantationData.rowSpacing.toFixed(2)
+                  : "N/A"}{" "}
+                meters
               </span>
             </p>
             <p style={styles.paragraph}>
-              Number of Plants: <span style={styles.highlight}>{PlantationData.numberOfPlants || "N/A"}</span>
+              Number of Plants:{" "}
+              <span style={styles.highlight}>
+                {PlantationData.numberOfPlants || "N/A"}
+              </span>
             </p>
             <p style={styles.paragraph}>
               Plantation Density:{" "}
               <span style={styles.highlight}>
-                {PlantationData.plantationDensity ? PlantationData.plantationDensity.toFixed(2) : "N/A"} plants/sq m
+                {PlantationData.plantationDensity
+                  ? PlantationData.plantationDensity.toFixed(2)
+                  : "N/A"}{" "}
+                plants/sq m
               </span>
             </p>
-            {PlantationData.fertilizerData && 
-             Object.values(PlantationData.fertilizerData).some(value => value !== null && value !== undefined && value !== "" && !isNaN(value)) && (
+            {PlantationData.fertilizerData &&
+              Object.values(PlantationData.fertilizerData).some(
+                (value) =>
+                  value !== null &&
+                  value !== undefined &&
+                  value !== "" &&
+                  !isNaN(value)
+              ) && (
                 <div style={styles.section}>
                   <h4 style={styles.heading}>Fertilizer Data:</h4>
                   {PlantationData.fertilizerData.fertilizerType && (
                     <p style={styles.paragraph}>
-                      Fertilizer Type: <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerType}</span>
+                      Fertilizer Type:{" "}
+                      <span style={styles.highlight}>
+                        {PlantationData.fertilizerData.fertilizerType}
+                      </span>
                     </p>
                   )}
                   {PlantationData.fertilizerData.fertilizerFrequency && (
                     <p style={styles.paragraph}>
-                      Frequency: <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerFrequency}</span>
+                      Frequency:{" "}
+                      <span style={styles.highlight}>
+                        {PlantationData.fertilizerData.fertilizerFrequency}
+                      </span>
                     </p>
                   )}
                   {PlantationData.fertilizerData.fertilizerTimes && (
                     <p style={styles.paragraph}>
-                      Times: <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerTimes}</span>
+                      Times:{" "}
+                      <span style={styles.highlight}>
+                        {PlantationData.fertilizerData.fertilizerTimes}
+                      </span>
                     </p>
                   )}
                   {PlantationData.fertilizerData.fertilizerAmount && (
                     <p style={styles.paragraph}>
-                      Amount: <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerAmount} {PlantationData.fertilizerData.fertilizerUnit || ""}</span>{" "}
-                      
+                      Amount:{" "}
+                      <span style={styles.highlight}>
+                        {PlantationData.fertilizerData.fertilizerAmount}{" "}
+                        {PlantationData.fertilizerData.fertilizerUnit || ""}
+                      </span>{" "}
                     </p>
                   )}
                   {PlantationData.fertilizerData.totalFertilizerPerYear && (
                     <p style={styles.paragraph}>
                       Total Fertilizer per Year:{" "}
-                      <span style={styles.highlight}>{PlantationData.fertilizerData.totalFertilizerPerYear.toFixed(2)} kg</span>
+                      <span style={styles.highlight}>
+                        {PlantationData.fertilizerData.totalFertilizerPerYear.toFixed(
+                          2
+                        )}{" "}
+                        kg
+                      </span>
                     </p>
                   )}
                   {PlantationData.fertilizerData.fertilizerPerPlant && (
                     <p style={styles.paragraph}>
                       Fertilizer per Plant:{" "}
-                      <span style={styles.highlight}>{PlantationData.fertilizerData.fertilizerPerPlant.toFixed(2)} kg</span>
+                      <span style={styles.highlight}>
+                        {PlantationData.fertilizerData.fertilizerPerPlant.toFixed(
+                          2
+                        )}{" "}
+                        kg
+                      </span>
                     </p>
                   )}
                 </div>
@@ -586,188 +655,258 @@ const Managemap = () => {
         </div>
       );
     }
-  
-    if (fenceData && Object.keys(fenceData).length > 0 && 
-    (fenceData.fenceType || fenceData.postSpacing || fenceData.numberOfSticks || 
-     (fenceData.gates && fenceData.gates.length > 0))) {
-  modalContent = (
-    <div style={styles.modalContent}>
-      {modalContent}
-      <div style={styles.section}>
-        <h4 style={styles.heading}>Fence Data:</h4>
-        {fenceData.fenceType && (
-          <p style={styles.paragraph}>
-            Fence Type: <span style={styles.highlight}>{fenceData.fenceType}</span>
-          </p>
-        )}
-        {fenceData.postSpacing && (
-          <p style={styles.paragraph}>
-            Post Spacing: <span style={styles.highlight}>{fenceData.postSpacing} {fenceData.postSpacingUnit}</span> 
-          </p>
-        )}
-        {fenceData.numberOfSticks && (
-          <p style={styles.paragraph}>
-            Number of Sticks: <span style={styles.highlight}>{fenceData.numberOfSticks}</span>
-          </p>
-        )}
-        {fenceData.gates && fenceData.gates.length > 0 && (
-          <>
-            <h6 style={{marginTop: "0.2em"}}>Gates:</h6>
-            {fenceData.gates.map((gate, idx) => (
-              <p key={idx} style={styles.paragraph}>
-                Gate {idx + 1}: <span style={styles.highlight}>{gate.length}m x {gate.count}</span>
-              </p>
-            ))}
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
 
-if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandData).length > 0 && (clearLandData.weedData.weedType|| clearLandData.plantData.plantList || clearLandData.stoneData.stoneList)) {
-  modalContent = (
-    <div style={styles.modalContent}>
-      {modalContent}
-      <div style={styles.section}>
-       
-        
-        {/* Weed Data */}
-        
-        {clearLandData.weedData && typeof clearLandData.weedData === 'object' && (
-          <div>
-           {clearLandData.weedData.weedType && (
-  <>
-   <h4 style={styles.heading}>Clear Land Data:</h4>
-    <h6 style={{ marginTop: "0.2em" }}>Weed Data:</h6>
-    <p style={styles.paragraph}>
-      Weed Type: <span style={styles.highlight}>{clearLandData.weedData.weedType}</span>
-    </p>
-  </>
-)}
-
-            {clearLandData.weedData.labourCount && (
+    if (
+      fenceData &&
+      Object.keys(fenceData).length > 0 &&
+      (fenceData.fenceType ||
+        fenceData.postSpacing ||
+        fenceData.numberOfSticks ||
+        (fenceData.gates && fenceData.gates.length > 0))
+    ) {
+      modalContent = (
+        <div style={styles.modalContent}>
+          {modalContent}
+          <div style={styles.section}>
+            <h4 style={styles.heading}>Fence Data:</h4>
+            {fenceData.fenceType && (
               <p style={styles.paragraph}>
-                Labour Count: <span style={styles.highlight}>{clearLandData.weedData.labourCount}</span>
+                Fence Type:{" "}
+                <span style={styles.highlight}>{fenceData.fenceType}</span>
               </p>
             )}
-            {clearLandData.weedData.workHours && (
+            {fenceData.postSpacing && (
               <p style={styles.paragraph}>
-                Work Hours: <span style={styles.highlight}>{clearLandData.weedData.workHours}</span>
+                Post Spacing:{" "}
+                <span style={styles.highlight}>
+                  {fenceData.postSpacing} {fenceData.postSpacingUnit}
+                </span>
               </p>
             )}
-            {clearLandData.weedData.machineList && clearLandData.weedData.machineList.length > 0 && (
-              <>
-              <div style={styles.paragraph}>
-                <h6 style={{marginTop: "0.2em"}}>Machines:</h6>
-                {clearLandData.weedData.machineList.map((machine, idx) => (
-                  <p key={idx} style={styles.highlight}>{machine}</p>
-                ))}
-              </div>
-              </>
-            )}
-            {clearLandData.weedData.weedCalculationResults && (
-              <div>
-                <h6 style={{marginTop: "0.2em"}}>Weed Efforrt Output:</h6>
-                <p style={styles.paragraph}>
-                  Total Hours For Weeding: <span style={styles.highlight}>{clearLandData.weedData.weedCalculationResults.weedEffort.toFixed(2)}</span>
-                </p>
-                {/* <p style={styles.paragraph}>
-                  Total Time: <span style={styles.highlight}>{clearLandData.weedData.weedCalculationResults.totalTime}</span>
-                </p> */}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Plant Data */}
-        {clearLandData.plantData && (
-          <div>
-            
-            {clearLandData.plantData.plantList && clearLandData.plantData.plantList.length > 0 && (
-              <>
-              <h5 style={styles.heading}>Plant Data:</h5>
-                <h6 style={styles.heading}>Plants:</h6>
-                {clearLandData.plantData.plantList.map((plant, idx) => (
-                  <p key={idx} style={styles.highlight}>
-                    {plant}
-                    </p>
-                ))} 
-              </>
-            )}
-            {clearLandData.plantData.plantWorkHours && (
+            {fenceData.numberOfSticks && (
               <p style={styles.paragraph}>
-                Plant Work Hours: <span style={styles.highlight}>{clearLandData.plantData.plantWorkHours}</span>
+                Number of Sticks:{" "}
+                <span style={styles.highlight}>{fenceData.numberOfSticks}</span>
               </p>
             )}
-            {clearLandData.plantData.plantMachineList && clearLandData.plantData.plantMachineList.length > 0 && (
+            {fenceData.gates && fenceData.gates.length > 0 && (
               <>
-                <h6 style={{marginTop: "0.2em"}}>Plant Machines:</h6>
-                {clearLandData.plantData.plantMachineList.map((machine, idx) => (
-                  <p key={idx} style={styles.highlight}>{machine}</p>
-                ))}
-              </>
-            )}
-            {clearLandData.plantData.plantCalculationResults && (
-              <div>
-                <h6 style={{marginTop: "0.2em"}}>plants Efforrt Output:</h6>
-                <p style={styles.paragraph}>
-                Total Hours For clear plants: <span style={styles.highlight}>{clearLandData.plantData.plantCalculationResults.plantEffort.toFixed(2)}</span>
-                </p>
-                {/* <p style={styles.paragraph}>
-                  Total Time: <span style={styles.highlight}>{clearLandData.plantData.plantCalculationResults.totalTime}</span>
-                </p> */}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Stone Data */}
-        {clearLandData.stoneData && (
-          <div>
-            {clearLandData.stoneData.stoneList && clearLandData.stoneData.stoneList.length > 0 && (
-              <>
-               <h5 style={styles.heading}>Stone Data:</h5>
-                <h6 style={styles.heading}>Stones:</h6>
-                {clearLandData.stoneData.stoneList.map((stone, idx) => (
-                  <p key={idx} style={styles.highlight}>
-                    {stone}
+                <h6 style={{ marginTop: "0.2em" }}>Gates:</h6>
+                {fenceData.gates.map((gate, idx) => (
+                  <p key={idx} style={styles.paragraph}>
+                    Gate {idx + 1}:{" "}
+                    <span style={styles.highlight}>
+                      {gate.length}m x {gate.count}
+                    </span>
                   </p>
                 ))}
               </>
             )}
-            {clearLandData.stoneData.stoneWorkHours && (
-              <p style={styles.paragraph}>
-                Stone Work Hours: <span style={styles.highlight}>{clearLandData.stoneData.stoneWorkHours}</span>
-              </p>
-            )}
-            {clearLandData.stoneData.stoneMachineList && clearLandData.stoneData.stoneMachineList.length > 0 && (
-              <>
-                <h6 style={{marginTop: "0.2em"}}>Stone Machines:</h6>
-                {clearLandData.stoneData.stoneMachineList.map((machine, idx) => (
-                  <p key={idx} style={styles.highlight}>{machine}</p>
-                ))}
-              </>
-            )}
-            {clearLandData.stoneData.stoneCalculationResults && (
+          </div>
+        </div>
+      );
+    }
+
+    if (
+      clearLandData &&
+      typeof clearLandData === "object" &&
+      Object.keys(clearLandData).length > 0 &&
+      (clearLandData.weedData.weedType ||
+        clearLandData.plantData.plantList ||
+        clearLandData.stoneData.stoneList)
+    ) {
+      modalContent = (
+        <div style={styles.modalContent}>
+          {modalContent}
+          <div style={styles.section}>
+            {/* Weed Data */}
+
+            {clearLandData.weedData &&
+              typeof clearLandData.weedData === "object" && (
+                <div>
+                  {clearLandData.weedData.weedType && (
+                    <>
+                      <h4 style={styles.heading}>Clear Land Data:</h4>
+                      <h6 style={{ marginTop: "0.2em" }}>Weed Data:</h6>
+                      <p style={styles.paragraph}>
+                        Weed Type:{" "}
+                        <span style={styles.highlight}>
+                          {clearLandData.weedData.weedType}
+                        </span>
+                      </p>
+                    </>
+                  )}
+
+                  {clearLandData.weedData.labourCount && (
+                    <p style={styles.paragraph}>
+                      Labour Count:{" "}
+                      <span style={styles.highlight}>
+                        {clearLandData.weedData.labourCount}
+                      </span>
+                    </p>
+                  )}
+                  {clearLandData.weedData.workHours && (
+                    <p style={styles.paragraph}>
+                      Work Hours:{" "}
+                      <span style={styles.highlight}>
+                        {clearLandData.weedData.workHours}
+                      </span>
+                    </p>
+                  )}
+                  {clearLandData.weedData.machineList &&
+                    clearLandData.weedData.machineList.length > 0 && (
+                      <>
+                        <div style={styles.paragraph}>
+                          <h6 style={{ marginTop: "0.2em" }}>Machines:</h6>
+                          {clearLandData.weedData.machineList.map(
+                            (machine, idx) => (
+                              <p key={idx} style={styles.highlight}>
+                                {machine}
+                              </p>
+                            )
+                          )}
+                        </div>
+                      </>
+                    )}
+                  {clearLandData.weedData.weedCalculationResults && (
+                    <div>
+                      <h6 style={{ marginTop: "0.2em" }}>
+                        Weed Efforrt Output:
+                      </h6>
+                      <p style={styles.paragraph}>
+                        Total Hours For Weeding:{" "}
+                        <span style={styles.highlight}>
+                          {clearLandData.weedData.weedCalculationResults.weedEffort.toFixed(
+                            2
+                          )}
+                        </span>
+                      </p>
+                      {/* <p style={styles.paragraph}>
+                  Total Time: <span style={styles.highlight}>{clearLandData.weedData.weedCalculationResults.totalTime}</span>
+                </p> */}
+                    </div>
+                  )}
+                </div>
+              )}
+
+            {/* Plant Data */}
+            {clearLandData.plantData && (
               <div>
-                <h6 style={{marginTop: "0.2em"}}>Stone Efforrt Output:</h6>
-                <p style={styles.paragraph}>
-                Total Hours For Stone Cleaning: <span style={styles.highlight}>{clearLandData.stoneData.stoneCalculationResults.stoneEffort.toFixed(2)}</span>
-                </p>
-                {/* <p style={styles.paragraph}>
+                {clearLandData.plantData.plantList &&
+                  clearLandData.plantData.plantList.length > 0 && (
+                    <>
+                      <h5 style={styles.heading}>Plant Data:</h5>
+                      <h6 style={styles.heading}>Plants:</h6>
+                      {clearLandData.plantData.plantList.map((plant, idx) => (
+                        <p key={idx} style={styles.highlight}>
+                          {plant}
+                        </p>
+                      ))}
+                    </>
+                  )}
+                {clearLandData.plantData.plantWorkHours && (
+                  <p style={styles.paragraph}>
+                    Plant Work Hours:{" "}
+                    <span style={styles.highlight}>
+                      {clearLandData.plantData.plantWorkHours}
+                    </span>
+                  </p>
+                )}
+                {clearLandData.plantData.plantMachineList &&
+                  clearLandData.plantData.plantMachineList.length > 0 && (
+                    <>
+                      <h6 style={{ marginTop: "0.2em" }}>Plant Machines:</h6>
+                      {clearLandData.plantData.plantMachineList.map(
+                        (machine, idx) => (
+                          <p key={idx} style={styles.highlight}>
+                            {machine}
+                          </p>
+                        )
+                      )}
+                    </>
+                  )}
+                {clearLandData.plantData.plantCalculationResults && (
+                  <div>
+                    <h6 style={{ marginTop: "0.2em" }}>
+                      plants Efforrt Output:
+                    </h6>
+                    <p style={styles.paragraph}>
+                      Total Hours For clear plants:{" "}
+                      <span style={styles.highlight}>
+                        {clearLandData.plantData.plantCalculationResults.plantEffort.toFixed(
+                          2
+                        )}
+                      </span>
+                    </p>
+                    {/* <p style={styles.paragraph}>
+                  Total Time: <span style={styles.highlight}>{clearLandData.plantData.plantCalculationResults.totalTime}</span>
+                </p> */}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Stone Data */}
+            {clearLandData.stoneData && (
+              <div>
+                {clearLandData.stoneData.stoneList &&
+                  clearLandData.stoneData.stoneList.length > 0 && (
+                    <>
+                      <h5 style={styles.heading}>Stone Data:</h5>
+                      <h6 style={styles.heading}>Stones:</h6>
+                      {clearLandData.stoneData.stoneList.map((stone, idx) => (
+                        <p key={idx} style={styles.highlight}>
+                          {stone}
+                        </p>
+                      ))}
+                    </>
+                  )}
+                {clearLandData.stoneData.stoneWorkHours && (
+                  <p style={styles.paragraph}>
+                    Stone Work Hours:{" "}
+                    <span style={styles.highlight}>
+                      {clearLandData.stoneData.stoneWorkHours}
+                    </span>
+                  </p>
+                )}
+                {clearLandData.stoneData.stoneMachineList &&
+                  clearLandData.stoneData.stoneMachineList.length > 0 && (
+                    <>
+                      <h6 style={{ marginTop: "0.2em" }}>Stone Machines:</h6>
+                      {clearLandData.stoneData.stoneMachineList.map(
+                        (machine, idx) => (
+                          <p key={idx} style={styles.highlight}>
+                            {machine}
+                          </p>
+                        )
+                      )}
+                    </>
+                  )}
+                {clearLandData.stoneData.stoneCalculationResults && (
+                  <div>
+                    <h6 style={{ marginTop: "0.2em" }}>
+                      Stone Efforrt Output:
+                    </h6>
+                    <p style={styles.paragraph}>
+                      Total Hours For Stone Cleaning:{" "}
+                      <span style={styles.highlight}>
+                        {clearLandData.stoneData.stoneCalculationResults.stoneEffort.toFixed(
+                          2
+                        )}
+                      </span>
+                    </p>
+                    {/* <p style={styles.paragraph}>
                   Total Time: <span style={styles.highlight}>{clearLandData.stoneData.stoneCalculationResults.totalTime}</span>
                 </p> */}
+                  </div>
+                )}
               </div>
             )}
           </div>
-        )}
-      </div>
-    </div>
-  );
-}
+        </div>
+      );
+    }
 
-  
     Modal.info({
       title: "Partition Statistics",
       content: modalContent,
@@ -801,7 +940,6 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
             setPartitionPolygons(updatedPolygons); // Update state after successful save
             setSelectedPolygonIndex(null);
             message.success("Partition polygon deleted successfully!"); // Use message.success for success
-            window.location.reload(); // Refresh the page
           } catch (error) {
             console.error("Error deleting partition polygon:", error);
             message.error("Failed to delete partition polygon."); // Use message.error for error
@@ -889,7 +1027,6 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
     setEditingPolygonIndex(null);
     setUndoStack([]);
     savePartitionPoints();
-    window.location.reload();
   };
 
   useEffect(() => {
@@ -927,22 +1064,24 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
         setPlantationSetupData(fetchedPlantationSetupData);
         setFenceSetupData(fetchedFenceSetupData);
         setClearLandSetupData(fetchedClearLandSetupData);
-        console.log("Fetched clear land setup data:", fetchedClearLandSetupData);
+        console.log(
+          "Fetched clear land setup data:",
+          fetchedClearLandSetupData
+        );
 
-  
         const avgLatitude =
           fetchedPoints.reduce((total, point) => total + point.latitude, 0) /
           fetchedPoints.length;
         const avgLongitude =
           fetchedPoints.reduce((total, point) => total + point.longitude, 0) /
           fetchedPoints.length;
-  
+
         setCenter({ lat: avgLatitude, lng: avgLongitude });
       } catch (error) {
         console.error("An error occurred while fetching the template:", error);
       }
     };
-  
+
     fetchTemplateData();
   }, [templateId]);
   const toggleMapType = () => {
@@ -957,7 +1096,7 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
 
   const mapOptions = useCallback(() => {
     if (!window.google || typeof window.google === "undefined") return {};
-  
+
     return {
       minZoom: 2,
       maxZoom: 40,
@@ -993,8 +1132,6 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
 
   return (
     <div style={styles.container}>
-    
-
       <LoadScript
         googleMapsApiKey={process.env.REACT_APP_GOOGLE_CLOUD_API_KEY}
         libraries={["places", "drawing", "geometry"]}
@@ -1031,16 +1168,30 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
                   lng: point.longitude,
                 }))}
                 options={{
-                  strokeColor: (multiSelectMode && multiSelectedPolygons.includes(index)) || (!multiSelectMode && selectedPolygonIndex === index) ? "#00B640" : "#0000FF",
+                  strokeColor:
+                    (multiSelectMode &&
+                      multiSelectedPolygons.includes(index)) ||
+                    (!multiSelectMode && selectedPolygonIndex === index)
+                      ? "#00B640"
+                      : "#0000FF",
                   strokeOpacity: 1.0,
                   strokeWeight: 2,
-                  fillColor: (multiSelectMode && multiSelectedPolygons.includes(index)) || (!multiSelectMode && selectedPolygonIndex === index) ? "rgba(0, 182, 64, 0.2)" : "rgba(0, 0, 255, 0.2)",
+                  fillColor:
+                    (multiSelectMode &&
+                      multiSelectedPolygons.includes(index)) ||
+                    (!multiSelectMode && selectedPolygonIndex === index)
+                      ? "rgba(0, 182, 64, 0.2)"
+                      : "rgba(0, 0, 255, 0.2)",
                   fillOpacity: 0.4,
                   zIndex: 2,
                   editable: editingPolygonIndex === index,
                   clickable: true,
                 }}
-                onClick={() => multiSelectMode ? handleMultiSelect(index) : handlePolygonClick(index)}
+                onClick={() =>
+                  multiSelectMode
+                    ? handleMultiSelect(index)
+                    : handlePolygonClick(index)
+                }
                 onMouseUp={() => handlePolygonEdit(index)}
                 onLoad={(polygon) => {
                   polygonRefs.current[index] = polygon;
@@ -1072,16 +1223,17 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
 
           {drawingEnabled && (
             <DrawingManager
-            onLoad={(drawingManager) => {
-              drawingManagerRef.current = drawingManager;
-            }}
-                          onPolygonComplete={handleGeofenceComplete}
+              onLoad={(drawingManager) => {
+                drawingManagerRef.current = drawingManager;
+              }}
+              onPolygonComplete={handleGeofenceComplete}
               options={{
-                drawingControl: true,
+                drawingControl: false,
                 drawingControlOptions: {
                   position: window.google.maps.ControlPosition.TOP_CENTER,
-                  drawingModes: [window.google.maps.drawing.OverlayType.POLYGON],
-
+                  drawingModes: [
+                    window.google.maps.drawing.OverlayType.POLYGON,
+                  ],
                 },
                 polygonOptions: {
                   fillColor: "#0000FF",
@@ -1093,7 +1245,8 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
                   clickable: true,
                   zIndex: 2,
                 },
-                drawingMode: drawingMode,              }}
+                drawingMode: drawingMode,
+              }}
             />
           )}
 
@@ -1103,12 +1256,12 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
             <p style={styles.toolTitle}>Tools</p>
             <hr style={styles.toolHr}></hr>
             <Button
-  onClick={() => setTemplateDataModalVisible(true)}
-  icon={<BsClipboardData />}
-  style={styles.toolButton}
->
-  Template Data
-</Button>
+              onClick={() => setTemplateDataModalVisible(true)}
+              icon={<BsClipboardData />}
+              style={styles.toolButton}
+            >
+              Template Data
+            </Button>
             <Button
               onClick={toggleDrawingMode}
               icon={<FiGrid />}
@@ -1133,29 +1286,31 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
             </Button>
 
             {selectedPolygonIndex === null && (
-    <Button
-      onClick={toggleMultiSelectMode}
-      icon={<PiSelectionForeground />}
-      style={{
-        ...styles.toolButton,
-        backgroundColor: multiSelectMode ? "#4CAF50" : undefined,
-        color: multiSelectMode ? "white" : undefined,
-      }}
-    >
-      {multiSelectMode ? "Exit Multi-Select" : "Select Multiple"}
-    </Button>
-  )}
+              <Button
+                onClick={toggleMultiSelectMode}
+                icon={<PiSelectionForeground />}
+                style={{
+                  ...styles.toolButton,
+                  backgroundColor: multiSelectMode ? "#4CAF50" : undefined,
+                  color: multiSelectMode ? "white" : undefined,
+                }}
+              >
+                {multiSelectMode ? "Exit Multi-Select" : "Select Multiple"}
+              </Button>
+            )}
 
-{multiSelectMode &&  (
-  <Button
-    onClick={deleteSelectedPolygons}
-    icon={<MdDeleteForever />}
-    style={styles.toolButton}
-    disabled={multiSelectedPolygons.length === 0}
-  >
-    <span style={{ fontSize: "10px" }}>Delete Selected ({multiSelectedPolygons.length})</span>
-  </Button>
-)}
+            {multiSelectMode && (
+              <Button
+                onClick={deleteSelectedPolygons}
+                icon={<MdDeleteForever />}
+                style={styles.toolButton}
+                disabled={multiSelectedPolygons.length === 0}
+              >
+                <span style={{ fontSize: "10px" }}>
+                  Delete Selected ({multiSelectedPolygons.length})
+                </span>
+              </Button>
+            )}
             {selectedPolygonIndex !== null && (
               <>
                 <Button
@@ -1190,53 +1345,52 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
                   </Button>
                 )}
 
-              {showLabelInput && (
-              <div>
-                <Input
-                  value={labelText}
-                  onChange={(e) => setLabelText(e.target.value)}
-                  placeholder="Enter label"
-                  style={{
-                    ...styles.toolButton,
-                    borderColor: "#4CAF50",
-                    borderWidth: "1px",
-                    borderStyle: "solid",
-                    outline: "none",
-                    boxShadow: "none",
-                  }}
-                />
-                <Button
-                  onClick={handleLabelSubmit}
-                  style={{
-                    ...styles.toolButton,
-                    backgroundColor: "#4CAF50",
-                    borderColor: "#4CAF50",
-                    color: "white",
-                  }}
-                >
-                  {partitionPolygons[selectedPolygonIndex].label
-                    ? "Update Label"
-                    : "Submit Label"}
-                </Button>
+                {showLabelInput && (
+                  <div>
+                    <Input
+                      value={labelText}
+                      onChange={(e) => setLabelText(e.target.value)}
+                      placeholder="Enter label"
+                      style={{
+                        ...styles.toolButton,
+                        borderColor: "#4CAF50",
+                        borderWidth: "1px",
+                        borderStyle: "solid",
+                        outline: "none",
+                        boxShadow: "none",
+                      }}
+                    />
+                    <Button
+                      onClick={handleLabelSubmit}
+                      style={{
+                        ...styles.toolButton,
+                        backgroundColor: "#4CAF50",
+                        borderColor: "#4CAF50",
+                        color: "white",
+                      }}
+                    >
+                      {partitionPolygons[selectedPolygonIndex].label
+                        ? "Update Label"
+                        : "Submit Label"}
+                    </Button>
 
-                {partitionPolygons[selectedPolygonIndex].label && (
-              <Button
-                onClick={handleDeleteLabel}
-                style={{
-                  ...styles.toolButton,
-                  backgroundColor: "#FF4136",
-                  borderColor: "#FF4136",
-                  color: "white",
-                  flex: 1,
-                  marginLeft: '5px'
-                }}
-              >
-                Delete Label
-              </Button>
-            )}
-              </div>
-            )}              
-
+                    {partitionPolygons[selectedPolygonIndex].label && (
+                      <Button
+                        onClick={handleDeleteLabel}
+                        style={{
+                          ...styles.toolButton,
+                          backgroundColor: "#FF4136",
+                          borderColor: "#FF4136",
+                          color: "white",
+                          flex: 1,
+                          marginLeft: "5px",
+                        }}
+                      >
+                        Delete Label
+                      </Button>
+                    )}
+                  </div>
+                )}
 
                 {plantationSetupData[selectedPolygonIndex] ? (
                   <Button
@@ -1256,50 +1410,51 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
                   </Button>
                 )}
 
-{fenceSetupData[selectedPolygonIndex]  ? (
-      <Button
-        onClick={handleEditFenceSetup}
-        icon={<TbFence />}
-        style={styles.toolButton}
-      >
-        Edit Fence
-      </Button>
-    ) : (
-      <Button
-        onClick={handleFenceSetup}
-        icon={<TbFence />}
-        style={styles.toolButton}
-      >
-        Fence Setup
-      </Button>
-    )}
+                {fenceSetupData[selectedPolygonIndex] ? (
+                  <Button
+                    onClick={handleEditFenceSetup}
+                    icon={<TbFence />}
+                    style={styles.toolButton}
+                  >
+                    Edit Fence
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleFenceSetup}
+                    icon={<TbFence />}
+                    style={styles.toolButton}
+                  >
+                    Fence Setup
+                  </Button>
+                )}
 
-{clearLandSetupData[selectedPolygonIndex] && typeof clearLandSetupData[selectedPolygonIndex] === 'object' && Object.keys(clearLandSetupData[selectedPolygonIndex]).length > 0  && (clearLandSetupData[selectedPolygonIndex].weedData.weedType|| clearLandSetupData[selectedPolygonIndex].plantData.plantList || clearLandSetupData[selectedPolygonIndex].stoneData.stoneList) 
- ? (
-  <Button
-    onClick={handleClearLandSetup}
-    icon={<GiBulldozer
-    size={15} />}
-    style={styles.toolButton}
-  >
-   Clear Land
-  </Button>
-) : (
-  <Button
-    onClick={handleClearLandSetup}
-    icon={<FiTrash2 />}
-    style={styles.toolButton}
-  >
-    Clear Land
-  </Button>
-)}
-
-
+                {clearLandSetupData[selectedPolygonIndex] &&
+                typeof clearLandSetupData[selectedPolygonIndex] === "object" &&
+                Object.keys(clearLandSetupData[selectedPolygonIndex]).length >
+                  0 &&
+                (clearLandSetupData[selectedPolygonIndex].weedData.weedType ||
+                  clearLandSetupData[selectedPolygonIndex].plantData
+                    .plantList ||
+                  clearLandSetupData[selectedPolygonIndex].stoneData
+                    .stoneList) ? (
+                  <Button
+                    onClick={handleClearLandSetup}
+                    icon={<GiBulldozer size={15} />}
+                    style={styles.toolButton}
+                  >
+                    Clear Land
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleClearLandSetup}
+                    icon={<FiTrash2 />}
+                    style={styles.toolButton}
+                  >
+                    Clear Land
+                  </Button>
+                )}
               </>
             )}
-            
-
-            
 
             {editingPolygonIndex !== null && (
               <>
@@ -1348,28 +1503,32 @@ if (clearLandData && typeof clearLandData === 'object' && Object.keys(clearLandD
 
           <FenceSetupModal
             visible={fenceSetupModalVisible}
-            onClose={() => {setFenceSetupModalVisible(false);
-              setIsEditingFence(false);} }
+            onClose={() => {
+              setFenceSetupModalVisible(false);
+              setIsEditingFence(false);
+            }}
             area={selectedPolygonData?.area}
             perimeter={selectedPolygonData?.perimeter}
             onSave={handleFenceSetupSave}
-            existingData={isEditingFence ? fenceSetupData[selectedPolygonIndex] : null}
+            existingData={
+              isEditingFence ? fenceSetupData[selectedPolygonIndex] : null
+            }
           />
 
-<ClearLandSetupModal
-  visible={clearLandSetupModalVisible}
-  onClose={() => setClearLandSetupModalVisible(false)}
-  area={selectedPolygonData?.area}
-  perimeter={selectedPolygonData?.perimeter}
-  onSave={handleClearLandSetupSave}
-  existingData={clearLandSetupData[selectedPolygonIndex]}
-/>
+          <ClearLandSetupModal
+            visible={clearLandSetupModalVisible}
+            onClose={() => setClearLandSetupModalVisible(false)}
+            area={selectedPolygonData?.area}
+            perimeter={selectedPolygonData?.perimeter}
+            onSave={handleClearLandSetupSave}
+            existingData={clearLandSetupData[selectedPolygonIndex]}
+          />
 
-<TemplateDataModal
-  visible={templateDataModalVisible}
-  onClose={() => setTemplateDataModalVisible(false)}
-  data={templateData}
-/>
+          <TemplateDataModal
+            visible={templateDataModalVisible}
+            onClose={() => setTemplateDataModalVisible(false)}
+            data={templateData}
+          />
         </GoogleMap>
       </LoadScript>
     </div>
