@@ -13,7 +13,7 @@ import {
   Popconfirm,
   message,
 } from "antd";
-import { DeleteOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined,  SearchOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
 
@@ -98,11 +98,6 @@ const EmailManage = () => {
       console.error("Failed to delete submission:", error);
       message.error("Failed to delete submission");
     }
-  };
-
-  const handleView = (submission) => {
-    setSelectedSubmission(submission);
-    setIsViewModalVisible(true);
   };
 
   const handleSearch = (value) => {

@@ -289,8 +289,8 @@ router.get("/getAllmapData/:id", async (req, res) => {
         stoneDetails: ClearLand.StoneDetails,
         machineDetails: ClearLand.MachineDetails,
       } : null,
-      locationPoints: map.locationPoints,
       
+      locationPoints: map.locationPoints,
     };
 
     res.json(response);

@@ -11,12 +11,16 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.kanishkazoysa.fieldmaster",
       "infoPlist": {
-        "UIBackgroundModes": ["location"]
+        "UIBackgroundModes": [
+          "location"
+        ]
       }
     },
     "android": {
@@ -25,7 +29,13 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.kanishkazoysa.fieldmaster",
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_BACKGROUND_LOCATION"]
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE"
+      ]
     },
     "web": {
       "config": {
@@ -43,6 +53,11 @@
         }
       ]
     ],
-    "scheme": "fieldmaster"
+    "scheme": "fieldmaster",
+    "extra": {
+      "eas": {
+        "projectId": "bf799190-a209-4b75-98b5-5ae3e66ea111"
+      }
+    }
   }
 }
