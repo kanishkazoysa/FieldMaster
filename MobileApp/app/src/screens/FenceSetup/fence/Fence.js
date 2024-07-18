@@ -158,7 +158,7 @@ export default function Fence({route}) {
   ];
 
   const placeholderPostSpaceUnit = {
-    label: "M",
+    label: "Unit",
     value: null,
     color: "blue",
   };
