@@ -65,7 +65,7 @@ export default function PlantationFromManualCalculator({ route }) {
   const navigation = useNavigation();
   const [PlantSpaceUnitselectedValue, PlantSpaceUnitSetSelectedValue] = useState(null);
   const PlantSpaceUnitPlaceholder = {
-    label: "M",
+    label: "Unit",
     value: null,
     color: "blue",
   };
@@ -76,7 +76,7 @@ export default function PlantationFromManualCalculator({ route }) {
   ];
 
   const RowSpacingUnitplaceholder = {
-    label: "M",
+    label: "Unit",
     value: null,
     color: "blue",
   };

@@ -95,7 +95,7 @@ export default function FertilizationFromManualCalculator({ route }) {
   const [FertilizerAmountUnitselectedValue, FertilizerAmountUnitsetSelectedValue] = useState(null);
 
   const FertilizerAmountUnitplaceholder = {
-    label: "KG",
+    label: "Unit",
     value: null,
     color: "blue",
   };
