@@ -1,4 +1,4 @@
-export const getFertilizerDetailsHtml = (selectedFrequency, FertilizerAmountUnitselectedValue, textFertilizationAmount, textFertilizationNUmberoftime, textFertilizationType, Perimeter, area) => `
+export const getFertilizerDetailsHtml = (selectedFrequency, FertilizerAmountUnitselectedValue, textFertilizationAmount, textFertilizationNUmberoftime, textFertilizationType, perimeter, Area, TotalFertilizer, totalAmount) => `
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -14,8 +14,9 @@ export const getFertilizerDetailsHtml = (selectedFrequency, FertilizerAmountUnit
           }
           .container {
               max-width: 800px;
-              margin: 20px auto;
+              margin: 10px auto;
               padding: 20px;
+              border: 5px solid #ccc;
               background-color: #fff;
               border-radius: 8px;
               box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -23,20 +24,19 @@ export const getFertilizerDetailsHtml = (selectedFrequency, FertilizerAmountUnit
           .logo-container {
               display: flex;
               align-items: center;
-              background-color: #007BFF;
+              background-color: #fff;
               padding: 20px;
-              border-radius: 8px 8px 0 0;
           }
           .App-logo {
-              max-width: 100px;
+              max-width: 130px;
               margin-right: 20px;
           }
           .logo-text {
-              color: #fff;
-              font-size: 36px;
-              font-family: 'Product Sans', sans-serif;
+              color: #007BFF;
+              font-size: 40px;
+              font-family: sans-serif;
           }
-          .description-text1 {
+          .Description-text1 {
               margin-top: 20px;
               color: #333;
               font-size: 24px;
@@ -45,7 +45,7 @@ export const getFertilizerDetailsHtml = (selectedFrequency, FertilizerAmountUnit
               padding: 10px;
               margin: 5px 0;
           }
-          .description-text {
+          .Description-text {
               background: #f1f1f1;
               margin: 5px 0;
               padding: 10px;
@@ -75,23 +75,27 @@ export const getFertilizerDetailsHtml = (selectedFrequency, FertilizerAmountUnit
               
               <h1 class="logo-text">Field Master</h1>
           </div>
-          <h2 class="description-text1">Description</h2>
-          <div class="description-text">
+          <h2 class="Description-text1">Description</h2>
+          <div class="Description-text">
               <p>Welcome to FieldMaster, your ultimate solution for accurately measuring, mapping, and managing land plots for various agricultural purposes. Our application is designed to assist plantation owners, farmers, and land surveyors in optimizing land utilization and planning agricultural activities with precision and ease.</p>
           </div>
           <h2>Map Information</h2>
           <ul>
-              <li>Perimeter = ${Perimeter} Km</li>
-              <li>Area = ${area} perches</li>
+              <li>Perimeter = ${perimeter} km</li>
+              <li>Area = ${Area} perches</li>
           </ul>
 
           <h2>Fertilizer Details</h2>
+
           <ul>
               <li>Fertilizer Type = ${textFertilizationType}</li>
+              <li>Per Plant = ${totalAmount} ${FertilizerAmountUnitselectedValue}</li>
+              <li>Total Fertilizer = ${TotalFertilizer} ${FertilizerAmountUnitselectedValue}</li>
               <li>Frequency = ${selectedFrequency}</li>
               <li>Amount = ${textFertilizationAmount} ${FertilizerAmountUnitselectedValue}</li>
-              <li>No. of times = ${textFertilizationNUmberoftime}</li>
+              <li>No. of Times = ${textFertilizationNUmberoftime}</li>
           </ul>
+
       </div>
   </body>
   </html>

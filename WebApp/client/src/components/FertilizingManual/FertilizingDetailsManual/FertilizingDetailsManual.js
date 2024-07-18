@@ -90,15 +90,28 @@ export default function FertilizingDetails({
   }, [plantcount, totalAmount]);
 
   const handleSave = () => {
-    const htmlContent = getFertilizerDetailsHtml(selectedFrequency,FertilizerAmountUnitselectedValue,textFertilizationAmount,textFertilizationNUmberoftime,textFertilizationType,perimeter,area);
+    const Perimeter = parseFloat(perimeter).toFixed(2);
+    const Area = parseFloat(area).toFixed(2);
+    const TotalFertilizer = totalAmount * numberOfPlants;
+
+    const htmlContent = getFertilizerDetailsHtml(
+      selectedFrequency,
+      FertilizerAmountUnitselectedValue,
+      textFertilizationAmount,
+      textFertilizationNUmberoftime,
+      textFertilizationType,
+      Perimeter,
+      Area,
+      TotalFertilizer,
+      totalAmount
+    );
     const newWindow = window.open();
     newWindow.document.write(htmlContent);
     newWindow.document.close();
     newWindow.print();
   };
-  const calculateFertilizerAmountForPlantation = (totalAmount, numberOfPlants) => {
-    return totalAmount * numberOfPlants;
-  };
+
+ 
 
   return (
     <div>

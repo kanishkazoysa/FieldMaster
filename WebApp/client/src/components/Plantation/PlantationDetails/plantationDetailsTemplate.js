@@ -34,7 +34,7 @@ export const getPlantationDetailsHtml = (PlantDensity, numberOfPlants, textPlant
           .logo-text {
               color: #fff;
               font-size: 36px;
-              font-family: 'Product Sans', sans-serif; 
+              font-family: 'Product Sans', sans-serif; /* You may need to import Product Sans */
           }
           .description-text1 {
               margin-top: 20px;
@@ -72,7 +72,6 @@ export const getPlantationDetailsHtml = (PlantDensity, numberOfPlants, textPlant
   <body>
       <div class="container">
           <div class="logo-container">
-              
               <h1 class="logo-text">Field Master</h1>
           </div>
           <h2 class="description-text1">Description</h2>

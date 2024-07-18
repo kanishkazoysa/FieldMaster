@@ -14,8 +14,9 @@ export const getPlantationDetailsHtml = (calculatedPlantDensity, numberOfPlants,
           }
           .container {
               max-width: 800px;
-              margin: 20px auto;
+              margin: 10px auto;
               padding: 20px;
+              border: 5px solid #ccc;
               background-color: #fff;
               border-radius: 8px;
               box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -23,20 +24,19 @@ export const getPlantationDetailsHtml = (calculatedPlantDensity, numberOfPlants,
           .logo-container {
               display: flex;
               align-items: center;
-              background-color: #007BFF;
+              background-color: #fff;
               padding: 20px;
-              border-radius: 8px 8px 0 0;
           }
           .App-logo {
-              max-width: 100px;
+              max-width: 130px;
               margin-right: 20px;
           }
           .logo-text {
-              color: #fff;
-              font-size: 36px;
-              font-family: 'Product Sans', sans-serif;
+              color: #007BFF;
+              font-size: 40px;
+              font-family: sans-serif;
           }
-          .description-text1 {
+          .Description-text1 {
               margin-top: 20px;
               color: #333;
               font-size: 24px;
@@ -45,7 +45,7 @@ export const getPlantationDetailsHtml = (calculatedPlantDensity, numberOfPlants,
               padding: 10px;
               margin: 5px 0;
           }
-          .description-text {
+          .Description-text {
               background: #f1f1f1;
               margin: 5px 0;
               padding: 10px;
@@ -72,20 +72,21 @@ export const getPlantationDetailsHtml = (calculatedPlantDensity, numberOfPlants,
   <body>
       <div class="container">
           <div class="logo-container">
-              
+             
               <h1 class="logo-text">Field Master</h1>
           </div>
-          <h2 class="description-text1">Description</h2>
-          <div class="description-text">
+          <h2 class="Description-text1">Description</h2>
+          <div class="Description-text">
               <p>Welcome to FieldMaster, your ultimate solution for accurately measuring, mapping, and managing land plots for various agricultural purposes. Our application is designed to assist plantation owners, farmers, and land surveyors in optimizing land utilization and planning agricultural activities with precision and ease.</p>
           </div>
           <h2>Map Information</h2>
           <ul>
-              <li>Perimeter = ${perimeter}ss km</li>
-              <li>Area = ${area} perches</li>
+              <li>Perimeter = ${perimeter} m</li>
+              <li>Area = ${area} sqm</li>
           </ul>
 
           <h2>Plantation Details</h2>
+
           <ul>
               <li>Plant Type = ${textPlant}</li>
               <li>Total Plants = ${numberOfPlants} plants</li>
@@ -93,6 +94,7 @@ export const getPlantationDetailsHtml = (calculatedPlantDensity, numberOfPlants,
               <li>Plant Space = ${textplantspace} m</li>
               <li>Plant Density = ${calculatedPlantDensity}/m<sup>2</sup></li>
           </ul>
+
       </div>
   </body>
   </html>

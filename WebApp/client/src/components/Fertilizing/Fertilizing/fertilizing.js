@@ -1,4 +1,3 @@
-// SideNavbar.js
 import React, { useState} from "react";
 import { MdArrowBack } from "react-icons/md";
 import { GiWeight } from "react-icons/gi";
@@ -62,7 +61,11 @@ const handleFrequencyChange = (selectedFrequency) => {
   
   const handleFertilizingDetails = async (e) => {
 
-    
+    const regex = /^\d+(\.\d+)?$/; // allow decimal and float numbers
+    if (!regex.test(textFertilizationAmount) || !regex.test(textFertilizationNUmberoftime)) {
+      message.error("Please fill valid input");
+      return;
+    }
       // Validate required fields
       if (
 
@@ -246,7 +249,7 @@ const handleFrequencyChange = (selectedFrequency) => {
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="number"
+                  type="text"
                   style={styles.box3input}
                   placeholder="00"
                   value={textFertilizationNUmberoftime}
@@ -273,7 +276,7 @@ const handleFrequencyChange = (selectedFrequency) => {
             <div style={styles.box3Property}>
               <div style={styles.box3inputContainer}>
                 <input
-                  type="number"
+                  type="text"
                   style={styles.box3input}
                   placeholder="100"
                   value={textFertilizationAmount}

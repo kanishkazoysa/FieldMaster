@@ -11,15 +11,13 @@ import { Tb24Hours } from "react-icons/tb";
 import { Button } from "antd";
 import AxiosInstance from "../../../AxiosInstance.js";
 import Fertilizing from "../../Fertilizing/Fertilizing/fertilizing";
-import TemplateDetails from "../../SavedTemplates/TemplateDetails.js"
+import TemplateDetails from "../../SavedTemplates/TemplateDetails.js";
 import { getFertilizerDetailsHtml } from "./FertilizerDetailsTemplate.js";
 export default function FertilizingDetails({
-
   route,
   onBackToSidebar,
   onEditTemplateClick,
   template,
-  
   id,
   FertilizerAmountUnitselectedValue,
   textFertilizationType,
@@ -28,11 +26,11 @@ export default function FertilizingDetails({
   selectedFrequency,
   numberOfPlants,
   area,
-  Perimeter
+  Perimeter,
 }) {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
-  
+
   const handleFertilization = () => {
     setCurrentPage("Fertilizing");
     setAnimatePage(true);
@@ -48,7 +46,7 @@ export default function FertilizingDetails({
     NumberOfTime,
     FertilizerAmount,
     FertilizerAmountUnit,
-   
+
     count,
     plantcount,
   } = params;
@@ -89,7 +87,9 @@ export default function FertilizingDetails({
         factorValue = 1;
     }
     setFactor(factorValue);
-    setTotalAmount(textFertilizationNUmberoftime * textFertilizationAmount * factorValue);
+    setTotalAmount(
+      textFertilizationNUmberoftime * textFertilizationAmount * factorValue
+    );
   }, [
     selectedFrequency,
     textFertilizationAmount,
@@ -103,8 +103,10 @@ export default function FertilizingDetails({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await AxiosInstance.get(`/api/fertilizers/FertilizerAmountNeeded`)
-        console.log(response.data)
+        const response = await AxiosInstance.get(
+          `/api/fertilizers/FertilizerAmountNeeded`
+        );
+        console.log(response.data);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -117,7 +119,10 @@ export default function FertilizingDetails({
     fetchData();
   }, []);
 
-  const calculateFertilizerAmountForPlantation = (totalAmount, numberOfPlants) => {
+  const calculateFertilizerAmountForPlantation = (
+    totalAmount,
+    numberOfPlants
+  ) => {
     return totalAmount * numberOfPlants;
   };
   const handleBackClick = () => {
@@ -126,8 +131,23 @@ export default function FertilizingDetails({
       setCurrentPage(null);
     }, 300);
   };
+ 
   const handleSave = () => {
-    const htmlContent = getFertilizerDetailsHtml(selectedFrequency,FertilizerAmountUnitselectedValue,textFertilizationAmount,textFertilizationNUmberoftime,textFertilizationType,Perimeter,area);
+    const perimeter = parseFloat(Perimeter).toFixed(2);
+    const Area = parseFloat(area).toFixed(2);
+    const TotalFertilizer = totalAmount * numberOfPlants;
+
+    const htmlContent = getFertilizerDetailsHtml(
+      selectedFrequency,
+      FertilizerAmountUnitselectedValue,
+      textFertilizationAmount,
+      textFertilizationNUmberoftime,
+      textFertilizationType,
+      perimeter,
+      Area,
+      TotalFertilizer,
+      totalAmount
+    );
     const newWindow = window.open();
     newWindow.document.write(htmlContent);
     newWindow.document.close();
@@ -154,16 +174,19 @@ export default function FertilizingDetails({
               <div style={styles.property}>
                 <SlChemistry color="gray" size={30} />
                 <div style={styles.propertyDetails}>
-                  <p style={styles.propertyLabel}>Plantation</p>
-                  <p style={styles.propertyValue}>{totalAmount*numberOfPlants} {FertilizerAmountUnitselectedValue}</p>
+                  <p style={styles.propertyLabel}>Total Fertilizer</p>
+                  <p style={styles.propertyValue}>
+                    {totalAmount * numberOfPlants}{" "}
+                    {FertilizerAmountUnitselectedValue}
+                  </p>
                 </div>
               </div>
               <div className="property" style={styles.property}>
                 <FaClockRotateLeft color="gray" size={25} />
                 <div style={styles.propertyDetails}>
-                  <p style={styles.propertyLabel}>Per Year / plant</p>
+                  <p style={styles.propertyLabel}>Per plant</p>
                   <p style={styles.propertyValue}>
-                    {totalAmount} { FertilizerAmountUnitselectedValue}
+                    {totalAmount} {FertilizerAmountUnitselectedValue}
                   </p>
                 </div>
               </div>
@@ -177,14 +200,18 @@ export default function FertilizingDetails({
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{parseFloat(Perimeter).toFixed(2)} km</p>
+                  <p style={styles.propertyValue}>
+                    {parseFloat(Perimeter).toFixed(2)} km
+                  </p>
                 </div>
               </div>
               <div className="property" style={styles.property}>
                 <PiSquareDuotone color="gray" size={40} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
-                  <p style={styles.propertyValue}>{parseFloat(area).toFixed(2)} perch</p>
+                  <p style={styles.propertyValue}>
+                    {parseFloat(area).toFixed(2)} perch
+                  </p>
                 </div>
               </div>
             </div>
@@ -214,7 +241,10 @@ export default function FertilizingDetails({
                 </div>
               </div>
               <div style={styles.innersquareright}>
-                <p style={styles.propertyLabel}>: {textFertilizationAmount} {FertilizerAmountUnitselectedValue}</p>
+                <p style={styles.propertyLabel}>
+                  : {textFertilizationAmount}{" "}
+                  {FertilizerAmountUnitselectedValue}
+                </p>
               </div>
             </div>
 
@@ -226,7 +256,9 @@ export default function FertilizingDetails({
                 </div>
               </div>
               <div style={styles.innersquareright}>
-                <p style={styles.propertyLabel}>: {textFertilizationNUmberoftime}</p>
+                <p style={styles.propertyLabel}>
+                  : {textFertilizationNUmberoftime}
+                </p>
               </div>
             </div>
 
@@ -244,12 +276,12 @@ export default function FertilizingDetails({
           </div>
 
           <div style={styles.bottom2}>
-            <Button type="primary" style={styles.Button2}onClick={handleSave}>
-              <p style={{fontSize: 13}}>Save as PDF</p>
+            <Button type="primary" style={styles.Button2} onClick={handleSave}>
+              <p style={{ fontSize: 13 }}>Save as PDF</p>
             </Button>
-            {/* <button style={styles.Button3} onClick={handleback}>
-                <p style={styles.Box4ButtonText}>Back to Template</p>
-              </button> */}
+            {/* <Button style={styles.Button2} onClick={handleback}>
+              <p style={{fontSize: 13}}>Back to Template</p>
+              </Button> */}
           </div>
         </div>
       )}
@@ -264,7 +296,6 @@ export default function FertilizingDetails({
         {currentPage === "Fertilizing" && (
           <Fertilizing
             onBackToSidebar={handleBackClick}
-            
             numberOfPlants={numberOfPlants}
             id={id}
             area={area}
@@ -273,7 +304,7 @@ export default function FertilizingDetails({
             template={template}
           />
         )}
-          {currentPage === "TemplateDetails" && (
+        {currentPage === "TemplateDetails" && (
           <TemplateDetails
             onBackToSidebar={onBackToSidebar}
             id={id}

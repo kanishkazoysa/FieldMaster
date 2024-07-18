@@ -237,14 +237,13 @@ export const styles = {
       width: "92%",
 
     },
-  
     Button2: {
       width: "100%",
-      height: 38,
+      padding: '18px',
       alignItems: "center",
-      marginTop: 60,
       borderRadius: 11,
-      padding: '17px',
+      marginTop: 10,
     },
+
   };
   
