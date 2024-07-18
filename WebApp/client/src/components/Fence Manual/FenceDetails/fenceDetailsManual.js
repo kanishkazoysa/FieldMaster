@@ -6,6 +6,7 @@ import { BsBoundingBox } from "react-icons/bs";
 import { PiSquareDuotone } from "react-icons/pi";
 import { styles } from "./fenceDetailsmanualStyles";
 import { getFenceDetailsHtml } from "./FenceDetailsTemplate";
+import { Button } from "antd";
 
 export default function FenceDetailsManual({
   onBackToSidebar,
@@ -19,6 +20,9 @@ export default function FenceDetailsManual({
   PerimeterUnitselectedValue,
   AreaUnitselectedValue,
 }) {
+
+
+
   const handleSave = () => {
     const htmlContent = getFenceDetailsHtml(
       FenceTypeselectedValue,
@@ -36,6 +40,8 @@ export default function FenceDetailsManual({
     newWindow.document.close();
     newWindow.print();
   };
+
+  
 
   return (
     <div style={styles.content}>
@@ -83,8 +89,7 @@ export default function FenceDetailsManual({
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
               <p style={styles.propertyValue}>
-                {Perimeter}
-                {PerimeterUnitselectedValue}
+              {parseFloat(Perimeter).toFixed(2)} {PerimeterUnitselectedValue}
               </p>
             </div>
           </div>
@@ -93,8 +98,7 @@ export default function FenceDetailsManual({
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
               <p style={styles.propertyValue}>
-                {area}
-                {AreaUnitselectedValue}
+              {parseFloat(area).toFixed(2)} {AreaUnitselectedValue}
               </p>
             </div>
           </div>
@@ -137,9 +141,13 @@ export default function FenceDetailsManual({
       </div>
 
       <div style={styles.bottom}>
-        <button style={styles.Button1} onClick={handleSave}>
-          <p style={styles.Box4ButtonText}>Save Data</p>
-        </button>
+       
+
+        <Button type="primary" style={styles.Button1} onClick={handleSave}>
+                <p style={{fontSize: 13}}>Save Data</p>
+        </Button>
+        
+
       </div>
     </div>
   );

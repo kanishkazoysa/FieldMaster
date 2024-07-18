@@ -14,6 +14,7 @@ const FormData = require('form-data');
 
 const upload = multer({ storage: multer.memoryStorage() });
 
+
 let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -293,23 +294,59 @@ router.get("/getAllUsers", async (req, res) => {
 });
 
 router.post("/addUser", async (req, res) => {
-  const { fname, lname, email,password, isVerified } = req.body;
+  const { fname, lname, email, password, isVerified } = req.body;
 
   try {
-      const newUser = new User({
-          fname,
-          lname,
-          email,
-          password,
-          isVerified,
-      });
-      await newUser.save();
-      res.status(201).send({ success: true, user: newUser });
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    const newUser = new User({
+      fname,
+      lname,
+      email,
+      password,
+      isVerified,
+    });
+
+    // Prepare email content
+    const mailOptions = {
+      from: "kanishkazoysa1234@gmail.com",
+      to: email,
+      subject: "Welcome to FieldMaster - Your Account Details",
+      html: `
+        <div style="text-align: center;">
+          <img src="https://i.ibb.co/JzHBV01/logo.png" alt="FieldMaster Logo" style="width: 200px;"/>
+          <h1>Welcome to FieldMaster</h1>
+          <p>Your account has been created successfully. Here are your login details:</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Password:</strong> ${password}</p>
+          <p>Please change your password after your first login.</p>
+          ${isVerified ? 
+            '<p>Your account has been verified. You can log in immediately.</p>' : 
+            '<p>Your account is pending verification. Please wait for an admin to verify your account before logging in.</p>'
+          }
+          <a href="http://localhost:3000/login" style="background-color: #4CAF50; color: white; padding: 14px 20px; text-align: center; text-decoration: none; display: inline-block;">Login to Your Account</a>
+        </div>
+      `,
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+
+    // Save the user
+    await newUser.save();
+
+    res.status(201).json({ success: true, message: "User added successfully and email sent with login details." });
   } catch (error) {
-      console.error("Failed to add user:", error.message);
-      res.status(500).send({ success: false, message: 'Failed to add user', error: error.message });
+    console.error("Failed to add user:", error.message);
+    res.status(500).json({ success: false, message: 'Failed to add user', error: error.message });
   }
 });
+
+
 
 router.post('/removeProfilePicture', auth, async (req, res) => {
   try {
@@ -355,6 +392,22 @@ router.post("/loginData", async (req, res) => {
       res.status(500).json({ message: "Internal server error" });
   }
 });
+
+//delete user
+router.delete("/deleteUser/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User
+      .findByIdAndDelete(id);
+    if (!user) {
+      return res.status(404).send({ success: false, message: 'User not found' });
+    }
+    res.send({ success: true, user });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+}
+);
 
 
 module.exports = router;

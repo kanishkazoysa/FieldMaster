@@ -1,8 +1,6 @@
 // SideNavbar.js
-import React, { useState, useRef } from "react";
-import { FaBars } from "react-icons/fa";
+import React, { useState, useRef,useEffect } from "react";
 import { MdArrowBack } from "react-icons/md";
-import { GiGate } from "react-icons/gi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { BsBoundingBox } from "react-icons/bs";
 import {
@@ -14,40 +12,61 @@ import {
 import { HiTruck } from "react-icons/hi2";
 import { GiStonePile } from "react-icons/gi";
 import { GrUserWorker } from "react-icons/gr";
-import axios from "axios";
 import { styles } from "./clearLandStyles";
 import { FiSearch } from "react-icons/fi";
-import { Input, Space, List, AutoComplete ,message } from "antd";
-import { CloseSquareFilled } from "@ant-design/icons";
+import Select from "react-select";
+import { Input, Space, List, AutoComplete ,message, } from "antd";
 import EffortOutput from "../EffortOutput/effortOutput";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails";
 import AxiosInstance from "../../../AxiosInstance";
-export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTemplateClick,template }) {
+import AlertWeed from "../EffortOutput/AlertWeed"
+import AlertPlant from "../EffortOutput/AlertPlant"
+import AlertStone from "../EffortOutput/AlertStone"
+export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTemplateClick,template,ClearLandData }) {
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
-  // const [perimeter, setPerimeter] = useState("1.5");
-  // const [area, setArea] = useState("100");
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
-  const [plantTypeSelectedValue1, setPlantTypeSelectedValue1] = useState(null);
   const [stoneTypeSelectedValue, setStoneTypeSelectedValue] = useState(null);
-  const [stoneTypeSelectedValue1, setStoneTypeSelectedValue1] = useState(null);
+  const [machineTypeSelectedValue, setMachineTypeSelectedValue] = useState(null);
   const [pressed, setPressed] = useState(null);
   const [plantCount, setPlantCount] = useState("");
   const [stonesCount, setStonesCount] = useState("");
   const [laborCount, setLaborCount] = useState("");
   const [workHours, setWorkHours] = useState("");
   const [machineCount, setMachineCount] = useState("");
+  const [machineList, setMachineList] = useState([]);
+  const [editMode, setEditMode] = useState(false);
 
-  // const { Search } = Input;
-
-  const machineryList = [
-    "Excavators",
-    "Backhoes",
-    "Chainsaws",
-    "Excavator breakers",
-  ];
+  useEffect(() => {
+    if (ClearLandData) {
+      setEditMode(true);
+      setPressed(ClearLandData.weedsType);
+      setLaborCount(ClearLandData.laborCount);
+      setWorkHours(ClearLandData.workHours);
+      setDisplayValues(ClearLandData.plantDetails || []);
+      setDisplayValues1(ClearLandData.stoneDetails || []);
+      setDisplayValues2(ClearLandData.machineDetails || []);
+    }
+  }, [ClearLandData]);
 
   const prefix = <FiSearch style={{ fontSize: 16, color: "#d3d3d3" }} />;
+
+
+  useEffect(() => {
+    fetchMchineList();
+  }, []);
+
+  const fetchMchineList = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/Machines"
+      );
+      setMachineList(response.data);
+    } catch (error) {
+      console.error("Error fetching machiList:", error);
+      message.error("Failed to fetch machiList. Please try again.");
+    }
+  };
 
   const handlePlantTypeChange = (event) => {
     setPlantTypeSelectedValue(event.target.value);
@@ -64,6 +83,9 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
   const handleStoneCountChange = (event) => {
     setStonesCount(event.target.value);
   };
+  const handleMachineTypeChange = (event) => {
+    setMachineTypeSelectedValue(event.target.value);
+  };
 
   const handleLaborCountChange = (event) => {
     setLaborCount(event.target.value);
@@ -79,6 +101,17 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
   const [displayValues, setDisplayValues] = useState([]);
   const handleAdd = () => {
+    if (!plantTypeSelectedValue || !plantCount) {
+      message.error("Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(plantCount)) {
+      message.error("Error: Please enter a valid plant count");
+      return;
+    }
+    
     //validation part Add button
     const combinedValue = plantCount + " x " + plantTypeSelectedValue;
     const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
@@ -96,8 +129,18 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
+    if (!stoneTypeSelectedValue || !stonesCount) {
+      message.error("Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(stonesCount)) {
+      message.error("Error: Please enter a valid stone count");
+      return;
+    }
     //validation part Add button
-    const combinedValue1 = stoneTypeSelectedValue;
+    const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
       Boolean
     );
@@ -114,13 +157,24 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
   const [displayValues2, setDisplayValues2] = useState([]);
   const handleAdd2 = () => {
+    if (!machineTypeSelectedValue || !machineCount) {
+      message.error("Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(machineCount)) {
+      message.error("Error: Please enter a valid machine count");
+      return;
+    }
+
     //validation part Add button
-    const combinedValue2 = machineCount + " x " + searchValue;
+    const combinedValue2 = machineCount + " x " + machineTypeSelectedValue;
     const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
       Boolean
     );
     setDisplayValues2(newDisplayValues2);
-    setSearchValue("");
+    setMachineTypeSelectedValue("");
     setMachineCount("");
   };
 
@@ -130,42 +184,45 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
     setDisplayValues2(newDisplayValues2);
   };
 
-  const [searchValue, setSearchValue] = useState("");
-  const [filteredMachinery, setFilteredMachinery] = useState([]);
-
-  const handleSearchChange = (value) => {
-    setSearchValue(value);
-
-    if (value) {
-      const filtered = machineryList.filter((item) =>
-        item.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredMachinery(filtered);
-    } else {
-      setFilteredMachinery([]);
-    }
-  };
-
-  const handleItemClick = (item) => {
-    setSearchValue(item);
-    setFilteredMachinery([]); // Clear the list after selecting an item
-  };
-
   const handleClearlandDetails = async (e) => {
       // Validate required fields
-      if (
-        !pressed ||
-        !(displayValues.length > 0) ||
-        !(displayValues1.length > 0) ||
-        !laborCount ||
-        !workHours
-      ) {
-        message.error("Error: Please fill in all fields");
-        return;
-      }
-
-       // Make POST request to the backend
-       AxiosInstance.post("/api/clearLand/clearLand", {
+      if (!laborCount) {
+          message.error("Error:Please enter the Labor Count.");
+          return;
+        }
+    
+        if (!workHours) {
+          message.error("Error:Please enter the Work Hours.");
+          return;
+        }
+    
+        if (displayValues2.length === 0) {
+          message.error("Error:Please add at least one Machinery item.");
+          return;
+        }
+    
+        if (!pressed && displayValues.length === 0 && displayValues1.length === 0) {
+          message.error(
+            "Error:Please fill in at least one optional field: Weeds, Plants, or Stones."
+          );
+          return;
+        }
+        const regex2 = /^\d+$/; // allow only decimal numbers
+        if (!regex2.test(laborCount)) {
+          message.error("Error: Please enter a valid labor count");
+          return;
+        }
+        const regex = /^\d+$/; // allow only decimal numbers
+        if (!regex.test(workHours)) {
+          message.error("Error: Please enter a valid work hour count");
+          return;
+        }
+    
+        try{
+          const method = editMode ? 'put': 'post';
+          const url = editMode ? `/api/clearLand/clearLand/${id}` : '/api/clearLand/clearLand';
+          // Make POST request to the backend
+       const response = await AxiosInstance[method](url, {
         id,
         pressed,
         laborCount,
@@ -173,18 +230,22 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
         displayValues,
         displayValues1,
         displayValues2,
-       })
-       .then((response) => {
+       });
+        console.log("Response:", response.data);	
         setCurrentPage("EffortOutput"); // Update this line
         setAnimatePage(true);
-        e.preventDefault();
-  
-       })
-       .catch((error) => {
-        console.error("Error:", error.response.data);
-        message.error("Error", "Failed to create clear land. Please try again.")
-        alert("Error", "Failed to create clear land. Please try again.");
-      });
+        // e.preventDefault();
+      }catch(error){
+        console.error("Error:", error);
+        if (error.response) {
+          console.error("Response data:", error.response.data);
+          console.error("Response status:", error.response.status);
+          console.error("Response headers:", error.response.headers);
+        }
+        message.error(`Failed to ${editMode ? 'update' : 'create'} clear land: ${error.message}`);
+      }
+
+       
   };
 
   const handleBackClick = () => {
@@ -220,7 +281,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{Perimeter}Km</p>
+                  <p style={styles.propertyValue}>{parseFloat(Perimeter).toFixed(2)} km</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -228,7 +289,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} m<sup>2</sup>
+                  {parseFloat(area).toFixed(2)} m<sup>2</sup>
                   </p>
                 </div>
               </div>
@@ -241,7 +302,8 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
               <div style={styles.box2InnerTop}>
                 <PiPlantFill color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
-                  <p style={styles.Box2PropertyLabel}>Weeds</p>
+                  <p style={styles.BoxPropertyLabel}>Weeds</p>
+                  <AlertWeed></AlertWeed>
                 </div>
               </div>
               <div style={styles.box2InnerBottom}>
@@ -307,7 +369,8 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
               <div style={styles.box2InnerTop}>
                 <PiTreeFill color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
-                  <p style={styles.Box2PropertyLabel}>Plants</p>
+                  <p style={styles.BoxPropertyLabel}>Trees</p>
+                  <AlertPlant></AlertPlant>
                 </div>
               </div>
             </div>
@@ -370,7 +433,8 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
               <div style={styles.box2InnerTop}>
                 <GiStonePile color="gray" size={20} />
                 <div style={styles.box2PropertyDetails}>
-                  <p style={styles.Box2PropertyLabel}>Stones</p>
+                  <p style={styles.BoxPropertyLabel}>Stones</p>
+                  <AlertStone></AlertStone>
                 </div>
               </div>
             </div>
@@ -385,8 +449,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                     Select
                   </option>
                   <option value="Small">Small</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
+                  <option value="Large">Large</option>
                 </select>
               </div>
               <div style={styles.box3middleContainer}>
@@ -429,10 +492,10 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
           {/* fifth box */}
           <div style={styles.box5}>
-            <div style={styles.box5leftcontainer}>
+            <div style={{ ...styles.box5leftcontainer, width: "35%" }}>
               <GrUserWorker color="gray" size={20} />
               <div style={styles.box2PropertyDetails}>
-                <p style={styles.Box2PropertyLabel}>Labors : </p>
+                <p style={styles.Box2PropertyLabel}>Labors  : </p>
               </div>
             </div>
             <div style={styles.box5inputContainer}>
@@ -448,7 +511,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
 
           {/* sixth box */}
           <div style={styles.box5}>
-            <div style={{ ...styles.box5leftcontainer, width: "65%" }}>
+            <div style={{ ...styles.box5leftcontainer, width: "80%" }}>
               <PiClock color="gray" size={20} />
               <div style={styles.box2PropertyDetails}>
                 <p style={styles.Box2PropertyLabel}>Work hours : </p>
@@ -459,10 +522,10 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
                 type="text"
                 style={{
                   ...styles.box3input,
-                  width: "100%",
-                  marginLeft: "-30px",
+                  width: "150%",
+                  marginLeft: "-65px",
                 }}
-                placeholder="Enter no of hours"
+                placeholder="Enter hours per day"
                 value={workHours}
                 onChange={handleWorkHourChange}
               />
@@ -481,44 +544,20 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
             </div>
 
             <Space direction="vertical" style={{ width: "100%" }}>
-              <AutoComplete
-                option={filteredMachinery.map((item) => ({ value: item }))}
-                value={searchValue}
-                onChange={setSearchValue}
-                onSearch={handleSearchChange}
-              >
-                <Input
-                  size="small"
-                  placeholder="Search for machines"
-                  prefix={prefix}
-                  style={styles.searchbar}
-                  allowClear={{
-                    clearIcon: <CloseSquareFilled />,
-                  }}
-                />
-              </AutoComplete>
-              {filteredMachinery.length > 0 && (
-                <List
-                  bordered
-                  dataSource={filteredMachinery}
-                  renderItem={(item) => (
-                    <List.Item
-                      onClick={() => handleItemClick(item)}
-                      style={styles.searchbarListItems}
-                      size="small"
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "#f0f0f0";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "#fff";
-                      }}
-                    >
-                      {item}
-                    </List.Item>
-                  )}
-                  style={styles.searchbarList}
-                />
-              )}
+            <div style={styles.dropDown2Container}>
+            <select
+  style={styles.dropdown2}
+  value={machineTypeSelectedValue}
+  onChange={(e) => setMachineTypeSelectedValue(e.target.value)}
+>
+  <option value="" disabled selected>Select a machine type</option>
+  {machineList.map((machine) => (
+    <option key={machine.Name} value={machine.Name}>
+      {machine.Name}
+    </option>
+  ))}
+</select>
+              </div>
             </Space>
 
             <div style={styles.box7InputContainer}>
@@ -573,7 +612,7 @@ export default function ClearLand({ onBackToSidebar ,id,area,Perimeter,onEditTem
           transform: animatePage ? "translateX(0)" : "translateX(-100%)",
           transition: "transform 0.3s ease-in-out",
           backgroundColor: "whitesmoke",
-          overflow: "auto", // Add scrollbar if content exceeds container height
+          // overflow: "auto", // Add scrollbar if content exceeds container height
         }}
       >
         {currentPage === "EffortOutput" && (

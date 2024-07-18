@@ -9,16 +9,15 @@ import {
   Modal,
   ActivityIndicator,
 } from "react-native";
-import { TextInput, Alert } from "react-native";
+import { Alert } from "react-native";
 import { Polyline } from "react-native-maps";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { polygon, area, length } from "@turf/turf";
 import {
   faLayerGroup,
   faLocationCrosshairs,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { styles } from "./PointAddingScreenStyles";
+import styles from "./PointAddingScreenStyles";
 import MapView, { MAP_TYPES } from "react-native-maps";
 import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
@@ -26,6 +25,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { captureRef } from "react-native-view-shot";
 import axios from "axios";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import Ionicons from "react-native-vector-icons/Ionicons";
+
+const apiKey = "AIzaSyCmDfdWl4TZegcfinTmC0LlmFCiEcdRbmU";
 
 const PointAddingScreen = ({ navigation, route }) => {
   const [showUserLocation, setShowUserLocation] = useState(false);
@@ -45,6 +48,54 @@ const PointAddingScreen = ({ navigation, route }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [capturedImageUri, setCapturedImageUri] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [searchedMarker, setSearchedMarker] = useState(null);
+
+  const handlePlaceSelect = (data, details = null) => {
+    if (details) {
+      const { lat, lng } = details.geometry.location;
+      const newRegion = {
+        latitude: lat,
+        longitude: lng,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      };
+      setRegion(newRegion);
+      mapRef.current.animateToRegion(newRegion);
+
+      // Set the searched marker
+      setSearchedMarker({
+        latitude: lat,
+        longitude: lng,
+      });
+    }
+  };
+  const getLocationName = async (latitude, longitude) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U`
+      );
+      const data = await response.json();
+      if (data.results && data.results.length > 0) {
+        const addressComponents = data.results[0].address_components;
+        const city = addressComponents.find(
+          (component) =>
+            component.types.includes("locality") ||
+            component.types.includes("administrative_area_level_2")
+        );
+        const country = addressComponents.find((component) =>
+          component.types.includes("country")
+        );
+        if (city && country) {
+          return `${city.long_name}, ${country.long_name}`;
+        }
+      }
+      return "";
+    } catch (error) {
+      console.error("Error getting location name:", error);
+      return "";
+    }
+  };
 
   const uploadToImgbb = async (imageUri) => {
     const apiKey = "a08fb8cde558efecce3f05b7f97d4ef7";
@@ -143,8 +194,10 @@ const PointAddingScreen = ({ navigation, route }) => {
   /* the handleSaveMap function is used to save the map */
   const handleSaveMap = async () => {
     try {
+      setIsSaving(true);
       if (points.length < 3) {
         alert("You need at least 3 points to calculate area and perimeter");
+        setIsSaving(false);
         return;
       }
 
@@ -152,7 +205,7 @@ const PointAddingScreen = ({ navigation, route }) => {
       if (mapRef.current) {
         const uri = await captureRef(mapRef.current, {
           format: "jpg",
-          quality: 0.8,
+          quality: 0.3,
         });
         console.log("Captured image URI:", uri);
         imageUrl = await uploadToImgbb(uri);
@@ -170,6 +223,7 @@ const PointAddingScreen = ({ navigation, route }) => {
       const perimeterMeters = length(poly, { units: "meters" });
       const areaPerches = areaMeters / 25.29285264;
       const perimeterKilometers = perimeterMeters / 1000;
+      setIsSaving(false);
 
       Alert.alert(
         "Confirmation",
@@ -197,6 +251,7 @@ const PointAddingScreen = ({ navigation, route }) => {
     } catch (error) {
       console.error("Error saving map:", error);
       alert("An error occurred while saving the map. Please try again.");
+      setIsSaving(false);
     }
   };
 
@@ -235,7 +290,7 @@ const PointAddingScreen = ({ navigation, route }) => {
         const response = await fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
             searchQuery
-          )}&key=AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U`
+          )}&key=AIzaSyCmDfdWl4TZegcfinTmC0LlmFCiEcdRbmU`
         );
         const data = await response.json();
         if (data.results && data.results.length > 0) {
@@ -274,40 +329,34 @@ const PointAddingScreen = ({ navigation, route }) => {
         </View>
       ) : (
         <View style={{ flex: 1 }}>
-          <View style={styles.searchbar}>
-            <View style={styles.locationIconContainer}>
-              <MaterialIcons
-                name="location-on"
-                size={responsiveFontSize(2.5)}
-                color="#007BFF"
-              />
-            </View>
-            <TextInput
-              placeholder="Search Location"
-              placeholderTextColor="rgba(0, 0, 0, 0.5)"
-              onFocus={onFocus}
-              onBlur={onBlur}
-              style={[
-                styles.searchbarInput,
-                isFocused ? styles.searchbarInputFocused : null,
-              ]}
-              onChangeText={setSearchQuery}
-              value={searchQuery}
-              onSubmitEditing={searchLocation}
-            />
-            {searchQuery !== "" && (
+          <GooglePlacesAutocomplete
+            placeholder="Search Location"
+            onPress={handlePlaceSelect}
+            fetchDetails={true}
+            query={{
+              key: apiKey,
+              language: "en",
+            }}
+            styles={{
+              container: styles.searchBarContainer,
+              textInputContainer: styles.searchBarInputContainer,
+              textInput: styles.searchBarInput,
+            }}
+            renderRightButton={() => (
               <TouchableOpacity
-                onPress={clearSearchQuery}
-                style={styles.clearIconContainer}
+                onPress={() => {
+                  this.googlePlacesAutocomplete.clear();
+                }}
+                style={styles.clearButton}
               >
-                <MaterialIcons
-                  name="cancel"
-                  size={responsiveFontSize(2.5)}
-                  color="#707070"
-                />
+                <Ionicons name="close-circle" size={20} color="#999" />
               </TouchableOpacity>
             )}
-          </View>
+            ref={(instance) => {
+              this.googlePlacesAutocomplete = instance;
+            }}
+          />
+
           <Modal
             animationType="slide"
             transparent={true}
@@ -390,6 +439,23 @@ const PointAddingScreen = ({ navigation, route }) => {
                       fillColor="rgba(199, 192, 192, 0.5)"
                       strokeWidth={1}
                     />
+                  )}
+                  {searchedMarker && (
+                    <Marker
+                      coordinate={searchedMarker}
+                      tracksViewChanges={false}
+                    >
+                      <View
+                        style={{
+                          width: 12,
+                          height: 12,
+                          borderRadius: 6,
+                          backgroundColor: "red",
+                          borderWidth: 1,
+                          borderColor: "white",
+                        }}
+                      />
+                    </Marker>
                   )}
                 </MapView>
 
@@ -477,6 +543,12 @@ const PointAddingScreen = ({ navigation, route }) => {
               </View>
             )}
           </View>
+          {isSaving && (
+            <View style={styles.loadingOverlay}>
+              <ActivityIndicator color="#007BFF" size={45} />
+              <Text style={styles.loadingText}>Saving...</Text>
+            </View>
+          )}
         </View>
       )}
     </>

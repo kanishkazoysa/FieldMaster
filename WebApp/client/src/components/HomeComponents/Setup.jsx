@@ -1,14 +1,13 @@
 import React from "react";
 import SetupCard from "./SetupCard";
 const Setup = () => {
-    return (
-      <section id="Setup" className='setup'>
-     <div>
+  return (
+    <section id="Setup" className="setup">
+      <div>
         <SetupCard />
-        
-     </div>
-     </section>
-    );
-  }
+      </div>
+    </section>
+  );
+};
 
-  export default Setup
+export default Setup;

@@ -1,5 +1,9 @@
 import { StyleSheet, StatusBar, Platform } from "react-native";
-import { responsiveHeight, responsiveWidth, responsiveFontSize } from "react-native-responsive-dimensions";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from "react-native-responsive-dimensions";
 
 const styles = StyleSheet.create({
   layerIconContainer: {
@@ -8,16 +12,16 @@ const styles = StyleSheet.create({
     padding: responsiveHeight(1),
     borderRadius: 5,
     right: responsiveWidth(4),
-    top: responsiveHeight(78),
+    bottom: responsiveHeight(14),
     zIndex: 1,
     flexDirection: "row",
     alignItems: "center",
   },
   dropdownContainer: {
     position: "absolute",
-    top: responsiveHeight(-16.5),
+   bottom: responsiveHeight(0),
     right: responsiveWidth(12),
-    backgroundColor: "rgba(0,0,0, 0.7)",
+    backgroundColor: "rgba(0,0,0, 0.9)",
     borderRadius: 5,
     elevation: 3,
     shadowColor: "#000",
@@ -31,10 +35,11 @@ const styles = StyleSheet.create({
   overlay: {
     display: "flex",
     flexDirection: "row",
-    backgroundColor: "rgba(0,0,0, 0.7)",
+    backgroundColor: "rgb(0,0,0)",
+    opacity: 0.8,
     justifyContent: "center",
     alignItems: "center",
-    padding: 5,
+    padding: 9,
   },
   overlayText: {
     color: "#fff",
@@ -48,16 +53,16 @@ const styles = StyleSheet.create({
   markerTouchArea: {
     width: 30,
     height: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   marker: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: "black",
   },
   header: {
     height: responsiveHeight(6.5),
@@ -87,25 +92,41 @@ const styles = StyleSheet.create({
     position: "absolute",
     flexDirection: "row",
     justifyContent: "space-between",
-    bottom: responsiveHeight(3),
-    left: responsiveWidth(3),
-    right: responsiveWidth(3),
+    bottom: responsiveHeight(0),
+    paddingTop: responsiveWidth(5),
+    paddingBottom: responsiveWidth(5),
+    backgroundColor: "rgba(0,0,0, 0.7)",
   },
   buttonWrapper: {
     flex: 1,
-    marginHorizontal: 15,
+    marginHorizontal: 7,
   },
   button: {
     backgroundColor: "#007BFF",
+    borderRadius: 10,
     flex: 1,
   },
   undoIcon: {
     position: "absolute",
-    top: -responsiveHeight(17),
-    right: responsiveWidth(1),
+    bottom: responsiveHeight(21),
+    right: responsiveWidth(4),
     backgroundColor: "rgba(0, 0, 0, 0.7)",
     borderRadius: responsiveWidth(1),
     padding: responsiveWidth(2.1),
+  },
+  loadingOverlay: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingText: {
+    color: "#fff",
+    marginTop: 10,
   },
 });
 

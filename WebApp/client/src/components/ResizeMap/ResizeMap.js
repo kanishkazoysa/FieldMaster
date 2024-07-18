@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { GoogleMap, LoadScript, PolygonF } from "@react-google-maps/api";
-import SideNavbar from "../SideNavbar/sideNavbar";
 import { styles } from "./ResizeMapStyles";
 import AxiosInstance from "../../AxiosInstance";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button } from "antd";
+import { Button, message } from "antd";
+import html2canvas from "html2canvas";
+import axios from "axios";
 
 const ResizeMapScreen = () => {
   const location = useLocation();
@@ -17,6 +18,9 @@ const ResizeMapScreen = () => {
     parseFloat(templatePerimeter) || 0
   );
   const [history, setHistory] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const mapRef = useRef(null);
+  const mapContainerRef = useRef(null);
 
   const containerStyle = {
     width: "100%",
@@ -30,22 +34,20 @@ const ResizeMapScreen = () => {
     rotateControl: false,
     fullscreenControl: true,
     scrollwheel: true,
-    mapTypeId: 'satellite',
+    mapTypeId: "satellite",
     mapTypeControlOptions: {
-      mapTypeIds: ['satellite', 'hybrid'],
+      mapTypeIds: ["satellite", "hybrid"],
       style: window.google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
       position: window.google.maps.ControlPosition.TOP_LEFT,
-    }
+    },
   };
 
   useEffect(() => {
-    // Fetch template data using AxiosInstance
     AxiosInstance.get(`/api/auth/mapTemplate/getOneTemplate/${templateId}`)
       .then((response) => {
         const { locationPoints } = response.data;
         console.log(response.data);
 
-        // Calculate average latitude and longitude
         const totalPoints = locationPoints.length;
         const sumLat = locationPoints.reduce(
           (acc, point) => acc + parseFloat(point.latitude),
@@ -65,9 +67,8 @@ const ResizeMapScreen = () => {
           lng: point.longitude,
         }));
 
-        // setInitialArray(paths);
         setAppArray([{ path: paths, color: "#FF0000" }]);
-        setHistory([{ path: paths, color: "#FF0000" }]); // Initialize history with the initial points
+        setHistory([{ path: paths, color: "#FF0000" }]);
       })
       .catch((error) => {
         console.error("Error fetching template:", error);
@@ -83,7 +84,6 @@ const ResizeMapScreen = () => {
         });
         map.fitBounds(bounds);
 
-        // Optional: add a slight padding to the bounds
         const paddings = { top: 50, right: 50, bottom: 50, left: 50 };
         map.fitBounds(bounds, paddings);
       }
@@ -91,8 +91,80 @@ const ResizeMapScreen = () => {
     [appArray]
   );
 
+  const uploadToImgbb = async (imageBlob) => {
+    const apiKey = "a08fb8cde558efecce3f05b7f97d4ef7";
+    const formData = new FormData();
+    formData.append("image", imageBlob, "map_image.png");
+
+    try {
+      const response = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${apiKey}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data.data.url;
+    } catch (error) {
+      console.error("Error uploading image to imgbb:", error);
+      throw error;
+    }
+  };
+
+  const captureMap = async () => {
+    if (mapContainerRef.current) {
+      const map = mapRef.current.state.map;
+
+      // Hide UI elements
+      map.setOptions({
+        disableDefaultUI: true,
+        zoomControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+      });
+
+      // Wait for the next render cycle
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const canvas = await html2canvas(mapContainerRef.current, {
+        useCORS: true,
+        allowTaint: true,
+        scale: 0.5,
+        ignoreElements: (element) => {
+          return (
+            element.tagName === "LINK" &&
+            element.href.includes("fonts.googleapis.com")
+          );
+        },
+      });
+
+      // Restore UI elements
+      map.setOptions({
+        disableDefaultUI: false,
+        zoomControl: true,
+        streetViewControl: true,
+        fullscreenControl: false,
+      });
+
+      return new Promise((resolve) => {
+        canvas.toBlob(resolve, "image/png");
+      });
+    }
+    return null;
+  };
+
   const saveMapPoints = async () => {
     try {
+      setIsSaving(true);
+      message.loading("Capturing map image...", 0);
+
+      const imageBlob = await captureMap();
+      const imageUrl = await uploadToImgbb(imageBlob);
+
+      message.success("Map image captured successfully!");
+
       const locationPoints = appArray[0].path.map((point) => ({
         latitude: point.lat,
         longitude: point.lng,
@@ -104,18 +176,22 @@ const ResizeMapScreen = () => {
           locationPoints,
           area,
           perimeter,
+          imageUrl,
         }
       );
 
       if (response.status === 200) {
         console.log("Location updated successfully");
-        // Navigate to the home page after successful save
         navigate("/Home");
       } else {
         console.log("Failed to update location");
       }
     } catch (error) {
       console.error("An error occurred while updating the location:", error);
+      message.error("Failed to update location. Please try again.");
+    } finally {
+      setIsSaving(false);
+      message.destroy();
     }
   };
 
@@ -124,27 +200,23 @@ const ResizeMapScreen = () => {
       lat: latLng.lat(),
       lng: latLng.lng(),
     }));
-    // Push the current state to history
     setHistory((prevHistory) => [
       ...prevHistory,
       { path: newPath, color: "#FF0000" },
     ]);
-
     setAppArray([{ path: newPath, color: "#FF0000" }]);
 
-    // Calculate area and perimeter
     const area = window.google.maps.geometry.spherical.computeArea(polygonPath);
     const perimeter =
       window.google.maps.geometry.spherical.computeLength(polygonPath);
 
-    // Convert area to perches
     const areaInPerches = (area * 0.0395369).toFixed(2);
-    // Convert perimeter to kilometers
     const perimeterInKilometers = (perimeter * 0.001).toFixed(2);
 
     setArea(areaInPerches);
     setPerimeter(perimeterInKilometers);
   };
+
   const undoLastAction = () => {
     if (history.length > 1) {
       const previousState = history[history.length - 2];
@@ -169,6 +241,7 @@ const ResizeMapScreen = () => {
       setPerimeter(perimeterInKilometers);
     }
   };
+
   const onPolygonLoad = (polygon) => {
     polygon.addListener("dragend", () => handlePolygonEdit(polygon.getPath()));
     polygon.addListener("mouseup", () => handlePolygonEdit(polygon.getPath()));
@@ -180,12 +253,13 @@ const ResizeMapScreen = () => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.mapContainer}>
+      <div style={styles.mapContainer} ref={mapContainerRef}>
         <LoadScript
-          googleMapsApiKey="AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U"
+          googleMapsApiKey={process.env.REACT_APP_GOOGLE_CLOUD_API_KEY}
           libraries={["places"]}
         >
           <GoogleMap
+            ref={mapRef}
             mapContainerStyle={containerStyle}
             zoom={19}
             center={center}
@@ -217,8 +291,8 @@ const ResizeMapScreen = () => {
         </LoadScript>
       </div>
       <div style={styles.top}>
-        <div style={styles.area}>Area: {area} perches </div>
-        <div style={styles.perimeter}>Perimeter: {perimeter} kilometers</div>
+        <div style={styles.area}>Area: {parseFloat(area).toFixed(2)} perch </div>
+        <div style={styles.perimeter}>Perimeter: {parseFloat(perimeter).toFixed(2)} km</div>
       </div>
       <div style={styles.controls}>
         <Button
@@ -244,6 +318,11 @@ const ResizeMapScreen = () => {
           Undo
         </Button>
       </div>
+      {isSaving && (
+        <div style={styles.loadingOverlay}>
+          <div style={styles.loadingSpinner}></div>
+        </div>
+      )}
     </div>
   );
 };

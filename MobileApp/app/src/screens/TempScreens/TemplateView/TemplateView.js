@@ -9,72 +9,76 @@ import {
 } from 'react-native-responsive-dimensions';
 
 import AxiosInstance from '../../../AxiosInstance';
+const truncateText = (text, maxLength = 10) => {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + '...';
+};
 
 const ClearLandIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='island'
+    name="island"
     size={responsiveFontSize(2.8)}
-    color='white'
+    color="white"
   />
 );
 
 const PlantationIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='sprout'
+    name="sprout"
     size={responsiveFontSize(2.8)}
-    color='white'
+    color="white"
   />
 );
 
 const FenceSetupIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='fence'
+    name="fence"
     size={responsiveFontSize(2.8)}
-    color='white'
+    color="white"
   />
 );
 
 const TypeIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='format-list-bulleted-type'
+    name="format-list-bulleted-type"
     size={responsiveFontSize(2.8)}
-    color='grey'
+    color="grey"
   />
 );
 const PerimeterIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='vector-square'
+    name="vector-square"
     size={responsiveFontSize(2.8)}
-    color='grey'
+    color="grey"
   />
 );
 
 const AreaIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='texture-box'
+    name="texture-box"
     size={responsiveFontSize(2.8)}
-    color='grey'
+    color="grey"
   />
 );
 
 const CustomMapIcon = (props) => (
   <MaterialCommunityIcons
     {...props}
-    name='map-marker-radius'
+    name="map-marker-radius"
     size={responsiveFontSize(2.8)}
-    color='grey'
+    color="grey"
   />
 );
 
 const CustomEditIcon = ({ navigation, item }) => (
   <MaterialCommunityIcons
-    name='square-edit-outline'
+    name="square-edit-outline"
     size={responsiveFontSize(2.8)}
     color={'white'}
     style={{ marginRight: responsiveWidth(3) }}
@@ -180,7 +184,7 @@ const TemplateView = ({ route, navigation }) => {
 
   return (
     <>
-      <Appbar.Header style={styles.top_Bar} dark={true} mode='center-aligned'>
+      <Appbar.Header style={styles.top_Bar} dark={true} mode="center-aligned">
         <Appbar.BackAction
           onPress={() => {
             navigation.navigate('SavedTemplatesScreen');
@@ -245,7 +249,9 @@ const TemplateView = ({ route, navigation }) => {
                 <TypeIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Type</Text>
-                  <Text style={styles.text02Styling}>{item.landType}</Text>
+                  <Text style={styles.text02Styling}>
+                    {truncateText(item.landType)}
+                  </Text>
                 </View>
               </View>
               <View style={styles.blockView}>
@@ -272,7 +278,9 @@ const TemplateView = ({ route, navigation }) => {
                 <CustomMapIcon />
                 <View style={styles.textView}>
                   <Text style={styles.text01Styling}>Location</Text>
-                  <Text style={styles.text02Styling}>{item.location}</Text>
+                  <Text style={styles.text02Styling}>
+                    {truncateText(item.location)}
+                  </Text>
                 </View>
               </View>
             </View>

@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   Text,
   FlatList,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import MapView, {
   PROVIDER_GOOGLE,
@@ -23,6 +25,8 @@ import { distance } from "@turf/turf";
 import styles from "./WalkaroundLandStyles";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { faUndo } from "@fortawesome/free-solid-svg-icons";
+import { captureRef } from "react-native-view-shot";
+import axios from "axios";
 
 const BACKGROUND_LOCATION_TASK = "background-location-task";
 
@@ -48,9 +52,9 @@ export default function WalkaroundLand() {
   const [showUndoButton, setShowUndoButton] = useState(true);
   const [showFillColor, setShowFillColor] = useState(false);
   const [isPolygonClosed, setIsPolygonClosed] = useState(false);
-
+  const [isSaving, setIsSaving] = useState(false);
   //define taskmanager to request location permission
-  TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => { 
+  TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }) => {
     if (error) {
       console.error("Background location task error:", error);
       return;
@@ -87,15 +91,62 @@ export default function WalkaroundLand() {
     }
   });
 
+  const handleReMeasure = () => {
+    // Reset all relevant state
+    setPathCoordinates([]);
+    setUndoStack([]);
+    setTrackingStarted(false);
+    setTrackingPaused(false);
+    setDrawPolyline(false);
+    setCalculatedArea(0);
+    setPolygonPerimeter(0);
+    setIsResizeButtonDisabled(true);
+    setIsStartPauseButtonDisabled(false);
+    setIsSaveButtonDisabled(true);
+    setResizingMode(false);
+    setShowUndoButton(true);
+    setShowFillColor(false);
+    setIsPolygonClosed(false);
+
+    // Restart location tracking
+    startTracking();
+  };
+
+  const uploadToImgbb = async (imageUri) => {
+    const apiKey = "a08fb8cde558efecce3f05b7f97d4ef7";
+    const formData = new FormData();
+    formData.append("image", {
+      uri: imageUri,
+      type: "image/jpeg",
+      name: "map_image.jpg",
+    });
+
+    try {
+      const response = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${apiKey}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data.data.url;
+    } catch (error) {
+      console.error("Error uploading image to imgbb:", error);
+      throw error;
+    }
+  };
+
   const handleStartPress = () => {
     //start tracking location
     setTrackingPaused(!trackingPaused);
     if (!trackingPaused) {
       setDrawPolyline(true);
       setPathCoordinates([initialLocation]); //set initial location
-      setIsSaveButtonDisabled(true);//disable save button
-      setShowFillColor(false);//hide fill color
-      setIsPolygonClosed(false);//  set polygon closed to false
+      setIsSaveButtonDisabled(true); //disable save button
+      setShowFillColor(false); //hide fill color
+      setIsPolygonClosed(false); //  set polygon closed to false
     } else {
       setTrackingStarted(false);
       setIsResizeButtonDisabled(false);
@@ -113,47 +164,45 @@ export default function WalkaroundLand() {
     calculateAreaAndPerimeter();
   };
 
-  useEffect(() => {
-    //start tracking location
-    const startTracking = async () => {
-      try {
-        const { coords } = await Location.getCurrentPositionAsync({}); // get current location data 
+  const startTracking = async () => {
+    try {
+      const { coords } = await Location.getCurrentPositionAsync({});
 
-        const { status } = await Location.requestForegroundPermissionsAsync(); // request location permission
-        if (status !== "granted") {
-          console.error("Foreground location permission not granted");
-          return;
-        }
-        //start location updates  and set location data to initial location and current location
-        await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
-          accuracy: Location.Accuracy.Highest,
-          timeInterval: 1000,
-          distanceInterval: 0,
-          showsBackgroundLocationIndicator: true,
-          foregroundService: {
-            notificationTitle: "Tracking location",
-            notificationBody:
-              "Your location is being tracked in the background",
-          },
-        });
-
-        setInitialLocation({
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-        });
-
-        setCurrentLocation({
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-        });
-
-        console.log("Background location updates started");
-        setTrackingStarted(true);
-      } catch (error) {
-        console.error("Error starting background location updates:", error);
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.error("Foreground location permission not granted");
+        return;
       }
-    };
 
+      await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
+        accuracy: Location.Accuracy.Highest,
+        timeInterval: 1000,
+        distanceInterval: 0,
+        showsBackgroundLocationIndicator: true,
+        foregroundService: {
+          notificationTitle: "Tracking location",
+          notificationBody: "Your location is being tracked in the background",
+        },
+      });
+
+      setInitialLocation({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      });
+
+      setCurrentLocation({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      });
+
+      console.log("Background location updates started");
+      setTrackingStarted(true);
+    } catch (error) {
+      console.error("Error starting background location updates:", error);
+    }
+  };
+
+  useEffect(() => {
     startTracking();
 
     return () => {
@@ -233,11 +282,31 @@ export default function WalkaroundLand() {
 
   // save map data
   const saveMapData = async () => {
-    navigation.navigate("SaveScreen", {
-      locationPoints: pathCoordinates,
-      area: calculatedArea,
-      perimeter: polygonPerimeter,
-    });
+    try {
+      setIsSaving(true);
+      let imageUrl = "";
+      if (mapRef.current) {
+        const uri = await captureRef(mapRef.current, {
+          format: "jpg",
+          quality: 0.8,
+        });
+        console.log("Captured image URI:", uri);
+        imageUrl = await uploadToImgbb(uri);
+        console.log("Uploaded image URL:", imageUrl);
+      }
+
+      navigation.navigate("SaveScreen", {
+        locationPoints: pathCoordinates,
+        area: calculatedArea,
+        perimeter: polygonPerimeter,
+        imageUrl: imageUrl,
+      });
+    } catch (error) {
+      console.error("Error capturing or uploading map screenshot:", error);
+      Alert.alert("Error", "Failed to save map data. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   //  handle drag end
@@ -372,7 +441,7 @@ export default function WalkaroundLand() {
           longitudeDelta: 5,
         }} //initial region
       >
-      {/** Draw polyline */}
+        {/** Draw polyline */}
         {drawPolyline && pathCoordinates.length > 0 && (
           <>
             <Polyline
@@ -394,7 +463,7 @@ export default function WalkaroundLand() {
             )}
           </>
         )}
-          {/** Draw markers */}
+        {/** Draw markers */}
         {resizingMode &&
           pathCoordinates.map((coordinate, index) => (
             <Marker
@@ -443,7 +512,7 @@ export default function WalkaroundLand() {
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
           <Button
-            icon={trackingPaused ? "pause" : "play-outline"}
+            icon={trackingPaused ? "check" : "play-outline"}
             mode="contained"
             onPress={handleStartPress}
             disabled={isStartPauseButtonDisabled}
@@ -481,6 +550,16 @@ export default function WalkaroundLand() {
             {resizingMode ? "Done" : "Resize"}
           </Button>
         </View>
+        <View style={styles.buttonWrapper}>
+          <Button
+            icon="refresh"
+            mode="contained"
+            onPress={handleReMeasure}
+            style={styles.button}
+          >
+            Retry
+          </Button>
+        </View>
         {undoStack.length > 0 && showUndoButton && resizingMode && (
           <TouchableOpacity style={styles.undoIcon} onPress={handleUndo}>
             <FontAwesomeIcon
@@ -491,6 +570,12 @@ export default function WalkaroundLand() {
           </TouchableOpacity>
         )}
       </View>
+      {isSaving && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator color="#007BFF" size={45} />
+          <Text style={styles.loadingText}>Saving...</Text>
+        </View>
+      )}
     </View>
   );
 }

@@ -1,4 +1,3 @@
-// App.js
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -16,14 +15,10 @@ import Home from "./src/screens/HomePage/Home.js";
 import WalkaroundLand from "./src/screens/WalkaroundLand/WalkaroundLand";
 import Fence from "./src/screens/FenceSetup/fence/Fence";
 import FenceDetails from "./src/screens/FenceSetup/fenceDetails/FenceDetails";
-/* Template screens importing */
-
 import SaveScreen from "./src/screens/TempScreens/SaveScreen/SaveScreen";
 import TemplateView from "./src/screens/TempScreens/TemplateView/TemplateView";
 import EditTemplate from "./src/screens/TempScreens/EditTemplate/EditTemplate";
 import SavedTemplatesScreen from "./src/screens/TempScreens/SavedTemplatesScreen/SavedTemplatesScreen";
-
-
 import Fertilization from "./src/screens/Fertilizing/Fertilization";
 import PlantationDetails from "./src/screens/Plantation/PlantationDetails";
 import FertilizationDetails from "./src/screens/Fertilizing/FertilizationDetails";
@@ -32,9 +27,7 @@ import Clearland from './src/screens/ClearLand/Clearland';
 import EffortOutput from './src/screens/ClearLand/EffortOutput';
 import ResizeMap from './src/screens/TempScreens/ResizeMap/ResizeMap';
 import PointAddingScreen from './src/screens/PointAddingScreen/PointAddingScreen';
-
 import ProfileManagement from "./src/screens/ProfileManagement/ProfileManagement.js";
-
 import PlantationFromManualCalculator from "./src/screens/PlantationManual/PlantationFromManualCalculator.js";
 import PlantationDetailsFromManualCalculator from "./src/screens/PlantationDetailsManual/PlantationDetailsFromManualCalculator.js";
 import EffortOutputFromManualCalculator from "./src/screens/EffortOutputManual/EffortOutputFromManualCalculator.js";

@@ -15,7 +15,22 @@ export const styles = StyleSheet.create({
   dotsWrapper: {
     width: 100,
   },
-  
+
+  loadingOverlay: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  loadingText: {
+    color: "#fff",
+    marginTop: 10,
+  },
+
   buttonContainer: {
     position: "absolute",
     bottom: responsiveHeight(1),
@@ -52,7 +67,7 @@ export const styles = StyleSheet.create({
     width: responsiveWidth(32),
     paddingVertical: responsiveHeight(1.5),
     margin: responsiveHeight(1.25),
-    borderRadius:17,
+    borderRadius: 17,
     alignItems: "center",
   },
   sideIconWrap: {
@@ -99,17 +114,17 @@ export const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderWidth: 2,
-    borderColor: 'black',
+    borderColor: "black",
   },
   intermediateMarker: {
     width: 13,
     height: 13,
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: "black",
   },
   button2: {
     position: "absolute",

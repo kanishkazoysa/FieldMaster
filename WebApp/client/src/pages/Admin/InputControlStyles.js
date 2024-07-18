@@ -1,5 +1,3 @@
-import getFontSizes from "antd/es/theme/themes/shared/genFontSizes";
-
 export const styles = {
   pageWrapper: {
     height: '100vh',
@@ -47,11 +45,7 @@ export const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: "5px",
-    marginLeft: "16px",
-    padding: "20px",
-    backgroundColor: "#007BFF",
-    borderBottom: "1px solid #f1f1f1",
+    height: "50px",
   },
   listWrapper: {
     flex: 1,
@@ -62,7 +56,6 @@ export const styles = {
   },
   headertxt: {
     margin: 0,
-    color: "white",
   },
   InnerHeader: {
     color: "gray",
@@ -77,7 +70,6 @@ export const styles = {
   leftHeader: {
     color: "white",
     alignItems: "center",
-    backgroundColor: "#007BFF",
     justifyContent: "center",
     padding: "20px",
     display: "flex",

@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { MdArrowBack } from 'react-icons/md';
-import './SaveScreenWebStyles.css';
-import { FaVectorSquare } from 'react-icons/fa6';
-import { RiPieChart2Fill } from 'react-icons/ri';
-import { FaRegSave } from 'react-icons/fa';
-import axios from 'axios';
-import AxiosInstance from '../../AxiosInstance';
+import React, { useState, useEffect } from "react";
+import { MdArrowBack } from "react-icons/md";
+import "./SaveScreenWebStyles.css";
+import { FaVectorSquare } from "react-icons/fa6";
+import { RiPieChart2Fill } from "react-icons/ri";
+import { FaRegSave } from "react-icons/fa";
+import axios from "axios";
+import AxiosInstance from "../../AxiosInstance";
 
 const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
-  const [area, setArea] = useState('0');
-  const [perimeter, setPerimeter] = useState('0');
+  const [area, setArea] = useState("0");
+  const [perimeter, setPerimeter] = useState("0");
   const [locationPoints, setLocationPoints] = useState([]);
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState("");
 
-  const [templateName, setTemplateName] = useState('myTemplate');
-  const [measureName, setMeasureName] = useState('tea');
-  const [landType, setLandType] = useState('slope');
-  const [location, setLocation] = useState('Kandy');
-  const [description, setDescription] = useState('testing description');
+  const [templateName, setTemplateName] = useState(" ");
+  const [measureName, setMeasureName] = useState(" coffee trees");
+  const [landType, setLandType] = useState(" ");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState(" ");
 
   useEffect(() => {
     if (landInfo) {
@@ -37,7 +37,7 @@ const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
   const handleSave = async () => {
     try {
       const response = await AxiosInstance.post(
-        '/api/auth/mapTemplate/saveTemplate',
+        "/api/auth/mapTemplate/saveTemplate",
         {
           perimeter,
           area,
@@ -51,108 +51,110 @@ const SaveScreenWeb = ({ onBackToSidebar, hideMapButtons, landInfo }) => {
         },
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
 
       if (response.status === 200) {
-        console.log('Template saved successfully:', response.data);
-        alert('Template saved successfully');
+        console.log("Template saved successfully:", response.data);
+        alert("Template saved successfully");
       } else {
-        console.error('Unexpected response status:', response.status);
+        console.error("Unexpected response status:", response.status);
       }
     } catch (error) {
       console.error(
-        'Error saving template:',
+        "Error saving template:",
         error.response ? error.response.data : error.message
       );
     }
   };
   return (
-    <div className='outer-div'>
-      <div className='save-screen'>
-        <div className='save-screen-header'>
+    <div className="outer-div">
+      <div className="save-screen">
+        <div className="save-screen-header">
           <MdArrowBack
             onClick={() => {
-              console.log('clicked back btn');
+              console.log("clicked back btn");
               hideMapButtons();
               onBackToSidebar();
             }}
             size={20}
-            className='backBtn'
+            className="backBtn"
           />
         </div>
-        <div className='land-info-div'>
-          <p className='bold-text'>Land info</p>
-          <div className='info-blocks'>
-            <div className='info-block'>
-              <FaVectorSquare className='info-icon' size={22} />
+        <div className="land-info-div">
+          <p className="bold-text">Land info</p>
+          <div className="info-blocks">
+            <div className="info-block">
+              <FaVectorSquare className="info-icon" size={22} />
               <div>
                 <p>Perimeter</p>
-                <p className='bold-text'>{perimeter} km</p>
+                <p className="bold-text">
+                  {parseFloat(perimeter).toFixed(2)} km
+                </p>
               </div>
             </div>
-            <div className='info-block'>
-              <RiPieChart2Fill className='info-icon' size={25} />
+            <div className="info-block">
+              <RiPieChart2Fill className="info-icon" size={25} />
               <div>
                 <p>Area</p>
-                <p className='bold-text'>{area} perches</p>
+                <p className="bold-text">{parseFloat(area).toFixed(2)} perch</p>
               </div>
             </div>
           </div>
         </div>
-        <div className='mn-block'>
-          <label className='mn-label bold-text'>Template Name:</label>
+        <div className="mn-block">
+          <label className="mn-label bold-text">Template Name:</label>
           <input
-            className='mn-input'
-            type='text'
+            className="mn-input"
+            type="text"
             value={templateName}
             onChange={handleTemplateNameChange}
           />
         </div>
-        <div className='mn-block'>
-          <label className='mn-label bold-text'>Measure Name:</label>
+        <div className="mn-block">
+          <label className="mn-label bold-text">Measure Name:</label>
           <input
-            className='mn-input'
-            type='text'
+            className="mn-input"
+            type="text"
             value={measureName}
             onChange={handleMeasureNameChange}
           />
         </div>
-        <div className='mn-block'>
-          <label className='mn-label bold-text'>Land Type:</label>
+        <div className="mn-block">
+          <label className="mn-label bold-text">Land Type:</label>
           <input
-            className='mn-input'
-            type='text'
+            className="mn-input"
+            type="text"
             value={landType}
             onChange={handleLandTypeChange}
           />
         </div>
-        <div className='mn-block'>
-          <label className='mn-label bold-text'>Location : </label>
+        <div className="mn-block">
+          <label className="mn-label bold-text">Location : </label>
           <input
-            className='mn-input'
-            type='text'
+            className="mn-input"
+            type="text"
             value={location}
             onChange={handleLocationChange}
           />
         </div>
-        <div className='desc-block'>
-          <label className='mn-label bold-text'>Description:</label>
+        <div className="desc-block">
+          <label className="mn-label bold-text">Description:</label>
           <textarea
-            className='desc-input'
+            className="desc-input"
             value={description}
             onChange={handleDescriptionChange}
           />
         </div>
         {imageUrl && (
-          <div className='map-snapshot'>
-            <img src={imageUrl} alt='Map Snapshot' height={'150px'} />
+          <div className="map-snapshot">
+            <img src={imageUrl} alt="Map Snapshot" height={"150px"} />
           </div>
         )}
-        <div className='save-button-div'>
-          <button className='save-button' onClick={handleSave}>
+        <div className="save-button-div">
+          <button className="save-button" onClick={handleSave}>
             <FaRegSave />
             <p>Save</p>
           </button>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
 import { MdArrowBack, MdFence } from "react-icons/md";
 import { GiGate } from "react-icons/gi";
@@ -35,6 +35,25 @@ export default function FenceManual({
   const [NumberOfSticks, setNumberOfSticks] = useState(0);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
+  const [fenceType, setfenceType] = useState([]);
+  const [textFence, setTextFence] = useState(null);
+
+  useEffect(() => {
+    fetchFenceType();
+  }, []);
+
+  const fetchFenceType = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/FenceTypes"
+      );
+      setfenceType(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+      message.error("Failed to fetch plants. Please try again.");
+    }
+  };
 
   const handleFenceLengthChange = (event) => {
     setInputValueFenceLength(event.target.value);
@@ -108,7 +127,7 @@ export default function FenceManual({
     // Validate the data
     if (
       !PostSpaceUnitselectedValue ||
-      !FenceTypeselectedValue ||
+      !textFence ||
       !inputValuePostspace
     ) {
       message.error("Error: Please fill all input fields");
@@ -122,7 +141,7 @@ export default function FenceManual({
     }
 
     AxiosInstance.post("/api/fence/fenceFromManualcal", {
-      FenceTypeselectedValue,
+      FenceTypeselectedValue : textFence ? textFence.value : null,
       inputValuePostspace,
       PostSpaceUnitselectedValue,
       displayValues,
@@ -172,7 +191,7 @@ export default function FenceManual({
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
                   <p style={styles.propertyValue}>
-                    {Perimeter}
+                  {parseFloat(Perimeter).toFixed(2)}
                     {PerimeterUnitselectedValue}
                   </p>
                 </div>
@@ -182,7 +201,7 @@ export default function FenceManual({
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {area} {AreaUnitselectedValue}
+                  {parseFloat(area).toFixed(2)} {AreaUnitselectedValue}
                   </p>
                 </div>
               </div>
@@ -198,15 +217,15 @@ export default function FenceManual({
             </div>
             <div style={styles.box2Property}>
               <div style={styles.Box2DropdownContainer}>
-                <Select
+              <Select
                   placeholder="Type"
-                  options={[
-                    { value: "Wood", label: "Wood" },
-                    { value: "Metal", label: "Metal" },
-                    { value: "Fiber", label: "Fiber" },
-                  ]}
-                  value={FenceTypeselectedValue1}
-                  onChange={handleFenceTypeChange}
+                  value={textFence}
+                  onChange={(selectedOption) => setTextFence(selectedOption)}
+                  options={fenceType.map((Fence) => ({
+                    value: Fence.Name,
+                    label: Fence.Name,
+                  }))}
+                
                   styles={{
                     control: (provided) => ({
                       ...provided,
@@ -334,8 +353,7 @@ export default function FenceManual({
             inputValuePostspace={inputValuePostspace}
             displayValues={displayValues}
             PostSpaceUnitselectedValue={PostSpaceUnitselectedValue}
-            FenceTypeselectedValue={FenceTypeselectedValue}
-            NumberOfSticks={NumberOfSticks}
+            FenceTypeselectedValue={textFence ? textFence.value : null}            NumberOfSticks={NumberOfSticks}
             area={area}
             Perimeter={Perimeter}
             AreaUnitselectedValue={AreaUnitselectedValue}

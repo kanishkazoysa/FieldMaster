@@ -22,7 +22,8 @@ import Headersection from "../../../components/Headersection";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import area from "@turf/area";
 import { distance } from "@turf/turf";
-
+import { captureRef } from "react-native-view-shot";
+import axios from "axios";
 
 const ResizeMapScreen = ({ navigation, route }) => {
   const { templateId, Area, Perimeter } = route.params;
@@ -40,8 +41,36 @@ const ResizeMapScreen = ({ navigation, route }) => {
   const [isMarkerMoved, setIsMarkerMoved] = useState(false);
   const [undoStack, setUndoStack] = useState([]);
   const [calculatedArea, setCalculatedArea] = useState(parseFloat(Area) || 0);
-  const [polygonPerimeter, setPolygonPerimeter] = useState(parseFloat(Perimeter) || 0);
+  const [polygonPerimeter, setPolygonPerimeter] = useState(
+    parseFloat(Perimeter) || 0
+  );
+  const [isSaving, setIsSaving] = useState(false);
 
+  const uploadToImgbb = async (imageUri) => {
+    const apiKey = "a08fb8cde558efecce3f05b7f97d4ef7";
+    const formData = new FormData();
+    formData.append("image", {
+      uri: imageUri,
+      type: "image/jpeg",
+      name: "map_image.jpg",
+    });
+
+    try {
+      const response = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${apiKey}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data.data.url;
+    } catch (error) {
+      console.error("Error uploading image to imgbb:", error);
+      throw error;
+    }
+  };
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -53,32 +82,42 @@ const ResizeMapScreen = ({ navigation, route }) => {
   const calculateAreaAndPerimeter = (pointsToCalculate) => {
     const polygon = {
       type: "Polygon",
-      coordinates: [pointsToCalculate.map((coord) => [coord.longitude, coord.latitude])],
+      coordinates: [
+        pointsToCalculate.map((coord) => [coord.longitude, coord.latitude]),
+      ],
     };
     const polygonArea = area(polygon);
     const newArea = polygonArea * 0.03954; // Convert to perches
-  
+
     let perimeter = 0;
     for (let i = 0; i < pointsToCalculate.length; i++) {
-      const start = [pointsToCalculate[i].longitude, pointsToCalculate[i].latitude];
+      const start = [
+        pointsToCalculate[i].longitude,
+        pointsToCalculate[i].latitude,
+      ];
       const end =
         i === pointsToCalculate.length - 1
           ? [pointsToCalculate[0].longitude, pointsToCalculate[0].latitude]
-          : [pointsToCalculate[i + 1].longitude, pointsToCalculate[i + 1].latitude];
+          : [
+              pointsToCalculate[i + 1].longitude,
+              pointsToCalculate[i + 1].latitude,
+            ];
       perimeter += distance(start, end, { units: "kilometers" });
     }
-  
+
     setCalculatedArea(newArea);
     setPolygonPerimeter(perimeter);
   };
-
 
   const insertIntermediatePoints = (startPoint, endPoint, numPoints = 1) => {
     const points = [];
     for (let i = 1; i <= numPoints; i++) {
       const ratio = i / (numPoints + 1);
-      const lat = startPoint.latitude + (endPoint.latitude - startPoint.latitude) * ratio;
-      const lng = startPoint.longitude + (endPoint.longitude - startPoint.longitude) * ratio;
+      const lat =
+        startPoint.latitude + (endPoint.latitude - startPoint.latitude) * ratio;
+      const lng =
+        startPoint.longitude +
+        (endPoint.longitude - startPoint.longitude) * ratio;
       points.push({ latitude: lat, longitude: lng });
     }
     return points;
@@ -100,9 +139,14 @@ const ResizeMapScreen = ({ navigation, route }) => {
 
       AxiosInstance.get(`/api/auth/mapTemplate/getOneTemplate/${templateId}`)
         .then((response) => {
-          setPoints(response.data.locationPoints.map(point => ({ ...point, isMain: true })));
+          setPoints(
+            response.data.locationPoints.map((point) => ({
+              ...point,
+              isMain: true,
+            }))
+          );
           console.log(response.data.locationPoints);
-           
+
           // Calculate the average latitude and longitude
           const avgLatitude =
             response.data.locationPoints.reduce(
@@ -141,9 +185,9 @@ const ResizeMapScreen = ({ navigation, route }) => {
       const newUndoStack = [...undoStack];
       const lastAction = newUndoStack.pop();
       setUndoStack(newUndoStack);
-      
+
       setPoints(lastAction.originalPoints);
-      
+
       if (newUndoStack.length === 0) {
         setIsMarkerMoved(false);
       }
@@ -155,6 +199,13 @@ const ResizeMapScreen = ({ navigation, route }) => {
   const handleSaveMap = async () => {
     if (isMarkerMoved || undoStack.length > 0) {
       try {
+        setIsSaving(true);
+        const uri = await captureRef(mapRef.current, {
+          format: "jpg",
+          quality: 0.3,
+        });
+        const imageUrl = await uploadToImgbb(uri);
+
         const locationPoints = points.map((point) => ({
           latitude: point.latitude,
           longitude: point.longitude,
@@ -165,51 +216,65 @@ const ResizeMapScreen = ({ navigation, route }) => {
             locationPoints,
             area: calculatedArea,
             perimeter: polygonPerimeter,
+            imageUrl,
           }
         );
-  
+
         if (response.status === 200) {
-          console.log('Location updated successfully');
+          console.log("Location updated successfully");
           setIsMarkerMoved(false);
           setUndoStack([]);
-          navigation.navigate('SavedTemplatesScreen');
+          navigation.navigate("SavedTemplatesScreen");
         } else {
-          console.log('Failed to update location');
+          console.log("Failed to update location");
         }
       } catch (error) {
-        console.error('An error occurred while updating the location:', error);
+        console.error("An error occurred while updating the location:", error);
       }
     } else {
-      navigation.navigate('SavedTemplatesScreen');
+      navigation.navigate("SavedTemplatesScreen");
     }
   };
 
   //update the point's coordinates when a marker is dragged to a new location
   const handleMarkerDragEnd = (event, index) => {
-  const newPoints = [...points];
-  const originalPoints = [...newPoints];
-  const draggedPoint = { ...event.nativeEvent.coordinate, isMain: true };
-  newPoints[index] = draggedPoint;
+    const newPoints = [...points];
+    const originalPoints = [...newPoints];
+    const draggedPoint = { ...event.nativeEvent.coordinate, isMain: true };
+    newPoints[index] = draggedPoint;
 
-  const prevIndex = (index - 1 + newPoints.length) % newPoints.length;
-  const nextIndex = (index + 1) % newPoints.length;
-  
-  const intermediatePrev = insertIntermediatePoints(newPoints[prevIndex], draggedPoint).map(p => ({ ...p, isMain: false }));
-  const intermediateNext = insertIntermediatePoints(draggedPoint, newPoints[nextIndex]).map(p => ({ ...p, isMain: false }));
+    const prevIndex = (index - 1 + newPoints.length) % newPoints.length;
+    const nextIndex = (index + 1) % newPoints.length;
 
-  newPoints.splice(index, 0, ...intermediatePrev);
-  newPoints.splice(index + intermediatePrev.length + 1, 0, ...intermediateNext);
+    const intermediatePrev = insertIntermediatePoints(
+      newPoints[prevIndex],
+      draggedPoint
+    ).map((p) => ({ ...p, isMain: false }));
+    const intermediateNext = insertIntermediatePoints(
+      draggedPoint,
+      newPoints[nextIndex]
+    ).map((p) => ({ ...p, isMain: false }));
 
-  setUndoStack(prevStack => [...prevStack, {
-    originalPoints,
-    newPoints,
-    draggedIndex: index
-  }]);
+    newPoints.splice(index, 0, ...intermediatePrev);
+    newPoints.splice(
+      index + intermediatePrev.length + 1,
+      0,
+      ...intermediateNext
+    );
 
-  setPoints(newPoints);
-  setIsMarkerMoved(true);
-  calculateAreaAndPerimeter(newPoints);
-};
+    setUndoStack((prevStack) => [
+      ...prevStack,
+      {
+        originalPoints,
+        newPoints,
+        draggedIndex: index,
+      },
+    ]);
+
+    setPoints(newPoints);
+    setIsMarkerMoved(true);
+    calculateAreaAndPerimeter(newPoints);
+  };
 
   //select a map type
   const handleSetMapType = (type) => {
@@ -245,7 +310,7 @@ const ResizeMapScreen = ({ navigation, route }) => {
       </View>
     </Marker>
   );
-  
+
   const IntermediateMarker = ({ coordinate, onDragEnd, index }) => (
     <Marker
       coordinate={coordinate}
@@ -308,127 +373,133 @@ const ResizeMapScreen = ({ navigation, route }) => {
         ></Headersection>
       </View>
       <View style={styles.overlay}>
-      <Text style={styles.overlayText}>
-        Area: {calculatedArea.toFixed(2)} perches
-      </Text>
-      <Text style={styles.overlayText}>
-        Perimeter: {polygonPerimeter.toFixed(3)} km
-      </Text>
-    </View>
-    {loading ? (
+        <Text style={styles.overlayText}>
+          Area: {calculatedArea.toFixed(2)} perches
+        </Text>
+        <Text style={styles.overlayText}>
+          Perimeter: {polygonPerimeter.toFixed(3)} km
+        </Text>
+      </View>
+      {loading ? (
         <View style={styles.loadingScreen}>
           <View style={styles.dotsWrapper}>
-        <ActivityIndicator 
-           color="#007BFF" 
-           size={45} 
-           />
-      </View>
+            <ActivityIndicator color="#007BFF" size={45} />
+          </View>
         </View>
       ) : (
         <View style={{ flex: 1 }}>
-      {region && (
-        <View style={{ flex: 1 }}>
-          <MapView
-            ref={mapRef}
-            style={{ flex: 1, paddingTop: 100 }}
-            region={region}
-            mapType={mapTypes[mapTypeIndex].value}
-            mapPadding={{ top: 0, right: -100, bottom: 0, left: 0 }}
-          >
-          {points.map((point, index) => 
-            point.isMain ? (
-              <MainMarker
-                key={index}
-                coordinate={point}
-                onDragEnd={handleMarkerDragEnd}
-                index={index}
-              />
-            ) : (
-              <IntermediateMarker
-                key={index}
-                coordinate={point}
-                onDragEnd={handleMarkerDragEnd}
-                index={index}
-              />
-            )
-          )}
-            {!isPolygonComplete && points.length > 1 && (
-              <Polyline
-                coordinates={points}
-                strokeColor="#000"
-                strokeWidth={1}
-              />
-            )}
-            {isPolygonComplete && points.length > 2 && (
-              <Polygon
-                coordinates={points}
-                strokeColor="#000"
-                fillColor="rgba(199, 192, 192, 0.5)"
-                strokeWidth={1}
-              />
-            )}
-          </MapView>
+          {region && (
+            <View style={{ flex: 1 }}>
+              <MapView
+                ref={mapRef}
+                style={{ flex: 1, paddingTop: 100 }}
+                region={region}
+                mapType={mapTypes[mapTypeIndex].value}
+                mapPadding={{ top: 0, right: -100, bottom: 0, left: 0 }}
+              >
+                {points.map((point, index) =>
+                  point.isMain ? (
+                    <MainMarker
+                      key={index}
+                      coordinate={point}
+                      onDragEnd={handleMarkerDragEnd}
+                      index={index}
+                    />
+                  ) : (
+                    <IntermediateMarker
+                      key={index}
+                      coordinate={point}
+                      onDragEnd={handleMarkerDragEnd}
+                      index={index}
+                    />
+                  )
+                )}
+                {!isPolygonComplete && points.length > 1 && (
+                  <Polyline
+                    coordinates={points}
+                    strokeColor="#000"
+                    strokeWidth={1}
+                  />
+                )}
+                {isPolygonComplete && points.length > 2 && (
+                  <Polygon
+                    coordinates={points}
+                    strokeColor="#000"
+                    fillColor="rgba(199, 192, 192, 0.5)"
+                    strokeWidth={1}
+                  />
+                )}
+              </MapView>
 
-          <TouchableOpacity
-            style={styles.layerIconContainer}
-            onPress={() => {
-              setIsButtonPressed(true);
-              toggleMapType();
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faLayerGroup}
-              size={responsiveFontSize(3)}
-              color="#fff"
-            />
-            {showDropdown && (
-              <View style={styles.dropdownContainer}>
-                <FlatList
-                  data={mapTypes}
-                  renderItem={({ item, index }) => (
-                    <TouchableOpacity
-                      style={styles.dropdownItem}
-                      onPress={() => selectMapType(index)}
-                    >
-                      <Text style={{ color: "#fff" }}>{item.name}</Text>
-                    </TouchableOpacity>
-                  )}
-                  keyExtractor={(item) => item.value}
+              <TouchableOpacity
+                style={styles.layerIconContainer}
+                onPress={() => {
+                  setIsButtonPressed(true);
+                  toggleMapType();
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faLayerGroup}
+                  size={responsiveFontSize(3)}
+                  color="#fff"
                 />
+                {showDropdown && (
+                  <View style={styles.dropdownContainer}>
+                    <FlatList
+                      data={mapTypes}
+                      renderItem={({ item, index }) => (
+                        <TouchableOpacity
+                          style={styles.dropdownItem}
+                          onPress={() => selectMapType(index)}
+                        >
+                          <Text style={{ color: "#fff" }}>{item.name}</Text>
+                        </TouchableOpacity>
+                      )}
+                      keyExtractor={(item) => item.value}
+                    />
+                  </View>
+                )}
+              </TouchableOpacity>
+
+              {(undoStack.length > 0 || isMarkerMoved) && (
+                <TouchableOpacity
+                  style={styles.sideIconWrap}
+                  onPressIn={() => setIsButtonPressed(true)}
+                  onPressOut={() => setIsButtonPressed(false)}
+                  onPress={handleUndoLastPoint}
+                >
+                  <MaterialCommunityIcons
+                    name="arrow-u-left-top"
+                    size={responsiveFontSize(3)}
+                    color="white"
+                    style={styles.sideIconStyle}
+                  />
+                </TouchableOpacity>
+              )}
+
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  onPress={handleSaveMap}
+                  style={styles.btnStyle}
+                >
+                  <Text style={styles.btmBtnStyle}>Save</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleCancel}
+                  style={styles.cancelBtnStyle}
+                >
+                  <Text style={styles.btmBtnStyle}>Cancel</Text>
+                </TouchableOpacity>
               </View>
-            )}
-          </TouchableOpacity>
-
-          {(undoStack.length > 0 || isMarkerMoved) && (
-            <TouchableOpacity
-              style={styles.sideIconWrap}
-              onPressIn={() => setIsButtonPressed(true)}
-              onPressOut={() => setIsButtonPressed(false)}
-              onPress={handleUndoLastPoint}
-            >
-              <MaterialCommunityIcons
-                name="arrow-u-left-top"
-                size={responsiveFontSize(3)}
-                color="white"
-                style={styles.sideIconStyle}
-              />
-            </TouchableOpacity>
+            </View>
           )}
-
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleSaveMap} style={styles.btnStyle}>
-              <Text style={styles.btmBtnStyle}>Save</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleCancel}
-              style={styles.cancelBtnStyle}
-            >
-              <Text style={styles.btmBtnStyle}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
         </View>
       )}
-      </View>
+      {isSaving && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator color="#007BFF" size={45} />
+          <Text style={styles.loadingText}>Saving...</Text>
+        </View>
       )}
     </>
   );

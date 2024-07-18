@@ -12,8 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 import * as Print from "expo-print";
 import { styles } from "./PlantationDetailsStylesFromManualCalculatorStyles";
 import CustomButton from "../../components/CustomButton";
-
 import Headersection from "../../components/Headersection";
+
 export default function PlantationDetailsFromManualCalculator({ route }) {
   const {
     area,
@@ -202,7 +202,7 @@ export default function PlantationDetailsFromManualCalculator({ route }) {
                 />
                 <View style={styles.box2PropertyDetails}>
                   <Text style={styles.Box2PropertyLabel}>Perimeter</Text>
-                  <Text style={styles.Box2PropertyValue}>{perimeter}Km</Text>
+                  <Text style={styles.Box2PropertyValue}>{parseFloat(perimeter).toFixed(3)} km</Text>
                 </View>
               </View>
               <View style={styles.box2Property}>
