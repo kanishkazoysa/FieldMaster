@@ -206,7 +206,7 @@ export default function Plantation({ route }) {
                 />
                 <View style={styles.propertyDetails}>
                   <Text style={styles.propertyLabel}>Area</Text>
-                  <Text style={styles.propertyValue}>{area} Perch</Text>
+                  <Text style={styles.propertyValue}>{parseFloat(area).toFixed(2)}  Perch</Text>
                 </View>
               </View>
             </View>

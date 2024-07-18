@@ -6,9 +6,9 @@ import {
   FlatList,
   TouchableWithoutFeedback,
   Keyboard,
-  ActivityIndicator 
+  ActivityIndicator,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from "react-native-maps";
 import { Button } from "react-native-paper";
 import * as Location from "expo-location";
@@ -29,14 +29,12 @@ import AxiosInstance from "../../AxiosInstance";
 import styles from "./HomeStyles";
 import MapDetailsPanel from "./MapDetailsPanel";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { BackHandler, Alert } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { BackHandler, Alert } from "react-native";
 
-const apiKey = "AIzaSyB61t78UY4piRjSDjihdHxlF2oqtrtzw8U";
+const apiKey = "AIzaSyCmDfdWl4TZegcfinTmC0LlmFCiEcdRbmU";
 
 export default function Home() {
   const navigation = useNavigation();
-  const [isfocused, setIsFocused] = useState(false);
   const [mapTypeIndex, setMapTypeIndex] = useState(0);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [showCurrentLocation, setShowCurrentLocation] = useState(false);
@@ -56,21 +54,28 @@ export default function Home() {
 
   useFocusEffect(
     React.useCallback(() => {
+      fetchUserMaps();
+    }, [])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
       const onBackPress = () => {
-        Alert.alert('Exit App', 'Are you sure you want to exit?', [
+        Alert.alert("Exit App", "Are you sure you want to exit?", [
           {
-            text: 'Cancel',
+            text: "Cancel",
             onPress: () => null,
-            style: 'cancel',
+            style: "cancel",
           },
-          { text: 'YES', onPress: () => BackHandler.exitApp() },
+          { text: "YES", onPress: () => BackHandler.exitApp() },
         ]);
         return true;
       };
-  
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-  
-      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     }, [])
   );
 
@@ -93,21 +98,18 @@ export default function Home() {
   }, [isFocused]);
 
   //get all maps of user
-  useEffect(() => {
-    const fetchUserMaps = async () => {
-      try {
-        const response = await AxiosInstance.get(
-          "/api/auth/mapTemplate/getAllTemplates"
-        );
-        setUserMaps(response.data);
-        showAllMaps(); // Call showAllMaps after setting userMaps
-      } catch (error) {
-        console.error("Failed to fetch user maps:", error);
-      }
-    };
-  
-    fetchUserMaps();
-  }, []);
+
+  const fetchUserMaps = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/mapTemplate/getAllTemplates"
+      );
+      setUserMaps(response.data);
+      showAllMaps(); // Call showAllMaps after setting userMaps
+    } catch (error) {
+      console.error("Failed to fetch user maps:", error);
+    }
+  };
 
   //get the current location
   useEffect(() => {
@@ -167,14 +169,6 @@ export default function Home() {
     setShowDropdown(false);
   };
 
-  const onFocus = () => {
-    setIsFocused(true);
-  };
-
-  const onBlur = () => {
-    setIsFocused(false);
-  };
-
   const focusOnCurrentLocation = () => {
     setShowCurrentLocation(!showCurrentLocation); // Toggle current location
     setSearchedLocation(null); // Clear searched location
@@ -210,8 +204,8 @@ export default function Home() {
           `/api/auth/mapTemplate/getAllmapData/${mapId}`
         );
         setSelectedMapDetails(response.data);
-        setIsMapDetailsVisible(true);  // Set this to true when map is selected
-  
+        setIsMapDetailsVisible(true); // Set this to true when map is selected
+
         // Zoom to the selected map
         const selectedMap = userMaps.find((map) => map._id === mapId);
         if (selectedMap && mapRef.current) {
@@ -219,7 +213,7 @@ export default function Home() {
             latitude: point.latitude,
             longitude: point.longitude,
           }));
-  
+
           mapRef.current.fitToCoordinates(coordinates, {
             edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
             animated: true,
@@ -250,7 +244,7 @@ export default function Home() {
     }
     setSelectedMapId(null);
     setSelectedMapDetails(null);
-    setIsMapDetailsVisible(false);  // Set this to false when zooming out
+    setIsMapDetailsVisible(false); // Set this to false when zooming out
   };
 
   const getCenterOfPolygon = (points) => {
@@ -287,7 +281,7 @@ export default function Home() {
           longitude: point.longitude,
         }))
       );
-  
+
       mapRef.current.fitToCoordinates(allCoordinates, {
         edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
         animated: true,
@@ -317,12 +311,19 @@ export default function Home() {
                 strokeWidth={3}
               />
               <Marker
+                key={`marker-${map._id}`}
                 coordinate={getCenterOfPolygon(map.locationPoints)}
                 onPress={() => handleMapSelect(map._id)}
+                tracksViewChanges={false}
               >
-                <View style={styles.markerContainer}>
-                  <Text style={styles.markerText}>{index + 1}</Text>
-                </View>
+                <TouchableOpacity
+                  onPress={() => handleMapSelect(map._id)}
+                  style={styles.markerTouchable}
+                >
+                  <View style={styles.markerContainer}>
+                    <Text style={styles.markerText}>{index + 1}</Text>
+                  </View>
+                </TouchableOpacity>
               </Marker>
             </React.Fragment>
           ))}
@@ -340,13 +341,13 @@ export default function Home() {
             <Marker coordinate={searchedLocation} title="Searched Location" />
           )}
         </MapView>
-        
+
         {isLoading && (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#007BFF" />
           </View>
         )}
-        
+
         {selectedMapDetails && !isLoading && (
           <MapDetailsPanel
             mapDetails={selectedMapDetails}
@@ -360,12 +361,12 @@ export default function Home() {
         {!isMapDetailsVisible && (
           <>
             <GooglePlacesAutocomplete
-              placeholder='Search Location'
+              placeholder="Search Location"
               onPress={handlePlaceSelect}
               fetchDetails={true}
               query={{
                 key: apiKey,
-                language: 'en',
+                language: "en",
               }}
               styles={{
                 container: styles.searchBarContainer,
@@ -375,7 +376,10 @@ export default function Home() {
               renderRightButton={() => (
                 <View style={{ marginRight: responsiveWidth(1) }}>
                   <TouchableOpacity onPress={ProfileManage}>
-                    <ProfileAvatar userData={userData} textSize={responsiveFontSize(0.65)} />
+                    <ProfileAvatar
+                      userData={userData}
+                      textSize={responsiveFontSize(0.65)}
+                    />
                   </TouchableOpacity>
                 </View>
               )}

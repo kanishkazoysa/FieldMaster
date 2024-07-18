@@ -150,7 +150,7 @@ export default function Fertilization({ route }) {
                     />
                     <View style={styles.propertyDetails}>
                       <Text style={styles.propertyLabel}>Area</Text>
-                      <Text style={styles.propertyValue}>{area} perch</Text>
+                      <Text style={styles.propertyValue}>{parseFloat(area).toFixed(2)} Perch</Text>
                     </View>
                   </View>
                 </View>

@@ -8,7 +8,6 @@ import { PiSquareDuotone } from "react-icons/pi";
 import { styles } from "./fenceDetailsStyles";
 import { RiEditBoxLine } from "react-icons/ri"; 
 import AxiosInstance from "../../../AxiosInstance";
-import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal,Button } from "antd";
 import Fence from "../Fence/fence";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails";
@@ -35,6 +34,7 @@ export default function FenceDetails({
   const [data1 , setdata1] = useState([]);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
+  const [fencedata, setfencedata] = useState(null);
 
 
   useEffect(() => {
@@ -42,6 +42,7 @@ export default function FenceDetails({
       try {
         const response = await AxiosInstance.get(`/api/fence/numberOfSticks/${id}`);
         const data = response.data;
+        setfencedata(data);
         console.log(data);
   
         setnumberOfSticks(data.numberOfSticks);
@@ -63,7 +64,6 @@ export default function FenceDetails({
     // Cleanup function if needed
     return () => {};
   }, [id]);
-  
 
 
   const FenceDelete = async (id) => {
@@ -78,39 +78,60 @@ export default function FenceDetails({
     }
   };
 
-  const handleIconPress = (e) => {
-    confirm({
-      title: 'Are you sure?',
-      content: 'Do you want to update Fence?',
-      icon: <ExclamationCircleOutlined />,
-      okText: 'Yes',
+  const handleEditIconPressd = () => {
+    Modal.confirm({
+      title: 'Do you want to delete Fence data',
+      content: 'Choose an action:',
+      okText: 'Update',
+      cancelText: 'Close',
       okType: 'primary',
-      cancelText: 'No',
-      onOk() {
-        try {
-          FenceDelete(id)
-            .then(() => {
-              // Navigate to the desired screen
-              setCurrentPage('Fence');
-              setAnimatePage(true);
-              e.preventDefault();
-            })
-            .catch((error) => {
-              // Show detailed error message
-              const errorMessage = error.response ? error.response.data.message : error.message;
-              Modal.error({
-                title: 'Failed to delete fence',
-                content: errorMessage,
-              });
-            });
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      },
-      onCancel() {
-        console.log('Cancelled');
-      },
+      onOk: handleEditfencedata,
+      onCancel: () => {},
+      maskClosable: true,
+      closable: true,
+      footer: (_, { OkBtn, CancelBtn }) => (
+        <>
+          <CancelBtn />
+          <Button 
+            onClick={() => {
+              Modal.destroyAll(); // This closes all open modals
+              handledeletefence();
+            }} 
+            danger
+          >
+            Delete
+          </Button>
+          <OkBtn />
+        </>
+      ),
     });
+  };
+
+  const handledeletefence = () => {
+    try {
+      FenceDelete(id)
+        .then(() => {
+          // Navigate to the desired screen
+          setfencedata(null);
+          setCurrentPage('Fence');
+          setAnimatePage(true);
+        })
+        .catch((error) => {
+          // Show detailed error message
+          const errorMessage = error.response ? error.response.data.message : error.message;
+          Modal.error({
+            title: 'Failed to delete fence',
+            content: errorMessage,
+          });
+        });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleEditfencedata = () => {
+    setCurrentPage('Fence');
+    setAnimatePage(true);
   };
 
  
@@ -144,7 +165,7 @@ export default function FenceDetails({
               />
               <p style={styles.titleText1}>Fence Details</p>
               <RiEditBoxLine
-                onClick={handleIconPress}
+                onClick={handleEditIconPressd}
                 style={styles.editbutton}
                 fontSize={19}
               />
@@ -182,14 +203,14 @@ export default function FenceDetails({
                   <BsBoundingBox color="gray" size={28} />
                   <div style={styles.propertyDetails}>
                     <p style={styles.propertyLabel}>Perimeter</p>
-                    <p style={styles.propertyValue}>{Perimeter} Km</p>
+                    <p style={styles.propertyValue}>{parseFloat(Perimeter).toFixed(2)} km</p>
                   </div>
                 </div>
                 <div className="property" style={styles.property}>
                   <PiSquareDuotone color="gray" size={40} />
                   <div style={styles.propertyDetails}>
                     <p style={styles.propertyLabel}>Area</p>
-                    <p style={styles.propertyValue}>{Area} perches</p>
+                    <p style={styles.propertyValue}>{parseFloat(Area).toFixed(2)} perch</p>
                   </div>
                 </div>
               </div>
@@ -257,6 +278,7 @@ export default function FenceDetails({
             Perimeter={Perimeter}
             onEditTemplateClick={onEditTemplateClick}
             template={template}
+            fencedata={fencedata}
           />
         )}
   

@@ -20,12 +20,6 @@ function NavBar() {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-
-  const handleEmail = () => {
-    navigate('/email-manage')
-  }
-
-
   return (
     <>
       <MobileNav isOpen={openMenu} toggleMenu={toggleMenu} />
@@ -38,10 +32,6 @@ function NavBar() {
         <div className="nav-content">
           <div className="logo"><img className="image" src={logo} alt="FIELDMASTER" />
         </div>
-
-        <button className="contact-btn" onClick={handleEmail}>
-         Email
-        </button>
           
           <div className="nav-links" >
           <ul>

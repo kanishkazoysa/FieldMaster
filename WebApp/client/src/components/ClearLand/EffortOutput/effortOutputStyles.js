@@ -6,7 +6,7 @@ export const styles = {
       
     },
     editbutton: {
-      marginRight: "1px",
+      marginRight: "15px",
       cursor: "pointer",
       color: "white",
     },
@@ -35,6 +35,7 @@ export const styles = {
       marginBottom: 0,
       color: "white",
       marginLeft: "0px",
+      marginRight:5,
     },
     Box1: {
       width: "90%",
@@ -43,15 +44,23 @@ export const styles = {
       flexDirection: "column",
       alignItems: "center",
       backgroundColor: "white",
-      marginTop: "30px",
+      marginTop: "10px",
       borderRadius: "11px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
       padding: "6px",
     },
+    box1Top: {
+     display: "flex", 
+     justifyContent: "space-between" ,
+     flexDirection:"row",
+    },
+   
     titleText: {
       fontSize: 13,
       fontWeight: "bold",
       marginBottom: 0,
+      marginLeft: "65px",
+      marginRight: "60px",
     },
   
     propertyBox: {
@@ -115,15 +124,43 @@ export const styles = {
     },
     box3: {
       width: "90%",
-      //height: "max-content",
-      height: 170,
+      height: "auto",
       backgroundColor: "white",
       marginTop: 15,
       borderRadius: 11,
       padding: 20,
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
-  
+    box: {
+      width: "90%",
+      height: "92px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      backgroundColor: "white",
+      marginTop: "10px",
+      borderRadius: "11px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      padding: "5px",
+    },
+    boxTop:{
+      display: "flex", 
+      justifyContent: "space-between" ,
+      flexDirection:"row",
+     },
+    boxHeader: {
+      fontWeight: "bold",
+      marginLeft: 90,
+      marginRight: 80,
+    },
+    boxInner:{
+      marginLeft: 5,
+      marginTop: 0,
+      width: "90%",
+    },
+    boxInnerText: {
+      marginBottom: 2,
+    },
     innertopText: {
       fontSize: 13,
       fontWeight: "bold",
@@ -133,35 +170,40 @@ export const styles = {
     innercenter: {
       display: "flex",
       flexDirection: "row",
-      width: "100%",
       justifyContent: "space-between",
+      width: "100%",
       backgroundColor: "white",
-      marginVertical: 3,
-      marginTop: 15,
+      marginVertical: 1,
+      marginTop: 12,
+      height:"auto",
     },
   
     innersquareleft: {
       display: "flex",
-      width: "52%",
+      width: "55%",
       flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
+      alignItems: "left",
+      // justifyContent: "space-between",
       backgroundColor: "white",
+      // height: 10,
     },
   
     innersquareright: {
       display: "flex",
-      width: "45%",
+      width: "50%",
       flexDirection: "row",
       alignItems: "center",
       backgroundColor: "white",
+      marginTop: 0,
     },
   
     innersquareright1: {
       display: "flex",
-      width: "45%",
-      height: 10,
-      marginTop: 5,
+      width: "50%",
+      height: "auto",
+      marginTop: 0,
+      paddinhTop: 0,
+      marginLeft: 0,
       marginBottom: 0,
       justifyContent: "flex-start",
       backgroundColor: "white",
@@ -171,7 +213,7 @@ export const styles = {
   
     bottom: {
       alignItems: "center",
-      marginTop: 100,
+      marginTop: 50,
       width: "92%",
       
     },

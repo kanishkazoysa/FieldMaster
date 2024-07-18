@@ -136,7 +136,7 @@ const handleFrequencyChange = (selectedFrequency) => {
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                    {/* {area} m<sup>2</sup> */}{area} Acres
+                  {parseFloat(area).toFixed(2)} Acres
                   </p>
                 </div>
               </div>

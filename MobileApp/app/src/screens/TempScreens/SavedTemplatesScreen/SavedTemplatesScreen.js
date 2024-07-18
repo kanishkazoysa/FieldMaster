@@ -7,6 +7,7 @@ import {
   ScrollView,
   StatusBar,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { Appbar } from "react-native-paper";
 import { styles } from "./SavedTemplatesScreenStyles";
@@ -40,6 +41,11 @@ const truncateText = (text, maxLength) => {
 const SavedTemplatesScreen = ({ navigation }) => {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState({});
+
+  const handleImageLoad = (id) => {
+    setImageLoading((prev) => ({ ...prev, [id]: false }));
+  };
 
   const fetchData = () => {
     console.log("calling api to get all templates...");
@@ -62,18 +68,36 @@ const SavedTemplatesScreen = ({ navigation }) => {
   );
 
   const handleDelete = (deletingTemplate) => {
-    AxiosInstance.delete(
-      `/api/auth/mapTemplate/deleteTemplate/${deletingTemplate._id}`
-    )
-      .then((response) => {
-        alert("Template deleted");
-        setTemplates(
-          templates.filter((template) => template._id !== deletingTemplate._id)
-        );
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this template?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            AxiosInstance.delete(
+              `/api/auth/mapTemplate/deleteTemplate/${deletingTemplate._id}`
+            )
+              .then((response) => {
+                alert("Template deleted");
+                setTemplates(
+                  templates.filter(
+                    (template) => template._id !== deletingTemplate._id
+                  )
+                );
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const handleTemplatePress = (item) => {
@@ -118,6 +142,11 @@ const SavedTemplatesScreen = ({ navigation }) => {
                   >
                     <View style={styles.template_style}>
                       <View style={styles.col_01}>
+                        {imageLoading[item._id] !== false && (
+                          <View style={styles.imageLoadingContainer}>
+                            <ActivityIndicator color="#007BFF" size="small" />
+                          </View>
+                        )}
                         <Image
                           style={styles.image_style}
                           source={{
@@ -125,6 +154,7 @@ const SavedTemplatesScreen = ({ navigation }) => {
                               item.imageUrl ||
                               "https://i.pcmag.com/imagery/articles/01IB0rgNa4lGMBlmLyi0VP6-6..v1611346416.png",
                           }}
+                          onLoad={() => handleImageLoad(item._id)}
                         />
                       </View>
                       <TouchableOpacity

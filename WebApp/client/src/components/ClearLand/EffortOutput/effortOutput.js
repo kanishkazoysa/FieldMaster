@@ -9,11 +9,14 @@ import { HiTruck } from "react-icons/hi2";
 import { GrUserWorker } from "react-icons/gr";
 import { RiEditBoxLine } from "react-icons/ri"; 
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Modal } from "antd";
+import { Modal,Button } from "antd";
 import ClearLand from "../ClearLand/clearLand";
 import TemplateDetails from "../../SavedTemplates/TemplateDetails";
 import AxiosInstance from "../../../AxiosInstance";
 import { getClearLandDetailsHtml } from "./EffortOutputTemplate";
+import AlertButton from "./AlertButton";
+import AlertEffort from "./AlertEffort";
+import { BeatLoader } from 'react-spinners';
 const { confirm } = Modal;
 export default function EffortOutput({
   onBackToSidebar,
@@ -29,8 +32,16 @@ export default function EffortOutput({
   const [Perimeter, setPerimeter] = useState(null);
   const [effortOutput, setEffortOutput] = useState(null);
   const [workDays, setWorkDays] = useState(null);
+  const [weedEffort, setWeedEffort] = useState(null);
+  const [plantEffort, setPlantEffort] = useState(null);
+  const [stoneEffort, setStoneEffort] = useState(null);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [ClearLandData, setClearLandData] = useState(null);
+  const [weedType, setWeedType] = useState(null);
+  const [plantDetails, setPlantDetails] = useState(null);
+  const [stoneDetails, setStoneDetails] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,17 +50,27 @@ export default function EffortOutput({
           `/api/clearLand/effortOutput/${id}`
         );
         const data = response.data;
+        setClearLandData(data);
         console.log(data);
 
-        setworkHours(response.data.workHours);
-        setlaborCount(response.data.laborCount);
-        setdata1(response.data.machineDetails);
-        setArea(response.data.Area);
-        setPerimeter(response.data.Perimeter);
-        setEffortOutput(response.data.effortOutput);
-        setWorkDays(response.data.workDays);
+        setworkHours(data.workHours);
+        setlaborCount(data.laborCount);
+        setdata1(data.machineDetails);
+        setArea(data.Area);
+        setPerimeter(data.Perimeter);
+        setEffortOutput(data.effortOutput);
+        setWeedEffort(data.weedEffort);
+        setPlantEffort(data.plantEffort);
+        setStoneEffort(data.stoneEffort);
+        setWorkDays(data.workDays);
+        setWeedType(data.weedsType);
+        setPlantDetails(data.plantDetails);
+        setStoneDetails(data.stoneDetails);
+
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setLoading(false);
       }
     };
     fetchData();
@@ -70,40 +91,59 @@ export default function EffortOutput({
   };
 
   const handleIconPress = (e) => {
-    confirm({
-      title: 'Are you sure?',
-      content: 'Do you want to update Clear land?',
-      icon: <ExclamationCircleOutlined />,
-      okText: 'Yes',
+    Modal.confirm({
+      title: 'Do you want to update Clear land data',
+      content: 'Choose an action:',
+      okText: 'Update',
+      cancelText: 'Close',
       okType: 'primary',
-      cancelText: 'No',
-      onOk() {
-        try {
-          ClearLandDelete(id)
-            .then(() => {
-              // Navigate to the desired screen
-              setCurrentPage('ClearLand');
-              setAnimatePage(true);
-              e.preventDefault();
-            })
-            .catch((error) => {
-              // Show detailed error message
-              const errorMessage = error.response ? error.response.data.message : error.message;
-              Modal.error({
-                title: 'Failed to delete clear land',
-                content: errorMessage,
-              });
-            });
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      },
-      onCancel() {
-        console.log('Cancelled');
-      },
+      onOk: handleEditClearland,
+      onCancel: () => {},
+      maskClosable: true,
+      closable: true,
+      footer: (_, { OkBtn, CancelBtn }) => (
+        <>
+          <CancelBtn />
+          <Button 
+            onClick={() => {
+              Modal.destroyAll(); // This closes all open modals
+              handledeleteClearland();
+            }} 
+            danger
+          >
+            Delete
+          </Button>
+          <OkBtn />
+        </>
+      ),
     });
   };
+  const handledeleteClearland = () => {
+    try {
+      ClearLandDelete(id)
+        .then(() => {
+          // Navigate to the desired screen
+          setCurrentPage('ClearLand');
+          setAnimatePage(true);
+          setClearLandData(null);
+        })
+        .catch((error) => {
+          // Show detailed error message
+          const errorMessage = error.response ? error.response.data.message : error.message;
+          Modal.error({
+            title: 'Failed to delete clear land',
+            content: errorMessage,
+          });
+        });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
+  const handleEditClearland = () => {
+    setCurrentPage("ClearLand");
+    setAnimatePage(true);
+  };
   const handleback = () => {
     setCurrentPage("TemplateDetails");
     setAnimatePage(true);
@@ -119,11 +159,16 @@ export default function EffortOutput({
 
   return (
     <div>
-      {!currentPage && (
+      {loading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '85vh' }}>
+          <BeatLoader color="#007BFF" loading={loading} size={12} />
+        </div>
+      )  : (
+      !currentPage && (
         <div style={styles.content}>
           <div style={styles.header}>
             <MdArrowBack
-              onClick={onback}
+              onClick={handleback}
               style={styles.backButton}
               fontSize={20}
             />
@@ -137,7 +182,10 @@ export default function EffortOutput({
 
           {/* first box */}
           <div style={styles.Box1}>
+            <div style={styles.box1Top}>
             <p style={styles.titleText}>Total Effort Count</p>
+            <AlertButton></AlertButton>
+            </div>
             <div style={styles.propertyBox}>
               <div style={styles.property}>
                 <div>
@@ -165,17 +213,29 @@ export default function EffortOutput({
                 <BsBoundingBox color="gray" size={25} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{Perimeter}Km</p>
+                  <p style={styles.propertyValue}>{parseFloat(Perimeter).toFixed(2)} km</p>
                 </div>
               </div>
               <div style={styles.property}>
                 <PiSquareDuotone color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
-                  <p style={styles.propertyValue}>{Area} perches</p>
+                  <p style={styles.propertyValue}>{parseFloat(Area).toFixed(2)} perch</p>
                 </div>
               </div>
             </div>
+          </div>
+
+          <div style ={styles.box}>
+            <div style={styles.boxTop}>
+              <p style={styles.boxHeader}>Effort Values</p>
+              <AlertEffort></AlertEffort>
+            </div>
+             <div style={styles.boxInner}>
+                <p style={styles.boxInnerText}>Weed Effort &nbsp;&nbsp;   :&nbsp;&nbsp; {(weedEffort ?? 0).toFixed(2)} hrs</p>
+                <p style={styles.boxInnerText}>Tree Effort  &nbsp;&nbsp;&nbsp;&nbsp;  :&nbsp;&nbsp; {(plantEffort ?? 0).toFixed(2)} hrs</p>
+                <p>Stone Effort  &nbsp;&nbsp; :&nbsp;&nbsp; {(stoneEffort ?? 0).toFixed(2)} hrs</p>
+             </div>
           </div>
 
           {/* third box */}
@@ -187,7 +247,7 @@ export default function EffortOutput({
                 <GrUserWorker size={20} color="gray" />
                 <p style={styles.propertyLabel1}>
                   Labors
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
                 </p>
               </div>
               <div style={styles.innersquareright}>
@@ -200,7 +260,7 @@ export default function EffortOutput({
                 <HiTruck name="boom-gate" size={24} color="gray" />
                 <p style={styles.propertyLabel1}>
                   Macinery
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
                 </p>
               </div>
               <div style={styles.innersquareright1}>
@@ -223,6 +283,7 @@ export default function EffortOutput({
               </button>
           </div>
         </div>
+      )
       )}
       <div
         style={{
@@ -240,6 +301,7 @@ export default function EffortOutput({
             Perimeter={Perimeter}
             onEditTemplateClick={onEditTemplateClick}
             template={template}
+            ClearLandData={ClearLandData}
           />
         )}
 

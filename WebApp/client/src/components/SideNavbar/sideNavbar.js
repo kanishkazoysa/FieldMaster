@@ -7,20 +7,25 @@ import { IoBookmarks } from 'react-icons/io5';
 import { RiWalkFill } from 'react-icons/ri';
 import StartMeasurePage from '../MeasureOption/measureOption.js';
 import SavedTemplatesWeb from '../SavedTemplates/SavedTemplatesWeb.js';
-
 import ClearLand from '../ClearLand/ClearLand/clearLand';
 import Plantation from '../Plantation/PlantationPage/plantation';
 import TemplateDetails from '../SavedTemplates/TemplateDetails.js';
 import SaveScreenWeb from '../SaveScreen/SaveScreenWeb.js';
 import EditTemplateWeb from '../SavedTemplates/EditTemplateWeb.js';
 
-export default function SideNavbar() {
+export default function SideNavbar({ onShowMobileOnlyModal }) {
   const [collapsed, setCollapsed] = useState(true);
   const [hoveredMenuItem, setHoveredMenuItem] = useState(null);
   const [currentPage, setCurrentPage] = useState(null);
   const [animatePage, setAnimatePage] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   
+
+  const handleMobileOnlyFeature = () => {
+    if (onShowMobileOnlyModal) {
+      onShowMobileOnlyModal();
+    }
+  };
 
   const handleMouseEnter = (item) => {
     setHoveredMenuItem(item);
@@ -120,23 +125,7 @@ export default function SideNavbar() {
               <IoBookmarks fontSize={18} style={{ marginRight: '15px' }} />
               {!collapsed && 'Templates'}
             </MenuItem>
-            {/* 
-            <MenuItem
-              onClick={() => {
-                handleSaveScreenClick();
-              }}
-              onMouseEnter={() => handleMouseEnter('SaveScreen')}
-              onMouseLeave={handleMouseLeave}
-              style={{
-                ...styles.menuItem,
-                ...(hoveredMenuItem === 'SaveScreen'
-                  ? styles.hoveredMenuItem
-                  : {}),
-              }}
-            >
-              {!collapsed && 'SaveScreen'}
-            </MenuItem>
-            */}
+           
           </Menu>
         )}
         <div
@@ -150,7 +139,7 @@ export default function SideNavbar() {
           }}
         >
           {currentPage === 'StartMeasure' && (
-            <StartMeasurePage onBackToSidebar={handleBackClick} />
+            <StartMeasurePage onBackToSidebar={handleBackClick} onMobileOnlyFeature={handleMobileOnlyFeature} />
           )}
           {currentPage === 'ClearLand' && (
             <ClearLand onBackToSidebar={handleBackClick} />

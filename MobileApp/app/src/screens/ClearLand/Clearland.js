@@ -28,11 +28,14 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { styles } from "./ClearLandStyles";
 import Headersection from "../../components/Headersection";
 import CustomButton from "../../components/CustomButton";
+import WeedAlert from "./AlertButtonWeed";
+import PlantAlert from "./AlertButtonPlant";
+import StoneAlert from "./AlertButtonStones";
 import AxiosInstance from "../../AxiosInstance";
 
 export default function ClearLand({ route }) {
   const navigation = useNavigation();
-  const { id, Area ,item } = route.params;
+  const { id, Area ,item,ClearLandData } = route.params;
   const [text, setText] = React.useState("");
   const [pressed, setPressed] = useState(null);
   const [plantTypeSelectedValue, setPlantTypeSelectedValue] = useState(null);
@@ -41,32 +44,38 @@ export default function ClearLand({ route }) {
   const [stonesCount, setStonesCount] = useState("");
   const [laborCount, setLaborCount] = useState("");
   const [workHours, setWorkHours] = useState("");
-  const [searchItem, setSearchItem] = useState("");
+  const [machineTypeSelectedValue, setMachineTypeSelectedValue] = useState(null);
   const [machineCount, setMachineCount] = useState("");
-  const [searchSuggestions, setSearchSuggestions] = useState([]);
-  const [suggestions, setSuggestions] = useState([
-    "Excavators",
-    "Backhoes",
-    "Chainsaws",
-    "Excavator breakers",
-  ]);
+  const [Machines, SetMachines] = useState([]);
 
-  const handleSearch = (query) => {
-    if (query === "") {
-      setSearchSuggestions([]);
-      return;
+  useEffect(() => {
+    fetchMachines();
+  }, []);
+
+  const fetchMachines = async () => {
+    try {
+      const response = await AxiosInstance.get(
+        "/api/auth/inputControl/getItems/Machines"
+      );
+      SetMachines(response.data);
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+      Alert.alert("Error", "Failed to fetch plants. Please try again.");
     }
-    const filteredSuggestions = suggestions.filter((item) =>
-      item.toLowerCase().includes(query.toLowerCase())
-    );
-    setSearchSuggestions(filteredSuggestions);
   };
 
-  const handleSuggestionSelect = (item) => {
-    setSearchItem(item);
-    setSearchSuggestions([]);
-  };
-
+  const [editMode, setEditMode] = useState(false);
+  useEffect(() => {
+    if (ClearLandData) {
+      setEditMode(true);
+      setPressed(ClearLandData.weedsType);
+      setLaborCount(ClearLandData.laborCount);
+      setWorkHours(ClearLandData.workHours);
+      setDisplayValues(ClearLandData.plantDetails || []);
+      setDisplayValues1(ClearLandData.stoneDetails || []);
+      setDisplayValues2(ClearLandData.machineDetails || []);
+    }
+  }, [ClearLandData]);
   const handlePlantCountChange = (text) => {
     setPlantCount(text);
   };
@@ -83,12 +92,6 @@ export default function ClearLand({ route }) {
   const handleMachineCountChange = (text) => {
     setMachineCount(text);
   };
-
-  // const handleEffortOutput = () => {
-  //   navigation.navigate("EffortOutput",{
-  //     id:id,
-  //   });
-  // };
 
   const placeholder1 = {
     label: "Select Type",
@@ -110,8 +113,20 @@ export default function ClearLand({ route }) {
 
   const options = [
     { label: "Small", value: "Small" },
-    { label: "Medium", value: "Medium" },
-    { label: "High", value: "High" },
+    { label: "Large", value: "Large" },
+  ];
+
+  const placeholder2 = {
+    label: "Select Machine Type",
+    value: null,
+    color: "red",
+  };
+
+  const options2 = [
+    { label: "Excavators", value: "Excavators" },
+    { label: "Backhoes", value: "Backhoes" },
+    { label: "Chainsaws", value: "Chainsaws" },
+    { label: "Excavator breakers", value: "Excavator breakers" },
   ];
 
   /display/;
@@ -119,6 +134,16 @@ export default function ClearLand({ route }) {
   const [displayValues, setDisplayValues] = useState([]);
 
   const handleAdd = () => {
+    if (!plantTypeSelectedValue || !plantCount) {
+      Alert.alert("Error","Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(plantCount)) {
+      Alert.alert("Error","Please enter a valid plant count");
+      return;
+    }
     //validation part Add button
     const combinedValue = plantCount + " x " + plantTypeSelectedValue;
     const newDisplayValues = [...displayValues, combinedValue].filter(Boolean);
@@ -136,8 +161,18 @@ export default function ClearLand({ route }) {
   const [displayValues1, setDisplayValues1] = useState([]);
 
   const handleAdd1 = () => {
+    if (!stoneTypeSelectedValue || !stonesCount) {
+      Alert.alert("Error","Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(stonesCount)) {
+      Alert.alert("Error","Please enter a valid stone count");
+      return;
+    }
     //validation part Add button
-    const combinedValue1 = stoneTypeSelectedValue;
+    const combinedValue1 = stonesCount + " x " + stoneTypeSelectedValue;
     const newDisplayValues1 = [...displayValues1, combinedValue1].filter(
       Boolean
     );
@@ -155,13 +190,23 @@ export default function ClearLand({ route }) {
   const [displayValues2, setDisplayValues2] = useState([]);
 
   const handleAdd2 = () => {
+    if (!machineTypeSelectedValue || !machineCount) {
+      Alert.alert("Error","Please fill both input fields");
+      return;
+    }
+
+    const regex = /^\d+(\.\d+)?$/; // allow float and decimal numbers
+    if (!regex.test(machineCount)) {
+      Alert.alert("Error","Please enter a valid machine count");
+      return;
+    }
     //validation part Add button
-    const combinedValue2 = searchItem + " x " + machineCount;
+    const combinedValue2 = machineCount + " x " + machineTypeSelectedValue;
     const newDisplayValues2 = [...displayValues2, combinedValue2].filter(
       Boolean
     );
     setDisplayValues2(newDisplayValues2);
-    setSearchItem("");
+    setMachineTypeSelectedValue("");
     setMachineCount("");
   };
 
@@ -172,7 +217,42 @@ export default function ClearLand({ route }) {
   };
 
   const handleClear = async () => {
-    AxiosInstance.post("/api/clearLand/clearLand", {
+    if (!laborCount) {
+      Alert.alert("Error", "Please enter the Labor Count.");
+      return;
+    }
+
+    if (!workHours) {
+      Alert.alert("Error", "Please enter the Work Hours.");
+      return;
+    }
+
+    if (displayValues2.length === 0) {
+      Alert.alert("Error", "Please add at least one Machinery item.");
+      return;
+    }
+
+    if (!pressed && displayValues.length === 0 && displayValues1.length === 0) {
+      Alert.alert(
+        "Error",
+        "Please fill in at least one optional field: Weeds, Plants, or Stones."
+      );
+      return;
+    }
+    const regex2 = /^\d+$/; // allow only decimal numbers
+    if (!regex2.test(laborCount)) {
+      Alert.alert("Error","Please enter a valid labor count");
+      return;
+    }
+    const regex = /^\d+$/; // allow only decimal numbers
+    if (!regex.test(workHours)) {
+      Alert.alert("Error"," Please enter a valid work hour count");
+      return;
+    }
+
+    const method = editMode ? 'put' : 'post';
+    const url = editMode ? `/api/clearLand/clearLand/${id}` : '/api/clearLand/clearLand';
+    AxiosInstance[method](url, {
       id,
       pressed,
       displayValues,
@@ -182,36 +262,12 @@ export default function ClearLand({ route }) {
       displayValues2,
     })
       .then((response) => {
-        if (
-          !pressed ||
-          !(displayValues.length > 0) ||
-          !(displayValues1.length > 0) ||
-          !laborCount ||
-          !workHours ||
-          !(displayValues2.length > 0)
-        ) {
-          // Display error message
-          Alert.alert("Error", "Please fill in all fields");
-          return; // Stop execution if fields are empty
-        }
+        
         navigation.navigate("EffortOutput", {
           id: id,
           item: item,
-          // data: displayValues,
-          // data1: displayValues1,
-          // data2: displayValues2,
-          // weedType: pressed,
-          // stonesCount: stonesCount,
-          // laborCount: laborCount,
-          // workHours: workHours,
         });
 
-        setPressed(" ");
-        setLaborCount(" ");
-        setWorkHours(" ");
-        setDisplayValues([]);
-        setDisplayValues1([]);
-        setDisplayValues2([]);
       })
       .catch((error) => {
         console.error("Error:", error.response.data);
@@ -242,16 +298,22 @@ export default function ClearLand({ route }) {
       <ScrollView>
         <View style={styles.container2}>
           {/* Weeds box */}
-          <Card style={styles.card1}>
-            <Card.Content style={styles.cardContent}>
+          <Card style={styles.card}>
+          
+            <Card.Content style={styles.cardContent1}>
+              <View style={styles.cardTop}>
+              <View style={styles.cardHeader}>
               <MaterialCommunityIcons
                 name="sprout-outline"
                 size={responsiveFontSize(3)}
                 color="#65676B"
               />
-              <Text style={styles.cardTopText} variant="titleLarge">
+                <Text style={styles.cardTopText} variant="titleLarge">
                 Weeds
-              </Text>
+                </Text>
+              </View>
+              <WeedAlert></WeedAlert>
+              </View>
               <PaperProvider>
                 <View style={styles.weedButton}>
                   <Button
@@ -304,14 +366,20 @@ export default function ClearLand({ route }) {
           {/* Plants box */}
           <Card style={styles.card1}>
             <Card.Content style={styles.cardContent}>
+            <View style={styles.card1Top}>
+              <View style={styles.card1Header}>
               <MaterialCommunityIcons
                 name="sprout"
                 size={responsiveFontSize(3)}
                 color="#65676B"
               />
               <Text style={styles.cardTopText} variant="titleLarge">
-                Plants
+                Trees
               </Text>
+              </View>
+              <PlantAlert></PlantAlert>
+              </View>
+              
               <View style={styles.Dropdown1}>
                 <RNPickerSelect
                   placeholder={placeholder1}
@@ -384,12 +452,20 @@ export default function ClearLand({ route }) {
 
           {/* Stones box */}
           <Card style={styles.card1}>
+            
             <Card.Content style={styles.cardContent}>
+            <View style={styles.card2Top}>
+              <View style={styles.card2Header}>
+              
               <Image source={require("../../../assets/Stones.png")} />
               <Text style={styles.cardTopText} variant="titleLarge">
                 Stones
               </Text>
-              <View style={styles.Dropdown1}>
+              </View>
+              </View>
+              <StoneAlert></StoneAlert>
+              
+              <View style={styles.Dropdown2}>
                 <RNPickerSelect
                   placeholder={placeholder}
                   items={options}
@@ -511,7 +587,7 @@ export default function ClearLand({ route }) {
                     paddingHorizontal: 8,
                   }}
                   keyboardType="numeric"
-                  placeholder="Enter count of hours"
+                  placeholder="Enter hours per day"
                   mode="flat"
                   onChangeText={handleWorkHourChange}
                   value={workHours}
@@ -541,28 +617,17 @@ export default function ClearLand({ route }) {
                   alignItems: "center",
                 }}
               >
-                <View style={styles.SearchbarContainer}>
-                  <Searchbar
-                    placeholder="Search for machines"
-                    placeholderStyle={{ fontSize: 16, marginTop: -14 }}
-                    inputStyle={{ fontSize: 16, marginTop: -14 }}
-                    style={styles.Searchbar}
-                    onChangeText={(text) => {
-                      setSearchItem(text);
-                      handleSearch(text);
-                    }}
-                    value={searchItem}
-                  ></Searchbar>
-                  {searchSuggestions.map((item, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      style={styles.suggestionItem}
-                      onPress={() => handleSuggestionSelect(item)}
-                    >
-                      <Text>{item}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
+                <View style={styles.Dropdown3}>
+                <RNPickerSelect
+                  placeholder={placeholder2}
+                  items={Machines.map((Machine) => ({
+                    label: Machine.Name,
+                    value: Machine.Name,
+                  }))}                  
+                  onValueChange={(value) => setMachineTypeSelectedValue(value)}
+                  value={machineTypeSelectedValue}
+                />
+              </View>
                 <Text
                   style={{
                     fontSize: 16,
@@ -615,7 +680,7 @@ export default function ClearLand({ route }) {
                   >
                     <MaterialCommunityIcons
                       name="close-circle-outline"
-                      size={20}
+                      size={responsiveFontSize(2.7)}
                       color="#007BFF"
                     />
                   </TouchableOpacity>

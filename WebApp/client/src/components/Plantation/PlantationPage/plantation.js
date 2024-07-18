@@ -176,14 +176,14 @@ export default function Plantation({
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{Perimeter} Km</p>
+                  <p style={styles.propertyValue}>{parseFloat(Perimeter).toFixed(2)} km</p>
                 </div>
               </div>
               <div style={styles.property}>
                 <PiSquareDuotone color="gray" size={35} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
-                  <p style={styles.propertyValue}>{area} Perches</p>
+                  <p style={styles.propertyValue}>{parseFloat(area).toFixed(2)} perch</p>
                 </div>
               </div>
             </div>
