@@ -150,7 +150,7 @@ export default function EffortOutput({
   };
 
   const handleSave = () => {
-    const htmlContent = getClearLandDetailsHtml(Perimeter,Area,laborCount,workHours,data1,effortOutput,workDays);
+    const htmlContent = getClearLandDetailsHtml(Perimeter,Area,data1,effortOutput,workDays,weedEffort,plantEffort,stoneEffort);
     const newWindow = window.open();
     newWindow.document.write(htmlContent);
     newWindow.document.close();

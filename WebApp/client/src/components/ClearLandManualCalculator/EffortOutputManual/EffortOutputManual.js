@@ -90,14 +90,14 @@ export default function EffortOutputManual({
             <BsBoundingBox color="gray" size={25} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Perimeter</p>
-              <p style={styles.propertyValue}>{parseFloat(perimeter).toFixed(2)} km {PerimeterUnitSelectedValue}</p>
+              <p style={styles.propertyValue}>{parseFloat(perimeter).toFixed(2)}  {PerimeterUnitSelectedValue}</p>
             </div>
           </div>
           <div className="property" style={styles.property}>
             <PiSquareDuotone color="gray" size={28} />
             <div style={styles.propertyDetails}>
               <p style={styles.propertyLabel}>Area</p>
-              <p style={styles.propertyValue}>{parseFloat(area).toFixed(2)} perch {AreaUnitSelectedValue}</p>
+              <p style={styles.propertyValue}>{parseFloat(area).toFixed(2)} {AreaUnitSelectedValue}</p>
             </div>
           </div>
         </div>
