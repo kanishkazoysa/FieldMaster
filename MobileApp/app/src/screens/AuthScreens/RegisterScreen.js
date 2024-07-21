@@ -239,9 +239,9 @@ export default function RegisterScreen() {
 
 const styles = StyleSheet.create({
   header: {
-    height: responsiveHeight(6.5),
+    height: responsiveHeight(3),
+    paddingBottom: responsiveHeight(3),
     backgroundColor: "#007BFF",
-
     ...Platform.select({
       android: {
         marginTop: StatusBar.currentHeight,
