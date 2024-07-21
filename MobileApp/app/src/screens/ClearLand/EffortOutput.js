@@ -135,7 +135,7 @@ export default function EffortOutput({ route }) {
    const handleDelete = () => {
     Alert.alert(
       "Update Data",
-      "Do you want to delete Fence data?",
+      "Do you want to delete Clear Land data?",
       [
         {
           text: "No",
@@ -185,7 +185,7 @@ export default function EffortOutput({ route }) {
   };
 
   //Generate pdf
-  const html = effortOutputPrint(Perimeter, Area, laborCount, workHours,effortOutput,weedEffort,plantEffort,stoneEffort);
+  const html = effortOutputPrint(Perimeter, Area, laborCount, workHours,effortOutput,weedEffort,plantEffort,stoneEffort,workDays);
 
   // Print
   const [selectedPrinter, setSelectedPrinter] = React.useState();
