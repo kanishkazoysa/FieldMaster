@@ -59,7 +59,7 @@ export const styles = {
       fontSize: 13,
       fontWeight: "bold",
       marginBottom: 0,
-      marginLeft: "65px",
+      marginLeft: "55px",
       marginRight: "60px",
     },
   
@@ -112,7 +112,7 @@ export const styles = {
 
     Box2: {
       width: "90%",
-      height: "68px",
+      height: "75px",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -133,7 +133,7 @@ export const styles = {
     },
     box: {
       width: "90%",
-      height: "92px",
+      height: "99px",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -151,7 +151,7 @@ export const styles = {
     boxHeader: {
       fontWeight: "bold",
       marginLeft: 90,
-      marginRight: 80,
+      marginRight: 60,
     },
     boxInner:{
       marginLeft: 5,
@@ -213,7 +213,8 @@ export const styles = {
   
     bottom: {
       alignItems: "center",
-      marginTop: 50,
+      marginTop: 20,
+      marginBottom: 10,
       width: "92%",
       
     },

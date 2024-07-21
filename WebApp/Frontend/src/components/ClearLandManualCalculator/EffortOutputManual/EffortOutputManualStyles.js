@@ -212,7 +212,8 @@ export const styles = {
   
     bottom: {
       alignItems: "center",
-      marginTop: 100,
+      marginTop: 80,
+      marginBottom: 20,
       width: "92%",
       
     },

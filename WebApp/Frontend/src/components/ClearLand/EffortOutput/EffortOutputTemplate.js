@@ -1,4 +1,13 @@
-export const getClearLandDetailsHtml = (Perimeter,Area,laborCount,workHours,data1,effortOutput,workDays) => `
+export const getClearLandDetailsHtml = (
+  Perimeter,
+  Area,
+  data1,
+  effortOutput,
+  workDays,
+  weedEffort,
+  plantEffort,
+  stoneEffort
+) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,59 +16,71 @@ export const getClearLandDetailsHtml = (Perimeter,Area,laborCount,workHours,data
     <title>App Details</title>
     <style>
         body {
-            /* font-family: Arial, sans-serif; */
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 800px;
-            margin: 10px auto;
-            padding: 20px;
-            border: 5px solid #ccc;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            background-color: #fff;
-        }
-
-        .App-logo {
-            margin-left: 5px;
-        }
-
-        .logo-text {
-            margin-left: 70px;
-            margin-top: 40px;
-            color: #007BFF;
-            font-size: 40px;
-            /* font-family: Product Sans; / / You need to import Product Sans if it's a custom font */
-            font-family: sans-serif; /* Fallback font */
-        }
-
-        Description-text1 {
-          margin-top: 50px;
-        }
-
-        .Description-text {
-            width: 100%;
-            border-radius: 12px; /* Corrected typo */
-        }
-
-        .logo {
-            max-width: 150px;
-            margin-bottom: 20px;
-        }
-        h1, p {
-            margin: 10px 0;
-      
-        }
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              background-color: #f9f9f9;
+          }
+          .container {
+              max-width: 800px;
+              margin: 10px auto;
+              padding: 20px;
+              border: 5px solid #ccc;
+              background-color: #fff;
+              border-radius: 8px;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          }
+          .logo-container {
+              display: flex;
+              align-items: center;
+              background-color: #fff;
+              padding: 20px;
+          }
+          .App-logo {
+              max-width: 130px;
+              margin-right: 20px;
+          }
+          .logo-text {
+              color: #007BFF;
+              font-size: 40px;
+              font-family: sans-serif;
+          }
+          .Description-text1 {
+              margin-top: 20px;
+              color: #333;
+              font-size: 24px;
+              border-bottom: 2px solid #007BFF;
+              padding-bottom: 10px;
+              padding: 10px;
+              margin: 5px 0;
+          }
+          .Description-text {
+              background: #f1f1f1;
+              margin: 5px 0;
+              padding: 10px;
+              border-radius: 4px;
+          }
+          h1, h2, p {
+              margin: 10px 0;
+          }
+          h2 {
+              color: #007BFF;
+          }
+          ul {
+              list-style-type: none;
+              padding: 0;
+          }
+          ul li {
+              background: #f1f1f1;
+              margin: 5px 0;
+              padding: 5px;
+              border-radius: 4px;
+          }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo-container">
-            <img class="App-logo" src="https://s3-alpha-sig.figma.com/img/0402/a49c/79d6086f4997c8eeba9d160fa7b869ed?Expires=1708905600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=bT1vIy5S2dJUVkDABMFzScUJX5Iws21riRotOmacpZl1bhA8yPqJLJNeF5-wc8kBpk4jyD81fp-8bBYVTVwO6cplKgVuos2HMwvvf3vA5yh0td6H5z5AqoKTIcV8sy6pPF9DsiJmzHLRn5QjfYk~o8ow0bxsqErV5jJfH1S4~4yDdn6O54pXqPBjgydtWdDEhlCUXmzQo1ZozcGTapshAhnzm3YNdYd5leb1AwnPhuURNJ7YO80jOE3QN3pqNxv2XESHYnKDOilaPqvuVKVTyG3AV2mxdnyg-U8iEkRBgQJNDH0YjrWMKTRb3GatXSa5KVA9zQDL5JLoTn9DOvqa-Q__" alt="Your App Logo" class="logo" width="130">
             <h1 class="logo-text">Field Master</h1>
         </div>
         <h2 class="Description-text1">Description</h2>
@@ -68,18 +89,19 @@ export const getClearLandDetailsHtml = (Perimeter,Area,laborCount,workHours,data
         </div>
         <h2>Map Information</h2>
         <ul>
-            <li>Perimeter = ${Perimeter} km</li>
-            <li>Area = ${Area} perches</li>
+            <li>Perimeter = ${parseFloat(Perimeter).toFixed(2)} km</li>
+<li>Area = ${parseFloat(Area).toFixed(2)} perches</li>
         </ul>
 
         <h2>Clear land Details</h2>
 
         <ul>
         <li> Total Effort Count= ${effortOutput} hours</li>
-        <li> Total number of days = ${workDays} </li>
-        <li> Number of labours = ${laborCount} </li>
-        <li> Work hours per day = ${workHours} </li>
-        <li>Machine details<ul>
+        <li>Weed Effort = ${weedEffort.toFixed(2)} hrs</li>
+        <li>Plant Effort = ${plantEffort.toFixed(2)} hrs</li>
+        <li>Stone Effort = ${stoneEffort.toFixed(2)} hrs</li>
+        <li>Total number of days = ${workDays} </li>
+        <li>Machine details = <ul>
         ${data1.map((value) => `<li>${value}</li>`).join("")}
         </ul></li>
         
