@@ -12,6 +12,7 @@ import Plantation from '../Plantation/PlantationPage/plantation';
 import TemplateDetails from '../SavedTemplates/TemplateDetails.js';
 import SaveScreenWeb from '../SaveScreen/SaveScreenWeb.js';
 import EditTemplateWeb from '../SavedTemplates/EditTemplateWeb.js';
+import { Link } from 'react-router-dom';
 
 export default function SideNavbar({ onShowMobileOnlyModal }) {
   const [collapsed, setCollapsed] = useState(true);
@@ -91,7 +92,11 @@ export default function SideNavbar({ onShowMobileOnlyModal }) {
           <FaBars color='#65676b' />
         </div>
         <div style={styles.logoContainer}>
-          {!collapsed && <img src={logo} alt='Logo' style={styles.logo} />}
+          {!collapsed && 
+            <Link to="/" style={{ textDecoration: "none" }}>
+            <img src={logo} alt='Logo' style={styles.logo} />
+          </Link>
+          }
         </div>
       </div>
       <div style={styles.content}>
