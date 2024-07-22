@@ -6,7 +6,7 @@ const handleIconPress = () => {
   // Display an alert message when the icon is pressed
   Alert.alert(
     "Important",
-    "This is an estimated count for the given details, allowing for a variance of +/- 10 plants from the actual value for flexibility and potential contingencies.",
+    "This is an estimated count for the given details, allowing for a variance of +/- 1 to 2 days from the actual value for flexibility and potential contingencies",
     [
       {
         text: "OK",
