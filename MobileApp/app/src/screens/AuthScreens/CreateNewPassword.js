@@ -38,7 +38,7 @@ export default function ForgotPassword({ route }) {
       return;
     }
 
-    if (!validatePassword(password)) {
+    if (!validatePassword(newPassword)) {
       setPasswordError(
         "Password must be 8+ character with uppercase, lowercase, digit, and special character."
       );
