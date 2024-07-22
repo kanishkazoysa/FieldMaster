@@ -31,7 +31,7 @@ import MapDetailsPanel from "./MapDetailsPanel";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { BackHandler, Alert } from "react-native";
 
-const apiKey = "AIzaSyC2Sb91oDLf5g9sY2Nai_lF-HTU3vfhN2Q";
+const apiKey = "AIzaSyBAYDMYlsBjJ_IlXSOetj774znS0nBNfDQ";
 
 export default function Home() {
   const navigation = useNavigation();

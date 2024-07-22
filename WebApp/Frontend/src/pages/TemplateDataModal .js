@@ -43,10 +43,10 @@ const TemplateDataModal = ({ visible, onClose, data }) => {
           <Text strong>Time:</Text> <Text>{data.time}</Text>
         </Col>
         <Col span={12}>
-          <Text strong>Perimeter:</Text> <Text>{data.perimeter} meters</Text>
+          <Text strong>Perimeter:</Text> <Text>{data.perimeter} km</Text>
         </Col>
         <Col span={12}>
-          <Text strong>Area:</Text> <Text>{data.area} sq meters</Text>
+          <Text strong>Area:</Text> <Text>{data.area} perch</Text>
         </Col>
       </Row>
     </Modal>
