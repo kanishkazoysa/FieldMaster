@@ -88,9 +88,7 @@ const LoginForm = () => {
         </Form.Item>
 
         <div className="container-sign-in">
-          <div className="csi-div">
-            <input type="checkbox" name="remember" /> <label>Remember Me</label>
-          </div>
+          
           <div className="csi-div">
             <Link to="/forgot-password">Forgot Password?</Link>
           </div>
