@@ -90,7 +90,7 @@ export const getClearLandDetailsHtml = (
         <h2>Map Information</h2>
         <ul>
             <li>Perimeter = ${parseFloat(Perimeter).toFixed(2)} km</li>
-<li>Area = ${parseFloat(Area).toFixed(2)} perches</li>
+            <li>Area = ${parseFloat(Area).toFixed(2)} perches</li>
         </ul>
 
         <h2>Clear land Details</h2>

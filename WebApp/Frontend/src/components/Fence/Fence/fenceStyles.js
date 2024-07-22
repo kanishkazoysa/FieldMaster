@@ -34,7 +34,7 @@ export const styles = {
 
   Box1: {
     width: "90%",
-    height: "81px",
+    height: "90px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",

@@ -209,7 +209,7 @@ export default function Fence({
                 <BsBoundingBox color="gray" size={28} />
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Perimeter</p>
-                  <p style={styles.propertyValue}>{Perimeter}Km</p>
+                  <p style={styles.propertyValue}> {parseFloat(Perimeter).toFixed(2)}Km</p>
                 </div>
               </div>
               <div style={styles.property}>
@@ -217,7 +217,7 @@ export default function Fence({
                 <div style={styles.propertyDetails}>
                   <p style={styles.propertyLabel}>Area</p>
                   <p style={styles.propertyValue}>
-                  {parseFloat(area).toFixed(2)} m<sup>2</sup>
+                  {parseFloat(area).toFixed(2)} perch
                   </p>
                 </div>
               </div>
