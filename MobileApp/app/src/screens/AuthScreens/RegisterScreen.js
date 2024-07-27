@@ -239,7 +239,7 @@ export default function RegisterScreen() {
 
 const styles = StyleSheet.create({
   header: {
-    height: responsiveHeight(3),
+    height: responsiveHeight(5),
     paddingBottom: responsiveHeight(3),
     backgroundColor: "#007BFF",
     ...Platform.select({
